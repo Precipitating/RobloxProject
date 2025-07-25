@@ -1,0 +1,3423 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBX72662CE972F442D3A8F1633ED03D36A0">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<string name="Name">FeaturePackagesCore</string>
+			<int64 name="SourceAssetId">94918533221001</int64>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="Folder" referent="RBX3F64142FBE80472F9BA7081A5529D51A">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Client</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="Script" referent="RBX7D252CD28E1C4BFDA3BE2815DDEA71B9">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">UISounds</string>
+					<token name="RunContext">2</token>
+					<string name="ScriptGuid">{41e8755e-dd08-4ac0-bbf8-907d93dbdb31}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Connects sounds to tagged GUIObjects.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+local bindToTaggedInstances = require(ReplicatedStorage.FeaturePackagesCore.Utils.bindToTaggedInstances)
+local playSound = require(ReplicatedStorage.FeaturePackagesCore.Utils.playSound)
+
+local function onButtonAdded(button: Instance)
+	assert(button:IsA("GuiButton"), `Invalid tagged UIButton: {button:GetFullName()}`)
+
+	button.Activated:Connect(function()
+		task.spawn(playSound, SharedConstants.Sounds.Ids.BUTTON_ACTIVATED)
+	end)
+
+	button.MouseEnter:Connect(function()
+		task.spawn(playSound, SharedConstants.Sounds.Ids.BUTTON_HOVER, SharedConstants.Sounds.VOLUME / 2)
+	end)
+
+	button.SelectionGained:Connect(function()
+		task.spawn(playSound, SharedConstants.Sounds.Ids.BUTTON_HOVER, SharedConstants.Sounds.VOLUME / 2)
+	end)
+end
+
+local function initialize()
+	bindToTaggedInstances(SharedConstants.Tags.UI.UIBUTTON_TAG, onButtonAdded)
+end
+
+initialize()
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="Script" referent="RBX54C53AFF2EFF434CB6AB501084F42589">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">UIAnimator</string>
+					<token name="RunContext">2</token>
+					<string name="ScriptGuid">{c1aa2b48-0653-45c1-a471-2b31f656ae96}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Connects various UI animations to tagged GUIObjects.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
+local bindToTaggedInstances = require(ReplicatedStorage.FeaturePackagesCore.Utils.bindToTaggedInstances)
+
+-- Animation constants
+local ROTATION_DURATION = 15
+local ROTATION_VALUE = 360
+local HOVER_DURATION = 0.3
+local SCALE_DURATION = 2
+local SCALE_FACTOR = 0.9
+local SHEEN_DURATION = 2
+local LOADING_DURATION = 4
+
+local function onUILoadingStrokeObjectAdded(object: UIGradient)
+	UITween.rotation(object, ROTATION_VALUE, LOADING_DURATION, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1)
+end
+
+local function onUIGlowObjectAdded(object: ImageLabel)
+	UITween.rotation(object, ROTATION_VALUE, ROTATION_DURATION, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1)
+	UITween.size(
+		object,
+		UDim2.new(
+			object.Size.Width.Scale * SCALE_FACTOR,
+			object.Size.Width.Offset * SCALE_FACTOR,
+			object.Size.Height.Scale * SCALE_FACTOR,
+			object.Size.Height.Offset * SCALE_FACTOR
+		),
+		SCALE_DURATION,
+		Enum.EasingStyle.Linear,
+		Enum.EasingDirection.InOut,
+		-1,
+		true
+	)
+end
+
+local function onUISheenObjectAdded(object: UIGradient)
+	local delay = math.random(1, 100) / 25
+	UITween.offset(
+		object,
+		Vector2.new(-1, 0),
+		SHEEN_DURATION,
+		Enum.EasingStyle.Sine,
+		Enum.EasingDirection.InOut,
+		-1,
+		false,
+		delay
+	)
+end
+
+local function onUIHoverObjectAdded(object: GuiObject)
+	local goalPropertiesByIsHovering: { [boolean]: { [string]: any } } = {}
+
+	if object:IsA("TextButton") or object:IsA("TextLabel") then
+		goalPropertiesByIsHovering[true] = {
+			TextTransparency = 0,
+			BackgroundTransparency = 0.8,
+		}
+		goalPropertiesByIsHovering[false] = {
+			TextTransparency = object.TextTransparency,
+			BackgroundTransparency = object.BackgroundTransparency,
+		}
+	else
+		goalPropertiesByIsHovering[true] = {
+			Size = UDim2.new(
+				object.Size.X.Scale / SCALE_FACTOR,
+				object.Size.X.Offset / SCALE_FACTOR,
+				object.Size.Y.Scale / SCALE_FACTOR,
+				object.Size.X.Offset / SCALE_FACTOR
+			),
+		}
+		goalPropertiesByIsHovering[false] = {
+			Size = object.Size,
+		}
+	end
+
+	local function onHover(isHovering: boolean)
+		UITween.play(object, goalPropertiesByIsHovering[isHovering], HOVER_DURATION)
+	end
+
+	object.MouseEnter:Connect(function()
+		onHover(true)
+	end)
+
+	object.MouseLeave:Connect(function()
+		onHover(false)
+	end)
+end
+
+local function initialize()
+	bindToTaggedInstances(SharedConstants.Tags.UI.UIGLOW_TAG, onUIGlowObjectAdded)
+	bindToTaggedInstances(SharedConstants.Tags.UI.UISHEEN_TAG, onUISheenObjectAdded)
+	bindToTaggedInstances(SharedConstants.Tags.UI.UILOADING_STROKE_TAG, onUILoadingStrokeObjectAdded)
+	bindToTaggedInstances(SharedConstants.Tags.UI.UIHOVER_TAG, onUIHoverObjectAdded)
+end
+
+initialize()
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX7FC915721E94437CA09D91CBD9578C7C">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">ModalManager</string>
+					<string name="ScriptGuid">{14a7428a-d6eb-42eb-9c12-55a36945fcd2}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	ModalManager provides a module for managing multiple GuiObject-based modals.
+	Opening and closing modals set with ModalManager will ensure only one modal is open at a time.
+	ModalManager also helps with tweening the modals in and out of view.
+	It also contains a getter for a centralized ScreenGui for all HUD buttons to be parented to so they can be centrally organized.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+
+local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
+local getInstance = require(ReplicatedStorage.FeaturePackagesCore.Utils.getInstance)
+
+local localPlayer = Players.LocalPlayer :: Player
+local hudGui: ScreenGui = getInstance(ReplicatedStorage, "FeaturePackagesCore", "Objects", "FeaturePackagesHud")
+
+local modals: { [string]: GuiObject } = {}
+
+local ModalManager = {}
+
+local function animateOpen(id: string): Tween?
+	local modal = modals[id]
+	if not modal then
+		return nil
+	end
+
+	modal.Visible = true
+	return UITween.transparency(modal, 0, 0.5)
+end
+
+local function animateClose(id: string): Tween?
+	local modal = modals[id]
+	if not modal then
+		return nil
+	end
+
+	local tween = UITween.transparency(modal, 1, 0.25)
+
+	if not tween then
+		return nil
+	end
+
+	tween.Completed:Connect(function(playbackState: Enum.PlaybackState)
+		if playbackState == Enum.PlaybackState.Completed then
+			modal.Visible = false
+		end
+	end)
+
+	return tween
+end
+
+function ModalManager.get(id: string): GuiObject?
+	return modals[id]
+end
+
+function ModalManager.getActive(): (string?, GuiObject?)
+	for id, modal in pairs(modals) do
+		if modal.Visible then
+			return id, modal
+		end
+	end
+
+	return nil, nil
+end
+
+function ModalManager.isOpen(id: string): boolean
+	local activeId, _modal = ModalManager.getActive()
+	return id == activeId
+end
+
+function ModalManager.set(id: string, modal: GuiObject)
+	modals[id] = modal
+
+	-- Set the modal to the closed state initially
+	modal.Visible = false
+
+	if modal:IsA("CanvasGroup") then
+		modal.GroupTransparency = 1
+	end
+end
+
+function ModalManager.unset(id: string)
+	modals[id] = nil
+end
+
+function ModalManager.open(id: string): Tween?
+	-- Check if the modal exists before opening
+	local modal = modals[id]
+	if not modal then
+		warn(`No modal with id {id} to open.`)
+		return nil
+	end
+
+	if ModalManager.isOpen(id) then
+		return nil
+	end
+
+	ModalManager.close()
+	return animateOpen(id)
+end
+
+function ModalManager.close(id: string?): Tween?
+	-- Check if there is an active modal to close
+	local activeId, activeModal = ModalManager.getActive()
+	if not activeModal then
+		return nil
+	end
+
+	-- If id was specified, verify that the active modal matches the id
+	if id then
+		-- Check if the modal exists before opening
+		local modal = modals[id]
+		if not modal then
+			warn(`No modal with id {id} to close.`)
+			return nil
+		end
+
+		if activeModal ~= modal then
+			-- Different modal is active
+			return nil
+		end
+	end
+
+	local idToClose = id or activeId
+	if not idToClose then
+		return nil
+	end
+
+	return animateClose(idToClose)
+end
+
+function ModalManager.toggleOpen(id: string?): Tween?
+	local activeId, _ = ModalManager.getActive()
+	id = id or activeId
+
+	if not id then
+		return nil
+	end
+
+	if id == activeId then
+		return ModalManager.close(id)
+	else
+		return ModalManager.open(id)
+	end
+end
+
+function ModalManager.getHudGui(): ScreenGui
+	hudGui.Parent = localPlayer.PlayerGui
+	return hudGui
+end
+
+return ModalManager
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="Script" referent="RBX929351931AA843899E0756F3CA9B065F">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<bool name="Disabled">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">UITimer</string>
+					<token name="RunContext">2</token>
+					<string name="ScriptGuid">{40ff8b6a-caff-4d71-98ba-8fae251e06bc}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Connects timers to tagged GUIObjects. Timers are used to display countdowns in the UI.
+
+	There are three types of timers:
+		1. Round Progress Bars: A circular perimeter is progressively filled based on the percentage of remaining time.
+		2. Progress Bars: A linear bar is progressively filled based on the percentage of remaining time
+		3. Text: A TextLabel is updated to the timer's remaining time in numbers and abbreviations for units of time.
+		
+	When Text timer expires, it will be assigned an FeaturePackagesTimerExpired=true attribute so that client code knows the timer has ran out and can
+		perform any necessary cleanup.
+
+	Timers rely on attributes to be set on the GUIObjects
+	Attributes:
+		- Start: The Unix timestamp when the timer started.
+		- End: The Unix timestamp when the timer ends.
+--]]
+
+local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+local TranslationStrings = require(ReplicatedStorage.FeaturePackagesCore.Configs.TranslationStrings)
+local Attributes = require(ReplicatedStorage.FeaturePackagesCore.Configs.Attributes)
+local formatTime = require(ReplicatedStorage.FeaturePackagesCore.Utils.formatTime)
+local getAttribute = require(ReplicatedStorage.FeaturePackagesCore.Utils.getAttribute)
+local getInstance = require(ReplicatedStorage.FeaturePackagesCore.Utils.getInstance)
+local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
+
+local UPDATE_INTERVAL_SECONDS = 1 -- The interval at which all timers are updated
+
+local lastUpdate = 0
+
+-- Used to return the percentage of time elapsed if the object has start and end attributes
+local function getPercentTimeElapsed(timer: GuiObject): number?
+	local startUtc: number = getAttribute(timer, Attributes.FeaturePackagesStart)
+	local endUtc: number = getAttribute(timer, Attributes.FeaturePackagesEnd)
+
+	local now = Workspace:GetServerTimeNow()
+	local timeRemaining = os.difftime(endUtc, now)
+	local percentTimeElapsed = 1 - timeRemaining / (endUtc - startUtc)
+	return math.clamp(percentTimeElapsed, 0, 1)
+end
+
+local function updateRoundProgressBars()
+	for _, roundProgressBar in CollectionService:GetTagged(SharedConstants.Tags.Timer.ROUND_PROGRESS_BAR) do
+		assert(roundProgressBar:IsA("GuiObject"), "Round Progress Bars must be gui objects")
+
+		local percentTimeElapsed = getPercentTimeElapsed(roundProgressBar)
+		if not percentTimeElapsed then
+			continue
+		end
+
+		local value = percentTimeElapsed * 360
+
+		local rightMask: GuiObject = getInstance(roundProgressBar, "Right", "Mask")
+		local leftMask: GuiObject = getInstance(roundProgressBar, "Left", "Mask")
+		local rightMaskRotation = math.clamp(value - 180, -180, 0)
+		local leftMaskRotation = leftMask.Rotation
+		local leftMaskVisible = false
+
+		if value > 180 then
+			leftMaskRotation = math.clamp(value - 360, -180, 0)
+			leftMaskVisible = true
+		end
+
+		rightMask.Rotation = rightMaskRotation
+		leftMask.Visible = leftMaskVisible
+		leftMask.Rotation = leftMaskRotation
+
+		local isCompleted = percentTimeElapsed >= 1
+		if isCompleted then
+			CollectionService:RemoveTag(roundProgressBar, SharedConstants.Tags.Timer.ROUND_PROGRESS_BAR)
+		end
+	end
+end
+
+local function updateProgressBars()
+	for _, progressBar in CollectionService:GetTagged(SharedConstants.Tags.Timer.PROGRESS_BAR) do
+		assert(progressBar:IsA("GuiObject"), "Progress bars must be gui objects")
+
+		local percentTimeElapsed = getPercentTimeElapsed(progressBar)
+		if not percentTimeElapsed then
+			continue
+		end
+
+		assert(
+			progressBar.Parent and progressBar.Parent:IsA("GuiObject"),
+			"Progress bars must be children of a gui object"
+		)
+		local parent: GuiObject = progressBar.Parent
+		local minScaleX = parent.AbsoluteSize.Y / parent.AbsoluteSize.X
+
+		local newSize = UDim2.new(math.max(minScaleX, percentTimeElapsed), 0, 1, 0)
+		UITween.size(progressBar, newSize, UPDATE_INTERVAL_SECONDS)
+
+		local isCompleted = percentTimeElapsed >= 1
+		if isCompleted then
+			CollectionService:RemoveTag(progressBar, SharedConstants.Tags.Timer.PROGRESS_BAR)
+		end
+	end
+end
+
+local function updateClocks()
+	for _, timerLabel in CollectionService:GetTagged(SharedConstants.Tags.Timer.TEXT) do
+		assert(timerLabel:IsA("TextLabel"), "Progress bars must be text labels")
+
+		local endUtc: number = getAttribute(timerLabel, Attributes.FeaturePackagesEnd)
+		local now = Workspace:GetServerTimeNow()
+		local timeRemaining = os.difftime(endUtc, now)
+
+		if timeRemaining <= 0 then
+			timerLabel.Text = TranslationStrings.OFFER_EXPIRED
+			CollectionService:RemoveTag(timerLabel, SharedConstants.Tags.Timer.TEXT)
+			timerLabel:SetAttribute(Attributes.FeaturePackagesTimerExpired, true)
+			continue
+		end
+
+		local includesSuffix: boolean = getAttribute(timerLabel, Attributes.FeaturePackagesIncludeSuffix)
+		local selectMaxUnits = 0
+		local success, result = pcall(getAttribute, timerLabel, Attributes.FeaturePackagesMaxUnits)
+		if success then
+			selectMaxUnits = result
+		end
+		local suffix = if includesSuffix then TranslationStrings.LEFT else nil
+		local includesPadding = if includesSuffix then true else false
+		local maxUnits = if includesSuffix then 3 else 2
+		if type(selectMaxUnits) == "number" and selectMaxUnits > 1 then
+			maxUnits = selectMaxUnits
+		end
+		local formattedTime = formatTime(timeRemaining, maxUnits, includesPadding, suffix)
+		timerLabel.Text = formattedTime
+	end
+end
+
+local function onHeartbeat()
+	local elapsed = os.clock() - lastUpdate
+	if elapsed < UPDATE_INTERVAL_SECONDS then
+		return
+	end
+	lastUpdate = os.clock()
+
+	updateClocks()
+	updateProgressBars()
+	updateRoundProgressBars()
+end
+
+local function initialize()
+	RunService.Heartbeat:Connect(onHeartbeat)
+end
+
+initialize()
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX1DEACFB371E944ED9D5D1261567CD553">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Configs</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXF5A35D5AA51946B3957FAECC9E327AD0">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">TranslationStrings</string>
+					<string name="ScriptGuid">{c0f11664-f378-46d7-984c-eec145b38ec5}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+local TranslationStrings = {
+	NOT_FOR_SALE = "NOT FOR SALE",
+	GREAT_VALUE = "GREAT VALUE",
+	ONE_TIME = "ONE TIME OFFER!",
+	LIMITED_TIME = "LIMITED TIME OFFER!",
+	OFFER_EXPIRED = "OFFER EXPIRED",
+	LEFT = "left",
+	COMPLETE = "Complete",
+	COMPLETE_LOWER = "complete",
+	COMPLETED = "Completed",
+	CLAIM_REWARDS = "Claim Rewards",
+	FAILED = "Failed",
+	LOCKED = "Locked",
+	REWARDS = "Rewards",
+	MISSIONS = "Missions",
+	GO = "Go to base",
+	BUY_PREMIUM_PASS = "Buy Premium Pass",
+	PREMIUM_PASS_PURCHASED = "Premium Pass Purchased",
+	PREMIUM = "Premium",
+	XP = "XP",
+	PREMIUM_PASS_REQUIRED = "Premium Pass Required",
+	LOADING = "Loading",
+	CLAIMING = "Claiming",
+	READY = "Ready",
+
+	-- Time format
+	-- ... formatTime module will replace "00" with the actual value. i.e. "00d" -> "1d"
+	TIME_FORMAT_DAYS = "00d",
+	TIME_FORMAT_HOURS = "00h",
+	TIME_FORMAT_MINUTES = "00m",
+	TIME_FORMAT_SECONDS = "00s",
+}
+
+return TranslationStrings
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX61C84BE9518B47B78E106DC1941066E5">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">ItemTypes</string>
+					<string name="ScriptGuid">{7ebe2f6c-6d7e-4f31-848b-5f105a3de39e}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Types used to enforce FeaturePackages Items.
+--]]
+
+export type AssetId = number
+
+export type ItemType = "DevProduct" | "Robux"
+
+type ItemCaption = {
+	text: string,
+	color: Color3?,
+}
+
+type ItemMetadata = {
+	caption: ItemCaption?,
+	hideName: boolean?,
+	hidePrice: boolean?,
+}
+
+type DisplayInfo = {
+	icon: AssetId,
+	displayName: string?,
+}
+
+export type BaseItem = {
+	itemType: ItemType,
+	featured: boolean?,
+	metadata: ItemMetadata?,
+}
+
+export type DevProductItem = BaseItem & {
+	itemType: "DevProduct",
+	devProductId: AssetId,
+}
+
+export type RobuxItem = BaseItem & DisplayInfo & {
+	itemType: "Robux",
+	priceInRobux: number,
+}
+
+export type Item = DevProductItem | RobuxItem
+
+local ItemTypes = {
+	ItemType = {
+		DevProduct = "DevProduct" :: "DevProduct",
+		Robux = "Robux" :: "Robux",
+	},
+}
+
+return ItemTypes
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXA4B36A8EE12A4EDA87347B3C18EC2A91">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Attributes</string>
+					<string name="ScriptGuid">{da24dc6b-5505-460f-b151-e9880e50abbc}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	A source of truth list of all attributes used by scripts. Allows
+	scripts to reference attributes by name without typo-prone strings
+	that won't be caught until runtime.
+--]]
+
+export type EnumType =
+	"FeaturePackagesStart"
+	| "FeaturePackagesEnd"
+	| "FeaturePackagesIncludeSuffix"
+	| "FeaturePackagesMaxUnits"
+	| "FeaturePackagesTimerExpired"
+local Attributes = {
+	FeaturePackagesStart = "FeaturePackagesStart" :: "FeaturePackagesStart",
+	FeaturePackagesEnd = "FeaturePackagesEnd" :: "FeaturePackagesEnd",
+	FeaturePackagesIncludeSuffix = "FeaturePackagesIncludeSuffix" :: "FeaturePackagesIncludeSuffix",
+	FeaturePackagesMaxUnits = "FeaturePackagesMaxUnits" :: "FeaturePackagesMaxUnits",
+	FeaturePackagesTimerExpired = "FeaturePackagesTimerExpired" :: "FeaturePackagesTimerExpired",
+}
+
+return Attributes
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX12A13FD5EB9041768B54341D7FC4C87C">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Currencies</string>
+					<string name="ScriptGuid">{c7b17410-7805-4a02-9c5f-db9327df77bd}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	A source of truth list of all in-experience currencies known by FeaturePackages.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local CurrencyTypes = require(ReplicatedStorage.FeaturePackagesCore.Configs.CurrencyTypes)
+
+-- Replace this with your own currencies, if your experience has any.
+local Currencies: CurrencyTypes.CurrencyList = {
+	-- An example currency
+	-- Gems = {
+	-- 	displayName = "Gems",
+	-- 	symbol = "💎",
+	-- 	icon = nil,
+	-- },
+}
+
+return Currencies
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXC20A752409B84B6E84DD81D203E641E0">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">SharedConstants</string>
+					<string name="ScriptGuid">{a21132d6-9ebf-47c4-9695-946a147cb768}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Constants for variables shared by all FeaturePackagess.
+--]]
+
+local SharedConstants = {
+	Stores = {
+		FeaturePackages = {
+			NAME = "BloxKitStore",
+			SUFFIX = "_bloxkitStore",
+		},
+		LEGACY = {
+			-- If Bundles was integrated before DataStore consolidation, uncomment this block so that we know to lazy-migrate the existing data into the new single table
+			-- Bundles = {
+			-- 	NAME = "BundlesStore",
+			-- 	SUFFIX = "_bundleStore",
+			-- },
+		},
+	},
+	Tags = {
+		UI = {
+			UIGLOW_TAG = "UIGlow",
+			UISHEEN_TAG = "UISheen",
+			UIHOVER_TAG = "UIHover",
+			UILOADING_STROKE_TAG = "UILoadingStroke",
+			UIBUTTON_TAG = "UIButton",
+		},
+		Timer = {
+			TEXT = "FeaturePackages_Timer_Text",
+			PROGRESS_BAR = "FeaturePackages_Timer_ProgressBar",
+			ROUND_PROGRESS_BAR = "FeaturePackages_Timer_RoundProgressBar",
+		},
+	},
+	Sounds = {
+		VOLUME = 0.2,
+		Ids = {
+			PROMPT_OPENED = "17161253544",
+			PROMPT_CLOSED = "17161255584",
+			PURCHASE_EFFECT = "17161210152",
+			PURCHASE_BUTTON_ACTIVATED = "17161225362",
+			BUTTON_ACTIVATED = "17161216230",
+			BUTTON_HOVER = "17161204665",
+		},
+	},
+	Effects = {
+		Purchase = {
+			Particle = {
+				COUNT = 10,
+				COLOR = Color3.fromRGB(50, 177, 255),
+				ASSET_ID = "16539788437",
+				LIFETIME = {
+					MIN = 1,
+					MAX = 2,
+				},
+				SPREAD = {
+					MIN = 1,
+					MAX = 2,
+				},
+			},
+			DURATION = 2,
+		},
+	},
+}
+
+return SharedConstants
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX421A1BA75E79477F88E31EB120B31931">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">DataStoreTypes</string>
+					<string name="ScriptGuid">{eae9d2a4-dfd4-4375-9dd8-ce4dee05a125}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Types used to enforce FeaturePackages DataStore tables.
+--]]
+
+export type TableId = string
+
+export type FeaturePackagesData = {
+	Tables: {
+		[TableId]: any,
+	},
+}
+
+export type DataCallback = (player: Player, data: any, isPlayerRemoving: boolean?) -> any
+
+return {}
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX0EA9141E827F43BCA2D6E335098D2E7D">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">CurrencyTypes</string>
+					<string name="ScriptGuid">{e847d8f9-1e83-40b6-8599-3272143b950a}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Types used to enforce in-experience Currencies.
+--]]
+
+export type AssetId = number
+export type CurrencyId = string
+export type GamePassId = number
+
+export type Currency = {
+	displayName: string,
+	icon: AssetId?,
+	symbol: string?,
+}
+
+export type CurrencyList = { [CurrencyId]: Currency? }
+
+export type PriceType = "Marketplace" | "InExperience" | "GamePass"
+
+export type BasePricing = {
+	priceType: PriceType,
+}
+
+export type InExperiencePricing = BasePricing & {
+	priceType: "InExperience",
+	icon: AssetId,
+	currencyId: CurrencyId,
+	price: number,
+}
+
+export type MarketplacePricing = BasePricing & {
+	priceType: "Marketplace",
+	devProductId: AssetId,
+}
+
+export type GamePassPricing = BasePricing & {
+	priceType: "GamePass",
+	gamePassId: GamePassId,
+ }
+
+export type Pricing = InExperiencePricing | MarketplacePricing | GamePassPricing
+
+local CurrencyTypes = {
+	PriceType = {
+		Marketplace = "Marketplace" :: "Marketplace",
+		InExperience = "InExperience" :: "InExperience",
+		GamePass = "GamePass" :: "GamePass",
+	},
+}
+
+return CurrencyTypes
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX695D8EE22F2341A2B767F4FE5C64C5B4">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Effects</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXA85895BA62DC40E99934ADE7CD50E698">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">playPurchaseEffect</string>
+					<string name="ScriptGuid">{e1c6bb3b-75af-4c7b-8a88-42ee009cbff4}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+local playSound = require(ReplicatedStorage.FeaturePackagesCore.Utils.playSound)
+local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
+
+local player = Players.LocalPlayer :: Player
+local PlayerGui = player:WaitForChild("PlayerGui")
+
+local function playParticles(position: Vector2, size: Vector2, parent: GuiObject)
+	local random = Random.new()
+	local center = position + size / 2
+
+	-- Create particles
+	for _ = 1, SharedConstants.Effects.Purchase.Particle.COUNT do
+		local particleSize = size * random:NextNumber(0.3, 0.8)
+		local particlePosition = center
+			+ Vector2.new(random:NextInteger(-size.X, size.X), random:NextInteger(-size.Y, size.Y))
+				* SharedConstants.Effects.Purchase.Particle.SPREAD.MIN
+
+		local particle = Instance.new("ImageLabel")
+		particle.Size = UDim2.fromOffset(particleSize.X, particleSize.Y)
+		particle.Position = UDim2.fromOffset(particlePosition.X, particlePosition.Y)
+		particle.BackgroundTransparency = 1
+		particle.ImageColor3 = SharedConstants.Effects.Purchase.Particle.COLOR
+		particle.Image = `rbxassetid://{SharedConstants.Effects.Purchase.Particle.ASSET_ID}`
+		particle.Parent = parent
+
+		local lifetime = random:NextNumber(
+			SharedConstants.Effects.Purchase.Particle.LIFETIME.MIN,
+			SharedConstants.Effects.Purchase.Particle.LIFETIME.MAX
+		)
+		local targetPosition = center
+			+ Vector2.new(random:NextInteger(-size.X, size.X), random:NextInteger(-size.Y, size.Y))
+				* SharedConstants.Effects.Purchase.Particle.SPREAD.MAX
+		local targetRotation = random:NextInteger(-360, 360)
+
+		UITween.rotation(particle, targetRotation, lifetime)
+		UITween.transparency(particle, 1, lifetime)
+		UITween.position(particle, UDim2.fromOffset(targetPosition.X, targetPosition.Y), lifetime)
+	end
+end
+
+local function playAnimation(imageLabels: { ImageLabel }, overrideTransparency: boolean?, solidBackground: boolean?)
+	local purchaseEffectGui = Instance.new("ScreenGui")
+	purchaseEffectGui.Name = "CollectGui"
+	purchaseEffectGui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
+	purchaseEffectGui.DisplayOrder = math.huge
+	purchaseEffectGui.ResetOnSpawn = false
+	purchaseEffectGui.Parent = PlayerGui
+
+	local purchaseEffectFrame = Instance.new("Frame")
+	purchaseEffectFrame.Size = UDim2.fromScale(1, 1)
+	purchaseEffectFrame.BackgroundTransparency = 1
+	purchaseEffectFrame.Parent = purchaseEffectGui
+
+	for _, imageLabel in ipairs(imageLabels) do
+		local size = imageLabel.AbsoluteSize
+		local position = imageLabel.AbsolutePosition
+		local center = position + size / 2
+
+		-- Create identical item image in canvas group
+		local itemImageLabel = imageLabel:Clone()
+		itemImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+		itemImageLabel.Position = UDim2.fromOffset(center.X, center.Y)
+		itemImageLabel.Size = UDim2.fromOffset(size.X, size.Y)
+		itemImageLabel.BackgroundTransparency = 1
+		itemImageLabel.ImageTransparency = 0
+		itemImageLabel.Parent = purchaseEffectFrame
+
+		-- Play animations
+		local tweenToCenter = UITween.position(
+			itemImageLabel,
+			UDim2.fromScale(0.5, 0.5),
+			SharedConstants.Effects.Purchase.DURATION / 3, -- Three tweens in total, each 1/3 of the total duration
+			Enum.EasingStyle.Bounce,
+			Enum.EasingDirection.Out
+		) :: Tween
+
+		local solidBackgroundFrame = Instance.new("Frame")
+		solidBackgroundFrame.Visible = false
+		if solidBackground then
+			solidBackgroundFrame.Visible = true
+			local prompt = PlayerGui:WaitForChild("MissionsGui"):WaitForChild("Prompt") :: CanvasGroup
+			solidBackgroundFrame.Parent = prompt
+			solidBackgroundFrame.Size = UDim2.fromScale(1, 1)
+			solidBackgroundFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+			solidBackgroundFrame.BackgroundTransparency = 1
+			task.spawn(UITween.transparency, solidBackgroundFrame, 0, SharedConstants.Effects.Purchase.DURATION / 6)
+		end
+
+		tweenToCenter.Completed:Once(function()
+			local tweenDown = UITween.position(
+				itemImageLabel,
+				UDim2.fromScale(0.5, 1.5),
+				SharedConstants.Effects.Purchase.DURATION / 3, -- Three tweens in total, each 1/3 of the total duration
+				Enum.EasingStyle.Back,
+				Enum.EasingDirection.In
+			)
+			if solidBackground then
+				task.spawn(UITween.transparency, solidBackgroundFrame, 1, SharedConstants.Effects.Purchase.DURATION / 6)
+			end
+
+			tweenDown.Completed:Once(function()
+				purchaseEffectGui:Destroy()
+			end)
+		end)
+
+		task.spawn(playParticles, position, size, purchaseEffectFrame)
+
+		if overrideTransparency then -- Do not call transparency tween if we are overriding it
+			continue
+		end
+		task.spawn(UITween.transparency, imageLabel, 1, SharedConstants.Effects.Purchase.DURATION / 3) -- Three tweens in total, each 1/3 of the total duration
+	end
+end
+
+local function playPurchaseEffect(
+	imageLabels: { ImageLabel },
+	overrideTransparency: boolean?,
+	solidBackground: boolean?
+)
+	task.spawn(playSound, SharedConstants.Sounds.Ids.PURCHASE_EFFECT, SharedConstants.Sounds.VOLUME / 2)
+
+	playAnimation(imageLabels, overrideTransparency or false, solidBackground or false)
+end
+
+return playPurchaseEffect
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBXB2215F15B7D64635B7B344E25B58DDBF">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Modules</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXBA571F3CC51A4A7BBDED0F58781A6BBF">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">TimerSystem</string>
+					<string name="ScriptGuid">{ff8d54d3-f873-4dd7-b0d5-f6163c573bde}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	TimerSystem is a utility for tracking the status of timers, 
+	as well as performing the relevant calculations and firing events when timers finish.
+
+	This module is useful if you want to get completion events and full timer features.
+	These Timers are designed to be stored in datastores or sent between clients and servers,
+	as such callbacks must be re registered in these cases and events are fired once the timer has completed,
+	but there is no guarentee that the event just finished if it was stored in datastores, it might have finished 
+	a week ago and is only being loaded now.
+
+	Timers should be modified using the methods here rather than directly to keep events firing correctly.
+
+	Important Methods:
+	- setCompletionHandler: Use this method to set the callback that will be called when a timer completes.
+		If the timer completes multiple times, it will be called the first time only. Untracking a timer will cancel the callback.
+	- suspend: Use this method to prepare a timer to be paused and stored. It will still work as a timer with no change unless untracked.
+	- unsuspend: Use this method to restore a timer to the time it was suspended and previously saved at.
+	- track: Use this method to track the completion of a previously untracked timer.
+	- untrack: Use this method to stop tracking a tracked timer, and cancel any callbacks it has.
+
+	To store a running timer in data stores:
+	If the timer should not count while in datastore, call suspend on it. 
+	Save the Timer's table in datastore, the timer can still be used as normal even if it was suspended. 
+
+	To load a running timer from data stores:
+	Load the Timer's table from datastore.
+	If the timer should not time while in datastore, call unsuspend on it.
+
+	Timers that are stopped are unaffected by suspend and unsuspend, only unsuspend modifies the state of the timer in an observable way.
+--]]
+
+export type UnixTimestamp = number
+export type Seconds = number
+
+export type Timer = {
+	durationInSeconds: Seconds?,
+	elapsedSeconds: Seconds?,
+	startUtc: UnixTimestamp?,
+	rate: number?,
+}
+
+export type TimerCallback = (Timer) -> ()
+
+local TimerSystem = {}
+
+local activeTimers: { [Timer]: thread? } = {}
+
+local completionCallbacks: { [Timer]: TimerCallback? } = {}
+
+-- Get the current time in seconds utc
+function TimerSystem.now(): UnixTimestamp
+	return DateTime.now().UnixTimestamp
+end
+
+-- Calculate the time since startTime multiplied by a rate, plus some additional number of seconds alreadyCounted
+-- Handles all nil cases for both
+local function calculateElapsedTime(
+	startTime: UnixTimestamp? | DateTime?,
+	alreadyCounted: Seconds?,
+	rate: number?
+): Seconds
+	if startTime then
+		local elapsed =
+			os.difftime(TimerSystem.now(), if type(startTime) == "number" then startTime else startTime.UnixTimestamp)
+		return elapsed * (rate or 1) + (alreadyCounted or 0)
+	else
+		return alreadyCounted or 0
+	end
+end
+
+local function handleCallback(timer: Timer)
+	if not timer.durationInSeconds then
+		activeTimers[timer] = nil
+		return
+	end
+
+	local remaining = TimerSystem.getRealSecondsRemaining(timer)
+
+	if remaining > 0 then
+		activeTimers[timer] = task.delay(remaining, function()
+			handleCallback(timer)
+		end)
+		return
+	end
+
+	local callback = completionCallbacks[timer]
+
+	-- Remove the callback after the timer completes.
+	completionCallbacks[timer] = nil
+	activeTimers[timer] = nil
+
+	if callback then
+		callback(timer)
+	end
+end
+
+local function unscheduleCompletion(timer: Timer)
+	local oldThread = activeTimers[timer]
+	if oldThread then
+		pcall(task.cancel, oldThread)
+		activeTimers[timer] = nil
+	end
+end
+
+local function scheduleCompletion(timer: Timer)
+	local oldThread = activeTimers[timer]
+	if oldThread then
+		unscheduleCompletion(timer)
+	end
+
+	-- No callback set, if one is set this will be called again.
+	if not completionCallbacks[timer] then
+		return
+	end
+
+	-- Timer never ends so no callback.
+	if not timer.durationInSeconds then
+		return
+	end
+
+	local secondsRemaining = TimerSystem.getRealSecondsRemaining(timer) or 0
+
+	activeTimers[timer] = task.delay(secondsRemaining, function()
+		handleCallback(timer)
+	end)
+end
+
+-- Set the handler to call when the timer ends.
+-- The handler is called once when the timer is completed, then unregistered.
+function TimerSystem.setCompletionHandler(timer: Timer?, callback: TimerCallback)
+	if not timer then
+		return
+	end
+
+	completionCallbacks[timer] = callback
+
+	if not activeTimers[timer] then
+		scheduleCompletion(timer)
+	end
+end
+
+-- Check if a timer is finished.
+function TimerSystem.isFinished(timer: Timer?): boolean
+	if not timer then
+		return false
+	end
+
+	return TimerSystem.getSecondsRemaining(timer) <= 0
+end
+
+-- Check if a timer is running.
+function TimerSystem.isRunning(timer: Timer?): boolean
+	if not timer then
+		return false
+	end
+
+	-- If there's a start time, timer is running.
+	if timer.startUtc then
+		return true
+	end
+
+	return false
+end
+
+-- Start a timer if it is not started.
+function TimerSystem.start(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	-- Timer is already started.
+	if timer.startUtc then
+		return
+	end
+
+	timer.startUtc = TimerSystem.now()
+	scheduleCompletion(timer)
+end
+
+-- Stop a timer if it is running.
+function TimerSystem.stop(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	-- Timer is already not running.
+	if not timer.startUtc then
+		return
+	end
+
+	timer.elapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+	timer.startUtc = nil
+	unscheduleCompletion(timer)
+end
+
+-- Get the number of seconds elapsed for a timer.
+function TimerSystem.getElapsedSeconds(timer: Timer?): Seconds
+	if not timer then
+		return 0
+	end
+
+	return calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+end
+
+-- Set the number of seconds elapsed for a timer.
+function TimerSystem.setElapsedSeconds(timer: Timer?, time: Seconds?)
+	if not timer then
+		return
+	end
+
+	timer.elapsedSeconds = time
+
+	-- If the timer is running, move the last started time to now.
+	if timer.startUtc then
+		timer.startUtc = TimerSystem.now()
+		scheduleCompletion(timer)
+	end
+end
+
+-- Get the time in seconds utc that a timer will end at, accounting for the current rate.
+function TimerSystem.getEndTime(timer: Timer?): UnixTimestamp?
+	if not timer then
+		return nil
+	end
+
+	-- If the timer has no duration.
+	if not timer.durationInSeconds then
+		return nil
+	end
+
+	-- If the timer is not running.
+	if not timer.startUtc then
+		return nil
+	end
+
+	local previousElapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+
+	local secondsRemaining = timer.durationInSeconds - previousElapsedSeconds
+
+	local realSecondsRemaining = secondsRemaining / TimerSystem.getRate(timer)
+
+	return TimerSystem.now() + realSecondsRemaining
+end
+
+-- Set the duration for a timer to be such that the timer ends
+-- at the specified time if it is started now, removing any rate.
+function TimerSystem.setEndTime(timer: Timer?, endTime: UnixTimestamp?)
+	if not timer then
+		return
+	end
+
+	local elapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+
+	-- Timer's rate will be reset, update the elapsed and start time appropriately.
+	if timer.rate and timer.rate ~= 1 then
+		timer.elapsedSeconds = elapsedSeconds
+		timer.rate = nil
+
+		-- Timer is started, so set it back to now
+		if timer.startUtc then
+			timer.startUtc = TimerSystem.now()
+		end
+	end
+
+	-- nil end time, remove the duration from the timer.
+	if not endTime then
+		timer.durationInSeconds = nil
+		unscheduleCompletion(timer)
+		return
+	end
+
+	local secondsUntilEndTime = endTime - TimerSystem.now()
+
+	-- Set duration to the time passed plus the number of seconds until the timer should end.
+	timer.durationInSeconds = elapsedSeconds + secondsUntilEndTime
+
+	scheduleCompletion(timer)
+end
+
+-- Get the duration of a timer in seconds.
+function TimerSystem.getDuration(timer: Timer?): Seconds?
+	if not timer then
+		return
+	end
+
+	return timer.durationInSeconds
+end
+
+-- Set the duration of a timer in seconds.
+function TimerSystem.setDuration(timer: Timer?, seconds: Seconds?)
+	if not timer then
+		return
+	end
+
+	timer.durationInSeconds = seconds
+
+	scheduleCompletion(timer)
+end
+
+-- Get the number of seconds remaining on a timer.
+function TimerSystem.getSecondsRemaining(timer: Timer?): Seconds?
+	if not timer then
+		return nil
+	end
+
+	-- Timer has no end time
+	if not timer.durationInSeconds then
+		return nil
+	end
+
+	return timer.durationInSeconds - calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+end
+
+-- Get the number of seconds remaining on a timer accounting for rate.
+function TimerSystem.getRealSecondsRemaining(timer: Timer?): Seconds?
+	local timeRemaining = TimerSystem.getSecondsRemaining(timer)
+	if not timeRemaining then
+		return nil
+	end
+
+	local rate = TimerSystem.getRate(timer)
+
+	return timeRemaining / rate
+end
+
+-- Set the number of seconds remaining on a timer, and remove any rate.
+function TimerSystem.setSecondsRemaining(timer: Timer?, secondsRemaining: Seconds?)
+	if not timer then
+		return
+	end
+
+	local elapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+
+	-- Timer's rate will be reset, update the elapsed and start time appropriately.
+	if timer.rate and timer.rate ~= 1 then
+		timer.elapsedSeconds = elapsedSeconds
+		timer.rate = nil
+
+		-- Timer is started, so set it back to now
+		if timer.startUtc then
+			timer.startUtc = TimerSystem.now()
+		end
+	end
+
+	-- nil seconds remaining, so clear the duration
+	if not secondsRemaining then
+		timer.durationInSeconds = nil
+		unscheduleCompletion(timer)
+		return
+	end
+
+	timer.durationInSeconds = elapsedSeconds + secondsRemaining
+
+	scheduleCompletion(timer)
+end
+
+-- Update a timer such that if it is unsuspended, its time passed will be the same as now.
+function TimerSystem.suspend(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	if timer.startUtc then
+		timer.elapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+		timer.startUtc = TimerSystem.now()
+	end
+end
+
+-- Reset a timer's start time to now if it was started.
+function TimerSystem.unsuspend(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	if timer.startUtc then
+		timer.startUtc = TimerSystem.now()
+	end
+
+	scheduleCompletion(timer)
+end
+
+-- Register a timer for events when it completes.
+function TimerSystem.track(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	scheduleCompletion(timer)
+end
+
+-- Unregister a timer for events when it completes.
+function TimerSystem.untrack(timer: Timer?)
+	if not timer then
+		return
+	end
+
+	unscheduleCompletion(timer)
+	completionCallbacks[timer] = nil
+end
+
+-- Get a timer's rate.
+function TimerSystem.getRate(timer: Timer?): number
+	if not timer then
+		return 1
+	end
+
+	return timer.rate or 1
+end
+
+-- Set a timer's rate.
+function TimerSystem.setRate(timer: Timer?, rate: number?)
+	if not timer then
+		return
+	end
+
+	if timer.startUtc then
+		timer.elapsedSeconds = calculateElapsedTime(timer.startUtc, timer.elapsedSeconds, timer.rate)
+		timer.startUtc = TimerSystem.now()
+	end
+
+	timer.rate = rate
+
+	scheduleCompletion(timer)
+end
+
+-- Create a new timer with an optional duration, either started or not.
+function TimerSystem.new(duration: Seconds?, started: boolean?): Timer
+	local timer: Timer = {}
+
+	if duration then
+		timer.durationInSeconds = duration
+	end
+
+	if started then
+		TimerSystem.start(timer)
+	end
+
+	return timer
+end
+
+-- Create a new started timer that ends at a specific time.
+function TimerSystem.newEndsAt(time: UnixTimestamp): Timer
+	local timer: Timer = {}
+
+	TimerSystem.setEndTime(timer, time)
+	TimerSystem.start(timer)
+
+	return timer
+end
+
+return TimerSystem
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX0AD2BA1C3DBF459BA4AA9AB21B34D320">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">UITween</string>
+					<string name="ScriptGuid">{1cbe1c94-3de1-41b1-9744-9f036e9b6db6}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	UITween provides utilities for tweening GuiObjects via short-hand methods.
+--]]
+
+local TweenService = game:GetService("TweenService")
+local UITween = {}
+
+function UITween.play(
+	object: GuiObject | UIGradient,
+	properties: { [string]: any },
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween
+	local tweenInfo = TweenInfo.new(
+		time,
+		style or Enum.EasingStyle.Quint,
+		direction or Enum.EasingDirection.Out,
+		repeatCount or 0,
+		reverse == true,
+		delay or 0
+	)
+	local tween = TweenService:Create(object, tweenInfo, properties)
+	tween:Play()
+
+	return tween
+end
+
+function UITween.rotation(
+	object: GuiObject | UIGradient,
+	rotation: number,
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween
+	return UITween.play(object, { Rotation = rotation }, time, style, direction, repeatCount, reverse, delay)
+end
+
+function UITween.size(
+	object: GuiObject | UIGradient,
+	size: UDim2,
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween
+	return UITween.play(object, { Size = size }, time, style, direction, repeatCount, reverse, delay)
+end
+
+function UITween.offset(
+	object: UIGradient,
+	offset: Vector2,
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween
+	object.Offset = offset
+	return UITween.play(object, { Offset = -offset }, time, style, direction, repeatCount, reverse, delay)
+end
+
+function UITween.position(
+	object: GuiObject,
+	position: UDim2,
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween
+	return UITween.play(object, { Position = position }, time, style, direction, repeatCount, reverse, delay)
+end
+
+function UITween.transparency(
+	object: GuiObject | UIGradient,
+	transparency: number,
+	time: number,
+	style: Enum.EasingStyle?,
+	direction: Enum.EasingDirection?,
+	repeatCount: number?,
+	reverse: boolean?,
+	delay: number?
+): Tween?
+	local transparencyProperty = if object:IsA("CanvasGroup")
+		then "GroupTransparency"
+		elseif object:IsA("ImageLabel") then "ImageTransparency"
+		else "BackgroundTransparency"
+
+	return UITween.play(
+		object,
+		{ [transparencyProperty] = transparency },
+		time,
+		style,
+		direction,
+		repeatCount,
+		reverse,
+		delay
+	)
+end
+
+return UITween
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXC6E4638F67EF4334ACFB5B427CFF4A4F">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">ThreadQueue</string>
+					<string name="ScriptGuid">{7ddbd776-0c98-48ad-9374-b9735acee48b}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	ThreadQueue is a task scheduler and rate limiter that allows callbacks to be queued to be executed, yielding the requesting thread
+	until the callback has returned.
+
+	Provides similar functionality to the NodeJS module Bottleneck (https://www.npmjs.com/package/bottleneck) however, it exposes
+	its scheduling functionality through coroutines rather than promises.
+--]]
+
+local ThreadQueue = {}
+ThreadQueue.__index = ThreadQueue
+
+export type ClassType = typeof(setmetatable(
+	{} :: {
+		_queue: { QueueEntry },
+		_queueRunning: boolean,
+		_timeBetween: number,
+		_maxQueueLength: number,
+		_enableConcurrency: boolean,
+	},
+	ThreadQueue
+))
+
+type Callback = (...any) -> ...any
+
+type QueueEntry = {
+	thread: thread,
+	callback: Callback,
+}
+
+function ThreadQueue.new(timeBetween: number?, maxQueueLength: number?, enableConcurrency: boolean?): ClassType
+	local self = {
+		_queue = {},
+		_queueRunning = false,
+		_timeBetween = (timeBetween or 0),
+		_maxQueueLength = (maxQueueLength or math.huge),
+		_enableConcurrency = enableConcurrency and true or false,
+	}
+	setmetatable(self, ThreadQueue)
+
+	return self
+end
+
+function ThreadQueue.submitAsync(self: ClassType, callback: Callback)
+	if #self._queue > self._maxQueueLength then
+		return false, string.format("Queue is at capacity (%i)", self._maxQueueLength)
+	end
+
+	local queueEntry: QueueEntry = {
+		thread = coroutine.running(),
+		callback = callback,
+	}
+
+	table.insert(self._queue, queueEntry)
+
+	self:_startQueue()
+
+	return coroutine.yield()
+end
+
+function ThreadQueue.getLength(self: ClassType): number
+	return #self._queue
+end
+
+function ThreadQueue.skipToLastEnqueued(self: ClassType)
+	-- This method will not skip currently executing requests, but will remove
+	-- all pending requests from the queue aside from the most recently enqueued
+	if #self._queue > 1 then
+		local lastEnqueuedEntry = self._queue[#self._queue]
+		self._queue = { lastEnqueuedEntry }
+	end
+end
+
+function ThreadQueue._startQueue(self: ClassType)
+	-- Wait for the next resumption cycle, so the requesting thread has time to yield first
+	task.defer(function()
+		if self._queueRunning then
+			return
+		end
+		self._queueRunning = true
+
+		while #self._queue > 0 do
+			self:_popQueueAsync()
+
+			if self._timeBetween > 0 then
+				task.wait(self._timeBetween)
+			end
+		end
+
+		self._queueRunning = false
+	end)
+end
+
+function ThreadQueue._popQueueAsync(self: ClassType)
+	local entry = table.remove(self._queue, 1) :: QueueEntry
+
+	local function execute()
+		-- This callback can yield. Note the callback is called synchronously on this thread.
+		-- The task.spawn is used to resume the calling thread with the pcall'd results of the callback.
+		task.spawn(entry.thread, pcall(entry.callback))
+	end
+
+	-- If concurrency is enabled, we do not want to yield the queue while we wait for the callback to return
+	if self._enableConcurrency then
+		-- Use spawn to call execute so entry.callback doesn't block us from proceeding
+		task.spawn(execute)
+	else
+		execute()
+	end
+end
+
+return ThreadQueue
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXA860AAF948ED455EA0D37911A43281F3">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">ProtectRunContext</string>
+					<string name="ScriptGuid">{6c3a1477-7d0d-48c5-8344-23b5b1ee8f5f}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Module with helpers for protecting the context of a ModuleScript. This is useful for ensuring that the ModuleScript is only run on the server or client, and not both.
+--]]
+
+local RunService = game:GetService("RunService")
+
+local ProtectRunContext = {}
+
+function ProtectRunContext.client()
+	if not RunService:IsClient() then
+		error("This ModuleScript should only be run on the client.")
+	end
+end
+
+function ProtectRunContext.server()
+	if not RunService:IsServer() then
+		error("This ModuleScript should only be run on the server.")
+	end
+end
+
+return ProtectRunContext
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX748CBB53C5A74A58B04C377F03CC3C01">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Objects</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ScreenGui" referent="RBX92ED84F55156449A959C31DBF8A7302B">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<bool name="AutoLocalize">true</bool>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="ClipToDeviceSafeArea">true</bool>
+					<bool name="DefinesCapabilities">false</bool>
+					<int name="DisplayOrder">0</int>
+					<bool name="Enabled">true</bool>
+					<string name="Name">FeaturePackagesHud</string>
+					<bool name="ResetOnSpawn">false</bool>
+					<Ref name="RootLocalizationTable">null</Ref>
+					<token name="SafeAreaCompatibility">1</token>
+					<token name="ScreenInsets">2</token>
+					<token name="SelectionBehaviorDown">0</token>
+					<token name="SelectionBehaviorLeft">0</token>
+					<token name="SelectionBehaviorRight">0</token>
+					<token name="SelectionBehaviorUp">0</token>
+					<bool name="SelectionGroup">false</bool>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+					<token name="ZIndexBehavior">0</token>
+				</Properties>
+				<Item class="ScrollingFrame" referent="RBX4A41DFB7F89B49F3B08B1D259627B7C3">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Vector2 name="AnchorPoint">
+							<X>1</X>
+							<Y>1</Y>
+						</Vector2>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<bool name="AutoLocalize">true</bool>
+						<token name="AutomaticCanvasSize">0</token>
+						<token name="AutomaticSize">0</token>
+						<Color3 name="BackgroundColor3">
+							<R>1</R>
+							<G>1</G>
+							<B>1</B>
+						</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">
+							<R>0</R>
+							<G>0</G>
+							<B>0</B>
+						</Color3>
+						<token name="BorderMode">0</token>
+						<int name="BorderSizePixel">0</int>
+						<Content name="BottomImage"><url>rbxasset://textures/ui/Scroll/scroll-bottom.png</url></Content>
+						<Vector2 name="CanvasPosition">
+							<X>0</X>
+							<Y>0</Y>
+						</Vector2>
+						<UDim2 name="CanvasSize">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0</YS>
+							<YO>0</YO>
+						</UDim2>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="DefinesCapabilities">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="ElasticBehavior">2</token>
+						<token name="HorizontalScrollBarInset">0</token>
+						<bool name="Interactable">true</bool>
+						<int name="LayoutOrder">0</int>
+						<Content name="MidImage"><url>rbxasset://textures/ui/Scroll/scroll-middle.png</url></Content>
+						<string name="Name">ButtonList2</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.699999988</YS>
+							<YO>0</YO>
+						</UDim2>
+						<Ref name="RootLocalizationTable">null</Ref>
+						<float name="Rotation">0</float>
+						<Color3 name="ScrollBarImageColor3">
+							<R>0</R>
+							<G>0</G>
+							<B>0</B>
+						</Color3>
+						<float name="ScrollBarImageTransparency">0</float>
+						<int name="ScrollBarThickness">12</int>
+						<token name="ScrollingDirection">2</token>
+						<bool name="ScrollingEnabled">false</bool>
+						<bool name="Selectable">true</bool>
+						<token name="SelectionBehaviorDown">0</token>
+						<token name="SelectionBehaviorLeft">0</token>
+						<token name="SelectionBehaviorRight">0</token>
+						<token name="SelectionBehaviorUp">0</token>
+						<bool name="SelectionGroup">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<int name="SelectionOrder">0</int>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.699999988</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<Content name="TopImage"><url>rbxasset://textures/ui/Scroll/scroll-top.png</url></Content>
+						<token name="VerticalScrollBarInset">0</token>
+						<token name="VerticalScrollBarPosition">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+					<Item class="UIListLayout" referent="RBX94093707DE9946DB9FFCF61E4E56BEB7">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<token name="FillDirection">1</token>
+							<token name="HorizontalAlignment">0</token>
+							<token name="HorizontalFlex">0</token>
+							<token name="ItemLineAlignment">0</token>
+							<string name="Name">UIListLayout</string>
+							<UDim name="Padding">
+								<S>0.075000003</S>
+								<O>0</O>
+							</UDim>
+							<token name="SortOrder">2</token>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<token name="VerticalAlignment">2</token>
+							<token name="VerticalFlex">0</token>
+							<bool name="Wraps">false</bool>
+						</Properties>
+					</Item>
+					<Item class="UIPadding" referent="RBXFDB9F9082F6C4389A79CE550EE8006C8">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<string name="Name">UIPadding</string>
+							<UDim name="PaddingBottom">
+								<S>0.0399999991</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingLeft">
+								<S>0.200000003</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingRight">
+								<S>0.200000003</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingTop">
+								<S>0.0250000004</S>
+								<O>0</O>
+							</UDim>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+						</Properties>
+					</Item>
+					<Item class="UIAspectRatioConstraint" referent="RBXC890AF2CA99B4793992094C9F0857E52">
+						<Properties>
+							<float name="AspectRatio">0.300000012</float>
+							<token name="AspectType">0</token>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<token name="DominantAxis">1</token>
+							<string name="Name">UIAspectRatioConstraint</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+						</Properties>
+					</Item>
+				</Item>
+				<Item class="ScrollingFrame" referent="RBX0192484503D54F0AB4B1A6913206809D">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Vector2 name="AnchorPoint">
+							<X>0</X>
+							<Y>1</Y>
+						</Vector2>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<bool name="AutoLocalize">true</bool>
+						<token name="AutomaticCanvasSize">0</token>
+						<token name="AutomaticSize">0</token>
+						<Color3 name="BackgroundColor3">
+							<R>1</R>
+							<G>1</G>
+							<B>1</B>
+						</Color3>
+						<float name="BackgroundTransparency">1</float>
+						<Color3 name="BorderColor3">
+							<R>0</R>
+							<G>0</G>
+							<B>0</B>
+						</Color3>
+						<token name="BorderMode">0</token>
+						<int name="BorderSizePixel">0</int>
+						<Content name="BottomImage"><url>rbxasset://textures/ui/Scroll/scroll-bottom.png</url></Content>
+						<Vector2 name="CanvasPosition">
+							<X>0</X>
+							<Y>0</Y>
+						</Vector2>
+						<UDim2 name="CanvasSize">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0</YS>
+							<YO>0</YO>
+						</UDim2>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="ClipsDescendants">false</bool>
+						<bool name="DefinesCapabilities">false</bool>
+						<bool name="Draggable">false</bool>
+						<token name="ElasticBehavior">2</token>
+						<token name="HorizontalScrollBarInset">0</token>
+						<bool name="Interactable">true</bool>
+						<int name="LayoutOrder">0</int>
+						<Content name="MidImage"><url>rbxasset://textures/ui/Scroll/scroll-middle.png</url></Content>
+						<string name="Name">ButtonList1</string>
+						<Ref name="NextSelectionDown">null</Ref>
+						<Ref name="NextSelectionLeft">null</Ref>
+						<Ref name="NextSelectionRight">null</Ref>
+						<Ref name="NextSelectionUp">null</Ref>
+						<UDim2 name="Position">
+							<XS>0</XS>
+							<XO>0</XO>
+							<YS>0.699999988</YS>
+							<YO>0</YO>
+						</UDim2>
+						<Ref name="RootLocalizationTable">null</Ref>
+						<float name="Rotation">0</float>
+						<Color3 name="ScrollBarImageColor3">
+							<R>0</R>
+							<G>0</G>
+							<B>0</B>
+						</Color3>
+						<float name="ScrollBarImageTransparency">0</float>
+						<int name="ScrollBarThickness">12</int>
+						<token name="ScrollingDirection">2</token>
+						<bool name="ScrollingEnabled">false</bool>
+						<bool name="Selectable">true</bool>
+						<token name="SelectionBehaviorDown">0</token>
+						<token name="SelectionBehaviorLeft">0</token>
+						<token name="SelectionBehaviorRight">0</token>
+						<token name="SelectionBehaviorUp">0</token>
+						<bool name="SelectionGroup">true</bool>
+						<Ref name="SelectionImageObject">null</Ref>
+						<int name="SelectionOrder">0</int>
+						<UDim2 name="Size">
+							<XS>1</XS>
+							<XO>0</XO>
+							<YS>0.699999988</YS>
+							<YO>0</YO>
+						</UDim2>
+						<token name="SizeConstraint">0</token>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<Content name="TopImage"><url>rbxasset://textures/ui/Scroll/scroll-top.png</url></Content>
+						<token name="VerticalScrollBarInset">0</token>
+						<token name="VerticalScrollBarPosition">0</token>
+						<bool name="Visible">true</bool>
+						<int name="ZIndex">1</int>
+					</Properties>
+					<Item class="UIListLayout" referent="RBX73BE7AF3597644F3BB57E3DA19DA56D6">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<token name="FillDirection">1</token>
+							<token name="HorizontalAlignment">0</token>
+							<token name="HorizontalFlex">0</token>
+							<token name="ItemLineAlignment">0</token>
+							<string name="Name">UIListLayout</string>
+							<UDim name="Padding">
+								<S>0.0399999991</S>
+								<O>0</O>
+							</UDim>
+							<token name="SortOrder">2</token>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+							<token name="VerticalAlignment">2</token>
+							<token name="VerticalFlex">0</token>
+							<bool name="Wraps">false</bool>
+						</Properties>
+					</Item>
+					<Item class="UIPadding" referent="RBX5515388925EB4B039FCF83D732960BED">
+						<Properties>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<string name="Name">UIPadding</string>
+							<UDim name="PaddingBottom">
+								<S>0.0399999991</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingLeft">
+								<S>0.200000003</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingRight">
+								<S>0.200000003</S>
+								<O>0</O>
+							</UDim>
+							<UDim name="PaddingTop">
+								<S>0.0250000004</S>
+								<O>0</O>
+							</UDim>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+						</Properties>
+					</Item>
+					<Item class="UIAspectRatioConstraint" referent="RBXA0D61B802E6742789BE5EB675B99535E">
+						<Properties>
+							<float name="AspectRatio">0.300000012</float>
+							<token name="AspectType">0</token>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+							<bool name="DefinesCapabilities">false</bool>
+							<token name="DominantAxis">1</token>
+							<string name="Name">UIAspectRatioConstraint</string>
+							<int64 name="SourceAssetId">-1</int64>
+							<BinaryString name="Tags"></BinaryString>
+						</Properties>
+					</Item>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBXE390E79CDDB245EEA85F7AF38272FB6E">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Server</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="Folder" referent="RBX879F6BB8DC27406E8249E9E8C46739BB">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<string name="Name">DataStore</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+				<Item class="ModuleScript" referent="RBX067DDCC5FD784ADFA38AEEF9AAD17A57">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">CounterSystem</string>
+						<string name="ScriptGuid">{b8bca798-1d31-4a56-8cfd-9e5a10832214}</string>
+						<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	CounterSystem is a utility for tracking per user numerical counters and timers.
+	Counters are stored in the shared FeaturePackages data store (FeaturePackagesStore).
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Protect the run context, this ModuleScript is only intended to run on the server
+require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
+
+local Players = game:GetService("Players")
+
+local FeaturePackagesStore = require(ReplicatedStorage.FeaturePackagesCore.Server.DataStore.FeaturePackagesStore)
+local TimerSystem = require(ReplicatedStorage.FeaturePackagesCore.Modules.TimerSystem)
+
+local CounterSystem = {}
+
+local TABLE_ID = "CounterSystem"
+
+export type CounterId = string
+
+export type CounterData = {
+	numerical: { [CounterId]: number? },
+	timer: { [CounterId]: TimerSystem.Timer? },
+	onlineTimer: { [CounterId]: TimerSystem.Timer? },
+}
+
+export type CounterCallback = (player: Player, counterId: CounterId, delta: number?) -> ()
+
+local playerInitialized: { [string]: boolean? } = {}
+
+local function getKeyForPlayer(player: Player): string
+	return `{player.UserId}`
+end
+
+local callbacks: { [CounterId]: { CounterCallback }? } = {}
+
+-- Call all the callbacks for a given player/counter
+local function handleCallbacks(player: Player, counterId: CounterId, delta: number?)
+	local counterCallbacks = callbacks[counterId]
+	if not counterCallbacks then
+		return -- There are no callbacks set for this timer, do nothing
+	end
+
+	for _, callback in counterCallbacks do
+		callback(player, counterId, delta)
+	end
+end
+
+-- Add a function to call when a specific counter changes.
+-- Called for both timers and numerical counters, users should just check the correct type.
+function CounterSystem.addChangedHandler(counterId: CounterId, callback: CounterCallback)
+	local counterCallbacks = callbacks[counterId] or {}
+
+	-- If the underlying list is nil, initialize it to the new one.
+	if not callbacks[counterId] then
+		callbacks[counterId] = counterCallbacks
+	end
+
+	table.insert(counterCallbacks, callback)
+end
+
+-- Remove a function from the list of handlers when a counter changes.
+function CounterSystem.removeChangedHandler(counterId: CounterId, callback: CounterCallback)
+	local counterCallbacks = callbacks[counterId]
+	if not counterCallbacks then
+		return
+	end
+
+	for index, otherCallback in counterCallbacks do
+		if otherCallback == callback then
+			table.remove(counterCallbacks, index)
+			return
+		end
+	end
+end
+
+-- When a player joins, unsuspend all their online only timers.
+local function onPlayerAdded(player: Player)
+	-- Prevent duplicate initializations of the same player.
+	if playerInitialized[getKeyForPlayer(player)] then
+		return
+	end
+
+	playerInitialized[getKeyForPlayer(player)] = true
+
+	local data: CounterData? = FeaturePackagesStore.getAsync(player, TABLE_ID)
+	if not data then
+		local newData = { numerical = {}, timer = {}, onlineTimer = {} }
+		FeaturePackagesStore.setAsync(player, TABLE_ID, newData, true)
+		return -- No timers to unsuspend, player is new.
+	end
+
+	for _, timer in data.onlineTimer do
+		TimerSystem.unsuspend(timer)
+	end
+end
+
+-- When a player's data is saved, suspend all their online only counters.
+local function onSave(player: Player, data: CounterData, isRemoving: boolean?): CounterData
+	for _, timer in data.onlineTimer do
+		TimerSystem.suspend(timer)
+	end
+
+	-- Player left and is thus no longer initialized.
+	if isRemoving then
+		playerInitialized[getKeyForPlayer(player)] = nil
+	end
+	return data
+end
+
+-- Get all the information on a given player's counters.
+local function getCounterData(player: Player): CounterData
+	-- Events may be called in a non-ideal order across other modules that require this one.
+	-- Handle now and ignore it later if that happens.
+	if not playerInitialized[getKeyForPlayer(player)] then
+		onPlayerAdded(player)
+	end
+
+	local data: CounterData = FeaturePackagesStore.getAsync(player, TABLE_ID)
+	-- If multiple async requests are made, only one of them initializes the table.
+	-- Wait for it.
+	while not data do
+		task.wait()
+		data = FeaturePackagesStore.getAsync(player, TABLE_ID)
+	end
+
+	return data
+end
+
+-- Set the value of a given counter for a player.
+function CounterSystem.setCounter(player: Player, counterId: CounterId, value: number?)
+	local data = getCounterData(player)
+
+	local previous = data.numerical[counterId] or 0
+	local delta = (value or 0) - previous
+
+	data.numerical[counterId] = value
+	handleCallbacks(player, counterId, delta)
+end
+
+-- Add to the value of a given counter for a player.
+function CounterSystem.addCounter(player: Player, counterId: CounterId, value: number)
+	local data = getCounterData(player)
+
+	local previous = data.numerical[counterId] or 0
+
+	data.numerical[counterId] = previous + value
+	handleCallbacks(player, counterId, value)
+end
+
+-- Get the value of a given counter for a player. Returns 0 if the counter is unset.
+function CounterSystem.getCounter(player: Player, counterId: CounterId): number
+	return getCounterData(player).numerical[counterId] or 0
+end
+
+-- Get the internal timer system reference to a timer that counts offline time.
+local function getTimer(player: Player, counterId: CounterId): TimerSystem.Timer
+	local data = getCounterData(player)
+
+	local timer = data.timer[counterId]
+	if not timer then
+		local newTimer = TimerSystem.new()
+		data.timer[counterId] = newTimer
+		return newTimer
+	end
+
+	return timer
+end
+
+-- Get the internal timer system reference to a timer that does not count offline time.
+local function getOnlineTimer(player: Player, counterId: CounterId): TimerSystem.Timer
+	local data = getCounterData(player)
+
+	local timer = data.onlineTimer[counterId]
+	if not timer then
+		local newTimer = TimerSystem.new()
+		data.onlineTimer[counterId] = newTimer
+		return newTimer
+	end
+
+	return timer
+end
+
+-- Start a timer counter by player/id.
+function CounterSystem.startTimer(player: Player, counterId: CounterId)
+	TimerSystem.start(getTimer(player, counterId))
+	TimerSystem.start(getOnlineTimer(player, counterId))
+	handleCallbacks(player, counterId)
+end
+
+-- Stop a timer counter by player/id.
+function CounterSystem.stopTimer(player: Player, counterId: CounterId)
+	TimerSystem.stop(getTimer(player, counterId))
+	TimerSystem.stop(getOnlineTimer(player, counterId))
+	handleCallbacks(player, counterId)
+end
+
+-- Check if a timer is running by player/id.
+function CounterSystem.isTimerRunning(player: Player, counterId: CounterId): boolean
+	return TimerSystem.isRunning(getTimer(player, counterId))
+end
+
+-- Get the number of elapsed seconds of a running timer including time offline.
+function CounterSystem.getElapsedSeconds(player: Player, counterId: CounterId): TimerSystem.Seconds
+	local timer = getTimer(player, counterId)
+	return TimerSystem.getElapsedSeconds(timer)
+end
+
+-- Get the number of elapsed seconds of a running timer only including time online.
+function CounterSystem.getElapsedSecondsOnline(player: Player, counterId: CounterId): TimerSystem.Seconds
+	local timer = getOnlineTimer(player, counterId)
+	return TimerSystem.getElapsedSeconds(timer)
+end
+
+-- Get the number of elapsed seconds of a timer for both online and offline time.
+function CounterSystem.setElapsedSeconds(player: Player, counterId: CounterId, seconds: TimerSystem.Seconds)
+	TimerSystem.setElapsedSeconds(getTimer(player, counterId), seconds)
+	TimerSystem.setElapsedSeconds(getOnlineTimer(player, counterId), seconds)
+	handleCallbacks(player, counterId)
+end
+
+local function initialize()
+	FeaturePackagesStore.bindToTransform(TABLE_ID, onSave)
+	Players.PlayerAdded:Connect(onPlayerAdded)
+	for _, player in Players:GetPlayers() do
+		onPlayerAdded(player)
+	end
+end
+
+initialize()
+
+return CounterSystem
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX4D93C7E37915477CB4E6C456E6DD00F8">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">FeaturePackagesStore</string>
+						<string name="ScriptGuid">{1dc6c8ad-8210-41b9-99dc-23a5842c2f9c}</string>
+						<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Wrapper around DataStore used by FeaturePackages to store and retrieve data.
+	
+	Using this module will help reduce the number of DataStore calls made by the game, as it caches the data locally.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Protect the run context, this ModuleScript is only intended to run on the server
+require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
+
+local Players = game:GetService("Players")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+local DataStoreTypes = require(ReplicatedStorage.FeaturePackagesCore.Configs.DataStoreTypes)
+local DataStoreWrapper = require(script.Parent.DataStoreWrapper)
+
+local DATA_STORE_REQUEST_ATTEMPTS = 3
+local DATA_STORE_REQUEST_COOLDOWN_CONSTANT = 5
+local DATA_STORE_REQUEST_COOLDOWN_EXPONENT = 5
+
+-- Local variables shared across the module
+local dataStoreWrapper = DataStoreWrapper.new(
+	SharedConstants.Stores.FeaturePackages.NAME,
+	DATA_STORE_REQUEST_ATTEMPTS,
+	DATA_STORE_REQUEST_COOLDOWN_CONSTANT,
+	DATA_STORE_REQUEST_COOLDOWN_EXPONENT
+)
+
+local cache: { [string]: DataStoreTypes.FeaturePackagesData } = {}
+
+local dataCallbacks: { [DataStoreTypes.TableId]: DataStoreTypes.DataCallback } = {}
+local initializeCallbacks: { [DataStoreTypes.TableId]: DataStoreTypes.DataCallback } = {}
+
+local readLock = false
+
+local FeaturePackagesStore = {}
+
+local function getKeyForPlayer(player: Player, suffix: string?): string
+	return `{player.UserId}{suffix or SharedConstants.Stores.FeaturePackages.SUFFIX}`
+end
+
+local function getPlayerFromKey(key: string, suffix: string?): Player?
+	local playerId = tonumber(key:sub(1, key:len() - (suffix or SharedConstants.Stores.FeaturePackages.SUFFIX):len()))
+	if not playerId then
+		return nil
+	end
+	return Players:GetPlayerByUserId(playerId)
+end
+
+local function onTableInitialize(player: Player)
+	local key = getKeyForPlayer(player)
+	local table = cache[key]
+
+	-- If there is an onInitializeCallback for the table, call it to make sure the data is initialized
+	for tableId, callback in pairs(initializeCallbacks) do
+		local cachedTableData = table.Tables[tableId]
+
+		table.Tables[tableId] = callback(player, cachedTableData) -- Allow table owner to mutate data
+
+		-- If the data was replaced, call the onSaveCallback for the handler in cache mode
+		if cachedTableData ~= table.Tables[tableId] then
+			local modifyCallback = dataCallbacks[tableId]
+			if modifyCallback then
+				table.Tables[tableId] = modifyCallback(player, table.Tables[tableId], false)
+			end
+		end
+	end
+end
+
+local function getFeaturePackagesStore(player: Player): DataStoreTypes.FeaturePackagesData
+	-- Wait for any concurrent reads to finish.
+	while readLock do
+		task.wait()
+	end
+
+	readLock = true
+	local key = getKeyForPlayer(player)
+
+	-- If the data is cached, return it
+	if cache[key] then
+		readLock = false
+		return cache[key]
+	end
+
+	-- Otherwise, get the data from the data store
+	local success, result = dataStoreWrapper:getAsync(key)
+
+	-- If the data has already been fetched by a parallel request, do not overwrite the cache just return it.
+	if cache[key] then
+		warn(`Duplicate DataStore fetch for {key}, cached version already exists.`)
+		readLock = false
+		return cache[key]
+	end
+
+	-- If data is not in cache and cannot be retrieved from data store, return nil
+	if not success then
+		error(`Failed to get FeaturePackages store for {key} because {result}`)
+	end
+
+	-- Cache the data
+	if result then
+		cache[key] = result :: DataStoreTypes.FeaturePackagesData
+	else
+		-- Return an empty table if no data is found
+		-- Save it in cache to initialize it.
+		cache[key] = { Tables = {} } :: DataStoreTypes.FeaturePackagesData
+	end
+
+	readLock = false
+
+	-- Data for the player was read for the first time, call init handlers
+	onTableInitialize(player)
+
+	return cache[key]
+end
+
+local function onPlayerRemoving(player: Player)
+	local key = getKeyForPlayer(player)
+
+	-- Save player data for all tables
+	local newData = cache[key] or { Tables = {} } :: DataStoreTypes.FeaturePackagesData
+	for tableId, callback in pairs(dataCallbacks) do
+		if not callback then
+			continue
+		end
+
+		-- If there is an onSaveCallback for the table, call it to make sure we save the latest data
+		local cachedTableData = newData.Tables[tableId]
+		newData.Tables[tableId] = callback(player, cachedTableData, true) -- Allow table owner to mutate data
+	end
+
+	-- Now save the entire data to the data store
+	dataStoreWrapper:setAsync(key, newData)
+
+	-- Clear cached data for player since they are leaving
+	cache[key] = nil
+end
+
+local function bindToClose()
+	-- As we only have a limited amount of time before the server closes, we do not
+	-- want to expend time processing out-of-date requests
+	dataStoreWrapper:skipAllQueuesToLastEnqueued()
+
+	-- We don't want to let this thread die until all saving has completed.
+	while not dataStoreWrapper:areAllQueuesEmpty() do
+		task.wait(0)
+	end
+end
+
+-- Checks if there is legacy data for the player in a legacy table and migrates it to the new table
+-- If there is no legacy data, returns nil
+-- If there is legacy data, returns the data that was migrated
+-- This method will error if the migration fails
+local function checkAndMigrateLegacyData(player: Player, tableId: DataStoreTypes.TableId): any?
+	local legacyTableConstants = SharedConstants.Stores.LEGACY[tableId]
+	if not legacyTableConstants then
+		return nil -- This table did not exist in the legacy constants
+	end
+
+	-- Check to see if the player has existing data in the legacy table
+	local legacyKey = getKeyForPlayer(player, legacyTableConstants.SUFFIX)
+	local legacyDataStoreWrapper = DataStoreWrapper.new(
+		legacyTableConstants.NAME,
+		DATA_STORE_REQUEST_ATTEMPTS,
+		DATA_STORE_REQUEST_COOLDOWN_CONSTANT,
+		DATA_STORE_REQUEST_COOLDOWN_EXPONENT
+	)
+
+	local success, result = legacyDataStoreWrapper:getAsync(legacyKey)
+
+	if not success then
+		-- If the get fails, then we cannot migrate the data
+		error(`Failed to migrate data for {legacyKey} because {result}`)
+	end
+
+	if not result then
+		return nil -- The player did not have data in the legacy table
+	end
+
+	-- Handle init callbacks for the legacy data
+	local callback = initializeCallbacks[tableId]
+
+	if callback then
+		result = callback(player, result) -- Allow table owner to mutate data
+
+		-- Call the onSaveCallback for the handler
+		local modifyCallback = dataCallbacks[tableId]
+		if modifyCallback then
+			result = modifyCallback(player, result, false)
+		end
+	end
+
+	-- Save the data to the new table
+	local saveSuccess = FeaturePackagesStore.setAsync(player, tableId, result)
+
+	if not saveSuccess then
+		-- If the save fails, then we cannot migrate the data
+		error(`Failed to save legacy data into new table for {legacyKey}`)
+	end
+
+	-- Clear the legacy data
+	print(`Migrated legacy data for {legacyKey} to new table {tableId} successfully`)
+	legacyDataStoreWrapper:removeAsync(legacyKey)
+
+	return result
+end
+
+function FeaturePackagesStore.getAsync(player: Player, tableId: DataStoreTypes.TableId): any
+	local featurepackagesData = getFeaturePackagesStore(player)
+
+	if not featurepackagesData or not featurepackagesData.Tables[tableId] then
+		-- There is no data for the player or the player had data but not for the specific table
+		-- Let's check if there is legacy data that needs to be migrated
+		local migratedData = checkAndMigrateLegacyData(player, tableId)
+		return migratedData
+	end
+
+	return featurepackagesData.Tables[tableId]
+end
+
+function FeaturePackagesStore.setAsync(
+	player: Player,
+	tableId: DataStoreTypes.TableId,
+	data: any,
+	onlySaveToCache: boolean?
+): boolean
+	local key = getKeyForPlayer(player)
+
+	-- Data owner callback
+	local newData = data
+	if dataCallbacks[tableId] then
+		newData = dataCallbacks[tableId](player, data) -- Allow table owner to mutate data
+	end
+
+	local featurepackagesData = getFeaturePackagesStore(player)
+	featurepackagesData.Tables[tableId] = newData -- Overwrite the sub-table with the new data
+
+	if onlySaveToCache then
+		-- If onlySaveToCache is true, only save to cache and do not save to data store
+		-- This will rely on the server shutting down gracefully to save the data or a subsequent call to setAsync without onlySaveToCache
+		cache[key] = featurepackagesData :: DataStoreTypes.FeaturePackagesData
+		return true
+	end
+
+	-- Attempt to set the data in the data store.
+	local success, result = dataStoreWrapper:setAsync(key, featurepackagesData)
+
+	-- If data cannot be set in data store, return false
+	if not success then
+		warn(`Failed to set FeaturePackages store for {key} because {result}`)
+		return false
+	end
+
+	-- Cache the data
+	if success then
+		cache[key] = featurepackagesData :: DataStoreTypes.FeaturePackagesData
+	end
+
+	return true
+end
+
+function FeaturePackagesStore.removeAsync(player: Player, tableId: DataStoreTypes.TableId?): boolean
+	local key = getKeyForPlayer(player)
+
+	-- If a specific table is provided, clear only that table from FeaturePackagesStore
+	if tableId then
+		local featurepackagesData = getFeaturePackagesStore(player)
+
+		if not featurepackagesData.Tables[tableId] then
+			-- If the table does not exist, nothing to remove
+			return true
+		end
+
+		featurepackagesData.Tables[tableId] = nil
+
+		local success, result = dataStoreWrapper:setAsync(key, featurepackagesData)
+
+		if not success then
+			warn(`Failed to remove {key} from table {tableId} because {result}`)
+			return false
+		end
+
+		return success
+	end
+
+	-- Otherwise, remove the entire data from data store
+	local success, result = dataStoreWrapper:removeAsync(key)
+
+	-- If data cannot be removed in data store, return false
+	if not success then
+		warn(`Failed to remove FeaturePackages store data for {key} because {result}`)
+		return false
+	end
+
+	-- Cache the data
+	if success then
+		cache[key] = nil
+	end
+
+	return true
+end
+
+function FeaturePackagesStore.bindToTransform(tableId: DataStoreTypes.TableId, callback: DataStoreTypes.DataCallback)
+	dataCallbacks[tableId] = callback
+end
+
+function FeaturePackagesStore.bindToInitialize(tableId: DataStoreTypes.TableId, callback: DataStoreTypes.DataCallback)
+	initializeCallbacks[tableId] = callback
+
+	for playerKey, cached in pairs(cache) do
+		local player = getPlayerFromKey(playerKey)
+		if not player then
+			continue
+		end
+
+		onTableInitialize(player)
+	end
+end
+
+local function initialize()
+	Players.PlayerRemoving:Connect(onPlayerRemoving)
+
+	game:BindToClose(function()
+		for _, player in ipairs(game.Players:GetPlayers()) do
+			onPlayerRemoving(player)
+		end
+
+		bindToClose()
+	end)
+end
+
+initialize()
+
+return FeaturePackagesStore
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="ModuleScript" referent="RBX478720E235F14F1BA31F401FE6A2D1E8">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">DataStoreWrapper</string>
+						<string name="ScriptGuid">{66562f6b-1cbc-496f-9bef-b4ef4288b14f}</string>
+						<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Wrapper for a DataStore that implements automatic retries for failed requests.
+
+	Requests to the same key are queued and scheduled with a ThreadQueue (including retries) to ensure they are
+	processed in order. This avoids a common pitfall in DataStore retry implementations where it is possible for a
+	retry for an older request to happen after a newer request resulting in outdated data being saved.
+
+	DataStoreWrapper request methods yield until the request (and its retries) have been completed.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Protect the run context, this ModuleScript is only intended to run on the server
+require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
+
+local DataStoreService = game:GetService("DataStoreService")
+
+local retryAsync = require(ReplicatedStorage.FeaturePackagesCore.Utils.retryAsync)
+local ThreadQueue = require(ReplicatedStorage.FeaturePackagesCore.Modules.ThreadQueue)
+
+local RETRY_CONSTANT_SECONDS = 0
+local RETRY_EXPONENT_SECONDS = 0
+local MAX_ATTEMPTS = 1
+
+type TransformCallback = (any, DataStoreKeyInfo) -> (any, { number }?, { [string]: any }?)
+
+local dataStoreOptions = Instance.new("DataStoreOptions")
+dataStoreOptions:SetExperimentalFeatures({ v2 = true })
+
+local DataStoreWrapper = {}
+DataStoreWrapper.__index = DataStoreWrapper
+
+export type ClassType = typeof(setmetatable(
+	{} :: {
+		_name: string,
+		_maxAttempts: number,
+		_retryConstant: number,
+		_retryExponent: number,
+		_keyQueues: { [string]: ThreadQueue.ClassType },
+	},
+	DataStoreWrapper
+))
+
+function DataStoreWrapper.new(
+	name: string,
+	maxAttempts: number?,
+	retryConstant: number?,
+	retryExponent: number?
+): ClassType
+	local self = {
+		_name = name,
+		_maxAttempts = maxAttempts or MAX_ATTEMPTS,
+		_retryConstant = retryConstant or RETRY_CONSTANT_SECONDS,
+		_retryExponent = retryExponent or RETRY_EXPONENT_SECONDS,
+		_keyQueues = {},
+	}
+	setmetatable(self, DataStoreWrapper)
+
+	return self
+end
+
+function DataStoreWrapper._attemptAsync(
+	self: ClassType,
+	key: string,
+	operation: (dataStore: GlobalDataStore) -> nil,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): (boolean, ...any)
+	-- As we will be retrying requests that fail, it's important we have a queue mechanism to ensure
+	-- each request is processed in order, to avoid race conditions (ie. request 2 completing while
+	-- request 1 is waiting to retry). ThreadQueue:submitAsync will yield until the task has
+	-- completed, allowing us to use DataStoreWrapper's API asynchronously
+	local queue = self._keyQueues[key] :: typeof(ThreadQueue.new())
+
+	if not queue then
+		queue = ThreadQueue.new() :: typeof(ThreadQueue.new())
+		self._keyQueues[key] = queue
+	end
+
+	-- Capture the tuple values in a table
+	local queueReturnValues = {
+		queue:submitAsync(function()
+			return self:_onQueuePop(operation, optionalRetryFunctionHandler)
+		end),
+	}
+
+	-- Remove empty queues to prevent memory leaks
+	if queue:getLength() == 0 then
+		self._keyQueues[key] = nil
+	end
+
+	-- Return the success, result values from onQueuePop
+	return table.unpack(queueReturnValues)
+end
+
+function DataStoreWrapper._onQueuePop(
+	self: ClassType,
+	operation: (dataStore: GlobalDataStore) -> nil,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): ...any
+	-- Capture the tuple values in a table
+	-- We are using retryAsync here to retry failed calls with an exponential backoff
+	local attemptReturnValues = {
+		retryAsync(function()
+			local dataStore = self:getDataStore()
+
+			return operation(dataStore)
+		end, self._maxAttempts, self._retryConstant, self._retryExponent, optionalRetryFunctionHandler),
+	}
+
+	-- retryAsync returns follow the protected call pattern (success, ...)
+	local attemptSuccess = table.remove(attemptReturnValues, 1) :: boolean
+
+	-- ThreadQueue calls tasks with pcall, so rather than returning the success, result
+	-- pattern here we will throw when success is false
+	if not attemptSuccess then
+		-- Attempt failed, bubble the error up through the ThreadQueue
+		local errorMessage = attemptReturnValues[1]
+		error(errorMessage)
+	end
+
+	-- Attempt succeeded, return all values in the result tuple
+	return table.unpack(attemptReturnValues)
+end
+
+function DataStoreWrapper.getAsync(
+	self: ClassType,
+	key: string,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): (boolean, any | string, DataStoreKeyInfo?)
+	return self:_attemptAsync(key, function(dataStore: GlobalDataStore)
+		return dataStore:GetAsync(key)
+	end, optionalRetryFunctionHandler)
+end
+
+function DataStoreWrapper.setAsync(
+	self: ClassType,
+	key: string,
+	value: any,
+	userIds: { number }?,
+	options: DataStoreSetOptions?,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): (boolean, string?)
+	return self:_attemptAsync(key, function(dataStore: GlobalDataStore)
+		return dataStore:SetAsync(key, value, userIds, options)
+	end, optionalRetryFunctionHandler)
+end
+
+function DataStoreWrapper.removeAsync(
+	self: ClassType,
+	key: string,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): (boolean, any | string, DataStoreKeyInfo?)
+	return self:_attemptAsync(key, function(dataStore: GlobalDataStore)
+		return dataStore:RemoveAsync(key)
+	end, optionalRetryFunctionHandler)
+end
+
+function DataStoreWrapper.updateAsync(
+	self: ClassType,
+	key: string,
+	transformFunction: TransformCallback,
+	optionalRetryFunctionHandler: retryAsync.FunctionHandler?
+): (boolean, any | string, DataStoreKeyInfo?)
+	return self:_attemptAsync(key, function(dataStore: GlobalDataStore)
+		return dataStore:UpdateAsync(key, transformFunction)
+	end, optionalRetryFunctionHandler)
+end
+
+function DataStoreWrapper.getDataStore(self: ClassType): GlobalDataStore
+	return DataStoreService:GetDataStore(self._name, nil, dataStoreOptions)
+end
+
+function DataStoreWrapper.getQueueLength(self: ClassType, key: string): number
+	local length = 0
+	local threadQueue = self._keyQueues[key]
+
+	if threadQueue then
+		length = threadQueue:getLength()
+	end
+
+	return length
+end
+
+function DataStoreWrapper.areAllQueuesEmpty(self: ClassType): boolean
+	for _, threadQueue in pairs(self._keyQueues) do
+		if threadQueue:getLength() > 0 then
+			return false
+		end
+	end
+
+	return true
+end
+
+-- Code bound to game closure (game:BindToClose) has a limited duration in which to run before timing out.
+-- The skipAllQueuesToLastEnqueued method can be used to skip all threadQueues to the most
+-- recent request so time isn't wasted on out of date requests. Note, this method will discard
+-- the yielded threads stored in the threadQueue meaning DataStoreWrapper calls for these
+-- outdated requests will not return. For this reason, only use skipAllQueuesToLastEnqueued during
+-- game closure.
+function DataStoreWrapper.skipAllQueuesToLastEnqueued(self: ClassType)
+	for _, threadQueue in pairs(self._keyQueues) do
+		threadQueue:skipToLastEnqueued()
+	end
+end
+
+return DataStoreWrapper
+]]></ProtectedString>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBX42686486744D47269F0A69C0219C1E41">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Utils</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBX7AE1EC0351B44AE1A97152D969F140DB">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">formatLargeNumber</string>
+					<string name="ScriptGuid">{7bbc9ce7-1847-44ef-b61f-0027d3a3f1a5}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Utility for formatting large numbers, into a human-readable string with K, M, B, etc.
+--]]
+
+local symbols = { "K", "M", "B", "T", "Q" }
+
+local function formatNumber(v: number): string
+	local symbol = ""
+	local shiftedValue = v
+
+	for index in symbols do
+		if shiftedValue < 1000 then
+			break
+		end
+		symbol = symbols[index]
+		shiftedValue = shiftedValue / 1000
+	end
+
+	if shiftedValue < 10 then
+		shiftedValue = math.floor(shiftedValue * 10) / 10
+	else
+		shiftedValue = math.floor(shiftedValue)
+	end
+
+	return `{shiftedValue}{symbol}`
+end
+
+return formatNumber
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXF71856D5E6D14FE7BB2638B7FF86F43C">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">retryAsync</string>
+					<string name="ScriptGuid">{3bda5a22-fab8-40aa-b0ef-b718c62d402a}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Function to call and retry a given function, up to maxAttempts times.
+	This function waits pauseConstant + (pauseExponent ^ numAttempts) between retries for progressive exponential backoff.
+	Calls are made with the functionCallHandler (default: pcall)
+	and the results of this (in the form of success, errorMessage or ...) are returned.
+--]]
+
+type Function = (...any) -> ...any
+export type FunctionHandler = (...any) -> (boolean, ...any)
+
+local function retryAsync(
+	func: Function,
+	maxAttempts: number,
+	optionalPauseConstant: number?,
+	optionalPauseExponent: number?,
+	optionalFunctionCallHandler: ((Function) -> (boolean, ...any))?
+): (boolean, ...any)
+	-- Using separate variables to satisfy the type checker
+	local pauseConstant: number = optionalPauseConstant or 0
+	local pauseExponent: number = optionalPauseExponent or 0
+	local functionCallHandler: FunctionHandler = optionalFunctionCallHandler or pcall
+
+	local attempts = 0
+	local success: boolean, result: { any }
+
+	while attempts < maxAttempts do
+		attempts = attempts + 1
+
+		local returnValues: { any }
+
+		returnValues = { functionCallHandler(func) }
+
+		success = table.remove(returnValues, 1) :: boolean
+		result = returnValues
+
+		if success then
+			break
+		end
+
+		local pauseTime = pauseConstant + (pauseExponent ^ attempts)
+
+		if attempts < maxAttempts then
+			task.wait(pauseTime)
+		end
+	end
+
+	if success then
+		return success, table.unpack(result)
+	else
+		local errorMessage = not success and result[1] :: any or nil
+		return success, errorMessage :: any
+	end
+end
+
+return retryAsync
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXBF3B43C5A7D54AA2995892425FFF2364">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">playSound</string>
+					<string name="ScriptGuid">{7dc55911-486b-4902-9aba-ad709aa5372b}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Utility for attempting to play sound. If soundId is invalid, or permission is insufficient, it will not play.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SoundService = game:GetService("SoundService")
+
+local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
+
+local function playSound(soundId: string, volume: number?)
+	pcall(function()
+		local soundEffect = Instance.new("Sound")
+		soundEffect.SoundId = `rbxassetid://{soundId}`
+		soundEffect.Volume = volume or SharedConstants.Sounds.VOLUME
+		soundEffect.Parent = SoundService
+		soundEffect:Play()
+
+		soundEffect.Ended:Once(function()
+			soundEffect:Destroy()
+		end)
+	end)
+end
+
+return playSound
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX1475F1DE63F84312A313B95B6A0C374F">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">getInstance</string>
+					<string name="ScriptGuid">{7714418f-c672-41de-98b4-7fdb252d1fa0}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Returns the instance corresponding with the given path of object names. Errors if this instance does not exist.
+
+	Useful for accessing Instance trees generated at runtime in strict mode. For example:
+
+	local mast: Model = getInstance(rootInstance, "Ship", "Mast")
+--]]
+
+local function getInstance<T>(instance: Instance, ...: string): T
+	for _, childName in ipairs({ ... }) do
+		local child = instance:FindFirstChild(childName)
+		assert(child, string.format("%s is not a child of %s", childName, instance:GetFullName()))
+		instance = child
+	end
+
+	-- We want this function to be callable with generic types
+	return (instance :: any) :: T
+end
+
+return getInstance
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXF0DA60664EEB4D07ABE495D3FBCA536D">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">formatTime</string>
+					<string name="ScriptGuid">{46d4a29f-cb1d-4d23-8876-cd63e6f0f5ee}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Utility for formatting time, from seconds, into a human-readable string in the format.
+
+	Parameters can be used to specify:
+		- maxUnitCount: The maximum number of time units to include in the formatted string, starting from the largest unit, e.g. days & hours is 2 units
+		- includePadding: Whether to append space padding at the end of the string to ensure consistent string length based on the units present
+		- suffix: The suffix to append to the end of the formatted string. If padding is enabled, the suffix will be appended before the extra spaces.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local TranslationStrings = require(ReplicatedStorage.FeaturePackagesCore.Configs.TranslationStrings)
+
+local SECONDS_IN_MINUTE = 60
+local SECONDS_IN_HOUR = 3600
+local SECONDS_IN_DAY = 86400
+
+local function formatTime(t: number, maxUnitCount: number?, includePadding: boolean?, suffix: string?): string
+	-- Max character count is calculated from the combination of unit strings present in the final time string
+	local maxCharacterCount = 0
+	local unitCount = 0
+	local timeStrings = {}
+	maxUnitCount = maxUnitCount or 4
+
+	-- Nil check for maxUnitCheck is unnecessary, but included so that the type checker knows it is not nil after this point
+	assert(
+		maxUnitCount and maxUnitCount >= 1 and maxUnitCount <= 4,
+		`Max units must be within [1, 4], got {maxUnitCount}`
+	)
+
+	local orderedUnitData = {
+		{
+			formatString = TranslationStrings.TIME_FORMAT_DAYS,
+			value = t // SECONDS_IN_DAY,
+		},
+		{
+			formatString = TranslationStrings.TIME_FORMAT_HOURS,
+			value = (t % SECONDS_IN_DAY) // SECONDS_IN_HOUR,
+		},
+		{
+			formatString = TranslationStrings.TIME_FORMAT_MINUTES,
+			value = (t % SECONDS_IN_HOUR) // SECONDS_IN_MINUTE,
+		},
+		{
+			formatString = TranslationStrings.TIME_FORMAT_SECONDS,
+			value = (t % SECONDS_IN_MINUTE) // 1,
+		},
+	}
+
+	for _, unit in ipairs(orderedUnitData) do
+		if unit.value > 0 and unitCount < maxUnitCount :: number then
+			unitCount += 1
+			maxCharacterCount += #unit.formatString
+			local unitString = string.gsub(unit.formatString, "00", tostring(unit.value))
+			table.insert(timeStrings, unitString)
+		end
+	end
+
+	if suffix then
+		table.insert(timeStrings, suffix)
+		maxCharacterCount += #suffix
+	end
+
+	local timeString = table.concat(timeStrings, " ")
+	maxCharacterCount += #timeStrings - 1 -- Add the spaces between each unit string
+
+	-- If padding is enabled, add extra spaces to the end of the string to ensure a consistent length
+	if includePadding then
+		timeString ..= string.rep(" ", maxCharacterCount - #timeString)
+	end
+
+	return timeString
+end
+
+return formatTime
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBX765C9D8F228444E2BAE34AF0AE807C27">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">getAttribute</string>
+					<string name="ScriptGuid">{05c2abe2-054d-48ee-9de4-e7762b9d4659}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Returns the value of an attribute on an instance, erroring if the
+	attribute doesn't exist. Normally, calling :GetAttribute() doesn't error,
+	but in most cases, getting an attribute should only happen where it's guaranteed
+	to exist, and we therefore want it to error.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Attributes = require(ReplicatedStorage.FeaturePackagesCore.Configs.Attributes)
+
+local function getAttribute<T>(instance: Instance, attributeName: Attributes.EnumType): T
+	local value = instance:GetAttribute(attributeName)
+	assert(value ~= nil, ("%s is not a valid attribute of %s"):format(attributeName, instance:GetFullName()))
+
+	return value
+end
+
+return getAttribute
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXEA4BE94268114A52888C6260F524CF25">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">getProductInfoAsync</string>
+					<string name="ScriptGuid">{73883930-cdff-40c1-a5a7-751c7cb49155}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Utility for fetching product information from MarketplaceService asynchronously with retry.
+--]]
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local retryAsync = require(ReplicatedStorage.FeaturePackagesCore.Utils.retryAsync)
+
+local MAX_ATTEMPTS = 4
+local RETRY_PAUSE_CONSTANT = 2
+local RETRY_PAUSE_EXPONENT = 2
+
+local function getProductInfoAsync(productId: number, productType: Enum.InfoType): { [string]: any }?
+	local success, productInfo = retryAsync(function()
+		return MarketplaceService:GetProductInfo(productId, productType)
+	end, MAX_ATTEMPTS, RETRY_PAUSE_CONSTANT, RETRY_PAUSE_EXPONENT)
+
+	if success then
+		return productInfo
+	end
+
+	warn("Failed to fetch product info for productId: " .. productId)
+	return nil
+end
+
+return getProductInfoAsync
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXC0A75D02F58F469EA4D54C53093EFF3B">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+					<bool name="DefinesCapabilities">false</bool>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">bindToTaggedInstances</string>
+					<string name="ScriptGuid">{e2744ff5-8769-4a86-a840-5cd4ed8a851a}</string>
+					<ProtectedString name="Source"><![CDATA[--!strict
+
+--[[
+	Utility for binding functions to instances with a given CollectionService tag.
+
+    Binding will automatically call the onAddedCallback when the tag is added to an instance.
+    
+    Likewise, when the tag is removed from an instance, the onRemovedCallback will be called for the instance.
+--]]
+
+local CollectionService = game:GetService("CollectionService")
+
+local function bindToTaggedInstances(
+	tag: string,
+	onAddedCallback: ((any) -> ())?,
+	onRemovedCallback: ((any) -> ())?,
+	includeReplicatedStorage: boolean?
+)
+	if onAddedCallback then
+		local function filteredCallback(instance: Instance)
+			if not includeReplicatedStorage and instance:FindFirstAncestorWhichIsA("ReplicatedStorage") then
+				return
+			end
+
+			onAddedCallback(instance)
+		end
+
+		CollectionService:GetInstanceAddedSignal(tag):Connect(filteredCallback)
+
+		for _, instance in CollectionService:GetTagged(tag) do
+			task.spawn(filteredCallback, instance)
+		end
+	end
+
+	if onRemovedCallback then
+		CollectionService:GetInstanceRemovedSignal(tag):Connect(onRemovedCallback)
+	end
+end
+
+return bindToTaggedInstances
+]]></ProtectedString>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="PackageLink" referent="RBX86B7A8AB4D1243E4ADFB19A6BE49DC97">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="AutoUpdate">false</bool>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<string name="DefaultName"></string>
+				<bool name="DefinesCapabilities">false</bool>
+				<int name="ModifiedState">-1</int>
+				<string name="Name">PackageLink</string>
+				<Content name="PackageIdSerialize"><url>rbxassetid://94918533221001</url></Content>
+				<BinaryString name="SerializedDefaultAttributes"></BinaryString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<int64 name="VersionIdSerialize">5</int64>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>
