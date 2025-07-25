@@ -1,0 +1,113 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local SoundService = game:GetService("SoundService")
+local TextToSpeech = SoundService.AudioTextToSpeech
+
+local ui = player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
+local frame = ui:WaitForChild("DialogueFrame")
+local nameLabel = frame:WaitForChild("NameLabel")
+local portrait = frame:WaitForChild("Portrait")
+local dialogueText = frame:WaitForChild("DialogueText")
+local btn1 = frame.ButtonHolder.Response1
+local btn2 = frame.ButtonHolder.Response2
+
+local btn1Conn
+local btn2Conn
+local talking = false
+
+function Speak(text)
+	TextToSpeech.Text = text
+	TextToSpeech:Play()
+end
+
+local function typeText(text)
+	btn1.Interactable = false
+	btn2.Interactable = false
+	Speak(text)
+	dialogueText.Text = ""
+	for i = 1, #text do
+		dialogueText.Text = string.sub(text, 1, i)
+		task.wait(0.06)
+	end
+
+	btn1.Interactable = true
+	btn2.Interactable = true
+end
+
+function hideUI()
+	task.delay(0.3, function()
+		talking = false
+		frame.Visible = false
+		ui.Enabled = false
+	end)
+end
+
+function handleResponse(responseData)
+	if responseData.Type == "Close" then
+		hideUI()
+	elseif responseData.Type == "NextMessage" then
+		local newData = responseData.NextDialogue
+		if newData then
+			updateUI(newData)
+		end
+	else
+		warn("Unknown request type")
+		hideUI()
+	end
+end
+
+function updateUI(data)
+	print(data)
+	nameLabel.Text = data.Name
+	portrait.Image = data.Portrait
+	typeText(data.Dialogue)
+
+	btn1.Text = data.Responses[1].Text
+	btn2.Text = data.Responses[2].Text
+
+	if btn1Conn then
+		btn1Conn:Disconnect()
+	end
+	if btn2Conn then
+		btn2Conn:Disconnect()
+	end
+
+	btn1Conn = btn1.MouseButton1Click:Connect(function()
+		handleResponse(data.Responses[1])
+	end)
+
+	btn2Conn = btn2.MouseButton1Click:Connect(function()
+		handleResponse(data.Responses[2])
+	end)
+end
+
+function openUI(data)
+	ui.Enabled = true
+	frame.Visible = true
+	updateUI(data)
+end
+
+game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, player)
+	if talking then
+		return
+	end
+	talking = true
+
+	local npc = prompt.Parent:FindFirstChild("NPCName")
+	if not npc then
+		print("Failed to get NPCName")
+		return
+	end
+
+	local dataModule = ReplicatedStorage.Shared:FindFirstChild(npc.Value)
+	if not dataModule then
+		print("Failed to get NPC module (UI)")
+		return
+	end
+
+	local npcData = require(dataModule)
+
+	openUI(npcData[npc.Value])
+end)
