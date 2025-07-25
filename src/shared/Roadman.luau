@@ -13,38 +13,53 @@ return {
 					Dialogue = "FINK UR FUNNY MATE... THIS ZOMBIE KNOIF AINT MUCKING AROUND... ONE MORE WORD.. I DARE YAH BRAV. ",
 					Responses = {
 						{
-							Text = "Calm down sir please it was a joke please don't hurt me",
+							Text = "S-sorry s-sir",
 							Type = "NextMessage",
 							NextDialogue = {
 								Name = "Arrogant Roadman",
 								Portrait = "rbxassetid://94016123678494",
-								Dialogue = "Exactly mate... code brown on your joggy bottoms is it? scurry off little boy.",
+								Dialogue = "Exactly mate... code brown on your joggy bottoms is it? scurry off you muppet",
 								Responses = {
 									{
 										Text = "I swear that's chocolate.",
 										Type = "Close",
 									},
 									{
-										Text = "Bruh",
+										Text = "Let ",
 										Type = "Close",
 									},
 								},
 							},
 						},
 						{
-							Text = "*throws PG Tip teabags into his face*",
+							Text = "*throws PG Tip*",
 							Type = "NextMessage",
 							NextDialogue = {
 								Name = "Esteemed Gentlemen",
 								Portrait = "rbxassetid://87797218754881",
-								Dialogue = "AHHGUUUHadddaahhhhh... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Macbeth says: Look! I see your under where! ",
+								Dialogue = "AHHGUUUHadddaahhhhh... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Cat in the adage. Succulent Chinese Meal ",
 								Responses = {
 									{
-										Text = "... Jesus these brits are OFF it.",
-										Type = "Close",
+										Text = "... Jesus christ",
+										Type = "NextMessage",
+										NextDialogue = {
+											Name = "Esteemed Gentlemen",
+											Portrait = "rbxassetid://132478097155027",
+											Dialogue = "Speaking of our Saviour, dear chap, do take this finely crafted instrument and, under the most virtuous pretence of feeding the little ones, discreetly acquire some poor wretch’s mobile telephone. A noble cause cloaked in necessity — how thoroughly spendid!",
+											Responses = {
+												{
+													Text = "Sir yes sir!",
+													Type = "Close",
+												},
+												{
+													Text = "Hell naw.",
+													Type = "Close",
+												},
+											},
+										},
 									},
 									{
-										Text = "Look behind you! there's a jammy dodger!",
+										Text = "Run",
 										Type = "Close",
 									},
 								},
