@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX72662CE972F442D3A8F1633ED03D36A0">
+	<Item class="Folder" referent="RBX79E1D703B1D148CBA07B09B246CF964C">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -11,7 +11,7 @@
 			<int64 name="SourceAssetId">94918533221001</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Folder" referent="RBX3F64142FBE80472F9BA7081A5529D51A">
+		<Item class="Folder" referent="RBX016D264EFA5940CEA834D8A53C875FB6">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -20,7 +20,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Script" referent="RBX7D252CD28E1C4BFDA3BE2815DDEA71B9">
+			<Item class="Script" referent="RBX0F69F6F4D9494E97B457820F086BC80E">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -36,7 +36,7 @@
 	Connects sounds to tagged GUIObjects.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local bindToTaggedInstances = require(ReplicatedStorage.FeaturePackagesCore.Utils.bindToTaggedInstances)
@@ -68,7 +68,7 @@ initialize()
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Script" referent="RBX54C53AFF2EFF434CB6AB501084F42589">
+			<Item class="Script" referent="RBXE4926AC1D9D84B3EB5A4AF2E04D7892A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -84,7 +84,7 @@ initialize()
 	Connects various UI animations to tagged GUIObjects.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
@@ -187,7 +187,7 @@ initialize()
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX7FC915721E94437CA09D91CBD9578C7C">
+			<Item class="ModuleScript" referent="RBX681827232AA54BCB88C7F31C70A22828">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -204,7 +204,7 @@ initialize()
 	It also contains a getter for a centralized ScreenGui for all HUD buttons to be parented to so they can be centrally organized.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Players = game:GetService("Players")
 
 local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
@@ -354,7 +354,7 @@ return ModalManager
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="Script" referent="RBX929351931AA843899E0756F3CA9B065F">
+			<Item class="Script" referent="RBXEE5779A7CEC44D12921AE488CA913585">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -384,7 +384,7 @@ return ModalManager
 --]]
 
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
@@ -525,7 +525,7 @@ initialize()
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX1DEACFB371E944ED9D5D1261567CD553">
+		<Item class="Folder" referent="RBXA1655546AF234800B523EB03A1525A3F">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -534,7 +534,7 @@ initialize()
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXF5A35D5AA51946B3957FAECC9E327AD0">
+			<Item class="ModuleScript" referent="RBXB85A44F9676B4ADA8BC52E6CBA8416F7">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -583,7 +583,7 @@ return TranslationStrings
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX61C84BE9518B47B78E106DC1941066E5">
+			<Item class="ModuleScript" referent="RBX54F54DFE111047219F6C59F4D4ACF970">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -648,7 +648,7 @@ return ItemTypes
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXA4B36A8EE12A4EDA87347B3C18EC2A91">
+			<Item class="ModuleScript" referent="RBX96C7AEFBE99D419B8ABD7E342CBC2BC9">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -684,7 +684,7 @@ return Attributes
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX12A13FD5EB9041768B54341D7FC4C87C">
+			<Item class="ModuleScript" referent="RBX391856473FDB49349F3F68F38BBF3D46">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -698,7 +698,7 @@ return Attributes
 	A source of truth list of all in-experience currencies known by FeaturePackages.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local CurrencyTypes = require(ReplicatedStorage.FeaturePackagesCore.Configs.CurrencyTypes)
 
@@ -718,7 +718,7 @@ return Currencies
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXC20A752409B84B6E84DD81D203E641E0">
+			<Item class="ModuleScript" referent="RBX65C090435C924E32905E20E400F706DF">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -797,7 +797,7 @@ return SharedConstants
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX421A1BA75E79477F88E31EB120B31931">
+			<Item class="ModuleScript" referent="RBX011C451FE100498BA65E1C287AD94AD3">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -827,7 +827,7 @@ return {}
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX0EA9141E827F43BCA2D6E335098D2E7D">
+			<Item class="ModuleScript" referent="RBX10F5227401794557810CA6CF75CDF974">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -893,7 +893,7 @@ return CurrencyTypes
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX695D8EE22F2341A2B767F4FE5C64C5B4">
+		<Item class="Folder" referent="RBX80ECD3A5DBED49218143F91052E6110C">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -902,7 +902,7 @@ return CurrencyTypes
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXA85895BA62DC40E99934ADE7CD50E698">
+			<Item class="ModuleScript" referent="RBXB5BC474F7A134D33BC2785FEBFC8ACD3">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -913,7 +913,7 @@ return CurrencyTypes
 					<ProtectedString name="Source"><![CDATA[--!strict
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local playSound = require(ReplicatedStorage.FeaturePackagesCore.Utils.playSound)
@@ -1047,7 +1047,7 @@ return playPurchaseEffect
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBXB2215F15B7D64635B7B344E25B58DDBF">
+		<Item class="Folder" referent="RBXD3AAB25A4D0E49DA9DE012C6B2530678">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1056,7 +1056,7 @@ return playPurchaseEffect
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXBA571F3CC51A4A7BBDED0F58781A6BBF">
+			<Item class="ModuleScript" referent="RBX1254E745F708497CBF3D9980F7D70FCE">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1522,7 +1522,7 @@ return TimerSystem
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX0AD2BA1C3DBF459BA4AA9AB21B34D320">
+			<Item class="ModuleScript" referent="RBXE4B88E22BBC141EA84F87898AD24835A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1649,7 +1649,7 @@ return UITween
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXC6E4638F67EF4334ACFB5B427CFF4A4F">
+			<Item class="ModuleScript" referent="RBXC722FFF9A9B4481B840DFBADC95D864A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1775,7 +1775,7 @@ return ThreadQueue
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXA860AAF948ED455EA0D37911A43281F3">
+			<Item class="ModuleScript" referent="RBX23744632EAC0446CAEB59CDD51A6B2BA">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1812,7 +1812,7 @@ return ProtectRunContext
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX748CBB53C5A74A58B04C377F03CC3C01">
+		<Item class="Folder" referent="RBXCCC9EF9AB91A411C970A363E72162A8A">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1821,7 +1821,7 @@ return ProtectRunContext
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ScreenGui" referent="RBX92ED84F55156449A959C31DBF8A7302B">
+			<Item class="ScreenGui" referent="RBX9EE60DB535FD4077AEC4692B559BCC2F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<bool name="AutoLocalize">true</bool>
@@ -1844,7 +1844,7 @@ return ProtectRunContext
 					<BinaryString name="Tags"></BinaryString>
 					<token name="ZIndexBehavior">0</token>
 				</Properties>
-				<Item class="ScrollingFrame" referent="RBX4A41DFB7F89B49F3B08B1D259627B7C3">
+				<Item class="ScrollingFrame" referent="RBXD450E3C010AF498783BCF5F6000616DC">
 					<Properties>
 						<bool name="Active">true</bool>
 						<Vector2 name="AnchorPoint">
@@ -1933,7 +1933,7 @@ return ProtectRunContext
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="UIListLayout" referent="RBX94093707DE9946DB9FFCF61E4E56BEB7">
+					<Item class="UIListLayout" referent="RBXEF3C1969AB244887819318FF019D5736">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1955,7 +1955,7 @@ return ProtectRunContext
 							<bool name="Wraps">false</bool>
 						</Properties>
 					</Item>
-					<Item class="UIPadding" referent="RBXFDB9F9082F6C4389A79CE550EE8006C8">
+					<Item class="UIPadding" referent="RBX2008E771162A48DBA7B3D05A837694A4">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1981,7 +1981,7 @@ return ProtectRunContext
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="UIAspectRatioConstraint" referent="RBXC890AF2CA99B4793992094C9F0857E52">
+					<Item class="UIAspectRatioConstraint" referent="RBXD94DFA2E94D44339B5CB2F7EACE72BC4">
 						<Properties>
 							<float name="AspectRatio">0.300000012</float>
 							<token name="AspectType">0</token>
@@ -1995,7 +1995,7 @@ return ProtectRunContext
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="ScrollingFrame" referent="RBX0192484503D54F0AB4B1A6913206809D">
+				<Item class="ScrollingFrame" referent="RBXAA08A101A3DD49EF982B045321ADC3B0">
 					<Properties>
 						<bool name="Active">true</bool>
 						<Vector2 name="AnchorPoint">
@@ -2084,7 +2084,7 @@ return ProtectRunContext
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="UIListLayout" referent="RBX73BE7AF3597644F3BB57E3DA19DA56D6">
+					<Item class="UIListLayout" referent="RBX16171C5312E74EB7AB79B601161437C1">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2106,7 +2106,7 @@ return ProtectRunContext
 							<bool name="Wraps">false</bool>
 						</Properties>
 					</Item>
-					<Item class="UIPadding" referent="RBX5515388925EB4B039FCF83D732960BED">
+					<Item class="UIPadding" referent="RBX3431E476138B46858F0A766C6614EE5D">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2132,7 +2132,7 @@ return ProtectRunContext
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="UIAspectRatioConstraint" referent="RBXA0D61B802E6742789BE5EB675B99535E">
+					<Item class="UIAspectRatioConstraint" referent="RBX129A7F9A07C84E529C6E5FD11EF4ED27">
 						<Properties>
 							<float name="AspectRatio">0.300000012</float>
 							<token name="AspectType">0</token>
@@ -2148,7 +2148,7 @@ return ProtectRunContext
 				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBXE390E79CDDB245EEA85F7AF38272FB6E">
+		<Item class="Folder" referent="RBXEFC6A57BAE3A40CE86288CEFAAE4092E">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2157,7 +2157,7 @@ return ProtectRunContext
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Folder" referent="RBX879F6BB8DC27406E8249E9E8C46739BB">
+			<Item class="Folder" referent="RBX43AECBF5874D4CE3BEE5707F73538FD0">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2166,7 +2166,7 @@ return ProtectRunContext
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX067DDCC5FD784ADFA38AEEF9AAD17A57">
+				<Item class="ModuleScript" referent="RBX275D4A2A109D4C8D9DC7FF0688CCF6EE">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2181,7 +2181,7 @@ return ProtectRunContext
 	Counters are stored in the shared FeaturePackages data store (FeaturePackagesStore).
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -2414,7 +2414,7 @@ return CounterSystem
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX4D93C7E37915477CB4E6C456E6DD00F8">
+				<Item class="ModuleScript" referent="RBX6F096507C258413E82606BD8CB87C6B9">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2430,7 +2430,7 @@ return CounterSystem
 	Using this module will help reduce the number of DataStore calls made by the game, as it caches the data locally.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -2764,7 +2764,7 @@ return FeaturePackagesStore
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX478720E235F14F1BA31F401FE6A2D1E8">
+				<Item class="ModuleScript" referent="RBX210C8FF9AEED4781A1487781D6CD5B7A">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2784,7 +2784,7 @@ return FeaturePackagesStore
 	DataStoreWrapper request methods yield until the request (and its retries) have been completed.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -2987,7 +2987,7 @@ return DataStoreWrapper
 				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX42686486744D47269F0A69C0219C1E41">
+		<Item class="Folder" referent="RBX6A3BE3F2016B425AA638D06EE188BD11">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2996,7 +2996,7 @@ return DataStoreWrapper
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX7AE1EC0351B44AE1A97152D969F140DB">
+			<Item class="ModuleScript" referent="RBXEA6A893368E74B308AF18595C9EC62A9">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3039,7 +3039,7 @@ return formatNumber
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXF71856D5E6D14FE7BB2638B7FF86F43C">
+			<Item class="ModuleScript" referent="RBXBD4BDB21F6664C7FA907C225818C5550">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3109,7 +3109,7 @@ return retryAsync
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXBF3B43C5A7D54AA2995892425FFF2364">
+			<Item class="ModuleScript" referent="RBX4274D9415B4F4684A87EE63DF77C33BC">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3123,7 +3123,7 @@ return retryAsync
 	Utility for attempting to play sound. If soundId is invalid, or permission is insufficient, it will not play.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local SoundService = game:GetService("SoundService")
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
@@ -3148,7 +3148,7 @@ return playSound
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX1475F1DE63F84312A313B95B6A0C374F">
+			<Item class="ModuleScript" referent="RBXC052FCBFE7164B849CCC184BECF50886">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3183,7 +3183,7 @@ return getInstance
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXF0DA60664EEB4D07ABE495D3FBCA536D">
+			<Item class="ModuleScript" referent="RBX75A470475C814586AFCE5F0A407C13E9">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3202,7 +3202,7 @@ return getInstance
 		- suffix: The suffix to append to the end of the formatted string. If padding is enabled, the suffix will be appended before the extra spaces.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local TranslationStrings = require(ReplicatedStorage.FeaturePackagesCore.Configs.TranslationStrings)
 
@@ -3273,7 +3273,7 @@ return formatTime
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX765C9D8F228444E2BAE34AF0AE807C27">
+			<Item class="ModuleScript" referent="RBXB51CBA75A12C440E99FDCC97BC81C356">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3290,7 +3290,7 @@ return formatTime
 	to exist, and we therefore want it to error.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local Attributes = require(ReplicatedStorage.FeaturePackagesCore.Configs.Attributes)
 
@@ -3307,7 +3307,7 @@ return getAttribute
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXEA4BE94268114A52888C6260F524CF25">
+			<Item class="ModuleScript" referent="RBX63462148A69F4CE8BA7152A269E42555">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3321,7 +3321,7 @@ return getAttribute
 	Utility for fetching product information from MarketplaceService asynchronously with retry.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local MarketplaceService = game:GetService("MarketplaceService")
 
 local retryAsync = require(ReplicatedStorage.FeaturePackagesCore.Utils.retryAsync)
@@ -3349,7 +3349,7 @@ return getProductInfoAsync
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXC0A75D02F58F469EA4D54C53093EFF3B">
+			<Item class="ModuleScript" referent="RBX36CD0F3F8E9D48F591B56B8F938BD096">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3402,22 +3402,6 @@ return bindToTaggedInstances
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-		</Item>
-		<Item class="PackageLink" referent="RBX86B7A8AB4D1243E4ADFB19A6BE49DC97">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<bool name="AutoUpdate">false</bool>
-				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-				<string name="DefaultName"></string>
-				<bool name="DefinesCapabilities">false</bool>
-				<int name="ModifiedState">-1</int>
-				<string name="Name">PackageLink</string>
-				<Content name="PackageIdSerialize"><url>rbxassetid://94918533221001</url></Content>
-				<BinaryString name="SerializedDefaultAttributes"></BinaryString>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<int64 name="VersionIdSerialize">5</int64>
-			</Properties>
 		</Item>
 	</Item>
 </roblox>
