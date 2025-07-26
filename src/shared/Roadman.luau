@@ -25,7 +25,7 @@ return {
 										Type = "Close",
 									},
 									{
-										Text = "Let ",
+										Text = "Ya got me..",
 										Type = "Close",
 									},
 								},
@@ -37,7 +37,7 @@ return {
 							NextDialogue = {
 								Name = "Esteemed Gentlemen",
 								Portrait = "rbxassetid://87797218754881",
-								Dialogue = "AHHGUUUHadddaahhhhh... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Cat in the adage. Succulent Chinese Meal ",
+								Dialogue = "AUGHBRAHUUNG... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Cat in the adage. Succulent Chinese Meal. Divorced, Beheaded, Died, Divorced, Beheaded, Survived.",
 								Responses = {
 									{
 										Text = "... Jesus christ",
@@ -45,14 +45,15 @@ return {
 										NextDialogue = {
 											Name = "Esteemed Gentlemen",
 											Portrait = "rbxassetid://132478097155027",
-											Dialogue = "Speaking of our Saviour, dear chap, do take this finely crafted instrument and, under the most virtuous pretence of feeding the little ones, discreetly acquire some poor wretch’s mobile telephone. A noble cause cloaked in necessity — how thoroughly spendid!",
+											Dialogue = "Speaking of our Lord, dear chap, do take this finely crafted instrument and, under the most virtuous pretence of feeding the little ones, discreetly acquire some poor wretch’s mobile telephone. A noble cause cloaked in necessity - how thoroughly spendid!",
 											Responses = {
 												{
 													Text = "Sir yes sir!",
 													Type = "Close",
+													UnlockMission = "StealPhone",
 												},
 												{
-													Text = "Hell naw.",
+													Text = "Hell naw",
 													Type = "Close",
 												},
 											},

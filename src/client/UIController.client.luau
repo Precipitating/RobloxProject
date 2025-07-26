@@ -1,9 +1,9 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
-local SoundService = game:GetService("SoundService")
-local TextToSpeech = SoundService.AudioTextToSpeech
+local unlockEvent = ReplicatedStorage.Missions.Events:WaitForChild("UnlockMissionEvent")
+local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 
 local ui = player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
 local frame = ui:WaitForChild("DialogueFrame")
@@ -17,16 +17,15 @@ local btn1Conn
 local btn2Conn
 local talking = false
 
-function Speak(text)
-	TextToSpeech.Text = text
-	TextToSpeech:Play()
-end
-
 local function typeText(text)
 	btn1.Interactable = false
 	btn2.Interactable = false
-	Speak(text)
 	dialogueText.Text = ""
+	textToSpeech.Speak(text)
+
+	while not textToSpeech.IsLoaded() do
+		task.wait()
+	end
 	for i = 1, #text do
 		dialogueText.Text = string.sub(text, 1, i)
 		task.wait(0.06)
@@ -56,10 +55,13 @@ function handleResponse(responseData)
 		warn("Unknown request type")
 		hideUI()
 	end
+	if responseData.UnlockMission then
+		unlockEvent:FireServer(responseData.UnlockMission)
+		print("Remote fired! mission unlock of " .. responseData.UnlockMission)
+	end
 end
 
 function updateUI(data)
-	print(data)
 	nameLabel.Text = data.Name
 	portrait.Image = data.Portrait
 	typeText(data.Dialogue)
@@ -101,7 +103,7 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		return
 	end
 
-	local dataModule = ReplicatedStorage.Shared:FindFirstChild(npc.Value)
+	local dataModule = ReplicatedStorage:FindFirstChild(npc.Value)
 	if not dataModule then
 		print("Failed to get NPC module (UI)")
 		return

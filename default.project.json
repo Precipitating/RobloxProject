@@ -2,8 +2,7 @@
   "name": "UnknownGame",
   "tree": {
     "$className": "DataModel",
-    "$ignoreUnknownInstances": true,
-
+    "$ignoreUnknownInstances": false,
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
