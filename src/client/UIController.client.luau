@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local unlockEvent = ReplicatedStorage.Missions.Events:WaitForChild("UnlockMissionEvent")
+local progressEvent = ReplicatedStorage.Missions.Events:WaitForChild("ProgressMissionEvent")
 local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 
 local ui = player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
@@ -28,7 +29,7 @@ local function typeText(text)
 	end
 	for i = 1, #text do
 		dialogueText.Text = string.sub(text, 1, i)
-		task.wait(0.06)
+		task.wait(0.05 / textToSpeech.GetCurrentSpeed())
 	end
 
 	btn1.Interactable = true
@@ -59,11 +60,21 @@ function handleResponse(responseData)
 		unlockEvent:FireServer(responseData.UnlockMission)
 		print("Remote fired! mission unlock of " .. responseData.UnlockMission)
 	end
+
+	if responseData.ProgressMission then
+		progressEvent:FireServer(responseData.ProgressMission)
+		print("Remote fired! mission progress of " .. responseData.MissionName)
+	end
 end
 
 function updateUI(data)
 	nameLabel.Text = data.Name
 	portrait.Image = data.Portrait
+
+	if data.VoiceId or data.Pitch or data.Speed or data.Volume then
+		print("changed TTS config")
+		textToSpeech.UpdateVoiceConfig(data.VoiceId or "1", data.Pitch or 1, data.Speed or 1, data.Volume or 1)
+	end
 	typeText(data.Dialogue)
 
 	btn1.Text = data.Responses[1].Text
@@ -103,7 +114,7 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		return
 	end
 
-	local dataModule = ReplicatedStorage:FindFirstChild(npc.Value)
+	local dataModule = ReplicatedStorage:WaitForChild("NPCDialogues"):FindFirstChild(npc.Value)
 	if not dataModule then
 		print("Failed to get NPC module (UI)")
 		return
