@@ -3,6 +3,9 @@ return {
 		Name = "Roadman",
 		Portrait = "rbxassetid://15375763382",
 		Dialogue = "Oi wagwan bruv what you looking at mate? i'll ching ya",
+		Pitch = 12,
+		Speed = 2,
+		Volume = 3,
 		Responses = {
 			{
 				Text = "You look dodgy as pal.",
@@ -37,6 +40,9 @@ return {
 							NextDialogue = {
 								Name = "Esteemed Gentlemen",
 								Portrait = "rbxassetid://87797218754881",
+								Pitch = 1,
+								Speed = 1,
+								Volume = 1,
 								Dialogue = "AUGHBRAHUUNG... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Cat in the adage. Succulent Chinese Meal. Divorced, Beheaded, Died, Divorced, Beheaded, Survived.",
 								Responses = {
 									{

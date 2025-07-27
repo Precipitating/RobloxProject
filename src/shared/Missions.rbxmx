@@ -262,10 +262,17 @@ If your experience already has an existing UI that you would like to integrate w
 local Types = require(script.Parent.Types)
 
 local Missions: Types.MissionsList = {
-	StealPhone = {
-		categoryId = "Missions",
+
+StealPhone = {
+		categoryId = "Roadman",
+		tasks = {
+			Steal = {
+				taskType = Types.TaskType.Count,
+				goalCount = 1,
+			},
+		},
 		metadata = {
-			displayName = "Steal a phone",
+			displayName = " 'Borrow' a phone",
 			visibleAfterComplete = true,
 			visibleBeforeUnlocked = false,
 			rewards = {
@@ -275,15 +282,10 @@ local Missions: Types.MissionsList = {
 				},
 			},
 		},
-		tasks = {
-			Steps = {
-				taskType = Types.TaskType.Count,
-				goalCount = 1,
-			},
-		},
-		manualOnly = true
+		manualOnly = true,	
+	},
 
-	}
+
 }
 
 return Missions
@@ -7753,7 +7755,6 @@ function MissionStore.getAsync(player: Player): Types.PlayerMissionData?
 	local data = FeaturePackagesStore.getAsync(player, TABLE_ID) :: Types.PlayerMissionData?
 
 	if not data then
-		-- Initialize the data as an empty table if it does not exist
 		data = {}
 		MissionStore.setAsync(player, data)
 	end
