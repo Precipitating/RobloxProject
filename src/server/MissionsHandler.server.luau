@@ -1,11 +1,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
 local MissionEventHandlers = require(ServerScriptService.Server.MissionsLogicHandler)
+local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
+local MissionCompleteHandlers = require(ServerScriptService.Server.MissionsCompleteHandler)
 
--- handle remote events for unlocking missions manually
+-- handle remote events
 ReplicatedStorage.Missions.Events.UnlockMissionEvent.OnServerEvent:Connect(function(player, missionName)
 	print(missionName)
 	if typeof(missionName) == "string" then
@@ -21,9 +22,44 @@ ReplicatedStorage.Missions.Events.ProgressMissionEvent.OnServerEvent:Connect(fun
 	end
 end)
 
+ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(player, toolName)
+	print(`Server received GiveToolEvent, attempting to give you the tool {toolName} `)
+	if typeof(toolName) == "string" then
+		HelperFunctions.GiveTool(player, toolName)
+	end
+end)
+
+ReplicatedStorage.Missions.Events.ForceEquipEvent.OnServerEvent:Connect(function(player, toolName)
+	print("Force equip tool arrived at server")
+	if typeof(toolName) == "string" then
+		HelperFunctions.ForceEquip(player, toolName)
+	end
+end)
+
+ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerEvent:Connect(function(player, toolsStringList)
+	print("Remove tool arrived at server")
+	if typeof(toolsStringList) == "table" then
+		HelperFunctions.RemoveTools(player, toolsStringList)
+	end
+end)
+
+ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(player, meshTagList)
+	print("Set mesh visibility arrived at server")
+	if typeof(meshTagList) == "table" then
+		HelperFunctions.SetMeshVisibility(meshTagList)
+	end
+end)
+
+ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(function(player, fromToTable)
+	print("Set dialogue arrived at server")
+	if typeof(fromToTable) == "table" then
+		HelperFunctions.SetNPCDialogueFile(fromToTable)
+	end
+end)
+
 -- mission handlers
 local function unlockHandler(player: Player, missionId: Types.MissionId)
-	print(`{player} unlocked mission {missionId}`)
+	print(` {player} attemping to unlock mission {missionId}...`)
 	local handler = MissionEventHandlers[missionId]
 
 	if handler then
@@ -35,6 +71,12 @@ end
 
 local function completeHandler(player: Player, missionId: Types.MissionId)
 	print(`{player} completed mission {missionId}`)
+	local handler = MissionCompleteHandlers[missionId]
+	if handler then
+		handler(player)
+	else
+		print("Failed to claim rewards")
+	end
 end
 
 local function failHandler(player: Player, missionId: Types.MissionId)

@@ -1,0 +1,91 @@
+local HelperFunctions = {}
+local ServerStorage = game:GetService("ServerStorage")
+local CollectionService = game:GetService("CollectionService")
+local NPCStorage = ServerStorage.NPCS
+local serverTools = ServerStorage.Tools
+
+-- force equip a tool, should a player own it (they should)
+function HelperFunctions.ForceEquip(player, name)
+	local tool = player.Backpack:FindFirstChild(name)
+	if tool then
+		player.Character.Humanoid:EquipTool(tool)
+	else
+		warn(`{name} not in backpack, probably equipped it already`)
+	end
+end
+
+-- remove tools, should a player own it (they should)
+-- goes thru backpack each iteration incase you have a duplicate (somehow)
+function HelperFunctions.RemoveTools(player, toolsStringList)
+	for _, toolName in pairs(toolsStringList) do
+		for _, currentToolInBackpack in pairs(player.Backpack:GetChildren()) do
+			if currentToolInBackpack:IsA("Tool") and currentToolInBackpack.Name == toolName then
+				currentToolInBackpack.Parent = nil
+			end
+		end
+	end
+end
+
+-- switch dialogue file for an NPC (NPC must have string component called "NPCName" with a tag )
+function HelperFunctions.SetNPCDialogueFile(fromToTable)
+	print(`Setting dialogue file...`)
+	local dialogueRef, newName = next(fromToTable[1])
+	print(dialogueRef .. newName)
+	if dialogueRef then
+		local convoTag = CollectionService:GetTagged(dialogueRef)[1]
+		if convoTag then
+			convoTag.Value = newName
+			print(`Succesfully set dialogue file to {newName}`)
+		end
+	end
+end
+
+-- spawn an NPC from ReplicatedStorage.NPCS
+function HelperFunctions.SpawnNPCAtPosition(npcName, pos)
+	local npc = NPCStorage:FindFirstChild(npcName):Clone()
+	if npc then
+		npc.Parent = workspace
+		npc:MoveTo(pos)
+	else
+		error("Cannot find NPC to spawn")
+	end
+end
+
+-- clone a tool from ServerStorage to player backpack
+function HelperFunctions.GiveTool(player, name)
+	local tool = serverTools:FindFirstChild(name)
+	if not tool then
+		error("Tool not found:", name)
+		return
+	end
+	local clone = tool:Clone()
+	clone.Parent = player.Backpack
+
+	print(name .. " should be in your backpack")
+end
+
+-- set a tagged mesh visible/invisible with collision/no collison
+-- mesh must be tagged
+function HelperFunctions.SetMeshVisibility(meshTagList)
+	print("Setting visibility on server...")
+	for _, table in pairs(meshTagList) do
+		for key, visible in pairs(table) do
+			local meshList = CollectionService:GetTagged(key)
+			if not visible then
+				print(`Setting {key} invisible`)
+				for _, instance in pairs(meshList) do
+					instance.Transparency = 1
+					instance.CanCollide = false
+				end
+			else
+				for _, instance in pairs(meshList) do
+					print(`Setting {key} visible`)
+					instance.Transparency = 0
+					instance.CanCollide = true
+				end
+			end
+		end
+	end
+end
+
+return HelperFunctions
