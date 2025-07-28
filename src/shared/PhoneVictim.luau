@@ -1,8 +1,8 @@
 return {
 	["PhoneVictim"] = {
 		Name = "Jack",
-		Portrait = "rbxassetid://926929998",
-		Dialogue = "ROBLOX does not give a-. Oh, what do you want, i'm livestreaming here!",
+		Portrait = "rbxassetid://1228431715",
+		Dialogue = "ROBLOX does not give a- Oh, what do you want, i'm livestreaming here!",
 		VoiceId = 3,
 		Pitch = 3,
 		Speed = 1,
@@ -11,6 +11,7 @@ return {
 			{
 				Text = "Nice Nokia Brick.",
 				Type = "NextMessage",
+				ForceEquip = "Skeng",
 				NextDialogue = {
 					Name = "Jack (smirking)",
 					Portrait = "rbxassetid://14851941873",
@@ -25,11 +26,12 @@ return {
 								Pitch = -6,
 								Speed = 1.5,
 								Volume = 3,
-								Dialogue = "WHAT IN THE DIDDLY HECKINGTON IS THAT MONSTER? TAKE IT. DON'T HURT ME PLEASE!",
+								Dialogue = "WHAT IN THE DIDDLY HUNKY DORY HECKINGTON IS THAT MONSTER? TAKE IT. DON'T HURT ME PLEASE!",
 								Responses = {
 									{
 										Text = "Exactly. Simple as.",
 										Type = "Close",
+										SetMeshVisibility = { { PhoneVictimNokia = false } },
 										ProgressMission = {
 											MissionName = "StealPhone",
 											ProgressVal = 1,
@@ -58,14 +60,13 @@ return {
 										Text = "Cry & Forfeit",
 										Type = "NextMessage",
 										NextDialogue = {
-											Name = "Esteemed Gentlemen",
-											Portrait = "rbxassetid://3074647433",
+											Name = "???",
+											Portrait = "rbxassetid://11125881651",
 											Dialogue = "EXACTLY LITTLE BOY, GIVE ME ALL YOUR BELONGINGS AS WELL OR IM ABOUT TO UNLEASH THE BEAST OF CURRENT CHRISTMAS",
 											Responses = {
 												{
 													Text = "Ya-yamete.",
 													Type = "Close",
-													UnlockMission = "StealPhone",
 												},
 												{
 													Text = "SIR YES SIR",

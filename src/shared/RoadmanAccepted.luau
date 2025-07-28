@@ -16,7 +16,7 @@ return {
 					Speed = 1,
 					Volume = 1,
 					Portrait = "rbxassetid://10246439168",
-					Dialogue = "Ahem. The game bugged my friend. Acquire the communications device and I will give you an ending. Ecks Dee as you kids say.",
+					Dialogue = "Ahem. The game bugged my friend. Acquire the communications device and I will give you a PC. Ecks Dee as you kids say.",
 					Responses = {
 						{
 							Text = "SIR YES SIR!",
