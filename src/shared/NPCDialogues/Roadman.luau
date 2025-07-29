@@ -6,6 +6,7 @@ return {
 		Pitch = 12,
 		Speed = 2,
 		Volume = 3,
+		PlayTheme = "RoadmanTune",
 		Responses = {
 			{
 				Text = "You look dodgy as pal.",
@@ -43,6 +44,7 @@ return {
 								Pitch = 1,
 								Speed = 1,
 								Volume = 1,
+								PlayTheme = "PoshTheme",
 								Dialogue = "AUGHBRAHUUNG... Oh dear, my throat is parched, I give my thanks to you kind sir, as this beverage you call a PG Tip is quenching my thirst. All is foul and foul is fair. Cat in the adage. Succulent Chinese Meal. Divorced, Beheaded, Died, Divorced, Beheaded, Survived.",
 								Responses = {
 									{

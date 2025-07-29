@@ -1,7 +1,6 @@
 local HelperFunctions = {}
 local ServerStorage = game:GetService("ServerStorage")
 local CollectionService = game:GetService("CollectionService")
-local NPCStorage = ServerStorage.NPCS
 local serverTools = ServerStorage.Tools
 
 -- force equip a tool, should a player own it (they should)
@@ -40,14 +39,19 @@ function HelperFunctions.SetNPCDialogueFile(fromToTable)
 	end
 end
 
--- spawn an NPC from ReplicatedStorage.NPCS
-function HelperFunctions.SpawnNPCAtPosition(npcName, pos)
-	local npc = NPCStorage:FindFirstChild(npcName):Clone()
-	if npc then
-		npc.Parent = workspace
-		npc:MoveTo(pos)
+-- spawn a model
+function HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
+	local model = ServerStorage:FindFirstChild(folderName):FindFirstChild(modelName):Clone()
+	if model then
+		model.Parent = workspace
+		if pos then
+			model:MoveTo(pos)
+		end
+
+		return model
 	else
-		error("Cannot find NPC to spawn")
+		error("Cannot find model to spawn")
+		return nil
 	end
 end
 
@@ -84,6 +88,20 @@ function HelperFunctions.SetMeshVisibility(meshTagList)
 					instance.CanCollide = true
 				end
 			end
+		end
+	end
+end
+
+function HelperFunctions.DestroyObject(objectTagList)
+	for _, tagName in pairs(objectTagList) do
+		local tagList = CollectionService:GetTagged(tagName)
+		if #tagList > 0 then
+			for _, instance in pairs(tagList) do
+				instance:Destroy()
+				print(`{tagName} destroyed`)
+			end
+		else
+			print(`No objects found with the tag {tagName} to destroy.`)
 		end
 	end
 end

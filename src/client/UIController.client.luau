@@ -3,16 +3,21 @@ local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
+-- remotes
 local unlockEvent = ReplicatedStorage.Missions.Events.UnlockMissionEvent
 local progressEvent = ReplicatedStorage.Missions.Events.ProgressMissionEvent
 local giveToolEvent = ReplicatedStorage.Missions.Events.GiveToolEvent
 local forceEquipEvent = ReplicatedStorage.Missions.Events.ForceEquipEvent
 local removeToolsEvent = ReplicatedStorage.Missions.Events.RemoveToolsEvent
 local setMeshVisibilityEvent = ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent
+local executeScenarioEvent = ReplicatedStorage.Missions.Events.ExecuteScenarioEvent
 local setDialogueFileEvent = ReplicatedStorage.Missions.Events.SetDialogueFileEvent
+local destroyObjectEvent = ReplicatedStorage.Missions.Events.DestroyObjectEvent
+
 local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 local soundModule = require(StarterPlayer.StarterPlayerScripts:WaitForChild("Client"):WaitForChild("SoundModule"))
 
+-- ui
 local ui = player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
 local frame = ui:WaitForChild("DialogueFrame")
 local nameLabel = frame:WaitForChild("NameLabel")
@@ -25,6 +30,8 @@ local btn1Conn
 local btn2Conn
 local talking = false
 local debounce = false
+
+local currentThemePlaying
 
 local function typeText(text)
 	btn1.Interactable = false
@@ -57,6 +64,12 @@ end
 
 function hideUI()
 	task.delay(0.3, function()
+		-- disable all theme sounds
+		soundModule.StopSound(currentThemePlaying)
+		-- set movement back
+		character.Humanoid.WalkSpeed = 25
+		character.Humanoid.JumpPower = 50
+
 		talking = false
 		frame.Visible = false
 		ui.Enabled = false
@@ -86,12 +99,6 @@ function handleResponse(responseData)
 		hideUI()
 	end
 
-	-- client events
-	if responseData.PlaySound then
-		print(`Client wants to play sound: {responseData.PlaySound}`)
-		soundModule.PlaySound(responseData.PlaySound)
-	end
-
 	-- server events
 	fireAndLog(unlockEvent, responseData.UnlockMission, "Mission unlock")
 	fireAndLog(progressEvent, responseData.ProgressMission, "Mission progress")
@@ -100,11 +107,34 @@ function handleResponse(responseData)
 	fireAndLog(removeToolsEvent, responseData.RemoveTools, "Remove tools")
 	fireAndLog(setMeshVisibilityEvent, responseData.SetMeshVisibility, "Set Mesh Visibility")
 	fireAndLog(setDialogueFileEvent, responseData.SetDialogueFile, "Set Dialogue File")
+	fireAndLog(
+		executeScenarioEvent,
+		responseData.ExecuteScenarioEvent,
+		`Execute scenario {responseData.ExecuteScenarioEvent}`
+	)
+	fireAndLog(destroyObjectEvent, responseData.DestroyObject, "Destroy Object")
 end
 
 function updateUI(data)
 	nameLabel.Text = data.Name
 	portrait.Image = data.Portrait
+
+	-- client events
+	if data.PlaySound then
+		print(`Client wants to play sound: {data.PlaySound}`)
+		soundModule.PlaySound(data.PlaySound)
+	end
+	if data.PlayTheme then
+		print(`Client wants to play theme: {data.PlayTheme}`)
+		soundModule.StopSound(currentThemePlaying)
+		soundModule.PlaySound(data.PlayTheme)
+		currentThemePlaying = data.PlayTheme
+	end
+
+	if data.StopSound then
+		print(`Client wants to stop sound: {data.StopSound}`)
+		soundModule.StopSound(data.StopSound)
+	end
 
 	if btn1Conn then
 		btn1Conn:Disconnect()
@@ -130,7 +160,7 @@ function updateUI(data)
 		end
 		debounce = true
 		handleResponse(data.Responses[2])
-		task.delay(1, function()
+		task.delay(0.5, function()
 			debounce = false
 		end)
 	end)
@@ -146,12 +176,17 @@ function updateUI(data)
 end
 
 function openUI(data)
+	-- stop player movement
+	character.Humanoid.WalkSpeed = 0
+	character.Humanoid.JumpPower = 0
+
 	ui.Enabled = true
 	frame.Visible = true
+
 	updateUI(data)
 end
 
-game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, player)
+game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, _)
 	if talking then
 		return
 	end

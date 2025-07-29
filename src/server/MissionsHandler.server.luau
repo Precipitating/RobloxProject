@@ -6,6 +6,32 @@ local MissionEventHandlers = require(ServerScriptService.Server.MissionsLogicHan
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local MissionCompleteHandlers = require(ServerScriptService.Server.MissionsCompleteHandler)
 
+-- mission handlers
+local function unlockHandler(player: Player, missionId: Types.MissionId)
+	print(` {player} calling mission event {missionId}...`)
+	local handler = MissionEventHandlers[missionId]
+
+	if handler then
+		handler()
+	else
+		print("Mission handler not found. Check spelling")
+	end
+end
+
+local function completeHandler(player: Player, missionId: Types.MissionId)
+	print(`{player} completed mission {missionId}`)
+	local handler = MissionCompleteHandlers[missionId]
+	if handler then
+		handler(player)
+	else
+		print("Failed to claim rewards")
+	end
+end
+
+local function failHandler(player: Player, missionId: Types.MissionId)
+	print(`{player} failed mission {missionId}`)
+end
+
 -- handle remote events
 ReplicatedStorage.Missions.Events.UnlockMissionEvent.OnServerEvent:Connect(function(player, missionName)
 	print(missionName)
@@ -43,45 +69,36 @@ ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerEvent:Connect(functio
 	end
 end)
 
-ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(player, meshTagList)
+ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(_, meshTagList)
 	print("Set mesh visibility arrived at server")
 	if typeof(meshTagList) == "table" then
 		HelperFunctions.SetMeshVisibility(meshTagList)
 	end
 end)
 
-ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(function(player, fromToTable)
+ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(function(_, fromToTable)
 	print("Set dialogue arrived at server")
 	if typeof(fromToTable) == "table" then
 		HelperFunctions.SetNPCDialogueFile(fromToTable)
 	end
 end)
 
--- mission handlers
-local function unlockHandler(player: Player, missionId: Types.MissionId)
-	print(` {player} attemping to unlock mission {missionId}...`)
-	local handler = MissionEventHandlers[missionId]
-
-	if handler then
-		handler()
-	else
-		print("Mission handler not found. Check spelling")
-	end
-end
-
-local function completeHandler(player: Player, missionId: Types.MissionId)
-	print(`{player} completed mission {missionId}`)
-	local handler = MissionCompleteHandlers[missionId]
+ReplicatedStorage.Missions.Events.ExecuteScenarioEvent.OnServerEvent:Connect(function(player, eventName)
+	print(` {player} calling mission event {eventName}...`)
+	local handler = MissionEventHandlers[eventName]
 	if handler then
 		handler(player)
 	else
-		print("Failed to claim rewards")
+		print("Event handler not found. Check spelling")
 	end
-end
+end)
 
-local function failHandler(player: Player, missionId: Types.MissionId)
-	print(`{player} failed mission {missionId}`)
-end
+ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(function(_, objectTagList)
+	print("Destroy object arrived at server")
+	if typeof(objectTagList) == "table" then
+		HelperFunctions.DestroyObject(objectTagList)
+	end
+end)
 
 local function initialize()
 	for missionId in Missions.Missions do
