@@ -29,9 +29,9 @@ return {
 								Dialogue = "WHAT IN THE DIDDLY HUNKY DORY HECKINGTON IS THAT MONSTER? TAKE IT. DON'T HURT ME PLEASE!",
 								Responses = {
 									{
+										DestroyObject = { "PhoneVictim" },
 										Text = "Exactly. Simple as.",
 										Type = "Close",
-										SetMeshVisibility = { { PhoneVictimNokia = false } },
 										ProgressMission = {
 											MissionName = "StealPhone",
 											ProgressVal = 1,
@@ -66,10 +66,12 @@ return {
 											Responses = {
 												{
 													Text = "Ya-yamete.",
+													DestroyObject = { "PhoneVictim" },
 													Type = "Close",
 												},
 												{
 													Text = "SIR YES SIR",
+													DestroyObject = { "PhoneVictim" },
 													Type = "Close",
 												},
 											},

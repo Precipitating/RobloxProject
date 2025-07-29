@@ -6,6 +6,7 @@ return {
 		Pitch = 12,
 		Speed = 2,
 		Volume = 3,
+		PlayTheme = "RoadmanTune",
 		Responses = {
 			{
 				Text = "What happened to your voice?",
@@ -16,6 +17,7 @@ return {
 					Speed = 1,
 					Volume = 1,
 					Portrait = "rbxassetid://10246439168",
+					PlayTheme = "PoshTheme",
 					Dialogue = "Ahem. The game bugged my friend. Acquire the communications device and I will give you a PC. Ecks Dee as you kids say.",
 					Responses = {
 						{

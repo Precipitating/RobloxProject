@@ -1,0 +1,364 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="LocalScript" referent="RBX9BD3EBC05CFC4AD3A91AB86BB65E48DF">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<bool name="Disabled">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">RoadmanFail</string>
+			<token name="RunContext">0</token>
+			<string name="ScriptGuid">{74482AC9-D405-464D-9D2B-9F70B63B2C52}</string>
+			<ProtectedString name="Source"><![CDATA[-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local CodesOtaku = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("CodesOtaku")
+local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
+
+repeat wait() until workspace.CurrentCamera -- Wait until camera is found
+-- Constructor
+
+local Camera = workspace.CurrentCamera
+local Looping = false
+local Speed = 3
+local FreezeControls = false
+
+-- Loading
+local CutsceneFolder = ReplicatedStorage:WaitForChild("Shared"):WaitForChild("Cutscenes"):WaitForChild("RoadmanFail") -- The folder that contains the cutscene data (Cameras...)
+local Destroy = true -- Destroy folder after loading? you don't want your player to see your cameras floating around!
+local NoYield = false -- Generally you want this to be set to false, because loading takes a little bit of time, and you don't want to interact with the cutscene when it's not loaded
+local SafeMode = true -- This is adviced to be turned on, especially if the cutscene folder data is too big to load at one frame. when turned on, it loads a camera every frame, not all at once.
+
+local Cutscene = require(CutsceneModule)
+
+local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls) -- Create cutscene
+Demo:Load(CutsceneFolder, Destroy, NoYield, SafeMode) -- Load cutscene data from folder
+
+local PlayOnPartTouch = script:FindFirstChild("PlayOnPartTouch")
+local PlayOnPlayerJoin = script:FindFirstChild("PlayOnPlayerJoin")
+local PlayOnCharacterAdded = script:FindFirstChild("PlayOnCharacterAdded")
+local PlayOnCharacterDied = script:FindFirstChild("PlayOnCharacterDied")
+local PlayOnEventFire = script:FindFirstChild("PlayOnEventFire")
+local PlayOnRemoteEventFire = script:FindFirstChild("PlayOnRemoteEventFire")
+local ProtectTheCharacterWhilePlaying = script:FindFirstChild("ProtectTheCharacterWhilePlaying")
+local CharacterProtector = script:FindFirstChild("CharacterProtector")
+local Music = script:FindFirstChild("Music")
+local StopMusicWhenFinished = script:FindFirstChild("StopMusicWhenFinished")
+local StopOnEventFire = script:FindFirstChild("StopOnEventFire")
+local StopOnRemoteEventFire = script:FindFirstChild("StopOnRemoteEventFire")
+local PlayOnce = script:FindFirstChild("PlayOnce")
+local Debounce = script:FindFirstChild("Cooldown")
+local OnFinishedRemove = script:FindFirstChild("OnFinishedRemove")
+local bin = true
+local Player = game:GetService("Players").LocalPlayer
+local CutsceneGui = script:FindFirstChild("Cutscene")
+
+-- Cutscene duration in seconds
+local duration = Demo:GetDuration()
+-- Check the module script for more functions and then do like this "Demo:FunctionName()" like the above example of duration
+
+-- a better alternative implementation for the wait function
+function wait_time(duration)
+    local start = tick()
+    local Heartbeat = game:GetService("RunService").Heartbeat
+    repeat Heartbeat:Wait() until (tick() - start) >= duration
+    return (tick() - start)
+end
+
+-- Support for debounce
+function PlayCutscene()
+	if bin then
+		bin = false
+		Music:Play()
+		if ProtectTheCharacterWhilePlaying and ProtectTheCharacterWhilePlaying.Value and Player.Character then
+			CharacterProtector.Parent = Player.Character
+		end
+		Demo:Play()
+	end
+end
+
+Demo.EStop.Event:Connect(function()
+	print("Rejoining")
+	task.wait(7)
+	local teleportToPlace = game:GetService("TeleportService")
+	teleportToPlace:Teleport(game.PlaceId,Player)
+end)
+
+-- Update the cutscene every render frame
+RunService.RenderStepped:Connect(function(Delta)
+	Demo:Update(Delta)
+end)
+
+if PlayOnPlayerJoin and PlayOnPlayerJoin.Value then
+	-- Play the cutscene
+	PlayCutscene()
+end
+
+if PlayOnPartTouch then
+	local part = script.PlayOnPartTouch.Value
+	if part and part:IsA("BasePart") then
+		part.Touched:Connect(function(hit)
+			if hit.Parent == Player.Character then
+				PlayCutscene()
+			end
+		end)
+	end
+	PlayOnPartTouch:Destroy()
+end
+
+if PlayOnEventFire then
+	local e = PlayOnEventFire.Value
+	if e and e:IsA("BindableEvent") then
+		e.Event:Connect(PlayCutscene)
+	end
+	PlayOnEventFire:Destroy()
+end
+
+if PlayOnRemoteEventFire then
+	local e = PlayOnRemoteEventFire.Value
+	if e and e:IsA("RemoteEvent") then
+		e.OnClientEvent:Connect(PlayCutscene)
+	end
+	PlayOnRemoteEventFire:Destroy()
+end
+
+if StopOnRemoteEventFire then
+	local e = StopOnRemoteEventFire.Value
+	if e and e:IsA("RemoteEvent") then
+		e.OnClientEvent:Connect(function()
+			Demo:Stop()
+		end)
+	end
+	StopOnRemoteEventFire:Destroy()
+end
+
+if StopOnRemoteEventFire then
+	local e = StopOnRemoteEventFire.Value
+	if e and e:IsA("RemoteEvent") then
+		e.OnClientEvent:Connect(function()
+			Demo:Stop()
+		end)
+	end
+	StopOnRemoteEventFire:Destroy()
+end
+
+if CutsceneGui then
+	CutsceneGui.Parent = Player:WaitForChild("PlayerGui")
+	local SkipCutsceneButton = CutsceneGui:FindFirstChild("SkipCutscene", true)
+	local PlayCutsceneButton = CutsceneGui:FindFirstChild("PlayCutscene", true)
+	
+	if SkipCutsceneButton and SkipCutsceneButton:IsA("GuiButton") then
+		SkipCutsceneButton.MouseButton1Click:Connect(function()
+			Demo:Stop()
+		end)
+	end
+	
+	if PlayCutsceneButton and PlayCutsceneButton:IsA("GuiButton") then
+		PlayCutsceneButton.MouseButton1Click:Connect(function()
+			PlayCutscene()
+		end)
+	end
+	Demo.EStop.Event:Connect(function()
+		CutsceneGui.Enabled = false
+	end)
+end
+
+local Character = Player.Character or Player.CharacterAdded:Wait()
+
+if PlayOnCharacterAdded and PlayOnCharacterAdded.Value then
+	PlayCutscene()
+end
+if PlayOnCharacterDied and PlayOnCharacterDied.Value then
+	local Humanoid = Character:WaitForChild("Humanoid")
+	Character:WaitForChild("Humanoid").Died:Connect(function()
+		PlayCutscene()
+	end)
+end
+PlayOnCharacterAdded:Destroy()]]></ProtectedString>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="ObjectValue" referent="RBX39E4607C89D94BCF8B3D60FCE8979BA7">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnPartTouch</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="Value">null</Ref>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBX163DE34267374EE091CD5CFC7A409169">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnPlayerJoin</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">false</bool>
+			</Properties>
+		</Item>
+		<Item class="ObjectValue" referent="RBXEDD45A83A79A4517948401549BA2460A">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnEventFire</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="Value">null</Ref>
+			</Properties>
+		</Item>
+		<Item class="ObjectValue" referent="RBX25312861FF404F4AACD9F4D12D176404">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnRemoteEventFire</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="Value">RBX63760990B9AE4E8BB38FD7CADB8164F6</Ref>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBX4245B8AFBEBB41A6A2E7751E79137B5A">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnCharacterAdded</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">false</bool>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBXEA3EBE2422EF47BC89AA0208C1FD0B2B">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnCharacterDied</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">false</bool>
+			</Properties>
+		</Item>
+		<Item class="NumberValue" referent="RBX3A412C4007D54719A7E2E8A6ECFB5992">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Cooldown</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<double name="Value">10</double>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBXD7A729D8C3FA45B7A4C44BF02BD5EFB7">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">ProtectTheCharacterWhilePlaying</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">false</bool>
+			</Properties>
+		</Item>
+		<Item class="ForceField" referent="RBX241510A3E7844DC9AAC4029BB93A0F22">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">CharacterProtector</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Visible">true</bool>
+			</Properties>
+		</Item>
+		<Item class="Sound" referent="RBXFABC04F334B14EA2826DE8438CFDC369">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<bool name="IsMutedForCapture">false</bool>
+				<NumberRange name="LoopRegion">0 60000 </NumberRange>
+				<bool name="Looped">true</bool>
+				<string name="Name">Music</string>
+				<bool name="PlayOnRemove">false</bool>
+				<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
+				<bool name="PlaybackRegionsEnabled">false</bool>
+				<float name="PlaybackSpeed">1</float>
+				<bool name="Playing">false</bool>
+				<float name="RollOffMaxDistance">10000</float>
+				<float name="RollOffMinDistance">10</float>
+				<token name="RollOffMode">0</token>
+				<Ref name="SoundGroup">null</Ref>
+				<Content name="SoundId"><url>rbxassetid://9041777446</url></Content>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<double name="TimePosition">0</double>
+				<float name="Volume">0.300000012</float>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBX950A6E6210C84CBFBD10540F53E27BAD">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">StopMusicWhenFinished</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">false</bool>
+			</Properties>
+		</Item>
+		<Item class="BoolValue" referent="RBX707258D0362146EE921441BD2F75908D">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">PlayOnce</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Value">true</bool>
+			</Properties>
+		</Item>
+		<Item class="ObjectValue" referent="RBXFA5C10FA1ABC4B74ACD344CF0ACA2CB9">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">StopOnEventFire</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="Value">null</Ref>
+			</Properties>
+		</Item>
+		<Item class="ObjectValue" referent="RBX85E0430C216F4ECEBA16E3E02A909C4F">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">StopOnRemoteEventFire</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<Ref name="Value">null</Ref>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBX2615BABC832D41F285CAB438454A4F40">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">OnFinishedRemove</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

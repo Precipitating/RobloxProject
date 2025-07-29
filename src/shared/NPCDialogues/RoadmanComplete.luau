@@ -6,6 +6,7 @@ return {
 		Pitch = 12,
 		Speed = 2,
 		Volume = 3,
+		PlayTheme = "RoadmanTune",
 		Responses = {
 			{
 				Text = "I got it...",
@@ -20,27 +21,33 @@ return {
 					Portrait = "rbxassetid://10246439168",
 					Dialogue = "Ahem. Ignore what transpired a second ago. Excellent, I will be taking this along with my walking stick I lended. Can you say where you took this from dear sir?",
 					PlaySound = "RadioBeep",
+					PlayTheme = "PoshTheme",
 					Responses = {
 						{
 							Text = "Robbed some geezer.",
 							Type = "NextMessage",
-							PlaySound = "RadioBeep",
 							NextDialogue = {
 								Name = "????Parry??????",
 								Pitch = -12,
 								Speed = 2,
 								Volume = 3,
 								Portrait = "rbxassetid://729001246",
-								Dialogue = "Control, this is Pc Parry on the case. We’ve got a Code 0 developing - repeat, Code zero - suspect just confessed over open mic to nicking a Nokia brick. Requesting 300 Police Cruisers for detainment.",
+								PlaySound = "RadioBeep",
+								PlayTheme = "PoliceCaught",
+								Dialogue = "Control, this is Pc Parry on the case. We’ve got a Code 0 developing - repeat, Code zero - suspect just confessed over open mic to nicking a Nokia brick. Confirmed no license to hold that device. Requesting 300 Police Cruisers for detainment.",
 								Type = "NextMessage",
 								Responses = {
 									{
 										Text = "Ya got me...",
 										Type = "Close",
+										DestroyObject = { "Roadman" },
+										ExecuteScenarioEvent = "RoadmanCaught",
 									},
 									{
 										Text = "em tog aY",
 										Type = "Close",
+										DestroyObject = { "Roadman" },
+										ExecuteScenarioEvent = "RoadmanCaught",
 									},
 								},
 							},
@@ -63,33 +70,33 @@ return {
 											Dialogue = "Very well, I take your word for it. Here is the PC reward, do enjoy.",
 											Responses = {
 												{
-													Text = "What the...",
+													Text = "Time to play Bloxnite",
 													Type = "Close",
 												},
 												{
-													Text = "...Fed.",
+													Text = "Get on apoc lads..",
 													Type = "Close",
 												},
 											},
 										},
 									},
 									{
-										Text = "Name's not Oliver bucko ROFL",
+										Text = "Name's not Oliwier ROFLCOPTER Dogeface",
 										Type = "NextMessage",
 										NextDialogue = {
 											Name = "Gent-Z",
 											Pitch = 12,
-											Speed = 2,
+											Speed = 1.5,
 											Volume = 3,
 											Portrait = "rbxassetid://11394123247",
-											Dialogue = "Yikes, lil pup talkin' like that in the big 2025 jesus get with the times ts is crazy old man. Take the W clanker reward",
+											Dialogue = "Yikes, lil pup talkin' like that in the big 2025 jesus get with the times. Ts crazy old man. Take the W clanker reward",
 											Responses = {
 												{
 													Text = "What the...",
 													Type = "Close",
 												},
 												{
-													Text = "..Flippington.",
+													Text = "^",
 													Type = "Close",
 												},
 											},
