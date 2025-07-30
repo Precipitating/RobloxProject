@@ -1,11 +1,16 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local mainSound = ReplicatedStorage.Shared.Sounds.Main
 local soundLocation = ReplicatedStorage.Shared.Sounds
 local SoundHandler = {}
 
 function SoundHandler.PlaySound(soundName)
 	print(`Playing {soundName}`)
 	if soundName then
-		soundLocation:WaitForChild(soundName):Play()
+		soundLocation:FindFirstChild(soundName):Play()
+
+		if mainSound then
+			mainSound:Pause()
+		end
 	else
 		warn("No sound to play, its nil.")
 	end
@@ -16,9 +21,15 @@ function SoundHandler.StopSound(soundName)
 	if soundName then
 		soundLocation:FindFirstChild(soundName):Stop()
 		soundName = nil
+
+		if mainSound then
+			mainSound:Resume()
+		end
 	else
 		warn("No sound to stop, it's nil")
 	end
 end
+
+mainSound:Play()
 
 return SoundHandler

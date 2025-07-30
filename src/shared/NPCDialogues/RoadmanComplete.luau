@@ -70,12 +70,16 @@ return {
 											Dialogue = "Very well, I take your word for it. Here is the PC reward, do enjoy.",
 											Responses = {
 												{
-													Text = "Time to play Bloxnite",
+													Text = "Time to play the better game",
 													Type = "Close",
+													DestroyObject = { "Roadman" },
+													ExecuteScenarioEvent = "RoadmanWin",
 												},
 												{
-													Text = "Get on apoc lads..",
+													Text = "Time to become a streamer!",
 													Type = "Close",
+													DestroyObject = { "Roadman" },
+													ExecuteScenarioEvent = "RoadmanWin",
 												},
 											},
 										},
@@ -94,10 +98,14 @@ return {
 												{
 													Text = "What the...",
 													Type = "Close",
+													DestroyObject = { "Roadman" },
+													ExecuteScenarioEvent = "RoadmanWin",
 												},
 												{
 													Text = "^",
 													Type = "Close",
+													DestroyObject = { "Roadman" },
+													ExecuteScenarioEvent = "RoadmanWin",
 												},
 											},
 										},
