@@ -7,6 +7,7 @@ return {
 		Pitch = 3,
 		Speed = 1,
 		Volume = 1,
+		PlayTheme = "Santa",
 		Responses = {
 			{
 				Text = "Nice Nokia Brick.",
@@ -27,6 +28,7 @@ return {
 								Speed = 1.5,
 								Volume = 3,
 								Dialogue = "WHAT IN THE DIDDLY HUNKY DORY HECKINGTON IS THAT MONSTER? TAKE IT. DON'T HURT ME PLEASE!",
+								PlayTheme = "Toilet",
 								Responses = {
 									{
 										DestroyObject = { "PhoneVictim" },
@@ -55,6 +57,7 @@ return {
 								Speed = 1,
 								Volume = 3,
 								Dialogue = "You really thought you could steal my phone with that confidence. Heh. You little, little boy. You know what they called me back then? The Beast Of Last Christmas. Why? GRAH-GRUH-RAAAUR-FUAAARRRR-GRAAAAH-SAAAAAAH-FAAAH. How about this. Give me YOUR PHONE, NOW!",
+								PlayTheme = "Scary",
 								Responses = {
 									{
 										Text = "Cry & Forfeit",
@@ -67,19 +70,23 @@ return {
 												{
 													Text = "Ya-yamete.",
 													DestroyObject = { "PhoneVictim" },
+													ExecuteScenarioEvent = "RoadmanMugged",
 													Type = "Close",
 												},
 												{
 													Text = "SIR YES SIR",
 													DestroyObject = { "PhoneVictim" },
+													ExecuteScenarioEvent = "RoadmanMugged",
 													Type = "Close",
 												},
 											},
 										},
 									},
 									{
-										Text = "Laugh it off",
+										Text = "(It's over bud)",
 										Type = "Close",
+										DestroyObject = { "PhoneVictim" },
+										ExecuteScenarioEvent = "RoadmanMugged",
 									},
 								},
 							},
