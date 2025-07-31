@@ -13,7 +13,7 @@ local setMeshVisibilityEvent = ReplicatedStorage.Missions.Events.SetMeshVisibili
 local executeScenarioEvent = ReplicatedStorage.Missions.Events.ExecuteScenarioEvent
 local setDialogueFileEvent = ReplicatedStorage.Missions.Events.SetDialogueFileEvent
 local destroyObjectEvent = ReplicatedStorage.Missions.Events.DestroyObjectEvent
-
+local movementModule = require(script.Parent:WaitForChild("MovementHandler"))
 local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 local soundModule = require(StarterPlayer.StarterPlayerScripts:WaitForChild("Client"):WaitForChild("SoundModule"))
 
@@ -66,9 +66,8 @@ function hideUI()
 	task.delay(0.3, function()
 		-- disable all theme sounds
 		soundModule.StopSound(currentThemePlaying)
-		-- set movement back
-		character.Humanoid.WalkSpeed = 25
-		character.Humanoid.JumpPower = 50
+		-- re-enable movement (if not last disabled by cutscene)
+		movementModule.EnableControls("UI")
 
 		talking = false
 		frame.Visible = false
@@ -177,8 +176,7 @@ end
 
 function openUI(data)
 	-- stop player movement
-	character.Humanoid.WalkSpeed = 0
-	character.Humanoid.JumpPower = 0
+	movementModule.DisableControls("UI")
 
 	ui.Enabled = true
 	frame.Visible = true
