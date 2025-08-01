@@ -1,13 +1,11 @@
-local MissionEventHandlers = {}
 local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ServerStorage = game:GetService("ServerStorage")
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local mainMusic = ReplicatedStorage.Shared.Sounds.Main
-local animationFolder = ServerStorage.Animations
 
+local MissionEventHandlers = {}
 -- handle all game events
 MissionEventHandlers["StealPhone"] = function()
 	-- spawn the next NPC that progresses this mission
