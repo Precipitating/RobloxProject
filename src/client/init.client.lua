@@ -45,3 +45,10 @@ generalRemotes.PlayAnimation.OnClientEvent:Connect(function(animId)
 	animTrack:Play()
 	print("Animation playing...")
 end)
+
+-- set player's collision group
+for _, descendant in pairs(character:GetDescendants()) do
+	if descendant:IsA("BasePart") then
+		descendant.CollisionGroup = "Player"
+	end
+end
