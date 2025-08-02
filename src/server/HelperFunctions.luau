@@ -15,11 +15,23 @@ end
 
 -- remove tools, should a player own it (they should)
 -- goes thru backpack each iteration incase you have a duplicate (somehow)
+-- also checks player model as they may have equipped it already
+
 function HelperFunctions.RemoveTools(player, toolsStringList)
 	for _, toolName in pairs(toolsStringList) do
-		for _, currentToolInBackpack in pairs(player.Backpack:GetChildren()) do
-			if currentToolInBackpack:IsA("Tool") and currentToolInBackpack.Name == toolName then
-				currentToolInBackpack.Parent = nil
+		-- check backpack
+		for _, item in pairs(player.Backpack:GetChildren()) do
+			if item:IsA("Tool") and item.Name == toolName then
+				item:Destroy()
+			end
+		end
+
+		-- check character (equipped tools)
+		if player.Character then
+			for _, item in pairs(player.Character:GetChildren()) do
+				if item:IsA("Tool") and item.Name == toolName then
+					item:Destroy()
+				end
 			end
 		end
 	end
