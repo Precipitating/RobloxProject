@@ -3,7 +3,6 @@ local initializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNP
 local arrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
 
 initializedRemote.Event:Connect(function(data)
-	print("found")
 	arrivedRemote:Fire()
 end)
 

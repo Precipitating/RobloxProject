@@ -15,11 +15,10 @@ end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
 	-- stop movement
-	generalRemotes.DisableControls:FireClient(player, "Cutscene")
+	--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 	-- spawn surrounding cops around player
 	HelperFunctions.SpawnModelAtPosition("MissionModels", "Cops", nil)
-	mainMusic:Stop()
-	mainMusic:Destroy()
+
 	-- award badge
 	BadgeHandler.awardBadge(player, 3145652566759102)
 	-- call cutscene
@@ -28,13 +27,9 @@ end
 
 MissionEventHandlers["RoadmanWin"] = function(player)
 	-- stop movement
-	generalRemotes.DisableControls:FireClient(player, "Cutscene")
+	--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 
 	HelperFunctions.SpawnModelAtPosition("MissionModels", "PC", nil)
-
-	-- destroy main music, because after this function is called, hideUI (UIController) will call, auto resuming main music
-	mainMusic:Stop()
-	mainMusic:Destroy()
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 2251989026476496)
@@ -50,14 +45,10 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 
 	if humanoid and rootPart then
 		-- disable movement
-		generalRemotes.DisableControls:FireClient(player, "Cutscene")
+		--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 
 		-- spawn signs
 		local signs = HelperFunctions.SpawnModelAtPosition("MissionModels", "MuggedSigns", nil)
-
-		-- stop and destroy main music
-		mainMusic:Stop()
-		mainMusic:Destroy()
 
 		-- award badge
 		BadgeHandler.awardBadge(player, 3689591686016157)

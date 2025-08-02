@@ -5,6 +5,7 @@ local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local animator = humanoid:WaitForChild("Animator")
 local movementHandler = require(script:WaitForChild("MovementHandler"))
+local soundModule = require(script:WaitForChild("SoundModule"))
 -- disable reset button
 local coreCall
 do
@@ -52,3 +53,6 @@ for _, descendant in pairs(character:GetDescendants()) do
 		descendant.CollisionGroup = "Player"
 	end
 end
+
+-- play main
+soundModule.PlayTheme("Main")
