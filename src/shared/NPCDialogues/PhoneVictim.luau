@@ -8,7 +8,7 @@ return {
 			Pitch = 3,
 			Speed = 1,
 			Volume = 1,
-			PlayTheme = "Santa",
+			PlayTheme = "StreetAmbience",
 			Responses = {
 				{
 					Text = "Nice Nokia Brick.",

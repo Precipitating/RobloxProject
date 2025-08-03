@@ -69,7 +69,7 @@ return {
 				{
 					Text = "I'm going to blox you in a second...",
 					Type = "NextMessage",
-					NextId = "Safechatter32",
+					NextId = "Safechatter321",
 				},
 			},
 		},
@@ -116,9 +116,9 @@ return {
 			Dialogue = "TEH EPIK DUCK IS COMING!!! ",
 			Responses = {
 				{
-					Text = "Wetro Shlop Grr!",
+					Text = "Wetro Shlop GaiSHzz!",
 					Type = "NextMessage",
-					NextId = "Safechatter313",
+					NextId = "MissionMode",
 				},
 				{
 					Text = "My house is on fire! gtg.",
@@ -128,14 +128,15 @@ return {
 			},
 		},
 
-		Safechatter313 = {
+		MissionMode = {
 			Name = "Guest",
 			Portrait = "rbxassetid://18142327542",
 			Dialogue = "Have a nice day",
 			Responses = {
 				{
-					Text = "Have a nice d- SHUTAAAAAYAAUUUUUUUUUUP",
+					Text = "xD Have a nice day :) aha! xD",
 					SetDialogueFile = { { SafechatterNameTag = "SafechatterAccepted" } },
+					UnlockMission = "GuestMoney",
 					Type = "Close",
 				},
 				{
@@ -174,11 +175,13 @@ return {
 			Responses = {
 				{
 					Text = "Wha-",
+					ExecuteScenarioEvent = "GuestHorrorMode",
 					Type = "NextMessage",
 					NextId = "Close",
 				},
 				{
 					Text = "W-",
+					ExecuteScenarioEvent = "GuestHorrorMode",
 					Type = "Close",
 				},
 			},

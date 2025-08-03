@@ -5,6 +5,7 @@ local Types = require(ReplicatedStorage.Missions.Configs.Types)
 local MissionEventHandlers = require(ServerScriptService.Server.MissionsLogicHandler)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local MissionCompleteHandlers = require(ServerScriptService.Server.MissionsCompleteHandler)
+local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
 
 -- mission handlers
 local function unlockHandler(player: Player, missionId: Types.MissionId)
@@ -98,6 +99,11 @@ ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(funct
 	if typeof(objectTagList) == "table" then
 		HelperFunctions.DestroyObject(objectTagList)
 	end
+end)
+
+ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(_, pause, NPCName)
+	print(`{NPCName} pathfinding state on server: {pause}`)
+	NPCModule:GetNPC(NPCName):SetInteractedWith(pause)
 end)
 
 local function initialize()

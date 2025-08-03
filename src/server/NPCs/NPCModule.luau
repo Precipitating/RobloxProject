@@ -13,6 +13,7 @@ function NPC.new(model)
 	self.Health = 100
 	self.AvailablePaths = nil
 	self.InteractedWith = false
+	self.MovementCoroutine = nil
 	self.Humanoid = model:FindFirstChild("Humanoid")
 	self.HumanoidRootPart = model:FindFirstChild("HumanoidRootPart")
 	return self
@@ -20,6 +21,12 @@ end
 
 function NPC:SetInteractedWith(val)
 	self.InteractedWith = val
+
+	if not val then
+		if self.MovementCoroutine and coroutine.status(self.MovementCoroutine) == "suspended" then
+			coroutine.resume(self.MovementCoroutine)
+		end
+	end
 end
 
 function NPC:IsInteracting()
@@ -91,27 +98,53 @@ function NPC:ForceStopMovement()
 end
 
 function NPC:PathFindTo(targetPos)
-	if self.InteractedWith then
-		print("Is interacting, cancelling pathfind attempt")
-		return
-	end
-	if not self.Humanoid or not self.HumanoidRootPart then
-		error("Missing Humanoid or HumanoidRootPart")
-		return
-	end
-
 	local path = PathfindingService:CreatePath()
 	path:ComputeAsync(self.HumanoidRootPart.Position, targetPos.Position)
 
 	for _, waypoint in path:GetWaypoints() do
-		if self.InteractedWith then
-			return
+		while self.InteractedWith do
+			print("Paused...")
+			coroutine.yield() -- Pause here
 		end
+
 		self:MoveTo(waypoint.Position, true)
-		self.Humanoid.MoveToFinished:Wait()
+
+		local finished = false
+		local connection
+		local thread = coroutine.running()
+
+		connection = self.Humanoid.MoveToFinished:Connect(function()
+			if not finished then
+				finished = true
+				connection:Disconnect()
+				coroutine.resume(thread, "moveDone")
+			end
+		end)
+
+		local resumeReason = coroutine.yield()
+
+		while self.InteractedWith do
+			print("Paused after MoveTo")
+			coroutine.yield()
+		end
 	end
 
 	arrivedRemote:Fire()
+	print("Path complete")
+end
+
+function NPC:StartPathing(targetPos)
+	if self.MovementCoroutine and coroutine.status(self.MovementCoroutine) == "suspended" then
+		print("Already moving")
+		return
+	end
+
+	self.InteractedWith = false
+	self.MovementCoroutine = coroutine.create(function()
+		self:PathFindTo(targetPos)
+	end)
+
+	coroutine.resume(self.MovementCoroutine)
 end
 
 return NPC

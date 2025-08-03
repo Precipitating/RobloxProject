@@ -1,8 +1,10 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local Events = ReplicatedStorage.Missions.Events
+local NPCEvents = ReplicatedStorage.Events.NPC
 -- remotes
 local RemoteMap = {
 	UnlockMission = Events.UnlockMissionEvent,
@@ -15,6 +17,11 @@ local RemoteMap = {
 	DestroyObject = Events.DestroyObjectEvent,
 	ExecuteScenarioEvent = Events.ExecuteScenarioEvent,
 }
+
+-- npc
+local PauseNPCMovement = NPCEvents.PauseNPCMovement
+local moveableNPCName = nil
+
 local movementModule = require(script.Parent:WaitForChild("MovementHandler"))
 local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 local soundModule = require(script.Parent:WaitForChild("SoundModule"))
@@ -69,6 +76,11 @@ end
 
 function hideUI(closeType)
 	task.delay(0.3, function()
+		if moveableNPCName then
+			PauseNPCMovement:FireServer(false, moveableNPCName)
+			moveableNPCName = nil
+		end
+
 		if closeType ~= "CloseCutscene" then
 			soundModule.PlayTheme("Main")
 			-- re-enable movement (if not last disabled by cutscene)
@@ -85,6 +97,9 @@ end
 
 local function fireAndLog(event, data, label)
 	if data then
+		if label == "UnlockMission" then
+			soundModule.PlaySound("NewMission")
+		end
 		event:FireServer(data)
 		print(`Remote fired! {label}: {data}`)
 	end
@@ -199,6 +214,12 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		return
 	end
 	talking = true
+
+	-- check if moveable NPC, and if so pause its movement
+	if CollectionService:HasTag(prompt.Parent, "MoveableNPC") then
+		PauseNPCMovement:FireServer(true, prompt.Parent.Name)
+		moveableNPCName = prompt.Parent.Name
+	end
 
 	local npc = prompt.Parent:FindFirstChild("NPCName")
 	if not npc then

@@ -2104,6 +2104,28 @@ StealPhone = {
 		manualOnly = true,	
 	},
 
+	GuestMoney = {
+		categoryId = "Guest",
+		tasks = {
+			Money = {
+				taskType = Types.TaskType.Count,
+				goalCount = 5,
+			},
+		},
+		metadata = {
+			displayName = "Get 5 Tickets",
+			visibleAfterComplete = true,
+			visibleBeforeUnlocked = false,
+			rewards = {
+				{
+					icon = 138914986496043,
+					displayName = "Bag of Tix",
+				},
+			},
+		},
+		manualOnly = true,	
+	},
+
 
 }
 
