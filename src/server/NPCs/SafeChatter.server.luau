@@ -12,5 +12,5 @@ arrivedRemote.Event:Connect(function(data)
 	local safeChatterRef = NPCModule:GetNPC("Safechatter")
 	local pathData = safeChatterRef:GetPathStorage():GetChildren()
 	local nextLocation = pathData[math.random(1, #pathData)]
-	safeChatterRef:PathFindTo(nextLocation)
+	safeChatterRef:StartPathing(nextLocation)
 end)

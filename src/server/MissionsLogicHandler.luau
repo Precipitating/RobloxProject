@@ -1,12 +1,14 @@
 local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
+local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
-local mainMusic = ReplicatedStorage.Shared.Sounds.Main
 
 local MissionEventHandlers = {}
 -- handle all game events
+
+-- Roadman
 MissionEventHandlers["StealPhone"] = function()
 	-- spawn the next NPC that progresses this mission
 	local pos = Vector3.new(math.random(-360, 360), 5.23, -26.1)
@@ -65,5 +67,15 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 		warn("Humanoid or HumanoidRootPart missing for", player.Name)
 	end
 end
+
+MissionEventHandlers["GuestMoney"] = function(player)
+	print("GUEST MISSIO NBEGIN")
+end
+
+MissionEventHandlers["GuestHorrorMode"] = function(player)
+	print("GUEST HORROR MODE")
+end
+
+-- Guest
 
 return MissionEventHandlers
