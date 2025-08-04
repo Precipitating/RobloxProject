@@ -45,29 +45,22 @@ local function typeText(text)
 	btn2.Interactable = false
 	btn1.Text = ""
 	btn2.Text = ""
-
 	dialogueText.Text = ""
-	textToSpeech.Speak(text)
 
-	local timeout = 5
-	local startTime = tick()
-	local ttsFailed = false
+	local ttsSuccess = textToSpeech.Speak(text)
+	local charDelay = 0.05
+	local ttsHandle = textToSpeech.GetHandle()
 
-	while not textToSpeech.IsLoaded() do
-		if tick() - startTime >= timeout then
-			warn("Taking too long to generate TTS, proceeding without audio")
-			ttsFailed = true
-			break
-		end
-		task.wait()
+	if ttsSuccess and ttsHandle.TimeLength and ttsHandle.TimeLength > 0 then
+		charDelay = ttsHandle.TimeLength / #text
 	end
 
 	for i = 1, #text do
 		dialogueText.Text = string.sub(text, 1, i)
-		if ttsFailed then
+		if not ttsSuccess then
 			soundModule.PlaySound("TypeSound")
 		end
-		task.wait(0.05 / textToSpeech.GetCurrentSpeed())
+		task.wait(charDelay)
 	end
 
 	btn1.Interactable = true
@@ -81,12 +74,14 @@ function hideUI(closeType)
 			moveableNPCName = nil
 		end
 
-		if closeType ~= "CloseCutscene" then
+		if closeType == "Close" then
 			soundModule.PlayTheme("Main")
 			-- re-enable movement (if not last disabled by cutscene)
 			movementModule.EnableControls("UI")
-		else
+		elseif closeType == "CloseCutscene" then
 			soundModule.StopAllSounds()
+		elseif closeType == "CloseKeepTheme" then
+			movementModule.EnableControls("UI")
 		end
 
 		talking = false
@@ -100,6 +95,10 @@ local function fireAndLog(event, data, label)
 		if label == "UnlockMission" then
 			soundModule.PlaySound("NewMission")
 		end
+		if label == "ProgressMission" then
+			soundModule.PlaySound("Ping")
+		end
+
 		event:FireServer(data)
 		print(`Remote fired! {label}: {data}`)
 	end
@@ -111,7 +110,11 @@ function handleResponse(data, responseData)
 		return
 	end
 	print(responseData.Type)
-	if responseData.Type == "Close" or responseData.Type == "CloseCutscene" then
+	if
+		responseData.Type == "Close"
+		or responseData.Type == "CloseCutscene"
+		or responseData.Type == "CloseKeepTheme"
+	then
 		hideUI(responseData.Type)
 	elseif responseData.Type == "NextMessage" then
 		local newData = data[responseData.NextId]
@@ -147,6 +150,10 @@ function updateUI(data, dialogueId)
 	if selectedDialogue.PlayTheme then
 		print(`Client wants to play theme: {selectedDialogue.PlayTheme}`)
 		soundModule.PlayTheme(selectedDialogue.PlayTheme)
+	end
+	if selectedDialogue.ChangeThemePitch then
+		print("Pitch changed")
+		soundModule.ChangeThemePlaybackSpeed(selectedDialogue.ChangeThemePitch)
 	end
 
 	if selectedDialogue.StopSound then

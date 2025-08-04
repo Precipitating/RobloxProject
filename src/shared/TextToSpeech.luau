@@ -5,7 +5,16 @@ local textToSpeechHandle = soundService.AudioTextToSpeech
 
 function TextToSpeech.Speak(text)
 	textToSpeechHandle.Text = text
+	local status = textToSpeechHandle:LoadAsync()
+
+	if status ~= Enum.AssetFetchStatus.Success then
+		warn("TTS Load failed:", status.Name)
+		return false
+	end
+	print("TTS loaded successfully")
+
 	textToSpeechHandle:Play()
+	return true
 end
 
 -- speed range: 0.5, 2.0
@@ -25,6 +34,10 @@ end
 
 function TextToSpeech.IsLoaded()
 	return textToSpeechHandle.IsLoaded
+end
+
+function TextToSpeech.GetHandle()
+	return textToSpeechHandle
 end
 
 return TextToSpeech

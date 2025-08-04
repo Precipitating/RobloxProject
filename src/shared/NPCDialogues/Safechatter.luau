@@ -172,17 +172,17 @@ return {
 			Dialogue = "Lights out.",
 			PlayTheme = "Scary",
 			PlaySound = "Static",
+			ChangeThemePlaybackSpeed = 0.2,
 			Responses = {
 				{
 					Text = "Wha-",
 					ExecuteScenarioEvent = "GuestHorrorMode",
-					Type = "NextMessage",
-					NextId = "Close",
+					Type = "CloseKeepTheme",
 				},
 				{
 					Text = "W-",
 					ExecuteScenarioEvent = "GuestHorrorMode",
-					Type = "Close",
+					Type = "CloseKeepTheme",
 				},
 			},
 		},
