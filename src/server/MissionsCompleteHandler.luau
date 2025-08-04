@@ -9,4 +9,10 @@ MissionCompleteHandlers["StealPhone"] = function(player)
 	print("StealPhone reward given and dialogue set to RoadmanComplete")
 end
 
+MissionCompleteHandlers["GuestMoney"] = function(player)
+	HelperFunctions.GiveTool(player, "TixBag")
+	HelperFunctions.SetNPCDialogueFile({ { SafechatterNameTag = "SafechatterMissionComplete" } })
+	print("GuestMoney reward given and dialogue set to RoadmanComplete")
+end
+
 return MissionCompleteHandlers

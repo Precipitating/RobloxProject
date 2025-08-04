@@ -106,4 +106,12 @@ function SoundHandler.PlaySound(soundName)
 	end
 end
 
+function SoundHandler.ChangeThemePlaybackSpeed(val)
+	local theme = SoundHandler.GetCurrentTheme()
+
+	if theme then
+		theme.PlaybackSpeed = val
+	end
+end
+
 return SoundHandler

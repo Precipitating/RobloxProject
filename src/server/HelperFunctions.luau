@@ -53,7 +53,8 @@ end
 
 -- spawn a model
 function HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
-	local model = ServerStorage:FindFirstChild(folderName):FindFirstChild(modelName):Clone()
+	local model =
+		ServerStorage:FindFirstChild("MissionModels"):FindFirstChild(folderName):FindFirstChild(modelName):Clone()
 	if model then
 		model.Parent = workspace
 		if pos then
@@ -64,6 +65,34 @@ function HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
 	else
 		error("Cannot find model to spawn")
 		return nil
+	end
+end
+
+-- spawn a list of models (pos already set)
+function HelperFunctions.SpawnMissionPositionedModels(folderName, keyWords)
+	local missionsModels = ServerStorage:FindFirstChild("MissionModels")
+
+	if not missionsModels then
+		warn("MissionModels folder not found in ServerStorage")
+		return
+	end
+
+	local folder = missionsModels:FindFirstChild(folderName)
+	if not folder then
+		warn("Folder named " .. folderName .. " not found inside MissionModels")
+		return
+	end
+
+	local models = folder:GetChildren()
+	if models then
+		for _, model in pairs(models) do
+			if string.find(model.Name:lower(), keyWords:lower()) then
+				model:Clone()
+				model.Parent = workspace
+			end
+		end
+	else
+		error("Empty models folder. Check name")
 	end
 end
 

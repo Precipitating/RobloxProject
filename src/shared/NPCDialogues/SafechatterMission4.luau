@@ -107,7 +107,7 @@ return {
 				},
 				{
 					Text = "I was one of the 2011 people I swear! Ts is epic!",
-					DestroyObject = { "SafechatterMission3" },
+					DestroyObject = { "SafechatterMission4" },
 					ProgressMission = {
 						MissionName = "GuestMoney",
 						ProgressVal = 1,

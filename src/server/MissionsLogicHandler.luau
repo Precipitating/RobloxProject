@@ -12,14 +12,14 @@ local MissionEventHandlers = {}
 MissionEventHandlers["StealPhone"] = function()
 	-- spawn the next NPC that progresses this mission
 	local pos = Vector3.new(math.random(-360, 360), 5.23, -26.1)
-	HelperFunctions.SpawnModelAtPosition("NPCS", "PhoneVictim", pos)
+	HelperFunctions.SpawnModelAtPosition("Roadman", "PhoneVictim", pos)
 end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
 	-- stop movement
 	--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 	-- spawn surrounding cops around player
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "Cops", nil)
+	HelperFunctions.SpawnModelAtPosition("Roadman", "Cops", nil)
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 3145652566759102)
@@ -31,7 +31,7 @@ MissionEventHandlers["RoadmanWin"] = function(player)
 	-- stop movement
 	--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "PC", nil)
+	HelperFunctions.SpawnModelAtPosition("Roadman", "PC", nil)
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 2251989026476496)
@@ -50,7 +50,7 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 		--generalRemotes.DisableControls:FireClient(player, "Cutscene")
 
 		-- spawn signs
-		local signs = HelperFunctions.SpawnModelAtPosition("MissionModels", "MuggedSigns", nil)
+		local signs = HelperFunctions.SpawnModelAtPosition("Roadman", "MuggedSigns", nil)
 
 		-- award badge
 		BadgeHandler.awardBadge(player, 3689591686016157)
@@ -68,12 +68,33 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 	end
 end
 
+-- Safechatter
 MissionEventHandlers["GuestMoney"] = function(player)
 	print("GUEST MISSIO NBEGIN")
+	HelperFunctions.SpawnMissionPositionedModels("Safechatter", "Mission")
 end
 
 MissionEventHandlers["GuestHorrorMode"] = function(player)
-	print("GUEST HORROR MODE")
+	Lighting.OutdoorAmbient = Color3.new(0, 0, 0)
+	Lighting.ClockTime = 0
+	local pathModel = HelperFunctions.SpawnModelAtPosition("Safechatter", "InvisiblePaths", nil)
+	local character = player.Character
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	rootPart.CFrame = pathModel:FindFirstChild("SpawnLoc").CFrame
+end
+
+MissionEventHandlers["GuestComplete"] = function(player)
+	local character = player.Character
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	local hallway = HelperFunctions.SpawnModelAtPosition("Safechatter", "BrainwashHallway", nil)
+	rootPart.CFrame = hallway:FindFirstChild("SpawnLoc").CFrame
+	BadgeHandler.awardBadge(player, 844789406145883)
+	generalRemotes.PlayAnimation:FireClient(player, "90079565164200")
+	cutsceneRemotes.PlayGuestMissionComplete:FireClient(player)
+
+	-- make pitch black
+	Lighting.OutdoorAmbient = Color3.new(0, 0, 0)
+	Lighting.ClockTime = 0
 end
 
 -- Guest
