@@ -54,5 +54,5 @@ for _, descendant in pairs(character:GetDescendants()) do
 	end
 end
 
--- play main
+-- play main theme
 soundModule.PlayTheme("Main")

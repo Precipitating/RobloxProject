@@ -101,9 +101,14 @@ ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(funct
 	end
 end)
 
-ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(_, pause, NPCName)
+ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(player, pause, NPCName)
 	print(`{NPCName} pathfinding state on server: {pause}`)
-	NPCModule:GetNPC(NPCName):SetInteractedWith(pause)
+
+	if pause then
+		NPCModule:GetNPC(NPCName):SetMode("Interacting", player)
+	else
+		NPCModule:GetNPC(NPCName):SetBackPreviousMode(player)
+	end
 end)
 
 local function initialize()
