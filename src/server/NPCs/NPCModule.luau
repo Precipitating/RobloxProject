@@ -1,10 +1,11 @@
 local NPC = {}
 local NPCStorage = {}
 local Collections = game:GetService("CollectionService")
-local NPCList = Collections:GetTagged("MoveableNPC")
 local PathfindingService = game:GetService("PathfindingService")
 local initializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
 local arrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
+local weepingAngelModeEvent = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
+local TweenService = game:GetService("TweenService")
 NPC.__index = NPC
 
 function NPC.new(model)
@@ -12,29 +13,69 @@ function NPC.new(model)
 	self.Model = model
 	self.Health = 100
 	self.AvailablePaths = nil
-	self.InteractedWith = false
-	self.MovementCoroutine = nil
+	self.LastMode = nil
 	self.Humanoid = model:FindFirstChild("Humanoid")
 	self.HumanoidRootPart = model:FindFirstChild("HumanoidRootPart")
+	self.Mode = "Idle"
+	self.PathCancelled = false
+
 	return self
 end
 
-function NPC:SetInteractedWith(val)
-	self.InteractedWith = val
+function NPC:GetModel()
+	return self.Model
+end
 
-	if not val then
-		if self.MovementCoroutine and coroutine.status(self.MovementCoroutine) == "suspended" then
-			coroutine.resume(self.MovementCoroutine)
+function NPC:SetMode(mode, player)
+	self.LastMode = self.Mode
+	self.Mode = mode
+
+	if mode == "Interacting" then
+		self:ForceStopMovement()
+		if player then
+			local character = player.Character or player.CharacterAdded:Wait()
+			local playerPos = character:GetPivot().Position
+			local modelPosition = self.Model:GetPivot().Position
+			local targetPosition = Vector3.new(playerPos.X, modelPosition.Y, playerPos.Z)
+
+			-- rotate towards player via tween on seperate, non blocking thread
+			task.spawn(function()
+				local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out)
+				local facingCFrame = CFrame.lookAt(modelPosition, targetPosition)
+				local tween = TweenService:Create(self.Model.PrimaryPart, tweenInfo, { CFrame = facingCFrame })
+				tween:Play()
+			end)
 		end
+	elseif mode == "Patrol" then
+		arrivedRemote:Fire()
+	elseif mode == "Angel" then
+		weepingAngelModeEvent:Fire(player)
 	end
 end
 
-function NPC:IsInteracting()
-	return self.InteractedWith
+function NPC:SetBackPreviousMode(player)
+	print(self.LastMode)
+	if self.LastMode == self.Mode then
+		print("SAME MODE")
+		return
+	end
+	self:SetMode(self.LastMode, player)
+end
+
+function NPC:GetMode()
+	return self.Mode
 end
 
 function NPC:SetPathStorage(path)
 	self.AvailablePaths = path
+end
+
+function NPC:EnableProximityChat(val)
+	local prompt = self.Model:FindFirstChild("ProximityPrompt")
+
+	if prompt then
+		prompt.Enabled = val
+	end
 end
 
 function NPC:GetPathStorage()
@@ -55,6 +96,7 @@ function NPC:GetNPC(name)
 end
 
 function NPC:Init()
+	local NPCList = Collections:GetTagged("MoveableNPC")
 	-- get all MoveableNPC tagged objects and initialize it
 	for _, currNPC in pairs(NPCList) do
 		if currNPC:IsA("Model") and currNPC:FindFirstChildOfClass("Humanoid") then
@@ -74,77 +116,46 @@ function NPC:Init()
 			end
 		end
 	end
+
 	task.defer(function()
 		initializedRemote:Fire()
 	end)
 end
 
-function NPC:MoveTo(targetPos, interruptable)
-	if self.Humanoid then
-		self.Humanoid:MoveTo(targetPos)
-		if not interruptable then
-			self.Humanoid.MoveToFinished:Wait()
-		end
-	else
-		error("NPC has no valid Humanoid")
-	end
-end
-
 function NPC:ForceStopMovement()
 	if self.Humanoid and self.HumanoidRootPart then
 		self.Humanoid:MoveTo(self.HumanoidRootPart.Position)
+		self.PathCancelled = true
 		print("Force stopped!")
 	end
 end
 
-function NPC:PathFindTo(targetPos)
+function NPC:StartPathing(targetPos)
+	if not self.Humanoid then
+		error("NPC Humanoid not found to pathfind!")
+		return
+	end
+
+	self.PathCancelled = false
+
 	local path = PathfindingService:CreatePath()
 	path:ComputeAsync(self.HumanoidRootPart.Position, targetPos.Position)
 
 	for _, waypoint in path:GetWaypoints() do
-		while self.InteractedWith do
-			print("Paused...")
-			coroutine.yield() -- Pause here
+		if self.PathCancelled then
+			print("Pathfinding cancelled.")
+			return
 		end
 
-		self:MoveTo(waypoint.Position, true)
-
-		local finished = false
-		local connection
-		local thread = coroutine.running()
-
-		connection = self.Humanoid.MoveToFinished:Connect(function()
-			if not finished then
-				finished = true
-				connection:Disconnect()
-				coroutine.resume(thread, "moveDone")
-			end
-		end)
-
-		local resumeReason = coroutine.yield()
-
-		while self.InteractedWith do
-			print("Paused after MoveTo")
-			coroutine.yield()
+		self.Humanoid:MoveTo(waypoint.Position)
+		local reached = self.Humanoid.MoveToFinished:Wait()
+		if not reached or self.PathCancelled then
+			warn("Movement interrupted or waypoint not reached")
+			return
 		end
 	end
 
 	arrivedRemote:Fire()
-	print("Path complete")
-end
-
-function NPC:StartPathing(targetPos)
-	if self.MovementCoroutine and coroutine.status(self.MovementCoroutine) == "suspended" then
-		print("Already moving")
-		return
-	end
-
-	self.InteractedWith = false
-	self.MovementCoroutine = coroutine.create(function()
-		self:PathFindTo(targetPos)
-	end)
-
-	coroutine.resume(self.MovementCoroutine)
 end
 
 return NPC

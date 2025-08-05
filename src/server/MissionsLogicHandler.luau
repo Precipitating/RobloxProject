@@ -1,9 +1,11 @@
 local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
+local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
+local NPCModule = require(script.Parent.NPCs.NPCModule)
 
 local MissionEventHandlers = {}
 -- handle all game events
@@ -75,12 +77,60 @@ MissionEventHandlers["GuestMoney"] = function(player)
 end
 
 MissionEventHandlers["GuestHorrorMode"] = function(player)
+	local safeChatterRef = CollectionService:GetTagged("Safechatter")[1]
+	-- set dark lighting
 	Lighting.OutdoorAmbient = Color3.new(0, 0, 0)
 	Lighting.ClockTime = 0
+
+	-- spawn obby
 	local pathModel = HelperFunctions.SpawnModelAtPosition("Safechatter", "InvisiblePaths", nil)
+	if not pathModel then
+		warn("Failed to spawn pathModel")
+		return
+	end
+
+	-- teleport player
+	local spawnLoc = pathModel:FindFirstChild("SpawnLoc")
 	local character = player.Character
-	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	rootPart.CFrame = pathModel:FindFirstChild("SpawnLoc").CFrame
+	if spawnLoc and character and character.PrimaryPart then
+		character:SetPrimaryPartCFrame(spawnLoc.CFrame)
+	else
+		warn("Missing SpawnLoc or character PrimaryPart")
+	end
+
+	-- enable old ROBLOX green circle click to move
+	generalRemotes.EnableClickToMove:FireClient(player, true)
+
+	-- teleport NPC
+
+	if safeChatterRef and safeChatterRef.PrimaryPart then
+		local safeChatterSpawnLoc = pathModel:FindFirstChild("SafechatterSpawnLoc")
+		if safeChatterSpawnLoc then
+			safeChatterRef:SetPrimaryPartCFrame(safeChatterSpawnLoc.CFrame)
+		else
+			warn("SafechatterSpawnLoc not found")
+		end
+
+		local NPC = NPCModule:GetNPC("Safechatter")
+		NPC:EnableProximityChat(false)
+		NPC:SetMode("Angel", player)
+	else
+		warn("safeChatterRef missing or has no PrimaryPart")
+	end
+
+	local failPart = pathModel:FindFirstChild("FailPart")
+	local failed
+
+	if failPart then
+		failed = failPart.Touched:Connect(function(hit)
+			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
+				failed:Disconnect()
+				-- handle fail logic here
+			end
+		end)
+	else
+		warn("FailPart not found")
+	end
 end
 
 MissionEventHandlers["GuestComplete"] = function(player)
