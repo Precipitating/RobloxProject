@@ -1,3 +1,5 @@
+local DebuggerManager = game:GetService("DebuggerManager")
+local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local player = game.Players.LocalPlayer
@@ -6,7 +8,8 @@ local humanoid = character:WaitForChild("Humanoid")
 local animator = humanoid:WaitForChild("Animator")
 local movementHandler = require(script:WaitForChild("MovementHandler"))
 local soundModule = require(script:WaitForChild("SoundModule"))
--- disable reset button
+local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
+-- disable respawn button
 local coreCall
 do
 	local MAX_RETRIES = 8
@@ -45,6 +48,41 @@ generalRemotes.PlayAnimation.OnClientEvent:Connect(function(animId)
 	local animTrack = animator:LoadAnimation(anim)
 	animTrack:Play()
 	print("Animation playing...")
+end)
+
+generalRemotes.ChangeFOV.OnClientEvent:Connect(function(val)
+	local cam = workspace.CurrentCamera
+	cam.FieldOfView = val
+end)
+
+generalRemotes.Trip.OnClientEvent:Connect(function()
+	print("Tripped!")
+	local rootPart = character.PrimaryPart
+	humanoid:ChangeState(Enum.HumanoidStateType.FallingDown)
+	rootPart.AssemblyLinearVelocity += rootPart.CFrame.LookVector * 50 + Vector3.new(0, 25, 0)
+end)
+
+generalRemotes.Blur.OnClientEvent:Connect(function(time, blurTarget)
+	UIHelperFunctions.AdjustBlur(time, blurTarget)
+end)
+
+generalRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
+	local hasTShirt = character:FindFirstChild("Shirt Graphic")
+
+	if hasTShirt then
+		hasTShirt:Remove()
+	end
+
+	if shirt then
+		local hasShirt = character:FindFirstChildOfClass("Shirt")
+		if hasShirt then
+			hasShirt.ShirtTemplate = shirt
+		end
+		local hasPants = character:FindFirstChildOfClass("Pants")
+		if hasPants then
+			hasPants.PantsTemplate = pants
+		end
+	end
 end)
 
 -- set player's collision group

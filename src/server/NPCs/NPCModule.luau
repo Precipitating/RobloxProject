@@ -56,7 +56,7 @@ end
 function NPC:SetBackPreviousMode(player)
 	print(self.LastMode)
 	if self.LastMode == self.Mode then
-		print("SAME MODE")
+		print("SAME")
 		return
 	end
 	self:SetMode(self.LastMode, player)
@@ -124,13 +124,17 @@ end
 
 function NPC:ForceStopMovement()
 	if self.Humanoid and self.HumanoidRootPart then
-		self.Humanoid:MoveTo(self.HumanoidRootPart.Position)
 		self.PathCancelled = true
-		print("Force stopped!")
 	end
 end
 
-function NPC:StartPathing(targetPos)
+function NPC:SetWalkspeed(val)
+	if self.Humanoid then
+		self.Humanoid.WalkSpeed = val
+	end
+end
+
+function NPC:StartPathing(targetPos, obj)
 	if not self.Humanoid then
 		error("NPC Humanoid not found to pathfind!")
 		return
@@ -155,7 +159,7 @@ function NPC:StartPathing(targetPos)
 		end
 	end
 
-	arrivedRemote:Fire()
+	arrivedRemote:Fire(obj)
 end
 
 return NPC

@@ -15,6 +15,7 @@ local maxDistance = 55
 local enabled = false
 
 local enabledRemote = ReplicatedStorage.Shared.Remotes.EnableClickToMove
+local loop
 
 -- cleanup function
 local function removeClonedCircle()
@@ -26,7 +27,7 @@ end
 
 -- movement logic
 local function startClickToMove()
-	RunService.RenderStepped:Connect(function()
+	loop = RunService.RenderStepped:Connect(function()
 		if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
 			return
 		end
@@ -64,5 +65,9 @@ enabledRemote.OnClientEvent:Connect(function(val)
 
 	if enabled then
 		startClickToMove()
+	else
+		if loop then
+			loop:Disconnect()
+		end
 	end
 end)
