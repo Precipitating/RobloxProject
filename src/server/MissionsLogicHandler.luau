@@ -3,9 +3,11 @@ local BadgeHandler = require(script.Parent.BadgeHandler)
 local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local NPCModule = require(script.Parent.NPCs.NPCModule)
+local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 
 local MissionEventHandlers = {}
 -- handle all game events
@@ -76,11 +78,27 @@ MissionEventHandlers["GuestMoney"] = function(player)
 	HelperFunctions.SpawnMissionPositionedModels("Safechatter", "Mission")
 end
 
+local function ResetGuestHorrorEnvironment(player)
+	Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+	Lighting.ClockTime = 12
+	generalRemotes.EnableClickToMove:FireClient(player, false)
+	generalRemotes.ChangeFOV:FireClient(player, 20)
+end
+
 MissionEventHandlers["GuestHorrorMode"] = function(player)
 	local safeChatterRef = CollectionService:GetTagged("Safechatter")[1]
 	-- set dark lighting
 	Lighting.OutdoorAmbient = Color3.new(0, 0, 0)
 	Lighting.ClockTime = 0
+
+	-- give player light
+	local head = player.Character:FindFirstChild("Head")
+	local light = Instance.new("PointLight")
+	light.Name = "PersonalLight"
+	light.Brightness = 2
+	light.Range = 15
+	light.Color = Color3.new(1, 1, 1) -- white light
+	light.Parent = head
 
 	-- spawn obby
 	local pathModel = HelperFunctions.SpawnModelAtPosition("Safechatter", "InvisiblePaths", nil)
@@ -114,23 +132,77 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 		local NPC = NPCModule:GetNPC("Safechatter")
 		NPC:EnableProximityChat(false)
 		NPC:SetMode("Angel", player)
+		NPC:SetWalkspeed(10)
 	else
 		warn("safeChatterRef missing or has no PrimaryPart")
 	end
 
+	-- handle falling out of obby
 	local failPart = pathModel:FindFirstChild("FailPart")
 	local failed
 
 	if failPart then
+		local hrp = character:FindFirstChild("HumanoidRootPart")
 		failed = failPart.Touched:Connect(function(hit)
 			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 				failed:Disconnect()
+				local blur = Lighting:FindFirstChild("Blur")
+				if blur then
+					-- blur player
+					generalRemotes.Blur:FireClient(player, 2, 100)
+					generalRemotes.DisableControls:FireClient(player, "Cutscene")
+					-- spawn cutscene model
+					local prodRoom = HelperFunctions.SpawnModelAtPosition("Safechatter", "ProductionRoom", nil)
+					-- local hrp = character:FindFirstChild("HumanoidRootPart")
+					local humanoid = character:FindFirstChildOfClass("Humanoid")
+					-- disable click to move
+					generalRemotes.EnableClickToMove:FireClient(player, false)
+					-- -- stop all player physics movement
+					hrp.Velocity = Vector3.zero
+					hrp.RotVelocity = Vector3.zero
+					hrp.AssemblyLinearVelocity = Vector3.zero
+					hrp.AssemblyAngularVelocity = Vector3.zero
+					if humanoid then
+						for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
+							track:Stop()
+						end
+					end
+					hrp.Anchored = true
+
+					-- change to guest clothes
+					generalRemotes.ChangeClothes:FireClient(player, "rbxassetid://17380206", "rbxassetid://1069842201")
+
+					-- tp to cutscene spot
+					character:SetPrimaryPartCFrame(prodRoom:FindFirstChild("SpawnLoc").CFrame)
+
+					-- stop all music
+					SoundModule.StopAllSounds()
+
+					-- award badge
+					BadgeHandler.awardBadge(player, 3874162608974588)
+
+					-- back to day and remove player light
+					ResetGuestHorrorEnvironment(player)
+					light:Remove()
+
+					task.wait(3)
+
+					-- unblur
+					generalRemotes.Blur:FireClient(player, 1, 0)
+					cutsceneRemotes.PlaySafechatterFailedObby:FireClient(player)
+				end
+
 				-- handle fail logic here
 			end
 		end)
 	else
 		warn("FailPart not found")
 	end
+
+	-- handle camera settings
+	player.CameraMaxZoomDistance = 20
+	player.CameraMinZoomDistance = 20
+	generalRemotes.ChangeFOV:FireClient(player, 20)
 end
 
 MissionEventHandlers["GuestComplete"] = function(player)
