@@ -18,6 +18,7 @@ function NPC.new(model)
 	self.HumanoidRootPart = model:FindFirstChild("HumanoidRootPart")
 	self.Mode = "Idle"
 	self.PathCancelled = false
+	self.Connections = {}
 
 	return self
 end
@@ -26,10 +27,23 @@ function NPC:GetModel()
 	return self.Model
 end
 
+function NPC:DisconnectAllConnections()
+	if not self.Connections then
+		return
+	end
+
+	for event in pairs(self.Connections) do
+		if event.Connected then
+			event:Disconnect()
+		end
+	end
+
+	table.clear(self.Connections)
+end
+
 function NPC:SetMode(mode, player)
 	self.LastMode = self.Mode
 	self.Mode = mode
-
 	if mode == "Interacting" then
 		self:ForceStopMovement()
 		if player then

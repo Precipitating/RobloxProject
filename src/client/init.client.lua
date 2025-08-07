@@ -1,5 +1,3 @@
-local DebuggerManager = game:GetService("DebuggerManager")
-local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local player = game.Players.LocalPlayer
@@ -84,6 +82,11 @@ generalRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
 		end
 	end
 end)
+
+generalRemotes.StopAllMusic.OnClientInvoke = function()
+	soundModule.StopAllSounds()
+	return true
+end
 
 -- set player's collision group
 for _, descendant in pairs(character:GetDescendants()) do

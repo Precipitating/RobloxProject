@@ -2,14 +2,14 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBXF73178E104C84FFD998C2876855E5D30">
+	<Item class="Sound" referent="RBXA56213ABE9FA403A94BA4C8D9B7369F4">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
 			<bool name="IsMutedForCapture">false</bool>
 			<NumberRange name="LoopRegion">0 60000 </NumberRange>
-			<bool name="Looped">false</bool>
+			<bool name="Looped">true</bool>
 			<string name="Name">PoshTheme</string>
 			<bool name="PlayOnRemove">false</bool>
 			<NumberRange name="PlaybackRegion">0 60000 </NumberRange>

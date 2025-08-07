@@ -1,4 +1,3 @@
-local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local CameraEnableRemote = ReplicatedStorage.Shared.Remotes.EnableCameraLookDetection

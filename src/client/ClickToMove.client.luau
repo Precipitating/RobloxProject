@@ -16,6 +16,8 @@ local enabled = false
 
 local enabledRemote = ReplicatedStorage.Shared.Remotes.EnableClickToMove
 local loop
+local clickConn
+local charConn
 
 -- cleanup function
 local function removeClonedCircle()
@@ -25,6 +27,21 @@ local function removeClonedCircle()
 	end
 end
 
+local function disconnectAll()
+	if loop then
+		loop:Disconnect()
+		loop = nil
+	end
+	if clickConn then
+		clickConn:Disconnect()
+		clickConn = nil
+	end
+	if charConn then
+		charConn:Disconnect()
+		charConn = nil
+	end
+	removeClonedCircle()
+end
 -- movement logic
 local function startClickToMove()
 	loop = RunService.RenderStepped:Connect(function()
@@ -39,7 +56,7 @@ local function startClickToMove()
 		clicktowalkcircle.Position = mouse.Hit.p
 	end)
 
-	mouse.Button1Down:Connect(function()
+	clickConn = mouse.Button1Down:Connect(function()
 		if canMove and player.Character and player.Character:FindFirstChild("Humanoid") then
 			removeClonedCircle()
 
@@ -56,18 +73,15 @@ local function startClickToMove()
 		end
 	end)
 
-	player.CharacterAdded:Connect(removeClonedCircle)
+	charConn = player.CharacterAdded:Connect(removeClonedCircle)
 end
 
 -- listen for toggle from server
 enabledRemote.OnClientEvent:Connect(function(val)
 	enabled = val
-
 	if enabled then
 		startClickToMove()
 	else
-		if loop then
-			loop:Disconnect()
-		end
+		disconnectAll()
 	end
 end)
