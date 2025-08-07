@@ -4,10 +4,10 @@ local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
+local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local NPCModule = require(script.Parent.NPCs.NPCModule)
-local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 
 local MissionEventHandlers = {}
 -- handle all game events
@@ -85,8 +85,29 @@ local function ResetGuestHorrorEnvironment(player)
 	generalRemotes.ChangeFOV:FireClient(player, 20)
 end
 
-MissionEventHandlers["GuestHorrorMode"] = function(player)
-	local safeChatterRef = CollectionService:GetTagged("Safechatter")[1]
+local function ResetPlayerState(hrp, humanoid)
+	hrp.Velocity = Vector3.zero
+	hrp.RotVelocity = Vector3.zero
+	hrp.AssemblyLinearVelocity = Vector3.zero
+	hrp.AssemblyAngularVelocity = Vector3.zero
+
+	if humanoid then
+		for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
+			track:Stop()
+		end
+	end
+end
+
+local function ResetCamera(player)
+	player.CameraMaxZoomDistance = 60
+	player.CameraMinZoomDistance = 0.5
+	generalRemotes.ChangeFOV:FireClient(player, 70)
+end
+
+local function InitializeGuestHorrorMode(player)
+	local safeChatterModel = CollectionService:GetTagged("Safechatter")[1]
+	local NPC = NPCModule:GetNPC("Safechatter")
+	local character = player.Character
 	-- set dark lighting
 	Lighting.OutdoorAmbient = Color3.new(0, 0, 0)
 	Lighting.ClockTime = 0
@@ -109,7 +130,7 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 
 	-- teleport player
 	local spawnLoc = pathModel:FindFirstChild("SpawnLoc")
-	local character = player.Character
+	local prevPlayerPos = character.PrimaryPart.CFrame
 	if spawnLoc and character and character.PrimaryPart then
 		character:SetPrimaryPartCFrame(spawnLoc.CFrame)
 	else
@@ -120,29 +141,40 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 	generalRemotes.EnableClickToMove:FireClient(player, true)
 
 	-- teleport NPC
-
-	if safeChatterRef and safeChatterRef.PrimaryPart then
+	local prevEnemyPos
+	if safeChatterModel and safeChatterModel.PrimaryPart then
+		prevEnemyPos = safeChatterModel.PrimaryPart.CFrame
 		local safeChatterSpawnLoc = pathModel:FindFirstChild("SafechatterSpawnLoc")
 		if safeChatterSpawnLoc then
-			safeChatterRef:SetPrimaryPartCFrame(safeChatterSpawnLoc.CFrame)
+			safeChatterModel:SetPrimaryPartCFrame(safeChatterSpawnLoc.CFrame)
 		else
 			warn("SafechatterSpawnLoc not found")
 		end
 
-		local NPC = NPCModule:GetNPC("Safechatter")
 		NPC:EnableProximityChat(false)
 		NPC:SetMode("Angel", player)
 		NPC:SetWalkspeed(10)
 	else
-		warn("safeChatterRef missing or has no PrimaryPart")
+		warn("safeChatterModel missing or has no PrimaryPart")
 	end
 
+	-- handle camera settings
+	player.CameraMaxZoomDistance = 20
+	player.CameraMinZoomDistance = 20
+	generalRemotes.ChangeFOV:FireClient(player, 20)
+
+	return light, pathModel, prevPlayerPos, prevEnemyPos
+end
+
+local function HandleGuestHorrorModeFail(pathModel, light, player)
 	-- handle falling out of obby
+	local NPC = NPCModule:GetNPC("Safechatter")
+	local character = player.Character
 	local failPart = pathModel:FindFirstChild("FailPart")
 	local failed
-
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
 	if failPart then
-		local hrp = character:FindFirstChild("HumanoidRootPart")
 		failed = failPart.Touched:Connect(function(hit)
 			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 				failed:Disconnect()
@@ -153,37 +185,37 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 					generalRemotes.DisableControls:FireClient(player, "Cutscene")
 					-- spawn cutscene model
 					local prodRoom = HelperFunctions.SpawnModelAtPosition("Safechatter", "ProductionRoom", nil)
-					-- local hrp = character:FindFirstChild("HumanoidRootPart")
-					local humanoid = character:FindFirstChildOfClass("Humanoid")
-					-- disable click to move
+
+					-- disable events
 					generalRemotes.EnableClickToMove:FireClient(player, false)
+					generalRemotes.EnableCameraLookDetection:FireClient(player, false)
+					NPC:DisconnectAllConnections() -- disable the onTouch trip player
+
 					-- -- stop all player physics movement
-					hrp.Velocity = Vector3.zero
-					hrp.RotVelocity = Vector3.zero
-					hrp.AssemblyLinearVelocity = Vector3.zero
-					hrp.AssemblyAngularVelocity = Vector3.zero
-					if humanoid then
-						for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
-							track:Stop()
-						end
-					end
+					ResetPlayerState(hrp, humanoid)
+
 					hrp.Anchored = true
 
 					-- change to guest clothes
 					generalRemotes.ChangeClothes:FireClient(player, "rbxassetid://17380206", "rbxassetid://1069842201")
 
 					-- tp to cutscene spot
-					character:SetPrimaryPartCFrame(prodRoom:FindFirstChild("SpawnLoc").CFrame)
+					local playerCutsceneLoc = prodRoom:FindFirstChild("SpawnLoc")
+
+					if playerCutsceneLoc then
+						character:SetPrimaryPartCFrame(playerCutsceneLoc.CFrame)
+					else
+						warn("prodRoom player spawn loc is missing!")
+					end
 
 					-- stop all music
-					SoundModule.StopAllSounds()
+					generalRemotes.StopAllMusic:InvokeClient(player)
 
-					-- award badge
 					BadgeHandler.awardBadge(player, 3874162608974588)
 
 					-- back to day and remove player light
 					ResetGuestHorrorEnvironment(player)
-					light:Remove()
+					light:Destroy()
 
 					task.wait(3)
 
@@ -191,18 +223,92 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 					generalRemotes.Blur:FireClient(player, 1, 0)
 					cutsceneRemotes.PlaySafechatterFailedObby:FireClient(player)
 				end
-
-				-- handle fail logic here
 			end
 		end)
+		return failed
 	else
-		warn("FailPart not found")
+		error("FailPart not found")
+	end
+end
+
+local function HandleGuestHorrorModeWin(pathModel, player, failed, prevPlayerPos, prevEnemyPos)
+	local safeChatterModel = CollectionService:GetTagged("Safechatter")[1]
+	local NPC = NPCModule:GetNPC("Safechatter")
+	local character = player.Character
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+	local exit = pathModel:FindFirstChild("Exit")
+	local winPart
+	if exit then
+		winPart = exit:FindFirstChild("ExitPart")
+	else
+		warn("Exit model missing from pathModel")
 	end
 
-	-- handle camera settings
-	player.CameraMaxZoomDistance = 20
-	player.CameraMinZoomDistance = 20
-	generalRemotes.ChangeFOV:FireClient(player, 20)
+	local winConnection
+	if winPart then
+		winConnection = winPart.Touched:Connect(function(hit)
+			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
+				winConnection:Disconnect()
+				generalRemotes.Blur:FireClient(player, 1, 100)
+
+				-- disconnect all related events
+				failed:Disconnect()
+				generalRemotes.EnableClickToMove:FireClient(player, false)
+				generalRemotes.EnableCameraLookDetection:FireClient(player, false)
+				NPC:DisconnectAllConnections() -- disable the onTouch trip player
+
+				-- reset player velocity etc
+				ResetPlayerState(hrp, humanoid)
+				ResetGuestHorrorEnvironment(player)
+
+				-- reset music to main
+				local hasAllSoundsStopped = generalRemotes.StopAllMusic:InvokeClient(player)
+
+				-- reset camera settings
+				ResetCamera(player)
+
+				-- tp back to original position before obby
+				safeChatterModel:SetPrimaryPartCFrame(prevEnemyPos)
+				character:SetPrimaryPartCFrame(prevPlayerPos)
+				if hasAllSoundsStopped then
+					SoundModule.PlayTheme("Main")
+				else
+					print("All sounds not stopped yet, Main theme not played")
+				end
+
+				-- set new NPC dialogue
+				HelperFunctions.SetNPCDialogueFile({ { SafechatterNameTag = "SafechatterEscaped" } })
+				NPC:SetMode("Interacting", player)
+				NPC:EnableProximityChat(true)
+				generalRemotes.DisableControls:FireClient(player, "UI")
+
+				generalRemotes.Blur:FireClient(player, 1, 0)
+			end
+		end)
+	end
+end
+
+MissionEventHandlers["GuestHorrorMode"] = function(player)
+	local light, pathModel, prevPlayerPos, prevEnemyPos = InitializeGuestHorrorMode(player)
+
+	-- handle fail obby
+	local failed = HandleGuestHorrorModeFail(pathModel, light, player)
+
+	-- handle touching the portal
+	HandleGuestHorrorModeWin(pathModel, player, failed, prevPlayerPos, prevEnemyPos)
+end
+
+MissionEventHandlers["GuestPwn"] = function(player)
+	generalRemotes.Blur:FireClient(player, 1, 100)
+	local character = player.Character
+	local alley = HelperFunctions.SpawnModelAtPosition("Safechatter", "Alleyway")
+	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
+	generalRemotes.PlayAnimation:FireClient(player, "139462665064630")
+	BadgeHandler.awardBadge(player, 436980458877293)
+	cutsceneRemotes.PlayGuestPwn:FireClient(player)
+	generalRemotes.Blur:FireClient(player, 1, 0)
 end
 
 MissionEventHandlers["GuestComplete"] = function(player)

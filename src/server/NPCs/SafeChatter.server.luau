@@ -1,5 +1,6 @@
-local DebuggerConnectionManager = game:GetService("DebuggerConnectionManager")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Safechatter = require(ReplicatedStorage.Shared.NPCDialogues.Safechatter)
 local NPCModule = require(script.Parent.NPCModule)
 local initializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
 local arrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
@@ -29,7 +30,7 @@ local function WeepingAngelMode(player, isLooking)
 	else
 		-- player is NOT looking: start delay before movement
 		if player and player.Character then
-			delayHandle = task.delay(1, function()
+			delayHandle = task.delay(2, function()
 				-- Double-check character still exists
 				if player.Character then
 					safeChatterRef:StartPathing(player.Character:GetPivot(), player)
@@ -60,7 +61,7 @@ weepingAngelMode.Event:Connect(function(player)
 	if not hitEventConnected then
 		for _, part in pairs(safeChatterRef:GetModel():GetDescendants()) do
 			if part:IsA("BasePart") then
-				part.Touched:Connect(function(hit)
+				local connection = part.Touched:Connect(function(hit)
 					local isPlayer = Players:GetPlayerFromCharacter(hit.Parent)
 					if isPlayer and not touchedDebounce then
 						touchedDebounce = true
@@ -69,6 +70,7 @@ weepingAngelMode.Event:Connect(function(player)
 						touchedDebounce = false
 					end
 				end)
+				safeChatterRef.Connections[connection] = true
 			end
 		end
 		hitEventConnected = true
