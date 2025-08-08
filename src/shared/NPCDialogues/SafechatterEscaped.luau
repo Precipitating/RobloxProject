@@ -31,7 +31,7 @@ return {
 			PlaySound = "OldSplat",
 			Responses = {
 				{
-					Text = "YOU TRIED TO SILENCE ME?",
+					Text = "Weeping angel gimmick huh?",
 					Type = "NextMessage",
 					NextId = "Two",
 				},
@@ -51,12 +51,12 @@ return {
 
 			Responses = {
 				{
-					Text = "YOU'RE TRYING IT AGAIN",
+					Text = "Wh-",
 					Type = "NextMessage",
 					NextId = "Three",
 				},
 				{
-					Text = "??????",
+					Text = "W-",
 					Type = "NextMessage",
 					NextId = "Three",
 				},
@@ -71,7 +71,7 @@ return {
 			PlaySound = "OldButton",
 			Responses = {
 				{
-					Text = "EXPLAIN OR ELSE...",
+					Text = "DIDNT WORK THIS TIME EH?",
 					Type = "NextMessage",
 					NextId = "Two",
 				},

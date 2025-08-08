@@ -26,7 +26,7 @@ MissionEventHandlers["RoadmanCaught"] = function(player)
 	HelperFunctions.SpawnModelAtPosition("Roadman", "Cops", nil)
 
 	-- award badge
-	BadgeHandler.awardBadge(player, 3145652566759102)
+	BadgeHandler.awardBadge(player, 4119036600108215)
 	-- call cutscene
 	cutsceneRemotes.PlayRoadmanFail:FireClient(player)
 end
@@ -38,7 +38,7 @@ MissionEventHandlers["RoadmanWin"] = function(player)
 	HelperFunctions.SpawnModelAtPosition("Roadman", "PC", nil)
 
 	-- award badge
-	BadgeHandler.awardBadge(player, 2251989026476496)
+	BadgeHandler.awardBadge(player, 126301904067129)
 
 	-- call cutscene
 	cutsceneRemotes.PlayRoadmanWin:FireClient(player)
@@ -57,10 +57,10 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 		local signs = HelperFunctions.SpawnModelAtPosition("Roadman", "MuggedSigns", nil)
 
 		-- award badge
-		BadgeHandler.awardBadge(player, 3689591686016157)
+		BadgeHandler.awardBadge(player, 1658087564169818)
 
-		-- load pose animation
-		generalRemotes.PlayAnimation:FireClient(player, "133648952317027")
+		-- load beg animation
+		generalRemotes.PlayAnimation:FireClient(player, "107485474814421")
 
 		-- teleport player to sign's MoveLoc
 		rootPart.CFrame = signs.MoveLoc.CFrame
@@ -211,7 +211,7 @@ local function HandleGuestHorrorModeFail(pathModel, light, player)
 					-- stop all music
 					generalRemotes.StopAllMusic:InvokeClient(player)
 
-					BadgeHandler.awardBadge(player, 3874162608974588)
+					BadgeHandler.awardBadge(player, 2723844059823653)
 
 					-- back to day and remove player light
 					ResetGuestHorrorEnvironment(player)
@@ -305,8 +305,8 @@ MissionEventHandlers["GuestPwn"] = function(player)
 	local character = player.Character
 	local alley = HelperFunctions.SpawnModelAtPosition("Safechatter", "Alleyway")
 	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
-	generalRemotes.PlayAnimation:FireClient(player, "139462665064630")
-	BadgeHandler.awardBadge(player, 436980458877293)
+	generalRemotes.PlayAnimation:FireClient(player, "73806503045226")
+	BadgeHandler.awardBadge(player, 550797482323175)
 	cutsceneRemotes.PlayGuestPwn:FireClient(player)
 	generalRemotes.Blur:FireClient(player, 1, 0)
 end
@@ -316,8 +316,8 @@ MissionEventHandlers["GuestComplete"] = function(player)
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
 	local hallway = HelperFunctions.SpawnModelAtPosition("Safechatter", "BrainwashHallway", nil)
 	rootPart.CFrame = hallway:FindFirstChild("SpawnLoc").CFrame
-	BadgeHandler.awardBadge(player, 844789406145883)
-	generalRemotes.PlayAnimation:FireClient(player, "90079565164200")
+	BadgeHandler.awardBadge(player, 3791811322299538)
+	generalRemotes.PlayAnimation:FireClient(player, "135338300387862")
 	cutsceneRemotes.PlayGuestMissionComplete:FireClient(player)
 
 	-- make pitch black

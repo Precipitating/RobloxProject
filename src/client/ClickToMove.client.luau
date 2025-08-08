@@ -6,14 +6,12 @@ local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
 local originalCircle = ReplicatedStorage.Shared.Models.GreenCircle
-local clicktowalkcircle = originalCircle:Clone()
-clicktowalkcircle.Parent = workspace
 
 local clonedCircle = nil
 local canMove = false
 local maxDistance = 55
 local enabled = false
-
+local clicktowalkcircle
 local enabledRemote = ReplicatedStorage.Shared.Remotes.EnableClickToMove
 local loop
 local clickConn
@@ -41,9 +39,15 @@ local function disconnectAll()
 		charConn = nil
 	end
 	removeClonedCircle()
+	if clicktowalkcircle then
+		clicktowalkcircle:Destroy()
+		clicktowalkcircle = nil
+	end
 end
 -- movement logic
 local function startClickToMove()
+	clicktowalkcircle = originalCircle:Clone()
+	clicktowalkcircle.Parent = workspace
 	loop = RunService.RenderStepped:Connect(function()
 		if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
 			return

@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="LocalScript" referent="RBX34908E8F70CB43918F175AD13C054525">
+	<Item class="LocalScript" referent="RBX081E14F499CA41908322B5C422949786">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -146,7 +146,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="ObjectValue" referent="RBX6741EAD4B0784385AEFEF445CC439F0F">
+		<Item class="ObjectValue" referent="RBXF2741261E7094EA3B6E6985B8DCE195D">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -157,7 +157,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<Ref name="Value">null</Ref>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBXE9A101BE28E04473881DC44410A10852">
+		<Item class="BoolValue" referent="RBX798C024F58654891AA1FFF29024B2D31">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -168,7 +168,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">false</bool>
 			</Properties>
 		</Item>
-		<Item class="ObjectValue" referent="RBXF6322701A9894BE58022E7FA0B635C72">
+		<Item class="ObjectValue" referent="RBX2DF961F4A3344FFF83966880D177140B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -179,7 +179,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<Ref name="Value">null</Ref>
 			</Properties>
 		</Item>
-		<Item class="ObjectValue" referent="RBX7A07289D153E4F9B96E6ACA939466F15">
+		<Item class="ObjectValue" referent="RBX670A8950C1554D66B6BF8FB77B9B0C15">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -187,10 +187,10 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<string name="Name">PlayOnRemoteEventFire</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
-				<Ref name="Value">RBXFB2C7E5143904DEA889C45E02FBC18C5</Ref>
+				<Ref name="Value">RBX879C6B632DFA4EB6BAFFC45439727D76</Ref>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBX0A60D5296BFD430A89D066812FA95ECC">
+		<Item class="BoolValue" referent="RBXF935548A95B341569B57C1A618EEECFF">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -201,7 +201,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">false</bool>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBX12761311434C498FA3FCF716E96FB659">
+		<Item class="BoolValue" referent="RBXC9186B205C0C402DAF3A1B1BCDB48177">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -212,7 +212,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">false</bool>
 			</Properties>
 		</Item>
-		<Item class="NumberValue" referent="RBX686EABBEA7D94C26B7CDA74523BCD999">
+		<Item class="NumberValue" referent="RBXF5E30282AC7042A59D93531BDF7922D0">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -223,7 +223,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<double name="Value">10</double>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBX5BC81CCC8B5C4B25A7E8A2F5D6456057">
+		<Item class="BoolValue" referent="RBX49E15E81FD0F4EFDBA00BBE7D198B209">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -234,7 +234,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">false</bool>
 			</Properties>
 		</Item>
-		<Item class="ForceField" referent="RBX1C72F0ADCE404EDEB4CA91F79C252E09">
+		<Item class="ForceField" referent="RBX77541D9F0F1E4D2AB475F3B088F35F13">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -245,7 +245,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Visible">true</bool>
 			</Properties>
 		</Item>
-		<Item class="Sound" referent="RBX396506214C9C4676B854BEEA73F5A346">
+		<Item class="Sound" referent="RBX62BF5A0C5F9E452B901180B5382828EC">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -263,14 +263,14 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<float name="RollOffMinDistance">10</float>
 				<token name="RollOffMode">0</token>
 				<Ref name="SoundGroup">null</Ref>
-				<Content name="SoundId"><url>rbxassetid://8595980577</url></Content>
+				<Content name="SoundId"><url>rbxassetid://6477407899</url></Content>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 				<double name="TimePosition">0</double>
 				<float name="Volume">0.5</float>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBXDBE9D37AC78149C2845EF215B885CADB">
+		<Item class="BoolValue" referent="RBX73712B96E4544FC7816FB70476F58F8A">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -281,7 +281,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">true</bool>
 			</Properties>
 		</Item>
-		<Item class="BoolValue" referent="RBXDAABC668B2BD4953A2AD373658D93DFB">
+		<Item class="BoolValue" referent="RBXACD37CCBF7DF4BC5B5B7752278C5D39D">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -292,7 +292,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<bool name="Value">true</bool>
 			</Properties>
 		</Item>
-		<Item class="ObjectValue" referent="RBX052CB5BEF3E94BC287482EF15C52E1C3">
+		<Item class="ObjectValue" referent="RBX4122F0101EF446919444EFEE75012D19">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -303,7 +303,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<Ref name="Value">null</Ref>
 			</Properties>
 		</Item>
-		<Item class="ObjectValue" referent="RBX12ECE617629A438D808AA3648518F877">
+		<Item class="ObjectValue" referent="RBXF48EF8FDF7E9434EBD8A66DFA82D392B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -314,7 +314,7 @@ PlayOnCharacterAdded:Destroy()]]></ProtectedString>
 				<Ref name="Value">null</Ref>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBXA10F4542C82648A9B27B905F252C11ED">
+		<Item class="Folder" referent="RBX928756E776DE488BAAC471903F549579">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
