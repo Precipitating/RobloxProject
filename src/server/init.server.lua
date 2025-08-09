@@ -1,4 +1,3 @@
-local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local profileDataModule = require(script.PlayerProfileData.GetPlayerInfo)
 local generalRemotes = ReplicatedStorage.Shared.Remotes
@@ -12,10 +11,17 @@ generalRemotes.GetBasicPlayerData.OnServerInvoke = function(player)
 end
 
 generalRemotes.GetPlayerBio.OnServerInvoke = function(player)
-	local url = "https://users.roproxy.com/v1/users/" .. player.UserId
-	local success, response = pcall(function()
-		return HttpService:GetAsync(url)
-	end)
+	local success, response = profileDataModule.GetPlayerBio(player)
 
 	return success, response
+end
+
+generalRemotes.GetPlayerFavourites.OnServerInvoke = function(player)
+	local success, response = profileDataModule.GetPlayerFavouriteGames(player)
+	return success, response
+end
+generalRemotes.GetCountryData.OnServerInvoke = function(_, countryCode)
+	local country = profileDataModule.GetCountry(countryCode)
+	local fact = profileDataModule.GetCountryFact(countryCode)
+	return country, fact
 end
