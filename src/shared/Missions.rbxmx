@@ -2126,6 +2126,28 @@ StealPhone = {
 		manualOnly = true,	
 	},
 
+		TypingCompetition = {
+		categoryId = "Psycho Mantis",
+		tasks = {
+			Type = {
+				taskType = Types.TaskType.Count,
+				goalCount = 1,
+			},
+		},
+		metadata = {
+			displayName = "Win the competition",
+			visibleAfterComplete = true,
+			visibleBeforeUnlocked = false,
+			rewards = {
+				{
+					icon = 3318577889,
+					displayName = "FOO-ting Keyboard",
+				},
+			},
+		},
+		manualOnly = true,	
+	},
+
 
 }
 

@@ -325,6 +325,13 @@ MissionEventHandlers["GuestComplete"] = function(player)
 	Lighting.ClockTime = 0
 end
 
--- Guest
+-- Psycho Mantis
+
+MissionEventHandlers["PsychoMantisBegin"] = function(player)
+	-- local camera = workspace.CurrentCamera
+
+	-- camera.CameraType = Enum.CameraType.Scriptable
+	-- camera.CFrame = workspace.ExamRoom:FindFirstChild("CameraPos").CFrame
+end
 
 return MissionEventHandlers

@@ -3,11 +3,9 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local playerData = generalRemotes.GetBasicPlayerData:InvokeServer()
-local friendsList = generalRemotes.GetFriendsList:InvokeServer()
-local gotBio, bioData = generalRemotes.GetPlayerBio:InvokeServer()
-local randomFriend = friendsList[math.random(1, #friendsList)]
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
+local CustomDialogue = require(ReplicatedStorage.Shared.NPCDialogues.PsychoMantisHelpers.CustomPsychoMantisDialogue)
 
 local function Introduction()
 	local text
@@ -35,6 +33,8 @@ local function GetGameNameFromId(id)
 end
 
 local function FriendDialogue()
+	local friendsList = generalRemotes.GetFriendsList:InvokeServer()
+	local randomFriend = friendsList[math.random(1, #friendsList)]
 	local text
 	if randomFriend.Username == "Account Deleted" then
 		text = "Friends with a criminal huh? their account's deleted... interesting..."
@@ -68,7 +68,7 @@ local function OnlineFriendsDialogue()
 		local lastGamePlayed = GetGameNameFromId(randomOnlineFriend.PlaceId)
 		if lastGamePlayed then
 			text =
-				`Not playing with {randomOnlineFriend.Username}? He's online you know.. The last game he played was {lastGamePlayed}. Zanimljivo... `
+				`Not playing with {randomOnlineFriend.UserName}? He's online playing {lastGamePlayed}. Zanimljivo... `
 		else
 			text = `Not mingling with {randomOnlineFriend.UserName}? He's online you know...?`
 		end
@@ -78,24 +78,80 @@ local function OnlineFriendsDialogue()
 end
 
 local function PlayersBio()
-	local text
+	local gotBio, bioData = generalRemotes.GetPlayerBio:InvokeServer()
+	local text = "Interesting profile biography... Interestiiiiiingg..."
 	if gotBio then
 		local data = HttpService:JSONDecode(bioData)
-		if not data.description or data.description == "" then
-			text = "Didn't set a profile biography? shame, it's nice to let other's know who you are... ha ha ha ha"
-		else
+		if data.description and data.description ~= "" then
 			text = data.description
+		else
+			text = "Didn't set a profile biography? shame, it's nice to let other's know who you are... ha ha ha ha"
+		end
+	end
+	return text
+end
+
+local function PlayersFavourites()
+	local gotFav, favData = generalRemotes.GetPlayerFavourites:InvokeServer()
+	local text = "You haven't favourited any games? Maybe this one will be your first.. interesting..."
+	if gotFav then
+		local result = HttpService:JSONDecode(favData)
+		local randomFavGame = (#result.data > 0) and result.data[math.random(1, #result.data)] or nil
+
+		local hasCustomDialogue = CustomDialogue[randomFavGame.id]
+		if hasCustomDialogue then
+			text = hasCustomDialogue
+		else
+			text = `I see you like playing '{randomFavGame.name}'... interesting choice, very interesting...`
+		end
+	end
+
+	return text
+end
+
+local function PlayersGroup()
+	local text = "You're not in any groups huh? looks like you haven't found a game that rewards you for joining them."
+	if playerData.Groups then
+		local randomGroup = (#playerData.Groups > 0) and playerData.Groups[math.random(1, #playerData.Groups)] or nil
+		text = `I see you're a {randomGroup.Role} in '{randomGroup.Name}'... Care to explain..? `
+	end
+
+	return text
+end
+local function PlayersAge()
+	local text
+	local ageInYears = math.floor(playerData.Age / 365)
+	local ageTag = "inexperienced fr00b who's wet behind the ears"
+	if ageInYears >= 4 and ageInYears < 8 then
+		ageTag = "inbetweener! not too young and not too old"
+	elseif ageInYears >= 8 then
+		ageTag = "old coot! that is OUTRAGEOUS"
+	end
+
+	text = `You joined this platform for about {tostring(ageInYears)} years huh? You're an {ageTag}!!!`
+	return text
+end
+
+local function PlayerCountry()
+	local text =
+		"Fine, I had your location, but i'll keep that under wraps to keep this... interesting... Ze-ha-ha-ha-ha"
+	local country, flagFact = generalRemotes.GetCountryData:InvokeServer(playerData.Country)
+
+	if country then
+		if flagFact then
+			text = `And finally, you live in {country} dont you? Fun fact: {flagFact}. How interesting!`
 		end
 	else
-		text = "Interesting profile biography..."
+		text = `You live in {country} dont you? Shall I pay a visit? Could be interesting to see you...`
 	end
+
 	return text
 end
 
 return {
 	Nodes = {
 		PsychoMantis = {
-			Name = "??????",
+			Name = "?????? ???",
 			Portrait = "rbxassetid://7129644829",
 			Dialogue = Introduction(),
 			VoiceId = 1,
@@ -117,8 +173,8 @@ return {
 		},
 
 		One = {
-			Name = "H?????",
-			Portrait = "rbxassetid://7129644829",
+			Name = "H????? ???",
+			Portrait = "rbxassetid://17425818639",
 			Dialogue = FriendDialogue(),
 			Responses = {
 				{
@@ -135,8 +191,8 @@ return {
 		},
 
 		Two = {
-			Name = "Ha????",
-			Portrait = "rbxassetid://7129644829",
+			Name = "Ha???? ???",
+			Portrait = "rbxassetid://7937261481",
 			Dialogue = OnlineFriendsDialogue(),
 			Responses = {
 				{
@@ -153,19 +209,148 @@ return {
 		},
 
 		Three = {
-			Name = "Hack??",
-			Portrait = "rbxassetid://7129644829",
+			Name = "Hacke? ???",
+			Portrait = "rbxassetid://9104107231",
 			Dialogue = PlayersBio(),
 			Responses = {
 				{
 					Text = "WHAT THE....",
 					Type = "NextMessage",
-					NextId = "Safechatter2",
+					NextId = "Four",
 				},
 				{
 					Text = "A####pt to w##k o#f s##wl#",
 					Type = "NextMessage",
-					NextId = "Safechatter3",
+					NextId = "Four",
+				},
+			},
+		},
+		Four = {
+			Name = "Hacker ???",
+			Portrait = "rbxassetid://14316492370",
+			Dialogue = PlayersFavourites(),
+			Responses = {
+				{
+					Text = "IM BEGGIN' YA!!",
+					Type = "NextMessage",
+					NextId = "Five",
+				},
+				{
+					Text = "A####p# ## w### o#f ###wl#",
+					Type = "NextMessage",
+					NextId = "Five",
+				},
+			},
+		},
+
+		Five = {
+			Name = "Hacker H",
+			Portrait = "rbxassetid://3293972814",
+			Dialogue = PlayersGroup(),
+			Responses = {
+				{
+					Text = "N-NEIN",
+					Type = "NextMessage",
+					NextId = "Six",
+				},
+				{
+					Text = "#####p# ## w### o## ######",
+					Type = "NextMessage",
+					NextId = "Six",
+				},
+			},
+		},
+
+		Six = {
+			Name = "Hacker Ha",
+			Portrait = "rbxassetid://4929384371",
+			Dialogue = PlayersAge(),
+			Responses = {
+				{
+					Text = "HOW MUCH LONGER???",
+					Type = "NextMessage",
+					NextId = "Seven",
+				},
+				{
+					Text = "####### ## #### ### ######",
+					Type = "NextMessage",
+					NextId = "Seven",
+				},
+			},
+		},
+
+		Seven = {
+			Name = "TTS Message Limit LOL!",
+			Portrait = "rbxassetid://4929384371",
+			Dialogue = PlayerCountry(),
+			Responses = {
+				{
+					Text = "AAHHHHHHHHHH!!!",
+					Type = "NextMessage",
+					NextId = "Eight",
+				},
+				{
+					Text = "####### ## #### ### ######",
+					Type = "NextMessage",
+					NextId = "Eight",
+				},
+			},
+		},
+
+		Eight = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://7129644829",
+			Dialogue = "Right, you get the point, so you need to do a little task for me, or else, heh... you know.",
+			PlaySound = "Knock",
+			Responses = {
+				{
+					Text = "Y-ys-sh- S-hiire!",
+					Type = "NextMessage",
+					NextId = "Nine",
+				},
+				{
+					Text = "OK PLZ ANYTHING SIRE",
+					Type = "NextMessage",
+					NextId = "Nine",
+				},
+			},
+		},
+
+		Nine = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://7129644829",
+			Dialogue = "Let's get to the point, I need you to compete in a typing competition. My fingers are injured due to me getting your information, so take responsibility and win the competition.",
+			Responses = {
+				{
+					Text = "M-me?",
+					Type = "NextMessage",
+					NextId = "MissionStart",
+				},
+				{
+					Text = "Interesting...",
+					Type = "NextMessage",
+					NextId = "MissionStart",
+				},
+			},
+		},
+
+		MissionStart = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://7129644829",
+			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going. I'll set your HumanoidRootPart to the location, be grateful.",
+			PlaySound = "Knock",
+			Responses = {
+				{
+					Text = "YESSIRTHANKYOUSIR",
+					UnlockMission = "TypingCompetition",
+					ExecuteScenarioEvent = "PsychoMantisBegin",
+					Type = "CloseCutscene",
+				},
+				{
+					Text = "a-y-y-y-y-y--y-y-",
+					UnlockMission = "TypingCompetition",
+					ExecuteScenarioEvent = "PsychoMantisBegin",
+					Type = "CloseCutscene",
 				},
 			},
 		},
