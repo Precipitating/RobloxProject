@@ -88,6 +88,64 @@ generalRemotes.StopAllMusic.OnClientInvoke = function()
 	return true
 end
 
+generalRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
+	local camera = workspace.CurrentCamera
+	if not partPosition then
+		camera.CameraType = Enum.CameraType.Custom
+		print("Camera back to player")
+		return
+	end
+
+	camera.CameraType = Enum.CameraType.Scriptable
+
+	camera.CFrame = partPosition
+end)
+
+-- PsychoMantis
+local onFocusLostRemoteConnection
+local textBoxFocusLostConnection
+
+onFocusLostRemoteConnection = generalRemotes.PsychoMantis.OnFocusLostConnect.OnClientEvent:Connect(function(startWord)
+	local textBox = workspace
+		:WaitForChild("ExamRoom")
+		:WaitForChild("PlayerLaptop")
+		:WaitForChild("Screen")
+		:WaitForChild("SurfaceGui")
+		:WaitForChild("TextBox")
+
+	textBox:CaptureFocus()
+	local currentWord = startWord
+	if not textBoxFocusLostConnection then
+		if not textBox or not textBox:IsA("TextBox") then
+			warn("Invalid TextBox received in OnFocusLostConnect")
+			return
+		end
+
+		textBoxFocusLostConnection = textBox.FocusLost:Connect(function()
+			local result = textBox.Text:gsub("%s+", "")
+			textBox:CaptureFocus()
+
+			if result == currentWord then
+				local newResult = generalRemotes.PsychoMantis.GetNextWord:InvokeServer()
+				currentWord = newResult
+				soundModule.PlaySound("Correct")
+
+				if newResult == "(Finished)" then
+					onFocusLostRemoteConnection:Disconnect()
+					textBoxFocusLostConnection:Disconnect()
+					textBoxFocusLostConnection = nil
+					textBox:ReleaseFocus()
+					print("Client disconnected competition events!")
+				end
+			else
+				if result ~= "" then
+					soundModule.PlaySound("Wrong")
+				end
+			end
+		end)
+	end
+end)
+
 -- set player's collision group
 for _, descendant in pairs(character:GetDescendants()) do
 	if descendant:IsA("BasePart") then

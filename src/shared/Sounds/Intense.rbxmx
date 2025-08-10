@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBXB27ACDB44CC84111AB3ECD49A479A858">
+	<Item class="Sound" referent="RBX34576953B6C14321872A4A5A1EC8443E">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -10,7 +10,7 @@
 			<bool name="IsMutedForCapture">false</bool>
 			<NumberRange name="LoopRegion">0 60000 </NumberRange>
 			<bool name="Looped">false</bool>
-			<string name="Name">NewMission</string>
+			<string name="Name">Intense</string>
 			<bool name="PlayOnRemove">false</bool>
 			<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
 			<bool name="PlaybackRegionsEnabled">false</bool>
@@ -20,11 +20,11 @@
 			<float name="RollOffMinDistance">10</float>
 			<token name="RollOffMode">0</token>
 			<Ref name="SoundGroup">null</Ref>
-			<Content name="SoundId"><url>rbxassetid://76029655852111</url></Content>
-			<int64 name="SourceAssetId">76029655852111</int64>
-			<BinaryString name="Tags">VW5zdG9wcGFibGU=</BinaryString>
+			<Content name="SoundId"><url>rbxassetid://1842940253</url></Content>
+			<int64 name="SourceAssetId">1842940253</int64>
+			<BinaryString name="Tags"></BinaryString>
 			<double name="TimePosition">0</double>
-			<float name="Volume">0.5</float>
+			<float name="Volume">0.100000001</float>
 		</Properties>
 	</Item>
 </roblox>

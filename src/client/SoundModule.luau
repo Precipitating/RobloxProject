@@ -1,6 +1,5 @@
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Currencies = require(ReplicatedStorage.Shared.FeaturePackagesCore.Configs.Currencies)
-local mainSound = ReplicatedStorage.Shared.Sounds.Main
 local soundLocation = ReplicatedStorage.Shared.Sounds
 local currentTheme = nil
 local SoundHandler = {}
@@ -28,7 +27,10 @@ function SoundHandler.StopAllSounds()
 	local sounds = soundLocation:GetChildren()
 	for _, sound in pairs(sounds) do
 		if sound:IsA("Sound") and sound.IsPlaying then
-			print(sound.Name)
+			if CollectionService:HasTag(sound, "Unstoppable") then
+				continue
+			end
+			print(`Stopped {sound.Name}`)
 			sound:Stop()
 		end
 	end
@@ -96,10 +98,9 @@ end
 function SoundHandler.PlaySound(soundName)
 	--print(`Playing {soundName}`)
 	if soundName then
-		soundLocation:FindFirstChild(soundName):Play()
-
-		if mainSound then
-			mainSound:Pause()
+		local sound = soundLocation:FindFirstChild(soundName)
+		if not sound.IsPlaying then
+			sound:Play()
 		end
 	else
 		warn("No sound to play, its nil.")
