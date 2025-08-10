@@ -206,10 +206,6 @@ function updateUI(data, dialogueId)
 end
 
 function openUI(data, dialogueId)
-	-- stop player movement
-	movementModule.DisableControls("UI")
-	soundModule.PauseTheme()
-
 	ui.Enabled = true
 	frame.Visible = true
 
@@ -239,6 +235,10 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		print("Failed to get NPC module (UI)")
 		return
 	end
+
+	-- stop player movement
+	movementModule.DisableControls("UI")
+	soundModule.PauseTheme()
 
 	local npcData = require(dataModule)
 

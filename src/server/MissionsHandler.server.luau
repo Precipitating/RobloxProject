@@ -2,9 +2,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
-local MissionEventHandlers = require(ServerScriptService.Server.MissionsLogicHandler)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local MissionCompleteHandlers = require(ServerScriptService.Server.MissionsCompleteHandler)
+local MissionEventHandlers = require(script.Parent:FindFirstChild("MissionsLogicHandler"))
+local HelperFunctions = require(script.Parent:FindFirstChild("HelperFunctions"))
+local MissionCompleteHandlers = require(script.Parent:FindFirstChild("MissionsCompleteHandler"))
+local MissionFailedHandlers = require(script.Parent:FindFirstChild("MissionsFailedHandler"))
 local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
 
 -- mission handlers
@@ -13,7 +14,7 @@ local function unlockHandler(player: Player, missionId: Types.MissionId)
 	local handler = MissionEventHandlers[missionId]
 
 	if handler then
-		handler()
+		handler(player)
 	else
 		print("Mission handler not found. Check spelling")
 	end
@@ -30,6 +31,12 @@ local function completeHandler(player: Player, missionId: Types.MissionId)
 end
 
 local function failHandler(player: Player, missionId: Types.MissionId)
+	local handler = MissionFailedHandlers[missionId]
+	if handler then
+		handler(player)
+	else
+		print("Failed to call fail handler")
+	end
 	print(`{player} failed mission {missionId}`)
 end
 

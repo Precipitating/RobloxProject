@@ -15,4 +15,10 @@ MissionCompleteHandlers["GuestMoney"] = function(player)
 	print("GuestMoney reward given and dialogue set to RoadmanComplete")
 end
 
+MissionCompleteHandlers["TypingCompetition"] = function(player)
+	HelperFunctions.GiveTool(player, "Keyboard")
+	HelperFunctions.SetNPCDialogueFile({ { PsychoMantisNameTag = "PsychoMantisWin" } })
+	print("Typing competition reward given and dialogue set to PsychoMantisWin")
+end
+
 return MissionCompleteHandlers

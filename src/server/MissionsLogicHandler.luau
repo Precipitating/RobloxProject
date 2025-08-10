@@ -4,6 +4,7 @@ local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
+local RoadmanComplete = require(ReplicatedStorage.Shared.NPCDialogues.RoadmanComplete)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local cutsceneRemotes = ReplicatedStorage.Shared.Cutscenes
 local generalRemotes = ReplicatedStorage.Shared.Remotes
@@ -13,7 +14,7 @@ local MissionEventHandlers = {}
 -- handle all game events
 
 -- Roadman
-MissionEventHandlers["StealPhone"] = function()
+MissionEventHandlers["StealPhone"] = function(_)
 	-- spawn the next NPC that progresses this mission
 	local pos = Vector3.new(math.random(-360, 360), 5.23, -26.1)
 	HelperFunctions.SpawnModelAtPosition("Roadman", "PhoneVictim", pos)
@@ -327,11 +328,23 @@ end
 
 -- Psycho Mantis
 
-MissionEventHandlers["PsychoMantisBegin"] = function(player)
-	-- local camera = workspace.CurrentCamera
+MissionEventHandlers["TypingCompetition"] = function(player)
+	print("Typing competition start!")
+	generalRemotes.StopAllMusic:InvokeClient(player)
+	SoundModule.PlayTheme("Intense")
 
-	-- camera.CameraType = Enum.CameraType.Scriptable
-	-- camera.CFrame = workspace.ExamRoom:FindFirstChild("CameraPos").CFrame
+	local competition = require(script.Parent.NPCs.PsychoMantis.TypingCompetition)
+	if not competition then
+		error("Word type competition failed to begin: Failed to obtain module")
+	end
+	local init = competition.Init(player)
+
+	player.Character:SetPrimaryPartCFrame(workspace.Dumpster.Poop:GetPrimaryPartCFrame())
+	if not init then
+		error("Initialize word competition failed")
+	end
+
+	competition.Begin(player)
 end
 
 return MissionEventHandlers

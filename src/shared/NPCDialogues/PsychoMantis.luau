@@ -319,7 +319,7 @@ return {
 		Nine = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://7129644829",
-			Dialogue = "Let's get to the point, I need you to compete in a typing competition. My fingers are injured due to me getting your information, so take responsibility and win the competition.",
+			Dialogue = "Let's get to the point, I need you to compete in a typing competition. My fingers are injured due to me getting your information, so take responsibility and win.",
 			Responses = {
 				{
 					Text = "M-me?",
@@ -337,19 +337,17 @@ return {
 		MissionStart = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://7129644829",
-			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going. I'll set your HumanoidRootPart to the location, be grateful.",
+			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going. I'll set your Camera to the location, be grateful.",
 			PlaySound = "Knock",
 			Responses = {
 				{
 					Text = "YESSIRTHANKYOUSIR",
 					UnlockMission = "TypingCompetition",
-					ExecuteScenarioEvent = "PsychoMantisBegin",
 					Type = "CloseCutscene",
 				},
 				{
-					Text = "a-y-y-y-y-y--y-y-",
+					Text = "y-y-y-y-y-y--y-y-",
 					UnlockMission = "TypingCompetition",
-					ExecuteScenarioEvent = "PsychoMantisBegin",
 					Type = "CloseCutscene",
 				},
 			},

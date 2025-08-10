@@ -2700,8 +2700,10 @@ function Missions.isMissionInProgress(player: Player, missionId: Types.MissionId
 	return false
 end
 
+
+
 -- Check all the tasks of a mission, as well as expiration.
-local function updateMissionCompletion(player: Player, missionId: Types.MissionId)
+local function updateMissionCompletion(player: Player, missionId: Types.MissionId, forceFail)
 	local data = getMissionData(player, missionId)
 	if not data then
 		return
@@ -2735,6 +2737,9 @@ local function updateMissionCompletion(player: Player, missionId: Types.MissionI
 			failed = true
 		end
 	end
+	if forceFail then
+		failed = true 
+	end
 
 	-- mission failed, update data and call handler
 	if failed then
@@ -2755,6 +2760,10 @@ local function updateMissionCompletion(player: Player, missionId: Types.MissionI
 
 		fireMissionUpdatedEvent(player, missionId)
 	end
+end
+
+function Missions.FailMission(player: Player,  missionId: Types.MissionId)
+	updateMissionCompletion(player, missionId, true)
 end
 
 -- Check if a mission can be unlocked for a player.
