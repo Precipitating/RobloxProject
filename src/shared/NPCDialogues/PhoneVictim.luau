@@ -47,7 +47,7 @@ return {
 			Pitch = -6,
 			Speed = 1.5,
 			Volume = 3,
-			Dialogue = "WHAT IN THE DIDDLY HUNKY DORY HECKINGTON IS THAT MONSTER? TAKE IT. DON'T HURT ME PLEASE!",
+			Dialogue = "WHAT IN THE DIDDLY HUNKY DORY HECKINGTON IS THAT MONSTER?<br/>TAKE IT.<br/>DON'T HURT ME PLEASE!",
 			PlayTheme = "Toilet",
 			Responses = {
 				{
@@ -73,7 +73,7 @@ return {
 			Pitch = -12,
 			Speed = 1,
 			Volume = 3,
-			Dialogue = "You really thought you could steal my phone with that confidence. Heh. You little, little boy. You know what they called me back then? The Beast Of Last Christmas. Why? GRAH-GRUH-RAAAUR-FUAAARRRR-GRAAAAH-SAAAAAAH-FAAAH. How about this. Give me YOUR PHONE, NOW!",
+			Dialogue = "You really thought you could steal my phone with that confidence.<br/>Heh. You little, little boy.<br/>You know what they called me back then?<br/><i><font color='#FF0000'>The Beast Of Last Christmas.</font></i><br/>Why?<br/><font color='#FFFF00'>GRAH-GRUH-RAAAUR-FUAAARRRR-GRAAAAH-SAAAAAAH-FAAAH.</font><br/>How about this.<br/>Give me YOUR PHONE, NOW!",
 			PlayTheme = "Scary",
 			Responses = {
 				{
@@ -92,7 +92,7 @@ return {
 		BeastCurrent = {
 			Name = "???",
 			Portrait = "rbxassetid://11125881651",
-			Dialogue = "EXACTLY LITTLE BOY, GIVE ME ALL YOUR BELONGINGS AS WELL OR IM ABOUT TO UNLEASH THE BEAST OF CURRENT CHRISTMAS",
+			Dialogue = "EXACTLY LITTLE PIP, GIVE ME ALL YOUR BELONGINGS AS WELL OR IM ABOUT TO UNLEASH THE<br/><i><font color='#FF0000'>BEAST OF CURRENT CHRISTMAS</font></i>",
 			Responses = {
 				{
 					Text = "Ya-yamete.",

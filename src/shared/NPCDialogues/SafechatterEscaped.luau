@@ -3,7 +3,7 @@ return {
 		SafechatterEscaped = {
 			Name = "Guest 1337",
 			Portrait = "rbxassetid://15815325811",
-			Dialogue = "Lights out.",
+			Dialogue = "<b>Lights out</b>",
 			VoiceId = 10,
 			Pitch = 1,
 			Speed = 1,
@@ -36,7 +36,7 @@ return {
 					NextId = "Two",
 				},
 				{
-					Text = "'Hmm...' WHAT ARE YOU ON ABOUT",
+					Text = "'Hmm...'<br/>WHAT ARE YOU ON ABOUT",
 					Type = "NextMessage",
 					NextId = "Two",
 				},
@@ -46,7 +46,7 @@ return {
 		Two = {
 			Name = "Guest 1337",
 			Portrait = "rbxassetid://15296361385",
-			Dialogue = "Lights out.",
+			Dialogue = "<b>Lights out</b>",
 			PlayTheme = "Scary",
 
 			Responses = {

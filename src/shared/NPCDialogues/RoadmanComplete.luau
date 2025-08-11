@@ -29,7 +29,7 @@ return {
 			Speed = 1,
 			Volume = 1,
 			Portrait = "rbxassetid://10246439168",
-			Dialogue = "Ahem. Ignore what transpired a second ago. Excellent, I will be taking this along with the walking stick I lended. Can you say where you took this from dear sir?",
+			Dialogue = "Ahem. Ignore what transpired a second ago.<br/>Excellent, I will be taking this along with the <i>walking stick</i> I lended.<br/>Can you say where you took this from dear sir?",
 			PlaySound = "RadioBeep",
 			PlayTheme = "PoshTheme",
 			Responses = {
@@ -54,7 +54,7 @@ return {
 			Portrait = "rbxassetid://729001246",
 			PlaySound = "RadioBeep",
 			PlayTheme = "PoliceCaught",
-			Dialogue = "Control, this is Pc Parry on the case. We’ve got a Code 0 developing - repeat, Code zero - suspect just confessed over open mic to nicking a Nokia brick. Confirmed no license to hold that device. Requesting 300 Police Cruisers for detainment.",
+			Dialogue = "Control, this is Pc Parry on the case.<br/>We’ve got a Code 0 developing - repeat, <b>Code Zero</b><br/>Suspect just confessed over open mic to <b>nicking</b> a <b>Nokia Brick</b>.<br/>Confirmed <b>no license</b> to hold that device.<br/>Requesting <font size='40'>300</font> Police Cruisers for detainment.",
 			Responses = {
 				{
 					Text = "Ya got me...",
@@ -75,7 +75,7 @@ return {
 			Name = "nemeltneG",
 			Speed = 1.5,
 			Portrait = "rbxassetid://10246439168",
-			Dialogue = "Ah, so I can safely assume it wasn’t your distinguished self I observed up the lane, theatrically demanding a mobile device from a startled gentleman as if you were Oliver Twist discovering meat on one hit point?",
+			Dialogue = "Ah, so I can safely assume it wasn’t your <b>distinguished</b> self I observed up the lane, <b>theatrically</b> demanding a mobile device from a startled gentleman as if you were <b>Oliver Twist</b> discovering meat on <b>one</b> hit point?",
 			Responses = {
 				{
 					Text = "Wasn't me pal",
@@ -93,7 +93,7 @@ return {
 		Gent = {
 			Name = "Gent",
 			Portrait = "rbxassetid://11100293050",
-			Dialogue = "Very well, I take your word for it. Here is the PC reward, do enjoy.",
+			Dialogue = "Very well, I take your word for it.<br/>Here is the PC I <i>borrowed</i> from the <i>Iron Cafe</i>, do enjoy.",
 			Responses = {
 				{
 					Text = "Time to play the better game",
@@ -116,7 +116,7 @@ return {
 			Speed = 1.5,
 			Volume = 3,
 			Portrait = "rbxassetid://11394123247",
-			Dialogue = "Yikes, lil pup talkin' like that in the big 2025 jesus get with the times. Ts crazy old man. Take the W clanker reward",
+			Dialogue = "Yikes, lil <b>pup</b> talkin' like that in the big <b>2025</b> jesus get with the times.<br/>Ts crazy old man.<br/>Take the W <b>CLANKER</b> reward.",
 			Responses = {
 				{
 					Text = "What the...",

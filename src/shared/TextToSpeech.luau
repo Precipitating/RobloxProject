@@ -3,10 +3,27 @@ local TextToSpeech = {}
 local soundService = game:GetService("SoundService")
 local textToSpeechHandle = soundService.AudioTextToSpeech
 
-function TextToSpeech.Speak(text)
-	textToSpeechHandle.Text = text
-	local status = textToSpeechHandle:LoadAsync()
+function TextToSpeech.CleanTextForTTS(str)
+	-- Replace <br/> and newlines with a single space
+	str = str:gsub("<br%s*/>", " ")
+	str = str:gsub("\n", " ")
 
+	-- Remove all other tags
+	str = str:gsub("<[^<>]->", "")
+
+	-- Collapse multiple spaces into one
+	str = str:gsub("%s+", " ")
+
+	-- Trim leading/trailing spaces
+	str = str:match("^%s*(.-)%s*$")
+
+	print(str)
+	return str
+end
+function TextToSpeech.Speak(text)
+	local cleanedText = TextToSpeech.CleanTextForTTS(text)
+	textToSpeechHandle.Text = cleanedText
+	local status = textToSpeechHandle:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn("TTS Load failed:", status.Name)
 		return false

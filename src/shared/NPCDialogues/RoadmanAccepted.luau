@@ -3,7 +3,7 @@ return {
 		RoadmanAccepted = {
 			Name = "Esteemed GentleMAN?",
 			Portrait = "rbxassetid://11640689559",
-			Dialogue = "Bruv, you’re movin’ like a wasteman — man should be out there skimmin' a burner for me",
+			Dialogue = "Bruv, you’re movin’ like a <font color='#FF7800'>wasteman</font> — man should be out there skimmin' a burner for me",
 			Pitch = 12,
 			Speed = 2,
 			Volume = 3,
@@ -28,7 +28,7 @@ return {
 			Volume = 1,
 			Portrait = "rbxassetid://10246439168",
 			PlayTheme = "PoshTheme",
-			Dialogue = "Ahem. The game bugged my friend. Acquire the communications device and I will give you a PC. Ecks Dee as you kids say.",
+			Dialogue = "Ahem. The game bugged my friend. Acquire the communications device and I will give you a PC.<br/><b>Ecks Dee</b> as you kids say.",
 			Responses = {
 				{
 					Text = "SIR YES SIR!",

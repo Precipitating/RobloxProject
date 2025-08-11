@@ -330,9 +330,6 @@ end
 
 MissionEventHandlers["TypingCompetition"] = function(player)
 	print("Typing competition start!")
-	generalRemotes.StopAllMusic:InvokeClient(player)
-	SoundModule.PlayTheme("Intense")
-
 	local competition = require(script.Parent.NPCs.PsychoMantis.TypingCompetition)
 	if not competition then
 		error("Word type competition failed to begin: Failed to obtain module")

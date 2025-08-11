@@ -6,16 +6,13 @@ local playerData = generalRemotes.GetBasicPlayerData:InvokeServer()
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local CustomDialogue = require(ReplicatedStorage.Shared.NPCDialogues.PsychoMantisHelpers.CustomPsychoMantisDialogue)
-
 local function Introduction()
 	local text
-
 	if not player.DisplayName then
 		text = `Interesting {playerData.Name}, very interesting...`
 	else
 		text = `Interesting {player.DisplayName}, very interesting...`
 	end
-
 	return text
 end
 
@@ -23,7 +20,6 @@ local function GetGameNameFromId(id)
 	local success, result = pcall(function()
 		return MarketplaceService:GetProductInfo(id)
 	end)
-
 	if success and result then
 		return result.Name
 	else
@@ -36,14 +32,16 @@ local function FriendDialogue()
 	local friendsList = generalRemotes.GetFriendsList:InvokeServer()
 	local randomFriend = friendsList[math.random(1, #friendsList)]
 	local text
+
 	if randomFriend.Username == "Account Deleted" then
-		text = "Friends with a criminal huh? their account's deleted... interesting..."
+		text =
+			"Friends with a <font color='#FF0000'><b>criminal</b></font> huh? their account's deleted... interesting..."
 	elseif randomFriend.Username == randomFriend.DisplayName then
 		text =
-			`You're not here with {randomFriend.Username}? Seems like they didn't set a nickname for themselves.. Interesting...`
+			`You're not here with <b>{randomFriend.Username}</b>? Seems like they didn't set a nickname for themselves..<br/>Interesting...`
 	else
 		text =
-			`You're not here with {randomFriend.Username}? Or shall I refer to them as {randomFriend.DisplayName}...?`
+			`You're not here with <b><font color='#FF0000'>{randomFriend.Username}</font></b>? Or shall I refer to them as <font color='#FF0000'><b>{randomFriend.DisplayName}</b></font>...?`
 	end
 
 	return text
@@ -60,17 +58,17 @@ local function OnlineFriendsDialogue()
 	local randomOnlineFriend = (#result > 0) and result[math.random(1, #result)] or nil
 
 	if not randomOnlineFriend then
-		text = "No 'connections' online right now huh? very interesting... "
+		text = "No <i>'connections'</i> online right now huh? very interesting..."
 	elseif randomOnlineFriend.UserName == "Account Deleted" then
 		text =
-			"Why is your terminated 'connection' online..? Desperation at its finest. Roblox Support ain't gonna reverse the decision ha ha ha... Interessant..."
+			"Why is your terminated <b>'connection'</b> online..? Desperation at its finest. <b><font color='#FF0000'>ROBLOX</font></b> Support ain't gonna reverse the decision ha ha ha... Interessant..."
 	else
 		local lastGamePlayed = GetGameNameFromId(randomOnlineFriend.PlaceId)
 		if lastGamePlayed then
 			text =
-				`Not playing with {randomOnlineFriend.UserName}? He's online playing {lastGamePlayed}. Zanimljivo... `
+				`Not playing with <b>{randomOnlineFriend.UserName}</b>? He's online playing <b>{lastGamePlayed}</b>. <i>Zanimljivo</i>...`
 		else
-			text = `Not mingling with {randomOnlineFriend.UserName}? He's online you know...?`
+			text = `Not mingling with <b>{randomOnlineFriend.UserName}</b>? He's online you know...?`
 		end
 	end
 
@@ -79,13 +77,13 @@ end
 
 local function PlayersBio()
 	local gotBio, bioData = generalRemotes.GetPlayerBio:InvokeServer()
-	local text = "Interesting profile biography... Interestiiiiiingg..."
+	local text = "<b>Interesting</b> profile biography... <b>Interestiiiiiingg</b>..."
 	if gotBio then
 		local data = HttpService:JSONDecode(bioData)
 		if data.description and data.description ~= "" then
-			text = data.description
+			text = "<i>" .. data.description .. "</i>"
 		else
-			text = "Didn't set a profile biography? shame, it's nice to let other's know who you are... ha ha ha ha"
+			text = "Didn't set a profile biography? shame, it's nice to let others know who you are... ha ha ha ha"
 		end
 	end
 	return text
@@ -102,7 +100,8 @@ local function PlayersFavourites()
 		if hasCustomDialogue then
 			text = hasCustomDialogue
 		else
-			text = `I see you like playing '{randomFavGame.name}'... interesting choice, very interesting...`
+			text =
+				`I see you like playing <font color='#FF0000'>'{randomFavGame.name}'</font>... interesting choice, very interesting...`
 		end
 	end
 
@@ -113,36 +112,36 @@ local function PlayersGroup()
 	local text = "You're not in any groups huh? looks like you haven't found a game that rewards you for joining them."
 	if playerData.Groups then
 		local randomGroup = (#playerData.Groups > 0) and playerData.Groups[math.random(1, #playerData.Groups)] or nil
-		text = `I see you're a {randomGroup.Role} in '{randomGroup.Name}'... Care to explain..? `
+		text =
+			`I see you're a <font color='#ff4500'><b>{randomGroup.Role}</b></font> in '<font color='#ff4500'><b>{randomGroup.Name}</b></font>'... Care to explain..?`
 	end
-
 	return text
 end
+
 local function PlayersAge()
-	local text
 	local ageInYears = math.floor(playerData.Age / 365)
-	local ageTag = "inexperienced fr00b who's wet behind the ears"
+	local ageTag = "inexperienced <font color='#e3f542'>fr00b</font> who's wet behind the ears"
 	if ageInYears >= 4 and ageInYears < 8 then
-		ageTag = "inbetweener! not too young and not too old"
+		ageTag = "inbetweener! not too <b>young</b> and not too <b>old</b>"
 	elseif ageInYears >= 8 then
-		ageTag = "old coot! that is OUTRAGEOUS"
+		ageTag = "old <font color='#41526a'><b>COOT</b></font>.<br/>That is <b>OUTRAGEOUS</b>"
 	end
 
-	text = `You joined this platform for about {tostring(ageInYears)} years huh? You're an {ageTag}!!!`
+	local text = `You joined this platform for about <b>{tostring(ageInYears)}</b> years huh?<br/>You're an {ageTag}!!!`
 	return text
 end
 
 local function PlayerCountry()
 	local text =
-		"Fine, I had your location, but i'll keep that under wraps to keep this... interesting... Ze-ha-ha-ha-ha"
+		"Fine, I had your location, but I'll keep that under wraps to keep this... interesting...<br/><font color='#000000'>Ze-ha-ha-ha-ha</font>"
 	local country, flagFact = generalRemotes.GetCountryData:InvokeServer(playerData.Country)
 
 	if country then
 		if flagFact then
-			text = `And finally, you live in {country} dont you? Fun fact: {flagFact}. How interesting!`
+			text = `And finally, you live in <b>{country}</b> don't you?<br/>Fun fact: {flagFact}.<br/>How interesting!`
+		else
+			text = `You live in <b>{country}</b> don't you? Shall I pay a visit? Peek-a-boo.`
 		end
-	else
-		text = `You live in {country} dont you? Shall I pay a visit? Could be interesting to see you...`
 	end
 
 	return text
@@ -161,7 +160,7 @@ return {
 			PlayTheme = "Calm",
 			Responses = {
 				{
-					Text = "How do you know my name..?",
+					Text = "How do you know my <b>name</b>..?",
 					Type = "NextMessage",
 					NextId = "One",
 				},
@@ -319,7 +318,7 @@ return {
 		Nine = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://7129644829",
-			Dialogue = "Let's get to the point, I need you to compete in a typing competition. My fingers are injured due to me getting your information, so take responsibility and win.",
+			Dialogue = "Let's get to the point, I need you to compete in a typing competition.<br/>My fingers are injured due to me getting your information, so take responsibility and win.",
 			Responses = {
 				{
 					Text = "M-me?",
@@ -337,7 +336,7 @@ return {
 		MissionStart = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://7129644829",
-			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going. I'll set your Camera to the location, be grateful.",
+			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going.</br>I'll set your Camera to the location, be grateful.",
 			PlaySound = "Knock",
 			Responses = {
 				{

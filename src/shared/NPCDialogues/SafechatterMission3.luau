@@ -3,7 +3,7 @@ return {
 		SafechatterMission3 = {
 			Name = "Adurite",
 			Portrait = "rbxassetid://277685067",
-			Dialogue = "Adurite for life hahah",
+			Dialogue = "<b>Adurite</b> for life hahah",
 			VoiceId = 7,
 			Pitch = 1,
 			Speed = 1,
@@ -42,7 +42,7 @@ return {
 		Fail = {
 			Name = "Red",
 			Portrait = "rbxassetid://37700586",
-			Dialogue = "LEAVE YOU ADURITE-LESS PAGAN.",
+			Dialogue = "LEAVE YOU ADURITE-LESS <b>PAGAN.</b>",
 			Responses = {
 				{
 					Text = "... Blue better anyway",
@@ -58,7 +58,7 @@ return {
 		Win1 = {
 			Name = "Aduroite",
 			Portrait = "rbxassetid://337008046",
-			Dialogue = "WHAT PLAYER POINT RANKING DO YA NEEED TO GET THESE BOMBTASTIC THINGS?",
+			Dialogue = "WHAT PLAYER POINT RANKING DO YA NEEED TO GET THESE <b>BOMBTASTIC</b> THINGS?",
 			Responses = {
 				{
 					Text = "Top 20 for dailies, 10,000 for weeklies.",
@@ -93,7 +93,7 @@ return {
 		Win3 = {
 			Name = "Dawid",
 			Portrait = "rbxassetid://867849809",
-			Dialogue = "TAKE IT THEEEEEEEEEEEN?",
+			Dialogue = "<b>TAKE IT THEEEEEEEEEEEN?</b>",
 			Volume = 3,
 			Responses = {
 				{

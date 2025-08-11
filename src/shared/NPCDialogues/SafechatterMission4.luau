@@ -3,7 +3,7 @@ return {
 		SafechatterMission4 = {
 			Name = "Stuck in 2013",
 			Portrait = "rbxassetid://134009593",
-			Dialogue = "God what an event that was... I was one of the 2011 people that beat the event... Jesus..",
+			Dialogue = "God what an event that was... I was one of the <b>2011</b> people that beat the event... <i>Jesus..</i>",
 			VoiceId = 1,
 			Pitch = 1,
 			Speed = 1,
@@ -24,7 +24,7 @@ return {
 		Question = {
 			Name = "Hallow",
 			Portrait = "rbxassetid://183769773",
-			Dialogue = "Answer some questions and you'll get some Tix lad. Firstly, What year was the Witching Hour?",
+			Dialogue = "Answer some questions and you'll get some <font color='#ffde32'>Tix</font> lad.<br/>Firstly, What year was the <font color='#ff4500'>Witching Hour?</font>",
 			Responses = {
 				{
 					Text = "2012",
@@ -42,7 +42,7 @@ return {
 		Fail = {
 			Name = "...Chopper",
 			Portrait = "rbxassetid://11886454251",
-			Dialogue = "LEAVE YOU FLOPPLE DOODLE DOO NOOB! ENJOY THOSE EVENTS CREATED BY THE COMMUNITY NOT ROBLOX THEMSELVES",
+			Dialogue = "<b>LEAVE YOU FLOPPLE DOODLE DOO NOOB!</b><br/>ENJOY THOSE EVENTS CREATED BY THE COMMUNITY NOT ROBLOX THEMSELVES",
 			Responses = {
 				{
 					Text = "Er..",
@@ -75,7 +75,7 @@ return {
 		Win2 = {
 			Name = "Scooter",
 			Portrait = "rbxassetid://181753531",
-			Dialogue = "Here's the deal breaker: what hat did you get if you paid 1000 robux for early access?",
+			Dialogue = "Here's the deal breaker:<br/>What hat did you get if you paid <b>1000</b> robux for early access?",
 			Responses = {
 				{
 					Text = "Zombie Headrow",
@@ -106,7 +106,7 @@ return {
 					Type = "Close",
 				},
 				{
-					Text = "I was one of the 2011 people I swear! Ts is epic!",
+					Text = "I was one of the 2011 people I swear!<br/>Ts is epic!",
 					DestroyObject = { "SafechatterMission4" },
 					ProgressMission = {
 						MissionName = "GuestMoney",
