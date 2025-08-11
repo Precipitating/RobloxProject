@@ -34,7 +34,7 @@ function SoundHandler.StopAllSounds()
 			sound:Stop()
 		end
 	end
-	SoundHandler.StopTheme()
+	currentTheme = nil
 end
 
 function SoundHandler.PlayTheme(name)
@@ -101,6 +101,8 @@ function SoundHandler.PlaySound(soundName)
 		local sound = soundLocation:FindFirstChild(soundName)
 		if not sound.IsPlaying then
 			sound:Play()
+		else
+			sound.TimePosition = 0
 		end
 	else
 		warn("No sound to play, its nil.")

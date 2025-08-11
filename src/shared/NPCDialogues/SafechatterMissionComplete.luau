@@ -25,7 +25,7 @@ return {
 		Complete = {
 			Name = "Guest",
 			Portrait = "rbxassetid://112275522847651",
-			Dialogue = "You are awesome!",
+			Dialogue = "You are <b>awesome!</b>",
 			Responses = {
 				{
 					Text = "So what do I get?",
@@ -43,7 +43,7 @@ return {
 		Complete1 = {
 			Name = "SOPA Lover",
 			Portrait = "rbxassetid://70379700",
-			Dialogue = "Honest Politicians",
+			Dialogue = "Honest <i>Politicians</i>",
 			Responses = {
 				{
 					Text = "Wat...",
@@ -61,7 +61,7 @@ return {
 		Complete2 = {
 			Name = "Released Guest",
 			Portrait = "rbxassetid://60376597",
-			Dialogue = "AA-AAAH. FINALLY",
+			Dialogue = "AA-AAAH. <b>FINALLY.</b>",
 			Responses = {
 				{
 					Text = "der...",
@@ -79,7 +79,7 @@ return {
 		Complete3 = {
 			Name = "Guest",
 			Portrait = "rbxassetid://11886454251",
-			Dialogue = "AA-AAAH. FINALLY I ESCAPED THE SAFE CHAT THANKS TO THE 5 TIX I CONVERTED ON THE EXCHANGE FOR ROBUX TO PAY NOBLEDRAGON FOR CHAT ACCESS.",
+			Dialogue = "AA-AAAH. FINALLY.<br/>I ESCAPED THE SAFE CHAT THANKS TO THE <b>5</b> <font color='#ffde32'>TIX</font> I CONVERTED ON THE EXCHANGE FOR ROBUX TO PAY NOBLEDRAGON FOR CHAT ACCESS.",
 			Responses = {
 				{
 					Text = "Didn't ask bud. Give me the reward.",
@@ -97,7 +97,7 @@ return {
 		Complete4 = {
 			Name = "G#est",
 			Portrait = "rbxassetid://60376597",
-			Dialogue = "Ok I will give yo# # music 10 ############### ###########",
+			Dialogue = "Ok I will give yo# # <s>music 10</s> ############### ###########",
 			PlaySound = "Static",
 			PlayTheme = "Scary",
 			Responses = {
@@ -121,12 +121,12 @@ return {
 			PlaySound = "Static",
 			Responses = {
 				{
-					Text = "You've go## ## Wh- #w # HELP# ",
+					Text = "You've go## ## Wh- #w # <b>HELP</b># ",
 					ExecuteScenarioEvent = "GuestComplete",
 					Type = "CloseCutscene",
 				},
 				{
-					Text = "Th# ##### AAH#### #",
+					Text = "<s>Th# ##### AAH#### #</s>",
 					ExecuteScenarioEvent = "GuestComplete",
 					Type = "CloseCutscene",
 				},

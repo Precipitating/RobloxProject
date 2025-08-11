@@ -3,7 +3,7 @@ return {
 		SafechatterMission2 = {
 			Name = "Sauce-us",
 			Portrait = "rbxassetid://7910429061",
-			Dialogue = "Let me guess, tickets?",
+			Dialogue = "Let me guess, <font color='#ffde32'>tickets?</font>",
 			VoiceId = 5,
 			Pitch = 1,
 			Speed = 1,
@@ -24,7 +24,7 @@ return {
 		Question = {
 			Name = "Source?",
 			Portrait = "rbxassetid://6862780932",
-			Dialogue = "Answer this then kid. Where was I placed in the egg hunt?",
+			Dialogue = "Answer this then <b>kid</b>. Where was I placed in the egg hunt?",
 			Responses = {
 				{
 					Text = "You spawned in with 1/100 chance at the village.",
@@ -42,7 +42,7 @@ return {
 		Fail = {
 			Name = "Sorus",
 			Portrait = "rbxassetid://6888586040",
-			Dialogue = "Embarrassing. Leave.",
+			Dialogue = "<i>Embarrassing.</i> <b>Leave.</b>",
 			Responses = {
 				{
 					Text = "WHO DYO U THINK YO UAAREE???",
@@ -58,7 +58,7 @@ return {
 		Win1 = {
 			Name = "Sorc",
 			Portrait = "rbxassetid://1781166127",
-			Dialogue = "Thought it's over huh? WHAT ITEM DID YOU NEED TO GET MY EGG?",
+			Dialogue = "Thought it's over huh? WHAT ITEM DID YOU NEED TO GET MY <b>EGG?</b>",
 			Responses = {
 				{
 					Text = "Spam. Yummers.",
@@ -75,7 +75,7 @@ return {
 		Win2 = {
 			Name = "Sorcu",
 			Portrait = "rbxassetid://118445828581543",
-			Dialogue = "W-well WHERE DID YOU GET THIS SO CALLED 'SPAM'",
+			Dialogue = "W-well WHERE DID YOU GET THIS SO CALLED <b>'SPAM'</b>",
 			Responses = {
 				{
 					Text = "3rd teleport, in the cave.. give it already..",
@@ -93,7 +93,7 @@ return {
 		Win3 = {
 			Name = "Sorcus",
 			Portrait = "rbxassetid://17286318",
-			Dialogue = "Take it, you wiki searched it.. bum.",
+			Dialogue = "Take it, you wiki searched it.. <b>bum</b>.",
 			Volume = 3,
 			Responses = {
 				{

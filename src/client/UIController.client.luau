@@ -50,19 +50,37 @@ local function typeText(text)
 	local ttsSuccess = textToSpeech.Speak(text)
 	local charDelay = 0.05
 	local ttsHandle = textToSpeech.GetHandle()
-
-	if ttsSuccess and ttsHandle.TimeLength and ttsHandle.TimeLength > 0 then
-		charDelay = ttsHandle.TimeLength / #text
-	end
-
-	for i = 1, #text do
-		dialogueText.Text = string.sub(text, 1, i)
-		if not ttsSuccess then
-			soundModule.PlaySound("TypeSound")
+	local graphemeCount
+	if ttsSuccess then
+		graphemeCount = 0
+		for _ in utf8.graphemes(ttsHandle.Text) do
+			graphemeCount += 1
 		end
-		task.wait(charDelay)
+		charDelay = ttsHandle.TimeLength / graphemeCount
+	end
+	-- use built in ROBLOX graphemes to simulate typewriter effect
+	dialogueText.RichText = true
+	dialogueText.Text = text
+	dialogueText.MaxVisibleGraphemes = 0
+
+	local index = 0
+
+	for first, last in utf8.graphemes(ttsHandle.Text) do
+		local grapheme = ttsHandle.Text:sub(first, last)
+		index += 1
+		if grapheme ~= " " then
+			dialogueText.MaxVisibleGraphemes = index
+			if not ttsSuccess then
+				soundModule.PlaySound("TypeSound")
+			end
+			task.wait(charDelay)
+		end
 	end
 
+	-- prevent TTS playing issues if typewriter is too fast
+	while ttsHandle.IsPlaying do
+		task.wait()
+	end
 	btn1.Interactable = true
 	btn2.Interactable = true
 end

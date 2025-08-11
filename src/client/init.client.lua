@@ -104,46 +104,74 @@ end)
 -- PsychoMantis
 local onFocusLostRemoteConnection
 local textBoxFocusLostConnection
+local textBox
+local isCleaningUp = false
+local currentWord
+
+-- Unified cleanup function
+local function CleanupGame()
+	if isCleaningUp then
+		return
+	end
+	isCleaningUp = true
+
+	if onFocusLostRemoteConnection then
+		onFocusLostRemoteConnection:Disconnect()
+		onFocusLostRemoteConnection = nil
+	end
+	if textBoxFocusLostConnection then
+		textBoxFocusLostConnection:Disconnect()
+		textBoxFocusLostConnection = nil
+	end
+	if textBox and textBox.Parent then
+		textBox:ReleaseFocus()
+	end
+	textBox = nil
+
+	print("Client disconnected competition events!")
+end
+
+generalRemotes.PsychoMantis.PsychoMantisEventCleanup.OnClientEvent:Connect(CleanupGame)
 
 onFocusLostRemoteConnection = generalRemotes.PsychoMantis.OnFocusLostConnect.OnClientEvent:Connect(function(startWord)
-	local textBox = workspace
+	textBox = workspace
 		:WaitForChild("ExamRoom")
 		:WaitForChild("PlayerLaptop")
 		:WaitForChild("Screen")
 		:WaitForChild("SurfaceGui")
 		:WaitForChild("TextBox")
 
-	textBox:CaptureFocus()
-	local currentWord = startWord
-	if not textBoxFocusLostConnection then
-		if not textBox or not textBox:IsA("TextBox") then
-			warn("Invalid TextBox received in OnFocusLostConnect")
-			return
-		end
-
-		textBoxFocusLostConnection = textBox.FocusLost:Connect(function()
-			local result = textBox.Text:gsub("%s+", "")
-			textBox:CaptureFocus()
-
-			if result == currentWord then
-				local newResult = generalRemotes.PsychoMantis.GetNextWord:InvokeServer()
-				currentWord = newResult
-				soundModule.PlaySound("Correct")
-
-				if newResult == "(Finished)" then
-					onFocusLostRemoteConnection:Disconnect()
-					textBoxFocusLostConnection:Disconnect()
-					textBoxFocusLostConnection = nil
-					textBox:ReleaseFocus()
-					print("Client disconnected competition events!")
-				end
-			else
-				if result ~= "" then
-					soundModule.PlaySound("Wrong")
-				end
-			end
-		end)
+	if not textBox:IsA("TextBox") then
+		warn("Invalid TextBox received in OnFocusLostConnect")
+		return
 	end
+
+	currentWord = startWord
+	textBox:CaptureFocus()
+
+	-- Make sure we never connect twice
+	if textBoxFocusLostConnection then
+		textBoxFocusLostConnection:Disconnect()
+	end
+
+	textBoxFocusLostConnection = textBox.FocusLost:Connect(function()
+		if isCleaningUp then
+			return
+		end -- If ending, don't refocus
+		local result = textBox.Text:gsub("%s+", "")
+
+		textBox:CaptureFocus() -- Keep focus until end
+
+		if result == currentWord then
+			local newResult = generalRemotes.PsychoMantis.GetNextWord:InvokeServer()
+			currentWord = newResult
+			soundModule.PlaySound("Correct")
+		else
+			if result ~= "" then
+				soundModule.PlaySound("Wrong")
+			end
+		end
+	end)
 end)
 
 -- set player's collision group

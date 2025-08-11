@@ -1,9 +1,9 @@
 return {
 	Nodes = {
 		SafechatterMission5 = {
-			Name = "???OG USER??",
+			Name = "???OG USER???",
 			Portrait = "rbxassetid://150933824",
-			Dialogue = "Wait black milli at RT? Maybe I could jump him with my Auto 5",
+			Dialogue = "Wait black milli at RT? Maybe I could jump him with my Auto 5 or PPSH",
 			VoiceId = 5,
 			Pitch = 1,
 			Speed = 1,
@@ -24,7 +24,7 @@ return {
 		Question = {
 			Name = "Apoc dude",
 			Portrait = "rbxassetid://18636752982",
-			Dialogue = "Errrr don't have any old questions at the moment, let me pop an Apoc one while I think: What's the most popular location?",
+			Dialogue = "Errrr don't have any old questions at the moment.<br/>Let me pop an Apoc one while I think: What's the most popular location?",
 			Responses = {
 				{
 					Text = "Kin?",
@@ -42,7 +42,7 @@ return {
 		Fail = {
 			Name = "C&G Enthusiast",
 			Portrait = "rbxassetid://60181106",
-			Dialogue = "You're wasting my time... I'm off to Kin to get some blood packs. Bog off.",
+			Dialogue = "You're wasting my time... I'm off to <i>Kin</i> to get some blood packs.<br/><b>Bog off.</b>",
 			Responses = {
 				{
 					Text = "Er..",
@@ -58,15 +58,15 @@ return {
 		Win1 = {
 			Name = "Kinwah",
 			Portrait = "rbxassetid://150686898",
-			Dialogue = "Err still can't think of one soooo... what does a 'black milli' signify to other users?",
+			Dialogue = "Err still can't think of one soooo...<br/>What does a <font color='#000000'>'black milli'</font> signify to other users?",
 			Responses = {
 				{
-					Text = "Guys stacked out the gaff.",
+					Text = "Guys stacked out the <b>gaff.</b>",
 					Type = "NextMessage",
 					NextId = "Win2",
 				},
 				{
-					Text = "Guy has a black military backpack. Nothing really.",
+					Text = "Guy has a black military backpack.<br/>Nothing really.",
 					Type = "NextMessage",
 					NextId = "Fail",
 				},
@@ -75,10 +75,10 @@ return {
 		Win2 = {
 			Name = "Opportunity taker",
 			Portrait = "rbxassetid://147647099",
-			Dialogue = "Oh, here's one: Why was Riptide a popular item?",
+			Dialogue = "Oh, here's one:<br/>Why was <b>Riptide</b> a popular item?",
 			Responses = {
 				{
-					Text = "Infinite robux glitch",
+					Text = "Infinite robux glitch<br/>Get the badge, delete & repeat",
 					Type = "NextMessage",
 					NextId = "Win3",
 				},
@@ -93,7 +93,7 @@ return {
 		Win3 = {
 			Name = "RT",
 			Portrait = "rbxassetid://18434077998",
-			Dialogue = "Cool. Take it. Need to go to RT and one shot with my patriot I just spaw- found legally.",
+			Dialogue = "Cool. Take it.<br/>Need to go to RT and one shot with my Patriot I just spaw- found legally.",
 			Responses = {
 				{
 					Text = "Apoc 2 is out you know...?",
@@ -106,7 +106,7 @@ return {
 					Type = "Close",
 				},
 				{
-					Text = "Didn't you have an Auto-5?",
+					Text = "Didn't you have an Auto-5/PPSH?",
 					DestroyObject = { "SafechatterMission5" },
 					ProgressMission = {
 						MissionName = "GuestMoney",

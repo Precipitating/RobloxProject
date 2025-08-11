@@ -3,7 +3,7 @@ return {
 		SafechatterMission1 = {
 			Name = "Ancient Coot",
 			Portrait = "rbxassetid://13692620728",
-			Dialogue = "yo lil bro u want sum free tix??? lol",
+			Dialogue = "yo lil bro u want sum free <font color='#ffde32'>tix</font>??? lol",
 			VoiceId = 10,
 			Pitch = 1,
 			Speed = 1,
@@ -24,7 +24,7 @@ return {
 		Question = {
 			Name = "Ancient Coot",
 			Portrait = "rbxassetid://5600499503",
-			Dialogue = "k q 4 u... wut was roblox called 1st??? XD",
+			Dialogue = "k q 4 u... wut was roblox called 1st??? <b>XD</b>",
 			Responses = {
 				{
 					Text = "Roblox, nice trick question bud.",
@@ -59,7 +59,7 @@ return {
 		Win = {
 			Name = "Impressed Old Coot",
 			Portrait = "rbxassetid://6555366201",
-			Dialogue = "wow kk fair nuf enjoy da tix kid",
+			Dialogue = "wow kk fair nuf enjoy da <font color='#ffde32'>tix</font> kid",
 			PlaySound = "OldButton",
 			Responses = {
 				{

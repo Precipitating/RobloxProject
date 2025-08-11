@@ -8,7 +8,7 @@ local APIs = { "https://random-word-api.vercel.app/api?words=", "https://random-
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local Missions = require(ReplicatedStorage.Shared.Missions.Server.Missions)
 
-local WORD_AMOUNT = 30
+local WORD_AMOUNT = 1
 local DURATION = 60
 
 local wordList = { "The", "API", "Failed", "To", "Load", "So", "Enjoy", "This", "Easy", "Win" }
@@ -19,6 +19,7 @@ local targetScore = nil
 local clockText = nil
 local WordType = {}
 local currentWordIdx = 1
+local finishedExecuted = false
 function WordType.GenerateWordList(amount)
 	for _, api in APIs do
 		api = api .. amount
@@ -62,6 +63,7 @@ function WordType.StartTimer(textToModify, duration, async, player)
 end
 
 function WordType.Init(player)
+	-- get refs
 	wordList = WordType.GenerateWordList(WORD_AMOUNT)
 	examRoom = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "ExamRoom", nil)
 	clockText = examRoom.Clock.Screen.SurfaceGui.TextLabel
@@ -99,14 +101,16 @@ end
 
 function WordType.Begin(player)
 	-- clock timer
+
+	SoundModule.PlayTheme("Intense")
+	warn("Intense playing?")
 	WordType.StartTimer(clockText, DURATION, true, player)
 	whiteBoard.Text = wordList[currentWordIdx]
+
 	generalRemotes.PsychoMantis.GetNextWord.OnServerInvoke = function()
 		if currentWordIdx >= #wordList then
 			currentWordIdx = currentWordIdx + 1
 			currentScore.Text = tostring(currentWordIdx - 1)
-
-			generalRemotes.PsychoMantis.GetNextWord.OnServerInvoke = nil
 			WordType.Finished(true, player)
 			print("Competition Complete!")
 			return "(Finished)"
@@ -121,6 +125,14 @@ function WordType.Begin(player)
 end
 
 function WordType.Finished(won, player)
+	if finishedExecuted then
+		return
+	end
+	-- disconnect events
+	finishedExecuted = true
+	generalRemotes.PsychoMantis.GetNextWord.OnServerInvoke = nil
+	generalRemotes.PsychoMantis.PsychoMantisEventCleanup:FireClient(player)
+
 	if won then
 		whiteBoard.Text = "YOU WIN!"
 		local model = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "ExamWin", nil)
@@ -135,11 +147,11 @@ function WordType.Finished(won, player)
 	task.wait(7)
 	generalRemotes.Blur:FireClient(player, 1, 100)
 	generalRemotes.StopAllMusic:InvokeClient(player)
-	generalRemotes.EnableControls:FireClient(player)
+	generalRemotes.EnableControls:FireClient(player, nil)
 	examRoom:Destroy()
 	SoundModule.PlayTheme("Main")
 	generalRemotes.ChangeCameraSubject:FireClient(player, nil)
-	task.wait(2)
+	task.wait(1)
 	generalRemotes.Blur:FireClient(player, 2, 0)
 
 	--
