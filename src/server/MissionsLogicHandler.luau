@@ -344,4 +344,13 @@ MissionEventHandlers["TypingCompetition"] = function(player)
 	competition.Begin(player)
 end
 
+MissionEventHandlers["PsychoMantisFail"] = function(player)
+	generalRemotes.Blur:FireClient(player, 1, 100)
+	local room = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
+	task.wait(2)
+	generalRemotes.Blur:FireClient(player, 1, 0)
+	cutsceneRemotes.PlayPsychoMantisFail:FireClient(player)
+	BadgeHandler.awardBadge(player, 1768903662252309)
+end
+
 return MissionEventHandlers

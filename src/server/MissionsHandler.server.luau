@@ -118,6 +118,11 @@ ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(pla
 	end
 end)
 
+ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(function(_, folderName, modelName, pos)
+	print(`Client -> Server spawn {modelName}`)
+	HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
+end)
+
 local function initialize()
 	for missionId in Missions.Missions do
 		Missions.setUnlockHandler(missionId, unlockHandler)
