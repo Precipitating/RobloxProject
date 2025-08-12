@@ -336,7 +336,7 @@ return {
 		MissionStart = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://7129644829",
-			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going.</br>I'll set your Camera to the location, be grateful.",
+			Dialogue = "Exactly. If you fail, well.. Refer to previous point... Now get going.<br/>I'll set your Camera to the location, be grateful.",
 			PlaySound = "Knock",
 			Responses = {
 				{

@@ -17,14 +17,15 @@ return {
 				},
 				{
 					Text = "Nn-n--n-nn-n-n--nn-",
-					Type = "Truth",
+					Type = "NextMessage",
+					NextId = "Truth",
 				},
 			},
 		},
 
 		Lie = {
 			Name = "Hacker Ham",
-			Portrait = "rbxassetid://16642438470",
+			Portrait = "rbxassetid://16573701490",
 			Dialogue = "You really think that me, <font color='#5ad976'><b>HACKER HAM</b></font>, don't know that you've tippy tapped your way into a loss to a room of people that includes:<br/>"
 				.. "<font color='#FF0000'><b>Mr.Mugiwara</b></font>,<br/>"
 				.. "<font color='#FF69B4'><b>Hello Kitty Girl</b></font>,<br/>"
@@ -35,11 +36,66 @@ return {
 				{
 					Text = "Yah",
 					Type = "NextMessage",
-					NextId = "One",
+					NextId = "Lie1",
 				},
 				{
 					Text = "Aha! ragebait successful!<br/>Ahahah got you there!",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "Lie1",
+				},
+			},
+		},
+
+		Lie1 = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://113239226",
+			Dialogue = "<b>You are testing my patience you little chip stain.</b><br/>You know what i'm gonna do now you lying little <b><font color='#5ad976'>gremlin?</font></b>",
+			Responses = {
+				{
+					Text = "What you gonna do with my username info?<br/> claim it on other websites <b>OoOo</b> sCARY ",
+					Type = "NextMessage",
+					NextId = "Decision",
+				},
+				{
+					Text = "What you gonna do in that chair <b>BOY?</b>",
+					Type = "NextMessage",
+					NextId = "Decision",
+				},
+			},
+		},
+
+		Truth = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://113239226",
+			Dialogue = "Roleplaying Stuttering Stuart are we?<br/>I'll take that as a <b>NO.</b><br/>You know what I said i'll do if you lost...<b>RIGHT?</b>",
+			Responses = {
+				{
+					Text = "Knock on wood?",
+					Type = "NextMessage",
+					NextId = "Decision",
+				},
+				{
+					Text = "Kk-k-kI-II--",
+					Type = "NextMessage",
+					NextId = "Decision",
+				},
+			},
+		},
+
+		Decision = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://73456431219005",
+			Dialogue = "Nothing! Have a nice day! :)",
+			Responses = {
+				{
+					Text = "Phew he's a skid!<br/> Script Builder's his level!",
+					ExecuteScenarioEvent = "PsychoMantisFail",
+					Type = "CloseCutscene",
+				},
+				{
+					Text = "(He was a fraud after all...)",
+					ExecuteScenarioEvent = "PsychoMantisFail",
+					Type = "CloseCutscene",
 				},
 			},
 		},

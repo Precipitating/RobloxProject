@@ -17,7 +17,6 @@ function TextToSpeech.CleanTextForTTS(str)
 	-- Trim leading/trailing spaces
 	str = str:match("^%s*(.-)%s*$")
 
-	print(str)
 	return str
 end
 function TextToSpeech.Speak(text)
