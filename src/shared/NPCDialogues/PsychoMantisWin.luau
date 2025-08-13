@@ -11,35 +11,35 @@ return {
 			PlayTheme = "Calm",
 			Responses = {
 				{
-					Text = "Yeah. Easy. Lol. Ez.",
+					Text = "Easiest thing i've ever done.",
 					Type = "NextMessage",
-					NextId = "Lie",
+					RemoveTools = { "Keyboard" },
+					NextId = "Truth",
 				},
 				{
-					Text = "Nn-n--n-nn-n-n--nn-",
-					Type = "Truth",
+					Text = "Yes, more importantly, why was<br/>I inside a dumpster?",
+					Type = "NextMessage",
+					NextId = "TrashBin",
 				},
 			},
 		},
 
-		Lie = {
+		TrashBin = {
 			Name = "Hacker Ham",
-			Portrait = "rbxassetid://16573701490",
-			Dialogue = "You really think that me, <font color='#5ad976'><b>HACKER HAM</b></font>, don't know that you've tippy tapped your way into a loss to a room of people that includes:<br/>"
-				.. "<font color='#FF0000'><b>Mr.Mugiwara</b></font>,<br/>"
-				.. "<font color='#FF69B4'><b>Hello Kitty Girl</b></font>,<br/>"
-				.. "<font color='#A52A2A'><b>xXStreetz2CrimRobangerXx</b></font>.<br/>"
-				.. "Do you?",
-			PlayTheme = "Calm",
+			Portrait = "rbxassetid://129937383",
+			Dialogue = "I set a random coordinate back here when you finished the competition.<br/>Maybe fate decided that's where you belong?<br/><b>Tra-la-la-la-lah</b>",
 			Responses = {
 				{
-					Text = "Yah",
+					Text = "AHAHAHAHAHHA!",
+					RemoveTools = { "Keyboard" },
 					Type = "NextMessage",
-					NextId = "One",
+					NextId = "Truth",
 				},
 				{
-					Text = "Aha! ragebait successful!<br/>Ahahah got you there!",
-					Type = "Close",
+					Text = "<i>Ha ha ha!</i><br/><i>(He has my info)</i>",
+					RemoveTools = { "Keyboard" },
+					Type = "NextMessage",
+					NextId = "Truth",
 				},
 			},
 		},
@@ -47,33 +47,72 @@ return {
 		Truth = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://113239226",
-			Dialogue = "Roleplaying Stuttering Stuart are we? <br/>I'll take that as a <b>NO.</b><br/>You know what I said i'll do if you lost... <b>RIGHT?</b>",
+			Dialogue = "Excellent, i'll take that <b>delicious</b> Loo-ting keyboard or whatever it's called off you.<br/>What's yours is mine.",
 			Responses = {
 				{
-					Text = "Knock on wood?",
+					Text = "So.... what do I get then?",
+					Type = "NextMessage",
+					NextId = "Reward",
+				},
+				{
+					Text = "Yes haha!<br/><i>(He has my info)</i>",
+
+					Type = "NextMessage",
+					NextId = "Decision",
+				},
+			},
+		},
+
+		Reward = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://113239226",
+			Dialogue = "Wait... you thought you had negotiating power...?<br/><font color='#FF0000'>HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHA</font>",
+			Responses = {
+				{
+					Text = ".....",
 					Type = "NextMessage",
 					NextId = "Decision",
 				},
 				{
-					Text = "Kk-k-kI-II--",
-					Type = "Decision",
+					Text = ".....",
+					Type = "NextMessage",
+					NextId = "Decision",
 				},
 			},
 		},
 
 		Decision = {
 			Name = "Hacker Ham",
-			Portrait = "rbxassetid://73456431219005",
-			Dialogue = "Nothing! Have a nice day!",
+			Portrait = "rbxassetid://115280474356122",
+			Dialogue = "Be grateful for this, I'll give your information back.<br/>Spawned it somewhere in your room.<br/>Wait is this the <b>correct</b> one?<br/>Ah whatever.<br/>We're <b>EVEN!</b>",
 			Responses = {
 				{
-					Text = "Phew",
+					Text = "Uneven more like",
 					Type = "NextMessage",
-					NextId = "Close",
+					NextId = "End",
 				},
 				{
 					Text = "PHEW!",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "End",
+				},
+			},
+		},
+
+		End = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://73456431219005",
+			Dialogue = "Have a nice day! :)",
+			Responses = {
+				{
+					Text = "(Walk off)",
+					ExecuteScenarioEvent = "PsychoMantisWin",
+					Type = "CloseCutscene",
+				},
+				{
+					Text = "(Run off)",
+					ExecuteScenarioEvent = "PsychoMantisWin",
+					Type = "CloseCutscene",
 				},
 			},
 		},

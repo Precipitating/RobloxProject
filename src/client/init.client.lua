@@ -83,6 +83,9 @@ generalRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
 	end
 end)
 
+generalRemotes.PlayTheme.OnClientEvent:Connect(function(name)
+	soundModule.PlayTheme(name)
+end)
 generalRemotes.StopAllMusic.OnClientInvoke = function()
 	soundModule.StopAllSounds()
 	return true

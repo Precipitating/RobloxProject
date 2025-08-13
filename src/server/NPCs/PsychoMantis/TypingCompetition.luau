@@ -1,9 +1,8 @@
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local StarterPlayer = game:GetService("StarterPlayer")
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
+local playThemeRemote = ReplicatedStorage.Shared.Remotes.PlayTheme
 local APIs = { "https://random-word-api.vercel.app/api?words=", "https://random-word-api.herokuapp.com/word?number=" }
 local generalRemotes = ReplicatedStorage.Shared.Remotes
 local Missions = require(ReplicatedStorage.Shared.Missions.Server.Missions)
@@ -101,8 +100,7 @@ end
 
 function WordType.Begin(player)
 	-- clock timer
-
-	SoundModule.PlayTheme("Intense")
+	playThemeRemote:FireClient(player, "Intense")
 	warn("Intense playing?")
 	WordType.StartTimer(clockText, DURATION, true, player)
 	whiteBoard.Text = wordList[currentWordIdx]
@@ -149,7 +147,7 @@ function WordType.Finished(won, player)
 	generalRemotes.StopAllMusic:InvokeClient(player)
 	generalRemotes.EnableControls:FireClient(player, nil)
 	examRoom:Destroy()
-	SoundModule.PlayTheme("Main")
+	playThemeRemote:FireClient(player, "Main")
 	generalRemotes.ChangeCameraSubject:FireClient(player, nil)
 	task.wait(1)
 	generalRemotes.Blur:FireClient(player, 2, 0)
