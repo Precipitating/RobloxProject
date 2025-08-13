@@ -39,6 +39,7 @@ end
 
 function SoundHandler.PlayTheme(name)
 	if currentTheme then
+		print(`Should stop {currentTheme}`)
 		SoundHandler.StopTheme()
 	end
 

@@ -54,12 +54,12 @@ return {
 				{
 					Text = "What you gonna do with my username info?<br/> claim it on other websites <b>OoOo</b> sCARY ",
 					Type = "NextMessage",
-					NextId = "Decision",
+					NextId = "DecisionLie",
 				},
 				{
 					Text = "What you gonna do in that chair <b>BOY?</b>",
 					Type = "NextMessage",
-					NextId = "Decision",
+					NextId = "DecisionLie",
 				},
 			},
 		},
@@ -72,29 +72,47 @@ return {
 				{
 					Text = "Knock on wood?",
 					Type = "NextMessage",
-					NextId = "Decision",
+					NextId = "DecisionTruth",
 				},
 				{
 					Text = "Kk-k-kI-II--",
 					Type = "NextMessage",
-					NextId = "Decision",
+					NextId = "DecisionTruth",
 				},
 			},
 		},
 
-		Decision = {
+		DecisionLie = {
 			Name = "Hacker Ham",
 			Portrait = "rbxassetid://73456431219005",
-			Dialogue = "Nothing! Have a nice day! :)",
+			Dialogue = "Nothing! Have a nice day! (^._.^)",
+			Responses = {
+				{
+					Text = "Phew he's a skid!<br/>Guy buys level 7s and thinks he's a god!",
+					ExecuteScenarioEvent = "PsychoMantisFailLie",
+					Type = "CloseCutscene",
+				},
+				{
+					Text = "(Thank god I lied...)",
+					ExecuteScenarioEvent = "PsychoMantisFailLie",
+					Type = "CloseCutscene",
+				},
+			},
+		},
+
+		DecisionTruth = {
+			Name = "Hacker Ham",
+			Portrait = "rbxassetid://73456431219005",
+			Dialogue = "Nothing! Have a nice day!<br/> 🍟🍔 Yummers!",
 			Responses = {
 				{
 					Text = "Phew he's a skid!<br/> Script Builder's his level!",
-					ExecuteScenarioEvent = "PsychoMantisFail",
+					ExecuteScenarioEvent = "PsychoMantisFailTruth",
 					Type = "CloseCutscene",
 				},
 				{
 					Text = "(He was a fraud after all...)",
-					ExecuteScenarioEvent = "PsychoMantisFail",
+					ExecuteScenarioEvent = "PsychoMantisFailTruth",
 					Type = "CloseCutscene",
 				},
 			},

@@ -342,11 +342,13 @@ return {
 				{
 					Text = "YESSIRTHANKYOUSIR",
 					UnlockMission = "TypingCompetition",
+					SetDialogueFile = { { PsychoMantisNameTag = "PsychoMantisAccepted" } },
 					Type = "CloseCutscene",
 				},
 				{
 					Text = "y-y-y-y-y-y--y-y-",
 					UnlockMission = "TypingCompetition",
+					SetDialogueFile = { { PsychoMantisNameTag = "PsychoMantisAccepted" } },
 					Type = "CloseCutscene",
 				},
 			},

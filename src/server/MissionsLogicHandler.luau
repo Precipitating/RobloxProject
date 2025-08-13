@@ -274,7 +274,7 @@ local function HandleGuestHorrorModeWin(pathModel, player, failed, prevPlayerPos
 				safeChatterModel:SetPrimaryPartCFrame(prevEnemyPos)
 				character:SetPrimaryPartCFrame(prevPlayerPos)
 				if hasAllSoundsStopped then
-					SoundModule.PlayTheme("Main")
+					generalRemotes.PlayTheme:FireClient(player, "Main")
 				else
 					print("All sounds not stopped yet, Main theme not played")
 				end
@@ -344,13 +344,31 @@ MissionEventHandlers["TypingCompetition"] = function(player)
 	competition.Begin(player)
 end
 
-MissionEventHandlers["PsychoMantisFail"] = function(player)
+MissionEventHandlers["PsychoMantisFailLie"] = function(player)
 	generalRemotes.Blur:FireClient(player, 1, 100)
-	local room = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
-	task.wait(2)
+	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
+	task.wait(3)
 	generalRemotes.Blur:FireClient(player, 1, 0)
-	cutsceneRemotes.PlayPsychoMantisFail:FireClient(player)
+	cutsceneRemotes.PlayPsychoMantisFailLie:FireClient(player)
 	BadgeHandler.awardBadge(player, 1768903662252309)
+end
+
+MissionEventHandlers["PsychoMantisFailTruth"] = function(player)
+	generalRemotes.Blur:FireClient(player, 1, 100)
+	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
+	task.wait(3)
+	generalRemotes.Blur:FireClient(player, 1, 0)
+	cutsceneRemotes.PlayPsychoMantisFailTruth:FireClient(player)
+	BadgeHandler.awardBadge(player, 1517353246082078)
+end
+
+MissionEventHandlers["PsychoMantisWin"] = function(player)
+	generalRemotes.Blur:FireClient(player, 1, 100)
+	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "HallwayWin", nil)
+	task.wait(3)
+	generalRemotes.Blur:FireClient(player, 1, 0)
+	cutsceneRemotes.PlayPsychoMantisWin:FireClient(player)
+	BadgeHandler.awardBadge(player, 2250718080144467)
 end
 
 return MissionEventHandlers

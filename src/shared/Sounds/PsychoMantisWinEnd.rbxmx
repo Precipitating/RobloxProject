@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBX6813E14ECAF84E43A70D5190CA9BA9AA">
+	<Item class="Sound" referent="RBXFC306479E2564BF98D03EB4E563F4025">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -10,7 +10,7 @@
 			<bool name="IsMutedForCapture">false</bool>
 			<NumberRange name="LoopRegion">0 60000 </NumberRange>
 			<bool name="Looped">false</bool>
-			<string name="Name">Jumpscare</string>
+			<string name="Name">PsychoMantisWinEnd</string>
 			<bool name="PlayOnRemove">false</bool>
 			<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
 			<bool name="PlaybackRegionsEnabled">false</bool>
@@ -20,11 +20,11 @@
 			<float name="RollOffMinDistance">10</float>
 			<token name="RollOffMode">0</token>
 			<Ref name="SoundGroup">null</Ref>
-			<Content name="SoundId"><url>rbxassetid://85271883712040</url></Content>
-			<int64 name="SourceAssetId">85271883712040</int64>
+			<Content name="SoundId"><url>rbxassetid://82875471334124</url></Content>
+			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<double name="TimePosition">0</double>
-			<float name="Volume">10</float>
+			<float name="Volume">0.5</float>
 		</Properties>
 	</Item>
 </roblox>
