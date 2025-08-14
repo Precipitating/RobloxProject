@@ -2,12 +2,12 @@ local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local playThemeRemote = ReplicatedStorage.Shared.Remotes.PlayTheme
+local PlayThemeRemote = ReplicatedStorage.Shared.Remotes.PlayTheme
 local APIs = { "https://random-word-api.vercel.app/api?words=", "https://random-word-api.herokuapp.com/word?number=" }
-local generalRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local Missions = require(ReplicatedStorage.Shared.Missions.Server.Missions)
 
-local WORD_AMOUNT = 1
+local WORD_AMOUNT = 30
 local DURATION = 60
 
 local wordList = { "The", "API", "Failed", "To", "Load", "So", "Enjoy", "This", "Easy", "Win" }
@@ -75,7 +75,7 @@ function WordType.Init(player)
 
 	-- change cam to mission area
 	if spawnPos then
-		generalRemotes.ChangeCameraSubject:FireClient(player, spawnPos.CFrame)
+		GeneralRemotes.ChangeCameraSubject:FireClient(player, spawnPos.CFrame)
 	else
 		error("Part not found for camera to move to")
 	end
@@ -83,7 +83,7 @@ function WordType.Init(player)
 	-- start
 	if wordList then
 		-- add onFocusLost connection, aim is to detect if enter is pressed + check if matches current word
-		generalRemotes.PsychoMantis.OnFocusLostConnect:FireClient(player, wordList[currentWordIdx])
+		GeneralRemotes.PsychoMantis.OnFocusLostConnect:FireClient(player, wordList[currentWordIdx])
 		task.wait(1)
 
 		-- set target
@@ -100,12 +100,12 @@ end
 
 function WordType.Begin(player)
 	-- clock timer
-	playThemeRemote:FireClient(player, "Intense")
+	PlayThemeRemote:FireClient(player, "Intense")
 	warn("Intense playing?")
 	WordType.StartTimer(clockText, DURATION, true, player)
 	whiteBoard.Text = wordList[currentWordIdx]
 
-	generalRemotes.PsychoMantis.GetNextWord.OnServerInvoke = function()
+	GeneralRemotes.PsychoMantis.GetNextWord.OnServerInvoke = function()
 		if currentWordIdx >= #wordList then
 			currentWordIdx = currentWordIdx + 1
 			currentScore.Text = tostring(currentWordIdx - 1)
@@ -128,8 +128,8 @@ function WordType.Finished(won, player)
 	end
 	-- disconnect events
 	finishedExecuted = true
-	generalRemotes.PsychoMantis.GetNextWord.OnServerInvoke = nil
-	generalRemotes.PsychoMantis.PsychoMantisEventCleanup:FireClient(player)
+	GeneralRemotes.PsychoMantis.GetNextWord.OnServerInvoke = nil
+	GeneralRemotes.PsychoMantis.PsychoMantisEventCleanup:FireClient(player)
 
 	if won then
 		whiteBoard.Text = "YOU WIN!"
@@ -143,14 +143,14 @@ function WordType.Finished(won, player)
 		Missions.FailMission(player, "TypingCompetition")
 	end
 	task.wait(7)
-	generalRemotes.Blur:FireClient(player, 1, 100)
-	generalRemotes.StopAllMusic:InvokeClient(player)
-	generalRemotes.EnableControls:FireClient(player, nil)
+	GeneralRemotes.Blur:FireClient(player, 1, 100)
+	GeneralRemotes.StopAllMusic:InvokeClient(player)
+	GeneralRemotes.EnableControls:FireClient(player, nil)
 	examRoom:Destroy()
-	playThemeRemote:FireClient(player, "Main")
-	generalRemotes.ChangeCameraSubject:FireClient(player, nil)
+	PlayThemeRemote:FireClient(player, "Main")
+	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
 	task.wait(1)
-	generalRemotes.Blur:FireClient(player, 2, 0)
+	GeneralRemotes.Blur:FireClient(player, 2, 0)
 
 	--
 end

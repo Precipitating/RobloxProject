@@ -1,42 +1,40 @@
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Safechatter = require(ReplicatedStorage.Shared.NPCDialogues.Safechatter)
 local NPCModule = require(script.Parent.NPCModule)
-local initializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
-local arrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
-local weepingAngelMode = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
+local InitializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
+local ArrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
+local WeepingAngelModeEvent = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
 local IsCameraLookingAtSafechatterRemote = game.ReplicatedStorage.Shared.Remotes.IsCameraLookingAtPart
 local EnableCameraLook = game.ReplicatedStorage.Shared.Remotes.EnableCameraLookDetection
 local TripRemote = game.ReplicatedStorage.Shared.Remotes.Trip
-local safeChatterRef
-local delayHandle = nil
-local hitEventConnected = false
-local touchedDebounce = false
+local SafeChatterRef
+local DelayHandle = nil
+local HitEventConnected = false
+local TouchedDebounce = false
 
 local function PatrolMode()
-	local pathData = safeChatterRef:GetPathStorage():GetChildren()
+	local pathData = SafeChatterRef:GetPathStorage():GetChildren()
 	local nextLocation = pathData[math.random(1, #pathData)]
-	safeChatterRef:StartPathing(nextLocation)
+	SafeChatterRef:StartPathing(nextLocation)
 end
 
 local function WeepingAngelMode(player, isLooking)
 	if isLooking then
 		--player is looking: cancel any delayed move and stop movement
-		if delayHandle ~= nil then
-			task.cancel(delayHandle)
-			delayHandle = nil
+		if DelayHandle ~= nil then
+			task.cancel(DelayHandle)
+			DelayHandle = nil
 		end
-		safeChatterRef:ForceStopMovement()
+		SafeChatterRef:ForceStopMovement()
 	else
 		-- player is NOT looking: start delay before movement
 		if player and player.Character then
-			delayHandle = task.delay(2, function()
+			DelayHandle = task.delay(2, function()
 				-- Double-check character still exists
 				if player.Character then
-					safeChatterRef:StartPathing(player.Character:GetPivot(), player)
+					SafeChatterRef:StartPathing(player.Character:GetPivot(), player)
 					print("Path resume")
 				end
-				delayHandle = nil
+				DelayHandle = nil
 			end)
 		end
 	end
@@ -48,37 +46,37 @@ IsCameraLookingAtSafechatterRemote.OnServerEvent:Connect(function(player, lookin
 end)
 
 -- init
-initializedRemote.Event:Connect(function()
-	safeChatterRef = NPCModule:GetNPC("Safechatter")
-	safeChatterRef:SetMode("Patrol")
+InitializedRemote.Event:Connect(function()
+	SafeChatterRef = NPCModule:GetNPC("Safechatter")
+	SafeChatterRef:SetMode("Patrol")
 end)
 
-weepingAngelMode.Event:Connect(function(player)
-	EnableCameraLook:FireClient(player, true, safeChatterRef.HumanoidRootPart)
+WeepingAngelModeEvent.Event:Connect(function(player)
+	EnableCameraLook:FireClient(player, true, SafeChatterRef.HumanoidRootPart)
 	WeepingAngelMode(player, false)
 
 	-- if NPC touches player, trip them
-	if not hitEventConnected then
-		for _, part in pairs(safeChatterRef:GetModel():GetDescendants()) do
+	if not HitEventConnected then
+		for _, part in pairs(SafeChatterRef:GetModel():GetDescendants()) do
 			if part:IsA("BasePart") then
 				local connection = part.Touched:Connect(function(hit)
 					local isPlayer = Players:GetPlayerFromCharacter(hit.Parent)
-					if isPlayer and not touchedDebounce then
-						touchedDebounce = true
+					if isPlayer and not TouchedDebounce then
+						TouchedDebounce = true
 						TripRemote:FireClient(player)
 						task.wait(1)
-						touchedDebounce = false
+						TouchedDebounce = false
 					end
 				end)
-				safeChatterRef.Connections[connection] = true
+				SafeChatterRef.Connections[connection] = true
 			end
 		end
-		hitEventConnected = true
+		HitEventConnected = true
 	end
 end)
 
-arrivedRemote.Event:Connect(function()
-	if safeChatterRef:GetMode() == "Patrol" then
+ArrivedRemote.Event:Connect(function()
+	if SafeChatterRef:GetMode() == "Patrol" then
 		PatrolMode()
 		print("Arrived. Go to next destination ")
 	end

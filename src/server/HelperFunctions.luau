@@ -1,7 +1,7 @@
 local HelperFunctions = {}
 local ServerStorage = game:GetService("ServerStorage")
 local CollectionService = game:GetService("CollectionService")
-local serverTools = ServerStorage.Tools
+local ServerTools = ServerStorage.Tools
 
 -- force equip a tool, should a player own it (they should)
 function HelperFunctions.ForceEquip(player, name)
@@ -98,7 +98,7 @@ end
 
 -- clone a tool from ServerStorage to player backpack
 function HelperFunctions.GiveTool(player, name)
-	local tool = serverTools:FindFirstChild(name)
+	local tool = ServerTools:FindFirstChild(name)
 	if not tool then
 		error("Tool not found:", name)
 		return

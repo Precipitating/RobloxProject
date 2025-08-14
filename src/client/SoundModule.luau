@@ -1,12 +1,12 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local soundLocation = ReplicatedStorage.Shared.Sounds
-local currentTheme = nil
+local SoundLocation = ReplicatedStorage.Shared.Sounds
+local CurrentTheme = nil
 local SoundHandler = {}
 
 function SoundHandler.GetCurrentTheme()
-	if currentTheme then
-		return soundLocation:FindFirstChild(currentTheme)
+	if CurrentTheme then
+		return SoundLocation:FindFirstChild(CurrentTheme)
 	else
 		return nil
 	end
@@ -15,7 +15,7 @@ end
 function SoundHandler.StopSound(soundName)
 	print(`Stopping {soundName}`)
 	if soundName then
-		soundLocation:FindFirstChild(soundName):Stop()
+		SoundLocation:FindFirstChild(soundName):Stop()
 		soundName = nil
 	else
 		warn("No sound to stop, it's nil")
@@ -24,7 +24,7 @@ end
 
 function SoundHandler.StopAllSounds()
 	print("Stopping all sounds...")
-	local sounds = soundLocation:GetChildren()
+	local sounds = SoundLocation:GetChildren()
 	for _, sound in pairs(sounds) do
 		if sound:IsA("Sound") and sound.IsPlaying then
 			if CollectionService:HasTag(sound, "Unstoppable") then
@@ -34,49 +34,49 @@ function SoundHandler.StopAllSounds()
 			sound:Stop()
 		end
 	end
-	currentTheme = nil
+	CurrentTheme = nil
 end
 
 function SoundHandler.PlayTheme(name)
-	if currentTheme then
-		print(`Should stop {currentTheme}`)
+	if CurrentTheme then
+		print(`Should stop {CurrentTheme}`)
 		SoundHandler.StopTheme()
 	end
 
-	local newTheme = soundLocation:FindFirstChild(name)
+	local newTheme = SoundLocation:FindFirstChild(name)
 	if newTheme and not newTheme.IsPlaying then
 		if newTheme.IsPaused then
 			newTheme:Resume()
 		else
 			newTheme:Play()
 		end
-		currentTheme = name
+		CurrentTheme = name
 
-		print(`Theme set {currentTheme}`)
+		print(`Theme set {CurrentTheme}`)
 	else
 		print("Theme not found")
-		currentTheme = nil
+		CurrentTheme = nil
 	end
 end
 
 function SoundHandler.StopTheme()
-	if currentTheme then
-		local theme = soundLocation:FindFirstChild(currentTheme)
+	if CurrentTheme then
+		local theme = SoundLocation:FindFirstChild(CurrentTheme)
 		if theme and theme:IsA("Sound") and theme.IsPlaying then
-			print(`{currentTheme} stopped`)
+			print(`{CurrentTheme} stopped`)
 			theme:Stop()
 		else
 			print("Theme not found or not playing to be stopped")
 		end
-		currentTheme = nil
+		CurrentTheme = nil
 	else
 		print("No current theme to stop")
 	end
 end
 
 function SoundHandler.PauseTheme()
-	if currentTheme then
-		local curr = soundLocation:FindFirstChild(currentTheme)
+	if CurrentTheme then
+		local curr = SoundLocation:FindFirstChild(CurrentTheme)
 		if curr and curr.IsPlaying then
 			curr:Pause()
 		else
@@ -86,8 +86,8 @@ function SoundHandler.PauseTheme()
 end
 
 function SoundHandler.ResumeTheme()
-	if currentTheme then
-		local curr = soundLocation:FindFirstChild(currentTheme)
+	if CurrentTheme then
+		local curr = SoundLocation:FindFirstChild(CurrentTheme)
 		if curr and not curr.IsPlaying then
 			curr:Resume()
 		else
@@ -99,7 +99,7 @@ end
 function SoundHandler.PlaySound(soundName)
 	--print(`Playing {soundName}`)
 	if soundName then
-		local sound = soundLocation:FindFirstChild(soundName)
+		local sound = SoundLocation:FindFirstChild(soundName)
 		if not sound.IsPlaying then
 			sound:Play()
 		else
