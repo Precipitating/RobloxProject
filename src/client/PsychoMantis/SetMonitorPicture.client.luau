@@ -1,9 +1,9 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local Player = Players.LocalPlayer
 
 -- Fetch the thumbnail
-local userId = player.UserId
+local userId = Player.UserId
 local thumbType = Enum.ThumbnailType.HeadShot
 local thumbSize = Enum.ThumbnailSize.Size420x420
 local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)

@@ -2,9 +2,9 @@ local NPC = {}
 local NPCStorage = {}
 local Collections = game:GetService("CollectionService")
 local PathfindingService = game:GetService("PathfindingService")
-local initializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
-local arrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
-local weepingAngelModeEvent = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
+local InitializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNPC
+local ArrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
+local WeepingAngelModeEvent = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
 local TweenService = game:GetService("TweenService")
 NPC.__index = NPC
 
@@ -61,9 +61,9 @@ function NPC:SetMode(mode, player)
 			end)
 		end
 	elseif mode == "Patrol" then
-		arrivedRemote:Fire()
+		ArrivedRemote:Fire()
 	elseif mode == "Angel" then
-		weepingAngelModeEvent:Fire(player)
+		WeepingAngelModeEvent:Fire(player)
 	end
 end
 
@@ -132,7 +132,7 @@ function NPC:Init()
 	end
 
 	task.defer(function()
-		initializedRemote:Fire()
+		InitializedRemote:Fire()
 	end)
 end
 
@@ -173,7 +173,7 @@ function NPC:StartPathing(targetPos, obj)
 		end
 	end
 
-	arrivedRemote:Fire(obj)
+	ArrivedRemote:Fire(obj)
 end
 
 return NPC

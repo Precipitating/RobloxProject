@@ -1,0 +1,334 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<Meta name="ExplicitAutoJoints">true</Meta>
+	<External>null</External>
+	<External>nil</External>
+	<Item class="ModuleScript" referent="RBX5EC886C0C32749FD909035A14EB70E91">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+			<bool name="DefinesCapabilities">false</bool>
+			<Content name="LinkedSource"><null></null></Content>
+			<string name="Name">CutsceneClientHandler</string>
+			<string name="ScriptGuid">{5061BE4B-5AA4-49A0-9465-F28743A5CDC1}</string>
+			<ProtectedString name="Source"><![CDATA[-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+
+local CodesOtaku = ReplicatedStorage.Shared.CodesOtaku
+local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
+
+-- Wait for camera
+if not workspace.CurrentCamera then
+	repeat
+		task.wait()
+	until workspace.CurrentCamera
+end
+
+-- Constructor
+local Camera = workspace.CurrentCamera
+local Looping = false
+local Speed = 1
+local FreezeControls = false
+
+-- Loading
+local CutsceneFolderRoot = ReplicatedStorage.Shared.Cutscenes
+local Destroy = true
+local NoYield = false
+local SafeMode = true
+
+local Cutscene = require(CutsceneModule)
+local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls)
+local SoundFolder = ReplicatedStorage.Shared.Sounds
+
+local Player = Players.LocalPlayer
+local ProtectTheCharacterWhilePlaying = true
+local CharacterProtector = script:FindFirstChild("CharacterProtector")
+local Music = script:FindFirstChild("Music")
+local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
+
+local bin = true -- prevents multiple plays at once
+local currentRenderStepped
+
+-- Wait alternative
+local function wait_time(duration)
+	local start = tick()
+	repeat
+		RunService.Heartbeat:Wait()
+	until tick() - start >= duration
+	return tick() - start
+end
+
+-- Play cutscene safely
+local function PlayCutscene()
+	if not bin then
+		return
+	end
+	bin = false
+
+	if Music then
+		Music:Play()
+	end
+
+	if ProtectTheCharacterWhilePlaying and Player.Character and CharacterProtector then
+		CharacterProtector.Parent = Player.Character
+	end
+
+	Demo:Play()
+end
+
+local function CameraShake(duration, intensity, zoomAmount)
+	local startTime = tick()
+	local conn
+
+	local originalCF = Camera.CFrame
+
+	conn = RunService.RenderStepped:Connect(function()
+		local elapsed = tick() - startTime
+		if elapsed >= duration then
+			conn:Disconnect()
+			Camera.CFrame = originalCF
+			return
+		end
+
+		-- Random small shake offsets
+		local xOffset = (math.random() - 0.5) * intensity
+		local yOffset = (math.random() - 0.5) * intensity
+		local zOffset = (math.random() - 0.5) * intensity
+
+		-- In/out zoom effect
+		local zoomOffset = math.sin(elapsed * 25) * zoomAmount
+
+		Camera.CFrame = originalCF * CFrame.new(xOffset, yOffset, zOffset + zoomOffset)
+	end)
+end
+
+local CutsceneClientHandler = {}
+
+CutsceneClientHandler.KeyframeHandler = {
+
+	PsychoMantisWin = function(instruction, nextInstruction, X)
+		if instruction == 1 then
+			task.wait(2)
+			SoundFolder.Laugh:Play()
+		elseif instruction == 6 then
+			task.wait(5)
+			SoundFolder.PsychoMantisWinEnd:Play()
+		end
+	end,
+
+	PsychoMantisFailTruth = function(instruction, nextInstruction, X)
+		if instruction == 1 then
+			task.wait(5)
+			SoundFolder.PsychoMantisTruthDialogue1:Play()
+		elseif instruction == 3 then
+			task.wait(3)
+			SoundFolder.PsychoMantisTruthDialogue2:Play()
+		elseif instruction == 5 then
+			SoundFolder.FBI:Play()
+		elseif instruction == 6 then
+			SoundFolder.GlassBreak:Play()
+		end
+	end,
+
+	PsychoMantisFailLie = function(instruction, nextInstruction, X)
+		if instruction == 1 then
+			SoundFolder.Knock:Play()
+		elseif instruction == 4 then
+			SpawnModelFromServer:FireServer("PsychoMantis", "HallwayOder", nil)
+			if SoundFolder.Knock.IsPlaying then
+				SoundFolder.Knock:Stop()
+			end
+		end
+	end,
+
+	RoadmanFail = function(instruction, nextInstruction, X)
+		if instruction > 2 then
+			if instruction == 8 then
+				SoundFolder.Maccies:Play()
+			else
+				SoundFolder.License:Play()
+			end
+		end
+	end,
+
+	RoadmanMugged = function(instruction, nextInstruction, X)
+		if instruction == 3 then
+			task.wait(1)
+			SoundFolder.License:Play()
+		end
+	end,
+
+	RoadmanWin = function(instruction, nextInstruction, X)
+		if instruction == 1 then
+			SoundFolder.BlocklandBan:Play()
+		end
+	end,
+}
+
+CutsceneClientHandler.CutsceneFinishedHandler = {
+	PsychoMantisFailLie = function()
+		CameraShake(999, 0.1, 0.5)
+		SoundFolder.Jumpscare:Play()
+		task.wait(7)
+		print("Rejoining")
+		TeleportService:Teleport(game.PlaceId, Player)
+	end,
+	PsychoMantisWin = function()
+		task.wait(9)
+		print("Rejoining")
+		TeleportService:Teleport(game.PlaceId, Player)
+	end,
+}
+
+CutsceneClientHandler.Initialize = {
+	
+	GuestMissionComplete = function()
+		Music.SoundId = "rbxassetid://108841455819405"
+		Music.Volume = 0.5
+	end,
+	
+	GuestPwn = function()
+		Music.SoundId = "rbxassetid://6477407899"
+		Music.Volume = 0.5
+
+	end,
+	
+	PsychoMantisFailLie = function()
+		Music.SoundId = "rbxassetid://9119386571"
+		Music.Volume = 0.5
+	end,
+	
+	PsychoMantisFailTruth = function()
+		Music.SoundId = "rbxassetid://9119386571"
+		Music.Volume = 0.5
+	end,
+
+	PsychoMantisWin = function()
+		Music.SoundId = "rbxassetid://1845341094"
+		Music.Volume = 0.3
+	end,
+
+	RoadmanFail = function()
+		Music.SoundId = "rbxassetid://9041777446"
+		Music.Volume = 0.3
+		Speed = 3
+	end,
+
+	RoadmanMugged = function()
+		Music.SoundId = "rbxassetid://129621410079272"
+		Music.Volume = 0.5
+	end,
+
+	RoadmanWin = function()
+		Music.SoundId = "rbxassetid://93143593034012"
+		Music.Volume = 0.5
+	end,
+
+	
+	SafechatterFailedObby = function()
+		Music.SoundId = "rbxassetid://122447840112621"
+		Music.Volume = 0.5
+		
+	end,
+}
+
+-- Load a cutscene by name
+function CutsceneClientHandler.LoadCutscene(name)
+	local folder = CutsceneFolderRoot:WaitForChild(name)
+	if not folder then
+		warn("Cutscene not found:", name)
+		return
+	end
+	Demo:Load(folder, Destroy, NoYield, SafeMode)
+	if CutsceneClientHandler.Initialize[name] then
+		CutsceneClientHandler.Initialize[name]()
+	end
+end
+
+
+-- Play a cutscene with optional per-keyframe function
+function CutsceneClientHandler.Play(name)
+	-- Reset state
+	bin = true
+
+	-- Disconnect previous RenderStepped if exists
+	if currentRenderStepped then
+		currentRenderStepped:Disconnect()
+		currentRenderStepped = nil
+	end
+
+	CutsceneClientHandler.LoadCutscene(name)
+
+	-- Connect EStop once
+	Demo.EStop.Event:Connect(function()
+		if not CutsceneClientHandler.CutsceneFinishedHandler[name] then
+			task.wait(7)
+			print("Rejoining")
+			TeleportService:Teleport(game.PlaceId, Player)
+		else
+			CutsceneClientHandler.CutsceneFinishedHandler[name]()
+		end
+	end)
+
+	-- Update cutscene every frame
+	currentRenderStepped = RunService.RenderStepped:Connect(function(delta)
+		Demo:Update(delta)
+	end)
+
+	-- Custom per-keyframe logic
+	if CutsceneClientHandler.KeyframeHandler[name] then
+		Demo.ENextKeyframe.Event:Connect(function(instruction, nextInstruction, X)
+			CutsceneClientHandler.KeyframeHandler[name](instruction, nextInstruction, X)
+		end)
+	end
+
+	-- Start playback
+	PlayCutscene()
+end
+
+return CutsceneClientHandler
+]]></ProtectedString>
+			<int64 name="SourceAssetId">-1</int64>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="Sound" referent="RBXFBAB4830835049C09E8F6AC63E5E79E4">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<bool name="IsMutedForCapture">false</bool>
+				<NumberRange name="LoopRegion">0 60000 </NumberRange>
+				<bool name="Looped">true</bool>
+				<string name="Name">Music</string>
+				<bool name="PlayOnRemove">false</bool>
+				<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
+				<bool name="PlaybackRegionsEnabled">false</bool>
+				<float name="PlaybackSpeed">1</float>
+				<bool name="Playing">false</bool>
+				<float name="RollOffMaxDistance">10000</float>
+				<float name="RollOffMinDistance">10</float>
+				<token name="RollOffMode">3</token>
+				<Ref name="SoundGroup">null</Ref>
+				<Content name="SoundId"><null></null></Content>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<double name="TimePosition">0</double>
+				<float name="Volume">0.100000001</float>
+			</Properties>
+		</Item>
+		<Item class="ForceField" referent="RBX361A2612098946F290FA16692DC23F6A">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">CharacterProtector</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Visible">false</bool>
+			</Properties>
+		</Item>
+	</Item>
+</roblox>

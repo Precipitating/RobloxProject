@@ -1,12 +1,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local generalRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local animator = humanoid:WaitForChild("Animator")
-local movementHandler = require(script:WaitForChild("MovementHandler"))
-local soundModule = require(script:WaitForChild("SoundModule"))
+local Character = player.Character or player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local Animator = Humanoid:WaitForChild("Animator")
+local MovementHandler = require(script:WaitForChild("MovementHandler"))
+local SoundModule = require(script:WaitForChild("SoundModule"))
 local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
+local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChild("CutsceneClientHandler"))
 -- disable respawn button
 local coreCall
 do
@@ -30,68 +31,68 @@ end
 coreCall("SetCore", "ResetButtonCallback", false)
 
 -- handle general remotes
-generalRemotes.DisableControls.OnClientEvent:Connect(function(caller)
+GeneralRemotes.DisableControls.OnClientEvent:Connect(function(caller)
 	print(`Client received disable controls from server: {caller}`)
-	movementHandler.DisableControls(caller)
+	MovementHandler.DisableControls(caller)
 end)
 
-generalRemotes.EnableControls.OnClientEvent:Connect(function(caller)
+GeneralRemotes.EnableControls.OnClientEvent:Connect(function(caller)
 	print(`Client received enable controls from server: {caller}`)
-	movementHandler.EnableControls(caller)
+	MovementHandler.EnableControls(caller)
 end)
 
-generalRemotes.PlayAnimation.OnClientEvent:Connect(function(animId)
+GeneralRemotes.PlayAnimation.OnClientEvent:Connect(function(animId)
 	local anim = Instance.new("Animation")
 	anim.AnimationId = "rbxassetid://" .. animId
-	local animTrack = animator:LoadAnimation(anim)
+	local animTrack = Animator:LoadAnimation(anim)
 	animTrack:Play()
 	print("Animation playing...")
 end)
 
-generalRemotes.ChangeFOV.OnClientEvent:Connect(function(val)
+GeneralRemotes.ChangeFOV.OnClientEvent:Connect(function(val)
 	local cam = workspace.CurrentCamera
 	cam.FieldOfView = val
 end)
 
-generalRemotes.Trip.OnClientEvent:Connect(function()
+GeneralRemotes.Trip.OnClientEvent:Connect(function()
 	print("Tripped!")
-	local rootPart = character.PrimaryPart
-	humanoid:ChangeState(Enum.HumanoidStateType.FallingDown)
+	local rootPart = Character.PrimaryPart
+	Humanoid:ChangeState(Enum.HumanoidStateType.FallingDown)
 	rootPart.AssemblyLinearVelocity += rootPart.CFrame.LookVector * 50 + Vector3.new(0, 25, 0)
 end)
 
-generalRemotes.Blur.OnClientEvent:Connect(function(time, blurTarget)
+GeneralRemotes.Blur.OnClientEvent:Connect(function(time, blurTarget)
 	UIHelperFunctions.AdjustBlur(time, blurTarget)
 end)
 
-generalRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
-	local hasTShirt = character:FindFirstChild("Shirt Graphic")
+GeneralRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
+	local hasTShirt = Character:FindFirstChild("Shirt Graphic")
 
 	if hasTShirt then
 		hasTShirt:Remove()
 	end
 
 	if shirt then
-		local hasShirt = character:FindFirstChildOfClass("Shirt")
+		local hasShirt = Character:FindFirstChildOfClass("Shirt")
 		if hasShirt then
 			hasShirt.ShirtTemplate = shirt
 		end
-		local hasPants = character:FindFirstChildOfClass("Pants")
+		local hasPants = Character:FindFirstChildOfClass("Pants")
 		if hasPants then
 			hasPants.PantsTemplate = pants
 		end
 	end
 end)
 
-generalRemotes.PlayTheme.OnClientEvent:Connect(function(name)
-	soundModule.PlayTheme(name)
+GeneralRemotes.PlayTheme.OnClientEvent:Connect(function(name)
+	SoundModule.PlayTheme(name)
 end)
-generalRemotes.StopAllMusic.OnClientInvoke = function()
-	soundModule.StopAllSounds()
+GeneralRemotes.StopAllMusic.OnClientInvoke = function()
+	SoundModule.StopAllSounds()
 	return true
 end
 
-generalRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
+GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
 	local camera = workspace.CurrentCamera
 	if not partPosition then
 		camera.CameraType = Enum.CameraType.Custom
@@ -134,9 +135,9 @@ local function CleanupGame()
 	print("Client disconnected competition events!")
 end
 
-generalRemotes.PsychoMantis.PsychoMantisEventCleanup.OnClientEvent:Connect(CleanupGame)
+GeneralRemotes.PsychoMantis.PsychoMantisEventCleanup.OnClientEvent:Connect(CleanupGame)
 
-onFocusLostRemoteConnection = generalRemotes.PsychoMantis.OnFocusLostConnect.OnClientEvent:Connect(function(startWord)
+onFocusLostRemoteConnection = GeneralRemotes.PsychoMantis.OnFocusLostConnect.OnClientEvent:Connect(function(startWord)
 	textBox = workspace
 		:WaitForChild("ExamRoom")
 		:WaitForChild("PlayerLaptop")
@@ -166,23 +167,27 @@ onFocusLostRemoteConnection = generalRemotes.PsychoMantis.OnFocusLostConnect.OnC
 		textBox:CaptureFocus() -- Keep focus until end
 
 		if result == currentWord then
-			local newResult = generalRemotes.PsychoMantis.GetNextWord:InvokeServer()
+			local newResult = GeneralRemotes.PsychoMantis.GetNextWord:InvokeServer()
 			currentWord = newResult
-			soundModule.PlaySound("Correct")
+			SoundModule.PlaySound("Correct")
 		else
 			if result ~= "" then
-				soundModule.PlaySound("Wrong")
+				SoundModule.PlaySound("Wrong")
 			end
 		end
 	end)
 end)
 
+GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
+	CutsceneModule.Play(name)
+end)
+
 -- set player's collision group
-for _, descendant in pairs(character:GetDescendants()) do
+for _, descendant in pairs(Character:GetDescendants()) do
 	if descendant:IsA("BasePart") then
 		descendant.CollisionGroup = "Player"
 	end
 end
 
 -- play main theme
-soundModule.PlayTheme("Main")
+SoundModule.PlayTheme("Main")

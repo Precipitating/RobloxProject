@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
+local Player = Players.LocalPlayer
+local Character = Player.Character or Player.CharacterAdded:Wait()
 local Events = ReplicatedStorage.Missions.Events
 local NPCEvents = ReplicatedStorage.Events.NPC
 -- remotes
@@ -27,7 +27,7 @@ local textToSpeech = require(ReplicatedStorage.TextToSpeech)
 local soundModule = require(script.Parent:WaitForChild("SoundModule"))
 
 -- ui
-local ui = player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
+local ui = Player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
 local frame = ui:WaitForChild("DialogueFrame")
 local nameLabel = frame:WaitForChild("NameLabel")
 local portrait = frame:WaitForChild("Portrait")
@@ -254,7 +254,7 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		return
 	end
 
-	-- stop player movement
+	-- stop Player movement
 	movementModule.DisableControls("UI")
 	soundModule.PauseTheme()
 

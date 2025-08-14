@@ -1,7 +1,7 @@
 local TextToSpeech = {}
 
-local soundService = game:GetService("SoundService")
-local textToSpeechHandle = soundService.AudioTextToSpeech
+local SoundService = game:GetService("SoundService")
+local TextToSpeechHandle = SoundService.AudioTextToSpeech
 
 function TextToSpeech.CleanTextForTTS(str)
 	-- Replace <br/> and newlines with a single space
@@ -21,15 +21,15 @@ function TextToSpeech.CleanTextForTTS(str)
 end
 function TextToSpeech.Speak(text)
 	local cleanedText = TextToSpeech.CleanTextForTTS(text)
-	textToSpeechHandle.Text = cleanedText
-	local status = textToSpeechHandle:LoadAsync()
+	TextToSpeechHandle.Text = cleanedText
+	local status = TextToSpeechHandle:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn("TTS Load failed:", status.Name)
 		return false
 	end
 	print("TTS loaded successfully")
 
-	textToSpeechHandle:Play()
+	TextToSpeechHandle:Play()
 	return true
 end
 
@@ -38,22 +38,22 @@ end
 -- voice Id range - 1 - 10
 -- volume range - 1, 3
 function TextToSpeech.UpdateVoiceConfig(voiceId, pitch, speed, volume)
-	textToSpeechHandle.VoiceId = voiceId
-	textToSpeechHandle.Pitch = pitch
-	textToSpeechHandle.Speed = speed
-	textToSpeechHandle.Volume = volume
+	TextToSpeechHandle.VoiceId = voiceId
+	TextToSpeechHandle.Pitch = pitch
+	TextToSpeechHandle.Speed = speed
+	TextToSpeechHandle.Volume = volume
 end
 
 function TextToSpeech.GetCurrentSpeed()
-	return textToSpeechHandle.Speed
+	return TextToSpeechHandle.Speed
 end
 
 function TextToSpeech.IsLoaded()
-	return textToSpeechHandle.IsLoaded
+	return TextToSpeechHandle.IsLoaded
 end
 
 function TextToSpeech.GetHandle()
-	return textToSpeechHandle
+	return TextToSpeechHandle
 end
 
 return TextToSpeech

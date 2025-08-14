@@ -2,8 +2,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
+local Player = Players.LocalPlayer
+local mouse = Player:GetMouse()
 
 local originalCircle = ReplicatedStorage.Shared.Models.GreenCircle
 
@@ -49,11 +49,11 @@ local function startClickToMove()
 	clicktowalkcircle = originalCircle:Clone()
 	clicktowalkcircle.Parent = workspace
 	loop = RunService.RenderStepped:Connect(function()
-		if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+		if not Player.Character or not Player.Character:FindFirstChild("HumanoidRootPart") then
 			return
 		end
 
-		local distance = (player.Character.HumanoidRootPart.Position - mouse.Hit.p).Magnitude
+		local distance = (Player.Character.HumanoidRootPart.Position - mouse.Hit.p).Magnitude
 
 		canMove = distance <= maxDistance
 		clicktowalkcircle.Transparency = canMove and 0 or 1
@@ -61,14 +61,14 @@ local function startClickToMove()
 	end)
 
 	clickConn = mouse.Button1Down:Connect(function()
-		if canMove and player.Character and player.Character:FindFirstChild("Humanoid") then
+		if canMove and Player.Character and Player.Character:FindFirstChild("Humanoid") then
 			removeClonedCircle()
 
 			clonedCircle = clicktowalkcircle:Clone()
 			clonedCircle.Parent = workspace
 			clonedCircle.Name = "poscircle"
 
-			local humanoid = player.Character.Humanoid
+			local humanoid = Player.Character.Humanoid
 			humanoid:MoveTo(mouse.Hit.p)
 
 			humanoid.MoveToFinished:Connect(function()
@@ -77,7 +77,7 @@ local function startClickToMove()
 		end
 	end)
 
-	charConn = player.CharacterAdded:Connect(removeClonedCircle)
+	charConn = Player.CharacterAdded:Connect(removeClonedCircle)
 end
 
 -- listen for toggle from server

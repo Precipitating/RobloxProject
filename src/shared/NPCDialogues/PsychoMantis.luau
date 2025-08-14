@@ -1,17 +1,17 @@
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local generalRemotes = ReplicatedStorage.Shared.Remotes
-local playerData = generalRemotes.GetBasicPlayerData:InvokeServer()
+local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local PlayerData = GeneralRemotes.GetBasicPlayerData:InvokeServer()
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local Player = Players.LocalPlayer
 local CustomDialogue = require(ReplicatedStorage.Shared.NPCDialogues.PsychoMantisHelpers.CustomPsychoMantisDialogue)
 local function Introduction()
 	local text
-	if not player.DisplayName then
-		text = `Interesting {playerData.Name}, very interesting...`
+	if not Player.DisplayName then
+		text = `Interesting {PlayerData.Name}, very interesting...`
 	else
-		text = `Interesting {player.DisplayName}, very interesting...`
+		text = `Interesting {Player.DisplayName}, very interesting...`
 	end
 	return text
 end
@@ -29,7 +29,7 @@ local function GetGameNameFromId(id)
 end
 
 local function FriendDialogue()
-	local friendsList = generalRemotes.GetFriendsList:InvokeServer()
+	local friendsList = GeneralRemotes.GetFriendsList:InvokeServer()
 	local randomFriend = friendsList[math.random(1, #friendsList)]
 	local text
 
@@ -49,7 +49,7 @@ end
 
 local function OnlineFriendsDialogue()
 	local text
-	local success, result = pcall(player.GetFriendsOnline, player, 10)
+	local success, result = pcall(Player.GetFriendsOnline, Player, 10)
 	if not success then
 		warn("Getting online friends failed")
 		result = {}
@@ -76,7 +76,7 @@ local function OnlineFriendsDialogue()
 end
 
 local function PlayersBio()
-	local gotBio, bioData = generalRemotes.GetPlayerBio:InvokeServer()
+	local gotBio, bioData = GeneralRemotes.GetPlayerBio:InvokeServer()
 	local text = "<b>Interesting</b> profile biography... <b>Interestiiiiiingg</b>..."
 	if gotBio then
 		local data = HttpService:JSONDecode(bioData)
@@ -90,7 +90,7 @@ local function PlayersBio()
 end
 
 local function PlayersFavourites()
-	local gotFav, favData = generalRemotes.GetPlayerFavourites:InvokeServer()
+	local gotFav, favData = GeneralRemotes.GetPlayerFavourites:InvokeServer()
 	local text = "You haven't favourited any games? Maybe this one will be your first.. interesting..."
 	if gotFav then
 		local result = HttpService:JSONDecode(favData)
@@ -110,8 +110,8 @@ end
 
 local function PlayersGroup()
 	local text = "You're not in any groups huh? looks like you haven't found a game that rewards you for joining them."
-	if playerData.Groups then
-		local randomGroup = (#playerData.Groups > 0) and playerData.Groups[math.random(1, #playerData.Groups)] or nil
+	if PlayerData.Groups then
+		local randomGroup = (#PlayerData.Groups > 0) and PlayerData.Groups[math.random(1, #PlayerData.Groups)] or nil
 		text =
 			`I see you're a <font color='#ff4500'><b>{randomGroup.Role}</b></font> in '<font color='#ff4500'><b>{randomGroup.Name}</b></font>'... Care to explain..?`
 	end
@@ -119,7 +119,7 @@ local function PlayersGroup()
 end
 
 local function PlayersAge()
-	local ageInYears = math.floor(playerData.Age / 365)
+	local ageInYears = math.floor(PlayerData.Age / 365)
 	local ageTag = "inexperienced <font color='#e3f542'>fr00b</font> who's wet behind the ears"
 	if ageInYears >= 4 and ageInYears < 8 then
 		ageTag = "inbetweener! not too <b>young</b> and not too <b>old</b>"
@@ -134,7 +134,7 @@ end
 local function PlayerCountry()
 	local text =
 		"Fine, I had your location, but I'll keep that under wraps to keep this... interesting...<br/><font color='#000000'>Ze-ha-ha-ha-ha</font>"
-	local country, flagFact = generalRemotes.GetCountryData:InvokeServer(playerData.Country)
+	local country, flagFact = GeneralRemotes.GetCountryData:InvokeServer(PlayerData.Country)
 
 	if country then
 		if flagFact then
