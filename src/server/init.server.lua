@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ProfileDataModule = require(script.PlayerProfileData.GetPlayerInfo)
+local RoomHandler = require(script.RoomHandler)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 
 GeneralRemotes.GetFriendsList.OnServerInvoke = function(player)
@@ -25,3 +26,13 @@ GeneralRemotes.GetCountryData.OnServerInvoke = function(_, countryCode)
 	local fact = ProfileDataModule.GetCountryFact(countryCode)
 	return country, fact
 end
+
+GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, interactType, roomName)
+	if interactType == "Enter" then
+		RoomHandler.SpawnRoomAndEnter(player, roomName)
+	else
+		if interactType == "Exit" then
+			RoomHandler.LeaveRoom(player)
+		end
+	end
+end)

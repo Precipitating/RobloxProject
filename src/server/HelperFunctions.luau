@@ -52,9 +52,10 @@ function HelperFunctions.SetNPCDialogueFile(fromToTable)
 end
 
 -- spawn a model
-function HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
+function HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
+	local serverStorageFolder = storageFolderName
 	local model =
-		ServerStorage:FindFirstChild("MissionModels"):FindFirstChild(folderName):FindFirstChild(modelName):Clone()
+		ServerStorage:FindFirstChild(serverStorageFolder):FindFirstChild(folderName):FindFirstChild(modelName):Clone()
 	if model then
 		model.Parent = workspace
 		if pos then
