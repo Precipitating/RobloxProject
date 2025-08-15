@@ -231,6 +231,13 @@ function openUI(data, dialogueId)
 end
 
 game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, _)
+	-- for NPCS only
+	if
+		not (CollectionService:HasTag(prompt.Parent, "MoveableNPC") or CollectionService:HasTag(prompt.Parent, "NPC"))
+	then
+		return
+	end
+
 	if talking then
 		return
 	end
