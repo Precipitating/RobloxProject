@@ -17,6 +17,12 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 	local isEnter = string.find(houseName, "Enter")
 	local isExit = string.find(houseName, "Exit")
 
+	if not (isEnter or isExit) then
+		warn("Door string value has no 'Enter' or 'Exit' included")
+	end
+
+	print(houseName)
+
 	if isEnter then
 		modelName = string.sub(houseName, 1, isEnter - 1)
 		print(`Entering room {modelName}`)

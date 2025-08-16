@@ -1,4 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
+local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local HelperFunctions = require(script.Parent.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local PositionBeforeEntering = nil
@@ -14,6 +16,7 @@ function RoomHandler.SpawnRoomAndEnter(player, name)
 		if character then
 			PositionBeforeEntering = character:FindFirstChild("HumanoidRootPart").CFrame
 			GeneralRemotes.Blur:FireClient(player, 1, 100)
+			SoundModule.PlaySound("OpenDoor")
 			character:SetPrimaryPartCFrame(spawnLoc.CFrame)
 			GeneralRemotes.Blur:FireClient(player, 1, 0)
 		else
@@ -26,6 +29,7 @@ function RoomHandler.LeaveRoom(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
 	local character = player.Character
 	if character then
+		SoundModule.PlaySound("OpenDoor")
 		character:SetPrimaryPartCFrame(PositionBeforeEntering)
 	else
 		warn("Room leave character not found")
