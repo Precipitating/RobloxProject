@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
+local TShirtChecker = require(ServerScriptService.Server.NPCs.Glitcher.TShirtChecker)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
 local MissionEventHandlers = require(script.Parent:FindFirstChild("MissionsLogicHandler"))
@@ -118,10 +119,16 @@ ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(pla
 	end
 end)
 
-ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(function(_, folderName, modelName, pos)
-	print(`Client -> Server spawn {modelName}`)
-	HelperFunctions.SpawnModelAtPosition(folderName, modelName, pos)
-end)
+ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
+	function(_, storageFolderName, folderName, modelName, pos)
+		print(`Client -> Server spawn {modelName}`)
+		HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
+	end
+)
+
+ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally.OnServerInvoke = function(_)
+	return TShirtChecker.HasGlitchedIn()
+end
 
 local function initialize()
 	for missionId in Missions.Missions do

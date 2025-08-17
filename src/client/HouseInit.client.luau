@@ -1,5 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UIHelperFunctions = require(script.Parent.UIHelperFunctions)
 local HouseRemote = ReplicatedStorage.Shared.Remotes.House.HouseDoorInteracted
 game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, _)
 	if not CollectionService:HasTag(prompt.Parent, "HouseDoor") then
@@ -19,6 +20,7 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 
 	if not (isEnter or isExit) then
 		warn("Door string value has no 'Enter' or 'Exit' included")
+		return
 	end
 
 	print(houseName)
@@ -26,10 +28,12 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 	if isEnter then
 		modelName = string.sub(houseName, 1, isEnter - 1)
 		print(`Entering room {modelName}`)
+		UIHelperFunctions.AdjustBlur(0.1, 100)
 		HouseRemote:FireServer("Enter", modelName)
 	elseif isExit then
 		modelName = string.sub(houseName, 1, isExit - 1)
 		print(`Leaving room {modelName}`)
+		UIHelperFunctions.AdjustBlur(0.1, 100)
 		HouseRemote:FireServer("Exit", modelName)
 	end
 end)

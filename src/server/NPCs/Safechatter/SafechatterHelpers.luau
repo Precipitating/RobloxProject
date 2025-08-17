@@ -52,7 +52,7 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 	light.Parent = head
 
 	-- spawn obby
-	local pathModel = HelperFunctions.SpawnModelAtPosition("Safechatter", "InvisiblePaths", nil)
+	local pathModel = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "InvisiblePaths", nil)
 	if not pathModel then
 		warn("Failed to spawn pathModel")
 		return
@@ -114,7 +114,8 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 					GeneralRemotes.Blur:FireClient(player, 2, 100)
 					GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
 					-- spawn cutscene model
-					local prodRoom = HelperFunctions.SpawnModelAtPosition("Safechatter", "ProductionRoom", nil)
+					local prodRoom =
+						HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "ProductionRoom", nil)
 
 					-- disable events
 					GeneralRemotes.EnableClickToMove:FireClient(player, false)
