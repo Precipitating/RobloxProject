@@ -2,6 +2,8 @@ local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
 
@@ -12,12 +14,12 @@ local MissionEventHandlers = {}
 MissionEventHandlers["StealPhone"] = function(_)
 	-- spawn the next NPC that progresses this mission
 	local pos = Vector3.new(math.random(-360, 360), 5.23, -26.1)
-	HelperFunctions.SpawnModelAtPosition("Roadman", "PhoneVictim", pos)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", pos)
 end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
 	-- spawn surrounding cops around player
-	HelperFunctions.SpawnModelAtPosition("Roadman", "Cops", nil)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "Cops", nil)
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 4119036600108215)
@@ -26,7 +28,7 @@ MissionEventHandlers["RoadmanCaught"] = function(player)
 end
 
 MissionEventHandlers["RoadmanWin"] = function(player)
-	HelperFunctions.SpawnModelAtPosition("Roadman", "PC", nil)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PC", nil)
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 126301904067129)
@@ -42,7 +44,7 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 
 	if humanoid and rootPart then
 		-- spawn signs
-		local signs = HelperFunctions.SpawnModelAtPosition("Roadman", "MuggedSigns", nil)
+		local signs = HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "MuggedSigns", nil)
 
 		-- award badge
 		BadgeHandler.awardBadge(player, 1658087564169818)
@@ -79,7 +81,7 @@ end
 MissionEventHandlers["GuestPwn"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
 	local character = player.Character
-	local alley = HelperFunctions.SpawnModelAtPosition("Safechatter", "Alleyway")
+	local alley = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway")
 	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
 	GeneralRemotes.PlayAnimation:FireClient(player, "73806503045226")
 	BadgeHandler.awardBadge(player, 550797482323175)
@@ -91,7 +93,7 @@ end
 MissionEventHandlers["GuestComplete"] = function(player)
 	local character = player.Character
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	local hallway = HelperFunctions.SpawnModelAtPosition("Safechatter", "BrainwashHallway", nil)
+	local hallway = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "BrainwashHallway", nil)
 	rootPart.CFrame = hallway:FindFirstChild("SpawnLoc").CFrame
 	BadgeHandler.awardBadge(player, 3791811322299538)
 	GeneralRemotes.PlayAnimation:FireClient(player, "135338300387862")
@@ -122,7 +124,7 @@ end
 
 MissionEventHandlers["PsychoMantisFailLie"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailLie")
@@ -131,7 +133,7 @@ end
 
 MissionEventHandlers["PsychoMantisFailTruth"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "Hallway", nil)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailTruth")
@@ -140,11 +142,16 @@ end
 
 MissionEventHandlers["PsychoMantisWin"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("PsychoMantis", "HallwayWin", nil)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "HallwayWin", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisWin")
 	BadgeHandler.awardBadge(player, 2250718080144467)
+end
+
+-- Glitcher
+MissionEventHandlers["BosnianRoulette"] = function(player)
+	BosnianRoulette.Init(player)
 end
 
 return MissionEventHandlers

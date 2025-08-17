@@ -5,6 +5,7 @@ local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local Events = ReplicatedStorage.Missions.Events
 local NPCEvents = ReplicatedStorage.Events.NPC
+local CurrentPrompt = nil
 -- remotes
 local RemoteMap = {
 	UnlockMission = Events.UnlockMissionEvent,
@@ -85,26 +86,37 @@ local function typeText(text)
 	btn2.Interactable = true
 end
 
-function hideUI(closeType)
+function hideUI(responseData)
 	task.delay(0.3, function()
 		if moveableNPCName then
 			PauseNPCMovement:FireServer(false, moveableNPCName)
 			moveableNPCName = nil
 		end
 
-		if closeType == "Close" then
+		if responseData.Type == "Close" then
 			soundModule.PlayTheme("Main")
 			-- re-enable movement (if not last disabled by cutscene)
 			movementModule.EnableControls("UI")
-		elseif closeType == "CloseCutscene" then
+		elseif responseData.Type == "CloseCutscene" then
 			soundModule.StopAllSounds()
-		elseif closeType == "CloseKeepTheme" then
+		elseif responseData.Type == "CloseKeepTheme" then
 			movementModule.EnableControls("UI")
 		end
 
 		talking = false
 		frame.Visible = false
 		ui.Enabled = false
+
+		-- don't allow interaction again after dialogue close
+		if responseData.DisablePrompt then
+			CurrentPrompt = nil
+			return
+		end
+
+		if CurrentPrompt then
+			CurrentPrompt.Enabled = true
+			CurrentPrompt = nil
+		end
 	end)
 end
 
@@ -133,18 +145,18 @@ function handleResponse(data, responseData)
 		or responseData.Type == "CloseCutscene"
 		or responseData.Type == "CloseKeepTheme"
 	then
-		hideUI(responseData.Type)
+		hideUI(responseData)
 	elseif responseData.Type == "NextMessage" then
 		local newData = data[responseData.NextId]
 		if newData then
 			updateUI(data, responseData.NextId)
 		else
 			warn("NextMessage type, but no NextDialogue data.")
-			hideUI(responseData.Type)
+			hideUI(responseData)
 		end
 	else
 		warn("Unknown request type:", responseData.Type)
-		hideUI(responseData.Type)
+		hideUI(responseData)
 	end
 
 	for key, event in pairs(RemoteMap) do
@@ -158,6 +170,10 @@ end
 
 function updateUI(data, dialogueId)
 	local selectedDialogue = data[dialogueId]
+	-- some dialogues are functions that returns a table instead, for condition checking
+	if typeof(selectedDialogue) == "function" then
+		selectedDialogue = data[dialogueId]()
+	end
 	nameLabel.Text = selectedDialogue.Name
 	portrait.Image = selectedDialogue.Portrait
 	-- client events
@@ -268,4 +284,6 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 	local npcData = require(dataModule)
 
 	openUI(npcData.Nodes, npc.Value)
+	prompt.Enabled = false
+	CurrentPrompt = prompt
 end)

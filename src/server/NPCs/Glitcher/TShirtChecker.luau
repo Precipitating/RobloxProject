@@ -11,6 +11,10 @@ function TShirtChecker.SetTShirtMethodActivated(val)
 	print(`Entered via T-Shirt method {EnteredViaTShirt}`)
 end
 
+function TShirtChecker.HasGlitchedIn()
+	return EnteredViaTShirt
+end
+
 function TShirtChecker.GetPlayersTShirtName(character)
 	local tShirt = character:FindFirstChild("Shirt Graphic")
 	if not tShirt then

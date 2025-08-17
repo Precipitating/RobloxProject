@@ -64,7 +64,7 @@ end
 function WordType.Init(player)
 	-- get refs
 	wordList = WordType.GenerateWordList(WORD_AMOUNT)
-	examRoom = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "ExamRoom", nil)
+	examRoom = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamRoom", nil)
 	clockText = examRoom.Clock.Screen.SurfaceGui.TextLabel
 	whiteBoard = examRoom.Whiteboard.SurfaceGui.TextLabel
 	currentScore = examRoom.CurrentScore.Screen.SurfaceGui.TextLabel
@@ -133,12 +133,12 @@ function WordType.Finished(won, player)
 
 	if won then
 		whiteBoard.Text = "YOU WIN!"
-		local model = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "ExamWin", nil)
+		local model = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamWin", nil)
 		model.Parent = workspace.ExamRoom
 		Missions.addProgressToTask(player, "TypingCompetition", "Type", 1)
 	else
 		whiteBoard.Text = "YOU LOSE!"
-		local model = HelperFunctions.SpawnModelAtPosition("PsychoMantis", "ExamLose", nil)
+		local model = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamLose", nil)
 		model.Parent = workspace.ExamRoom
 		Missions.FailMission(player, "TypingCompetition")
 	end
