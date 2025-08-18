@@ -8,6 +8,7 @@ local MovementHandler = require(script:WaitForChild("MovementHandler"))
 local SoundModule = require(script:WaitForChild("SoundModule"))
 local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
 local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChild("CutsceneClientHandler"))
+local InitializeGUIModule = require(script.InitializeGUI.InitializeGUIModule)
 -- disable respawn button
 local coreCall
 do
@@ -65,6 +66,10 @@ GeneralRemotes.Blur.OnClientEvent:Connect(function(time, blurTarget)
 	UIHelperFunctions.AdjustBlur(time, blurTarget)
 end)
 
+GeneralRemotes.BlackFade.OnClientEvent:Connect(function(time, transparencyTarget)
+	UIHelperFunctions.AdjustBlackScreen(time, transparencyTarget)
+end)
+
 GeneralRemotes.ChangeClothes.OnClientEvent:Connect(function(shirt, pants)
 	local hasTShirt = Character:FindFirstChild("Shirt Graphic")
 
@@ -86,6 +91,9 @@ end)
 
 GeneralRemotes.PlayTheme.OnClientEvent:Connect(function(name)
 	SoundModule.PlayTheme(name)
+end)
+GeneralRemotes.PlaySound.OnClientEvent:Connect(function(name)
+	SoundModule.PlaySound(name)
 end)
 GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	SoundModule.StopAllSounds()
@@ -180,6 +188,11 @@ end)
 
 GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
 	CutsceneModule.Play(name)
+end)
+
+-- GUI
+GeneralRemotes.InitializeGUI.OnClientEvent:Connect(function(name)
+	InitializeGUIModule[name]()
 end)
 
 -- set player's collision group

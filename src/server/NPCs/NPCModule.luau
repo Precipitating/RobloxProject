@@ -6,6 +6,7 @@ local InitializedRemote = game.ReplicatedStorage.Shared.Events.NPC.InitializedNP
 local ArrivedRemote = game.ReplicatedStorage.Shared.Events.NPC.ArrivedDestination
 local WeepingAngelModeEvent = game.ReplicatedStorage.Shared.Events.NPC.WeepingAngelMode
 local TweenService = game:GetService("TweenService")
+local ModeDebounce = false
 NPC.__index = NPC
 
 function NPC.new(model)
@@ -42,8 +43,17 @@ function NPC:DisconnectAllConnections()
 end
 
 function NPC:SetMode(mode, player)
+	if ModeDebounce then
+		return
+	end
+	if self.Mode == mode then
+		return
+	end
+	print(`NPC going to state {mode}, prev state {self.Mode}`)
+
 	self.LastMode = self.Mode
 	self.Mode = mode
+	ModeDebounce = true
 	if mode == "Interacting" then
 		self:ForceStopMovement()
 		if player then
@@ -65,12 +75,15 @@ function NPC:SetMode(mode, player)
 	elseif mode == "Angel" then
 		WeepingAngelModeEvent:Fire(player)
 	end
+
+	task.wait(1)
+	ModeDebounce = false
 end
 
 function NPC:SetBackPreviousMode(player)
 	print(self.LastMode)
 	if self.LastMode == self.Mode then
-		print("SAME")
+		warn("NPC GOING BACK TO SAME MODE???")
 		return
 	end
 	self:SetMode(self.LastMode, player)
@@ -149,6 +162,7 @@ function NPC:SetWalkspeed(val)
 end
 
 function NPC:StartPathing(targetPos, obj)
+	print("should start moving npc")
 	if not self.Humanoid then
 		error("NPC Humanoid not found to pathfind!")
 		return

@@ -1,9 +1,11 @@
 -- UIHelperFunctions Module
 local UIHelperFunctions = {}
+local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
 -- Reference to your Blur effect
-local BlurRef = game.Lighting:FindFirstChildOfClass("BlurEffect") -- adjust as needed
+local BlurRef = game.Lighting:FindFirstChildOfClass("BlurEffect")
+local BlackScreenRef = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("BlackScreen"):WaitForChild("Frame")
 UIHelperFunctions.CurrentBlurTween = nil
 
 -- Adjusts the blur with smooth tween, cancels previous tweens
@@ -39,6 +41,13 @@ function UIHelperFunctions.AdjustBlur(duration, blurValue)
 		end
 		UIHelperFunctions.CurrentBlurTween = nil
 	end)
+end
+
+function UIHelperFunctions.AdjustBlackScreen(duration, blurValue)
+	local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(BlackScreenRef, tweenInfo, { BackgroundTransparency = blurValue })
+	tween:Play()
+	tween.Completed:Wait()
 end
 
 return UIHelperFunctions

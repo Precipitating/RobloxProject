@@ -1,8 +1,13 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local HelperFunctions = require(script.HelperFunctions)
+local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
+local TShirtChecker = require(script.NPCs.Glitcher.TShirtChecker)
+local NPCModule = require(script.NPCs.NPCModule)
 local ProfileDataModule = require(script.PlayerProfileData.GetPlayerInfo)
 local RoomHandler = require(script.RoomHandler)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Remotes
 
+-- PSYCHOMANTIS
 GeneralRemotes.GetFriendsList.OnServerInvoke = function(player)
 	return ProfileDataModule.RetrieveFriendsList(player)
 end
@@ -27,6 +32,30 @@ GeneralRemotes.GetCountryData.OnServerInvoke = function(_, countryCode)
 	return country, fact
 end
 
+-- NPC
+ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(player, pause, NPCName)
+	print(`{NPCName} pathfinding state on server: {pause}`)
+	local targetNPC = NPCModule:GetNPC(NPCName)
+	if pause then
+		targetNPC:SetMode("Interacting", player)
+	else
+		targetNPC:SetBackPreviousMode(player)
+	end
+end)
+
+-- MODEL
+ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
+	function(_, storageFolderName, folderName, modelName, pos)
+		print(`Client -> Server spawn {modelName}`)
+		HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
+	end
+)
+
+-- GLITCHER MISSION
+ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally.OnServerInvoke = function(_)
+	return TShirtChecker.HasGlitchedIn()
+end
+
 GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, interactType, roomName)
 	if interactType == "Enter" then
 		RoomHandler.SpawnRoomAndEnter(player, roomName)
@@ -35,4 +64,8 @@ GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, 
 			RoomHandler.LeaveRoom(player)
 		end
 	end
+end)
+
+GeneralRemotes.GlitcherMission.SubmitBombTimeReduction.OnServerEvent:Connect(function(player, reductionVal)
+	BosnianRoulette.ReduceBombTime(reductionVal)
 end)
