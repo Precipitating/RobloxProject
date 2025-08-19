@@ -1,5 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
+local Glitcher = require(ReplicatedStorage.Shared.NPCDialogues.Glitcher)
+local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local BosnianRoulette = {}
 local LandMine = nil
@@ -84,7 +88,7 @@ end
 
 function BosnianRoulette.ReduceBombTime(val)
 	CurrentTime -= val
-	GeneralRemotes.PlaySound:FireClient(PlayerRef, "Keypad")
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Keypad")
 	BosnianRoulette.ChangeTurn()
 end
 
@@ -105,7 +109,7 @@ function BosnianRoulette.NPCTurn()
 		else
 			choice = math.random(10, 20)
 		end
-	elseif CurrentTime <= 300 then
+	elseif CurrentTime <= 150 then
 		-- Mid game: reduce aggressively but not insane
 		choice = math.random(10, 40)
 	else
@@ -125,6 +129,7 @@ function BosnianRoulette.StartBomb()
 	local rampStart = 30 -- seconds before end when pitch starts rising
 	local minPitch = 1
 	local maxPitch = 2
+	local done = false
 	while CurrentTime > 0 do
 		BeepSound:Play()
 
@@ -146,18 +151,46 @@ function BosnianRoulette.StartBomb()
 
 		print(CurrentTime)
 	end
-	BoomSound:Play()
-	print(YourTurn)
-	GUIInstance.Enabled = false
-	local explosion = Instance.new("Explosion")
-	explosion.Position = LandMine.Position
-	explosion.BlastPressure = 0
-	explosion.BlastRadius = 0
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Parent = workspace
-	-- fade to black
-	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0.1, 0)
-	print("BOOM")
+	if not done then
+		done = true
+		BoomSound:Play()
+		print(YourTurn)
+		GUIInstance.Enabled = false
+		local explosion = Instance.new("Explosion")
+		explosion.Position = LandMine.Position
+		explosion.BlastPressure = 0
+		explosion.BlastRadius = 0
+		explosion.DestroyJointRadiusPercent = 0
+		explosion.Parent = workspace
+		-- fade to black
+		GeneralRemotes.BlackFade:FireClient(PlayerRef, 0.1, 0)
+		BosnianRoulette.SetupCutscene(YourTurn)
+		print("BOOM")
+	end
+end
+
+function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
+	-- player lose
+	if yourTurnAtDetonation then
+		local playerClone = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "PlayerClone", nil)
+		GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
+		task.wait(5)
+		GeneralRemotes.BlackFade:FireClient(PlayerRef, 2, 1)
+		GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "GlitcherFail")
+		GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Alarm")
+		task.wait(3)
+		local humanoid = playerClone.Humanoid
+		if humanoid then
+			BadgeHandler.awardBadge(PlayerRef, 2121837446715483)
+			humanoid:MoveTo(playerClone:FindFirstChild("WalkPoint").CFrame.Position)
+			humanoid.MoveToFinished:Wait()
+			task.wait(6)
+			local phrase = GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "RebelsOverLads")
+			task.wait(phrase.TimeLength)
+			humanoid.Health = 0
+			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "BloodSpurt")
+		end
+	end
 end
 
 return BosnianRoulette

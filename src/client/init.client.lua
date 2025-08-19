@@ -92,9 +92,9 @@ end)
 GeneralRemotes.PlayTheme.OnClientEvent:Connect(function(name)
 	SoundModule.PlayTheme(name)
 end)
-GeneralRemotes.PlaySound.OnClientEvent:Connect(function(name)
-	SoundModule.PlaySound(name)
-end)
+GeneralRemotes.PlaySound.OnClientInvoke = function(name)
+	return SoundModule.PlaySound(name)
+end
 GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	SoundModule.StopAllSounds()
 	return true
