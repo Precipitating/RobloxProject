@@ -105,8 +105,10 @@ function SoundHandler.PlaySound(soundName)
 		else
 			sound.TimePosition = 0
 		end
+		return sound
 	else
 		warn("No sound to play, its nil.")
+		return nil
 	end
 end
 
