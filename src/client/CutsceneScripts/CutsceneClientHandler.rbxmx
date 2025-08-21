@@ -48,6 +48,7 @@ local CharacterProtector = script:FindFirstChild("CharacterProtector")
 local Music = script:FindFirstChild("Music")
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
+local SoundModule = require(script.Parent.Parent.SoundModule)
 
 local bin = true -- prevents multiple plays at once
 local currentRenderStepped
@@ -166,6 +167,21 @@ CutsceneClientHandler.KeyframeHandler = {
 			SoundFolder.BlocklandBan:Play()
 		end
 	end,
+
+	GlitcherWin = function(instruction, nextInstruction, X)
+		if instruction == 4 then
+			SoundModule.PlaySound("Surprise")
+			Music:Stop()
+			Music.SoundId = "rbxassetid://9041777446"
+			Music.Volume = 0.3
+			Music:Play()
+			task.wait(1)
+			SoundModule.PlaySound("Bruh")
+			
+
+		end
+	end,
+
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -231,8 +247,18 @@ CutsceneClientHandler.Initialize = {
 	SafechatterFailedObby = function()
 		Music.SoundId = "rbxassetid://122447840112621"
 		Music.Volume = 0.5
-		
 	end,
+
+	GlitcherFail = function()
+		Music.SoundId = "rbxassetid://7084812679"
+		Music.Volume = 0.3
+	end,
+
+	GlitcherWin = function()
+		Music.SoundId = "rbxassetid://87594944283000"
+		Music.Volume = 0.3
+	end,
+
 }
 
 -- Load a cutscene by name

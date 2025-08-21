@@ -88,14 +88,90 @@ return {
 			Responses = {
 				{
 					Text = "Yes, I paid a lot of <b>ROBUX</b> for this!",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "Legit2",
 				},
 				{
 					Text = "Yes, I paid a lot of <b>TICKETS</b> for this!",
+					Type = "NextMessage",
+					NextId = "Legit2",
+				},
+			},
+		},
+		Legit2 = {
+			Name = "Owner",
+			Portrait = "rbxassetid://12542090980",
+			Dialogue = "Yes my <i>benefactor</i>, that is an <b>excellent</b> use of your valuable currency.<br/>The rewards will <b>definitely</b> be up to your standards.",
+			Responses = {
+				{
+					Text = "Good.",
+					Type = "NextMessage",
+					NextId = "Legit3",
+				},
+				{
+					Text = "Chop chop.",
+					Type = "NextMessage",
+					NextId = "Legit3",
+				},
+			},
+		},
+
+		Legit3 = {
+			Name = "Owner",
+			Portrait = "rbxassetid://9033585709",
+			Dialogue = "Right the VIP reward.<br/>Not your typical room full of morphs and path tools, but a locked terminal.<br/><b>PASSWORD?</b><br/>Find out yourself.",
+			Responses = {
+				{
+					Text = "Really bro?<br/>MORE INFO PLZ",
+					Type = "NextMessage",
+					GiveTool = "Terminal",
+					NextId = "Inside",
+				},
+				{
+					Text = "Whats inside?",
+					Type = "NextMessage",
+					GiveTool = "Terminal",
+					NextId = "Inside",
+				},
+			},
+		},
+
+		Inside = {
+			Name = "Owner",
+			Portrait = "rbxassetid://85618120",
+			Dialogue = "To open, xenial intentions create secrets, a lasting truth.",
+			Responses = {
+				{
+					Text = "What?",
+					Type = "NextMessage",
+					NextId = "LegitEnd",
+				},
+				{
+					Text = "Wat?",
+					Type = "NextMessage",
+					NextId = "LegitEnd",
+				},
+			},
+		},
+
+		LegitEnd = {
+			Name = "Owner",
+			Portrait = "rbxassetid://222515349",
+			Dialogue = "Thats all, and as always, <b>Rebels Over Lads</b>",
+			Responses = {
+				{
+					Text = "PLZ MORE INFO PLZ!",
+					Type = "Close",
+					SetDialogueFile = { { OwnerNameTag = "OwnerTerminalGiven" } },
+				},
+				{
+					Text = "WEBELS OVAH LAADZ",
+					SetDialogueFile = { { OwnerNameTag = "OwnerTerminalGiven" } },
 					Type = "Close",
 				},
 			},
 		},
+
 		-- illegal
 		Illegal1 = {
 			Name = "Owner",
