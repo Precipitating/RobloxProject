@@ -172,12 +172,12 @@ end
 function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
 	-- player lose
 	if yourTurnAtDetonation then
+		print("Lose")
 		local playerClone = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "PlayerClone", nil)
 		GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
 		task.wait(5)
 		GeneralRemotes.BlackFade:FireClient(PlayerRef, 2, 1)
 		GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "GlitcherFail")
-		GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Alarm")
 		task.wait(3)
 		local humanoid = playerClone.Humanoid
 		if humanoid then
@@ -190,6 +190,18 @@ function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
 			humanoid.Health = 0
 			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "BloodSpurt")
 		end
+	else
+		print("Win")
+		GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
+		GeneralRemotes.BlackFade:FireClient(PlayerRef, 0.1, 0)
+		workspace:FindFirstChild("GlitchRoom"):FindFirstChild("Owner"):Destroy()
+		workspace:FindFirstChild("GlitchRoom"):FindFirstChild("LandMine"):Destroy()
+		local deadOwner = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "OwnerDead", nil)
+		local fakeRoom = HelperFunctions.SpawnModelAtPosition("Rooms", "ScamRoom", "ScamRoom", nil)
+		task.wait(1)
+		BadgeHandler.awardBadge(PlayerRef, 2760480705679050)
+		GeneralRemotes.BlackFade:FireClient(PlayerRef, 2, 1)
+		GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "GlitcherWin")
 	end
 end
 
