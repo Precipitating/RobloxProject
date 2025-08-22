@@ -67,7 +67,7 @@ function BosnianRoulette.InitGUI()
 	if not playerGUI:FindFirstChild("BosnianRouletteGUI") then
 		GUIInstance = GUILocation:Clone()
 		GUIInstance.Parent = playerGUI
-		GeneralRemotes.InitializeGUI:FireClient(PlayerRef, "BosnianRouletteGUI")
+		GeneralRemotes.InitializeGUI:FireClient(PlayerRef, "BosnianRoulette")
 	end
 end
 
@@ -156,6 +156,7 @@ function BosnianRoulette.StartBomb()
 		BoomSound:Play()
 		print(YourTurn)
 		GUIInstance.Enabled = false
+
 		local explosion = Instance.new("Explosion")
 		explosion.Position = LandMine.Position
 		explosion.BlastPressure = 0

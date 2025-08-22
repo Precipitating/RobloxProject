@@ -169,8 +169,8 @@ function NPC:StartPathing(targetPos, obj)
 	end
 
 	self.PathCancelled = false
-
 	local path = PathfindingService:CreatePath()
+
 	path:ComputeAsync(self.HumanoidRootPart.Position, targetPos.Position)
 
 	for _, waypoint in path:GetWaypoints() do
@@ -178,7 +178,6 @@ function NPC:StartPathing(targetPos, obj)
 			print("Pathfinding cancelled.")
 			return
 		end
-
 		self.Humanoid:MoveTo(waypoint.Position)
 		local reached = self.Humanoid.MoveToFinished:Wait()
 		if not reached or self.PathCancelled then
