@@ -120,7 +120,7 @@ local textBox
 local isCleaningUp = false
 local currentWord
 
--- Unified cleanup function
+-- Cleanup TypingCompetition function
 local function CleanupGame()
 	if isCleaningUp then
 		return
@@ -192,7 +192,13 @@ end)
 
 -- GUI
 GeneralRemotes.InitializeGUI.OnClientEvent:Connect(function(name)
-	InitializeGUIModule[name]()
+	if InitializeGUIModule[name] then
+		InitializeGUIModule[name]()
+	end
+end)
+
+GeneralRemotes.DisconnectGUI.OnClientEvent:Connect(function(name)
+	InitializeGUIModule.DisconnectAll(name)
 end)
 
 -- set player's collision group

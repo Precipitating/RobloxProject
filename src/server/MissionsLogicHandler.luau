@@ -3,6 +3,7 @@ local BadgeHandler = require(script.Parent.BadgeHandler)
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local TweenService = game:GetService("TweenService")
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -152,6 +153,33 @@ end
 -- Glitcher
 MissionEventHandlers["BosnianRoulette"] = function(player)
 	BosnianRoulette.Init(player)
+end
+
+MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
+	local character = player.Character
+	if character and character.PrimaryPart then
+		local primaryPart = character.PrimaryPart
+		local arrivePos = primaryPart.Position
+			+ (primaryPart.CFrame.RightVector * 10)
+			+ (primaryPart.CFrame.UpVector * -3)
+
+		local spawnPos: Vector3 = primaryPart.Position
+			+ (primaryPart.CFrame.RightVector * 10)
+			+ (primaryPart.CFrame.UpVector * -5)
+			+ (primaryPart.CFrame.LookVector * -150)
+
+		local van = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "Van", spawnPos)
+		van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
+
+		-- Tween settings
+		local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+
+		-- Create tween
+		local tween = TweenService:Create(van.PrimaryPart, tweenInfo, { CFrame = CFrame.new(arrivePos) })
+
+		-- Play tween
+		tween:Play()
+	end
 end
 
 return MissionEventHandlers

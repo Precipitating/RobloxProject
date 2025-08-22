@@ -39,14 +39,25 @@ end
 
 -- switch dialogue file for an NPC (NPC must have string component called "NPCName" with a tag )
 function HelperFunctions.SetNPCDialogueFile(fromToTable)
-	print(`Setting dialogue file...`)
+	print("Setting dialogue file...")
+
 	local dialogueRef, newName = next(fromToTable[1])
-	print(dialogueRef .. newName)
+	print(dialogueRef, "->", newName)
+
 	if dialogueRef then
-		local convoTag = CollectionService:GetTagged(dialogueRef)[1]
-		if convoTag then
-			convoTag.Value = newName
-			print(`Succesfully set dialogue file to {newName}`)
+		local tagged = CollectionService:GetTagged(dialogueRef)
+		local success = false
+
+		for _, inst in ipairs(tagged) do
+			if inst:IsA("StringValue") then
+				inst.Value = newName
+				print(`Successfully set {dialogueRef} value to {newName}`)
+				success = true
+			end
+		end
+
+		if not success then
+			warn(`No StringValue found for tag {dialogueRef}`)
 		end
 	end
 end

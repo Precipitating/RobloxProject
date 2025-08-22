@@ -5,19 +5,19 @@ local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 -- handle all rewards
 MissionCompleteHandlers["StealPhone"] = function(player)
 	HelperFunctions.GiveTool(player, "Nokia")
-	HelperFunctions.SetNPCDialogueFile({ { RoadmanNameTag = "RoadmanComplete" } })
+	HelperFunctions.SetNPCDialogueFile({ RoadmanNameTag = "RoadmanComplete" })
 	print("StealPhone reward given and dialogue set to RoadmanComplete")
 end
 
 MissionCompleteHandlers["GuestMoney"] = function(player)
 	HelperFunctions.GiveTool(player, "TixBag")
-	HelperFunctions.SetNPCDialogueFile({ { SafechatterNameTag = "SafechatterMissionComplete" } })
+	HelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterMissionComplete" })
 	print("GuestMoney reward given and dialogue set to RoadmanComplete")
 end
 
 MissionCompleteHandlers["TypingCompetition"] = function(player)
 	HelperFunctions.GiveTool(player, "Keyboard")
-	HelperFunctions.SetNPCDialogueFile({ { PsychoMantisNameTag = "PsychoMantisWin" } })
+	HelperFunctions.SetNPCDialogueFile({ PsychoMantisNameTag = "PsychoMantisWin" })
 	print("Typing competition reward given and dialogue set to PsychoMantisWin")
 end
 

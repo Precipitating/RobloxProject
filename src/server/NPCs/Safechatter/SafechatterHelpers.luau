@@ -210,7 +210,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 				end
 
 				-- set new NPC dialogue
-				HelperFunctions.SetNPCDialogueFile({ { SafechatterNameTag = "SafechatterEscaped" } })
+				HelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterEscaped" })
 				NPC:SetMode("Interacting", player)
 				NPC:EnableProximityChat(true)
 				GeneralRemotes.DisableControls:FireClient(player, "UI")

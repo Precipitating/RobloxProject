@@ -1,13 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local ServerScriptService = game:GetService("ServerScriptService")
-local TShirtChecker = require(ServerScriptService.Server.NPCs.Glitcher.TShirtChecker)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
 local MissionEventHandlers = require(script.Parent:FindFirstChild("MissionsLogicHandler"))
 local HelperFunctions = require(script.Parent:FindFirstChild("HelperFunctions"))
 local MissionCompleteHandlers = require(script.Parent:FindFirstChild("MissionsCompleteHandler"))
 local MissionFailedHandlers = require(script.Parent:FindFirstChild("MissionsFailedHandler"))
-local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
+local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- mission handlers
 local function unlockHandler(player: Player, missionId: Types.MissionId)
@@ -61,6 +59,7 @@ ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(p
 	print(`Server received GiveToolEvent, attempting to give you the tool {toolName} `)
 	if typeof(toolName) == "string" then
 		HelperFunctions.GiveTool(player, toolName)
+		GeneralRemotes.InitializeGUI:FireClient(player, toolName)
 	end
 end)
 
@@ -108,27 +107,6 @@ ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(funct
 		HelperFunctions.DestroyObject(objectTagList)
 	end
 end)
-
-ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(player, pause, NPCName)
-	print(`{NPCName} pathfinding state on server: {pause}`)
-
-	if pause then
-		NPCModule:GetNPC(NPCName):SetMode("Interacting", player)
-	else
-		NPCModule:GetNPC(NPCName):SetBackPreviousMode(player)
-	end
-end)
-
-ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
-	function(_, storageFolderName, folderName, modelName, pos)
-		print(`Client -> Server spawn {modelName}`)
-		HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
-	end
-)
-
-ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally.OnServerInvoke = function(_)
-	return TShirtChecker.HasGlitchedIn()
-end
 
 local function initialize()
 	for missionId in Missions.Missions do
