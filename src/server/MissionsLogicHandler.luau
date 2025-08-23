@@ -196,6 +196,7 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 		-- tween hand to player
 		local handWeld = hand:FindFirstChild("WeldConstraint")
 		handWeld.Part0 = nil
+		hand:SetNetworkOwner(nil)
 		handTween(-10)
 
 		-- attach player to hand
