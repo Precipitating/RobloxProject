@@ -156,12 +156,18 @@ MissionEventHandlers["BosnianRoulette"] = function(player)
 end
 
 MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
+	GeneralRemotes.PlayTheme:FireClient(player, "McDonaldTheme")
+	GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
+
+	-- spawn van at X distance away from player, and arrive next to the player
 	local character = player.Character
 	if character and character.PrimaryPart then
 		local primaryPart = character.PrimaryPart
 		local arrivePos = primaryPart.Position
 			+ (primaryPart.CFrame.RightVector * 10)
-			+ (primaryPart.CFrame.UpVector * -3)
+			+ (primaryPart.CFrame.UpVector * -2)
+
+		local targetCFrame = CFrame.new(arrivePos, arrivePos + primaryPart.CFrame.LookVector)
 
 		local spawnPos: Vector3 = primaryPart.Position
 			+ (primaryPart.CFrame.RightVector * 10)
@@ -169,16 +175,61 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 			+ (primaryPart.CFrame.LookVector * -150)
 
 		local van = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "Van", spawnPos)
+		local hand = van:FindFirstChild("Hand")
 		van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
 
-		-- Tween settings
-		local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-
-		-- Create tween
-		local tween = TweenService:Create(van.PrimaryPart, tweenInfo, { CFrame = CFrame.new(arrivePos) })
-
-		-- Play tween
+		-- tween van to player
+		local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+		local tween = TweenService:Create(van.PrimaryPart, tweenInfo, { CFrame = targetCFrame })
 		tween:Play()
+		tween.Completed:Wait()
+
+		local function handTween(lookVectorDist)
+			local tweenInfoHand = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+			local tweenHand = TweenService:Create(hand, tweenInfoHand, {
+				CFrame = hand.CFrame + hand.CFrame.LookVector * lookVectorDist,
+			})
+			tweenHand:Play()
+			tweenHand.Completed:Wait()
+		end
+
+		-- tween hand to player
+		local handWeld = hand:FindFirstChild("WeldConstraint")
+		handWeld.Part0 = nil
+		handTween(-10)
+
+		-- attach player to hand
+		local root = character:FindFirstChild("HumanoidRootPart")
+		local ap = Instance.new("AlignPosition")
+		ap.Attachment0 = character.HumanoidRootPart:FindFirstChild("RootAttachment")
+		ap.Attachment1 = hand:FindFirstChild("Attachment") -- make an Attachment in your moving part
+		ap.RigidityEnabled = true
+		ap.Parent = root
+
+		-- tween hand (player attached) to van
+		handTween(10)
+		handWeld.Part0 = hand
+
+		-- move van somewhere else + fade to black
+		local escapeTweenInfo = TweenInfo.new(10, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+		local escapeTween = TweenService:Create(
+			van.PrimaryPart,
+			escapeTweenInfo,
+			{ CFrame = van.PrimaryPart.CFrame * CFrame.new(0, 0, -100) }
+		)
+		escapeTween:Play()
+		GeneralRemotes.BlackFade:FireClient(player, 3, 0)
+
+		-- cutscene
+		HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "RealVIPLocation", nil)
+		escapeTween.Completed:Wait()
+		GeneralRemotes.StopAllMusic:InvokeClient(player)
+
+		GeneralRemotes.PlayCutscene:FireClient(player, "GlitcherRealVIP")
+		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+		BadgeHandler.awardBadge(player, 3494073379327445)
+
+		print("done")
 	end
 end
 

@@ -81,8 +81,8 @@ function HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, mod
 end
 
 -- spawn a list of models (pos already set)
-function HelperFunctions.SpawnMissionPositionedModels(folderName, keyWords)
-	local missionsModels = ServerStorage:FindFirstChild("MissionModels")
+function HelperFunctions.SpawnMissionPositionedModels(storageFolderName, folderName, keyWords)
+	local missionsModels = ServerStorage:FindFirstChild(storageFolderName)
 
 	if not missionsModels then
 		warn("MissionModels folder not found in ServerStorage")

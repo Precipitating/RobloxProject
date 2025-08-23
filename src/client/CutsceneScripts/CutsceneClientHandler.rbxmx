@@ -182,6 +182,19 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
+	GlitcherRealVIP = function(instruction, nextInstruction, X)
+		if instruction == 3 then
+			SoundModule.PlaySound("Land")
+		elseif instruction == 5 then
+			SoundModule.PlaySound("Jackpot")
+		elseif instruction == 13 then
+			task.wait(8)
+			SoundModule.PlaySound("SoGood")
+		end
+
+
+	end,
+
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -257,6 +270,11 @@ CutsceneClientHandler.Initialize = {
 	GlitcherWin = function()
 		Music.SoundId = "rbxassetid://87594944283000"
 		Music.Volume = 0.3
+	end,
+
+	GlitcherRealVIP = function()
+	Music.SoundId = "rbxassetid://1836157888"
+	Music.Volume = 0.3
 	end,
 
 }
