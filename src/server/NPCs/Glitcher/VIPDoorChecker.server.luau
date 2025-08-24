@@ -2,7 +2,7 @@ local TShirtChecker = require(script.Parent.TShirtChecker)
 local Players = game:GetService("Players")
 local Player = Players:GetPlayers()[1] or Players.PlayerAdded:Wait()
 local Character = Player.Character or Player.CharacterAdded:Wait()
-local VIPDoor = workspace:FindFirstChild("VIPRoom"):FindFirstChild("VIP")
+local VIPDoor = workspace:FindFirstChild("West"):FindFirstChild("VIPRoom"):FindFirstChild("VIP")
 local Password = "Rebels Over Lads"
 local Debounce = false
 
