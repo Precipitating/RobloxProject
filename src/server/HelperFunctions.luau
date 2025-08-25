@@ -37,6 +37,16 @@ function HelperFunctions.RemoveTools(player, toolsStringList)
 	end
 end
 
+function HelperFunctions.RemoveEquippedTool(player)
+	if player.Character then
+		for _, item in pairs(player.Character:GetChildren()) do
+			if item:IsA("Tool") then
+				item:Destroy()
+			end
+		end
+	end
+end
+
 -- switch dialogue file for an NPC (NPC must have string component called "NPCName" with a tag )
 function HelperFunctions.SetNPCDialogueFile(fromToTable)
 	print("Setting dialogue file...")

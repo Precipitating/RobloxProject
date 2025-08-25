@@ -77,6 +77,11 @@ ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerEvent:Connect(functio
 	end
 end)
 
+ReplicatedStorage.Missions.Events.RemoveEquippedToolEvent.OnServerEvent:Connect(function(player)
+	print("Remove equipped tools arrived at server")
+	HelperFunctions.RemoveEquippedTool(player)
+end)
+
 ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(_, meshTagList)
 	print("Set mesh visibility arrived at server")
 	if typeof(meshTagList) == "table" then

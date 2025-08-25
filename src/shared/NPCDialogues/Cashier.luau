@@ -145,10 +145,28 @@ return {
 		Eight = {
 			Name = "Shayden",
 			Portrait = "rbxassetid://135950203966686",
+			PlayTheme = "Scary",
 			Dialogue = ".............",
 			Responses = {
 				{
 					Text = "....",
+					Type = "NextMessage",
+					NextId = "Nine",
+				},
+				{
+					Text = "....",
+					Type = "NextMessage",
+					NextId = "Nine",
+				},
+			},
+		},
+		Nine = {
+			Name = "Shayden",
+			Portrait = "rbxassetid://10657365540",
+			Dialogue = ".............",
+			Responses = {
+				{
+					Text = "....ahah....ahah..",
 					Type = "NextMessage",
 					NextId = "One",
 				},
