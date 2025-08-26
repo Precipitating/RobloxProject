@@ -168,11 +168,30 @@ return {
 				{
 					Text = "....ahah....ahah..",
 					Type = "NextMessage",
-					NextId = "One",
+					NextId = "CashierAnger",
 				},
 				{
 					Text = "....",
+					Type = "NextMessage",
+					NextId = "CashierAnger",
+				},
+			},
+		},
+
+		CashierAnger = {
+			Name = "Shayden",
+			Portrait = "rbxassetid://13905710796",
+			Dialogue = "Enjoy.",
+			Responses = {
+				{
+					Text = "???",
 					Type = "Close",
+					ExecuteScenarioEvent = "CashierAnger",
+				},
+				{
+					Text = "What...",
+					Type = "Close",
+					ExecuteScenarioEvent = "CashierAnger",
 				},
 			},
 		},

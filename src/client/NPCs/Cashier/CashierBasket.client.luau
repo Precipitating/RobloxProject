@@ -1,9 +1,10 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ShopBasketModule = require(script.Parent.ShopBasketModule)
+local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
 local Player = game.Players.LocalPlayer
 local Events = ReplicatedStorage.Shared.Missions.Events
 local Character = Player.Character or Player.CharacterAdded:Wait()
+local hasItemsInBasket = false
 
 local function getEquippedTool()
 	for _, item in pairs(Character:GetChildren()) do
@@ -31,6 +32,11 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 			equippedTool:WaitForChild("Price").Value,
 			equippedTool:WaitForChild("Quantity").Value
 		)
+
+		if not hasItemsInBasket then
+			Events.SetDialogueFileEvent:FireServer({ { CashierNameTag = "CashierItems" } })
+			hasItemsInBasket = true
+		end
 	elseif ShopItemGiver then
 		local itemName = prompt:FindFirstChild("ItemName")
 

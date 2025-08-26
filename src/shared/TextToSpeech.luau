@@ -22,6 +22,7 @@ end
 function TextToSpeech.Speak(text)
 	local cleanedText = TextToSpeech.CleanTextForTTS(text)
 	TextToSpeechHandle.Text = cleanedText
+
 	local status = TextToSpeechHandle:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn("TTS Load failed:", status.Name)

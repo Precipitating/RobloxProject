@@ -234,4 +234,17 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 	end
 end
 
+-- Cashier
+MissionEventHandlers["CashierShopLift"] = function(player)
+	print("Cashier shoplift event")
+end
+
+MissionEventHandlers["CashierScammed"] = function(player)
+	print("Cashier scammed event")
+end
+
+MissionEventHandlers["CashierAnger"] = function(player)
+	print("Cashier Anger event")
+end
+
 return MissionEventHandlers
