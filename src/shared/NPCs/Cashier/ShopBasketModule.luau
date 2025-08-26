@@ -1,3 +1,5 @@
+local StarterPlayer = game:GetService("StarterPlayer")
+local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local MissionEvents = ReplicatedStorage.Missions.Events
 local ShopBasketModule = {}
@@ -8,6 +10,7 @@ function ShopBasketModule.AddItem(name, price, quantity)
 		ItemsInBasket[name].Quantity += quantity
 		MissionEvents.RemoveEquippedToolEvent:FireServer()
 		print(`{name} already exists in cashier basket, added to quantity {ItemsInBasket[name].Quantity}`)
+		SoundModule.PlaySound("Rustle")
 
 		return
 	end
@@ -16,6 +19,11 @@ function ShopBasketModule.AddItem(name, price, quantity)
 	MissionEvents.RemoveEquippedToolEvent:FireServer()
 
 	print(`{quantity} {name} added to cashier basket`)
+	SoundModule.PlaySound("Rustle")
+end
+
+function ShopBasketModule.GetItemsInBasket()
+	return ItemsInBasket
 end
 
 -- respects quantity in regards to its removal

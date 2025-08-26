@@ -48,6 +48,8 @@ local function typeText(text)
 	btn2.Text = ""
 	dialogueText.Text = ""
 
+	print(text)
+
 	local ttsSuccess = textToSpeech.Speak(text)
 	local charDelay = 0.05
 	local ttsHandle = textToSpeech.GetHandle()
@@ -233,7 +235,11 @@ function updateUI(data, dialogueId)
 			selectedDialogue.Volume or 1
 		)
 	end
-	typeText(selectedDialogue.Dialogue)
+	if typeof(selectedDialogue.Dialogue) == "function" then
+		typeText(selectedDialogue.Dialogue())
+	else
+		typeText(selectedDialogue.Dialogue)
+	end
 
 	btn1.Text = selectedDialogue.Responses[1].Text
 	btn2.Text = selectedDialogue.Responses[2].Text
