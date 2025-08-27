@@ -128,10 +128,10 @@ return {
 		Seven = {
 			Name = "Shayden",
 			Portrait = "rbxassetid://14480008368",
-			Dialogue = "..........What.",
+			Dialogue = "..........What?",
 			Responses = {
 				{
-					Text = "I dont have any items.<b>LOL</b>",
+					Text = "I dont have any items.<br/><b>LOL</b>",
 					Type = "NextMessage",
 					NextId = "Eight",
 				},
@@ -180,17 +180,17 @@ return {
 
 		CashierAnger = {
 			Name = "Shayden",
-			Portrait = "rbxassetid://13905710796",
-			Dialogue = "Enjoy.",
+			Portrait = "rbxassetid://26610224",
+			Dialogue = "心転身の術­",
 			Responses = {
 				{
 					Text = "???",
-					Type = "Close",
+					Type = "CloseCutscene",
 					ExecuteScenarioEvent = "CashierAnger",
 				},
 				{
-					Text = "What...",
-					Type = "Close",
+					Text = "What...?",
+					Type = "CloseCutscene",
 					ExecuteScenarioEvent = "CashierAnger",
 				},
 			},

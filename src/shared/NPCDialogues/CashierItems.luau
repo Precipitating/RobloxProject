@@ -174,7 +174,7 @@ return {
 					NextId = "FakePrice",
 				},
 				{
-					Text = "Whatever, here you go.<br/>You're taking ages...",
+					Text = "Whatever, here you go.<br/>This is taking too long...",
 					Type = "NextMessage",
 					NextId = "Scammed",
 				},
@@ -187,7 +187,7 @@ return {
 			Dialogue = "You no like?<br/>YOU NO BUY!",
 			Responses = {
 				{
-					Text = "Yeah i'm paying £0.<br/> Thanks & bye",
+					Text = "Yeah i'm stealing this.<br/> Toodle-Loo!",
 					Type = "Close",
 					ExecuteScenarioEvent = "CashierShopLift",
 				},
@@ -201,10 +201,10 @@ return {
 		Scammed = {
 			Name = "Shayden",
 			Portrait = "rbxassetid://5842977421",
-			Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>",
+			Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>, heh.",
 			Responses = {
 				{
-					Text = "(Why does he have a smug face? )",
+					Text = "(Why does he have a smug face?)",
 					Type = "Close",
 					ExecuteScenarioEvent = "CashierScammed",
 				},
