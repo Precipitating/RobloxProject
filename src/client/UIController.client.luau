@@ -48,8 +48,6 @@ local function typeText(text)
 	btn2.Text = ""
 	dialogueText.Text = ""
 
-	print(text)
-
 	local ttsSuccess = textToSpeech.Speak(text)
 	local charDelay = 0.05
 	local ttsHandle = textToSpeech.GetHandle()

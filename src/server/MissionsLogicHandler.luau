@@ -4,6 +4,7 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -245,6 +246,7 @@ end
 
 MissionEventHandlers["CashierAnger"] = function(player)
 	print("Cashier Anger event")
+	CashierModule.Init(player)
 end
 
 return MissionEventHandlers
