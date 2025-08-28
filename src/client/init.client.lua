@@ -1,3 +1,4 @@
+local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local player = game.Players.LocalPlayer
@@ -199,6 +200,12 @@ end)
 
 GeneralRemotes.DisconnectGUI.OnClientEvent:Connect(function(name)
 	InitializeGUIModule.DisconnectAll(name)
+end)
+
+GeneralRemotes.Cashier.EnableButton.OnClientEvent:Connect(function(shouldEnable)
+	local submitButton = CollectionService:GetTagged("CashierSubmitButton")[1]
+	submitButton.Active = shouldEnable
+	submitButton.Interactable = shouldEnable
 end)
 
 -- set player's collision group

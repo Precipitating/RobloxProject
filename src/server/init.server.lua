@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local HelperFunctions = require(script.HelperFunctions)
+local CashierModule = require(script.NPCs.Cashier.CashierModule)
 local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
 local TShirtChecker = require(script.NPCs.Glitcher.TShirtChecker)
 local NPCModule = require(script.NPCs.NPCModule)
@@ -68,4 +69,11 @@ end)
 
 GeneralRemotes.GlitcherMission.SubmitBombTimeReduction.OnServerEvent:Connect(function(player, reductionVal)
 	BosnianRoulette.ReduceBombTime(reductionVal)
+end)
+
+GeneralRemotes.Cashier.CheckPrice.OnServerInvoke = function(_)
+	return CashierModule.CheckPrice()
+end
+GeneralRemotes.Cashier.NextCustomer.OnServerEvent:Connect(function(player, currentTime)
+	CashierModule.NextCustomer(player, currentTime)
 end)

@@ -1,9 +1,13 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local TweenService = game:GetService("TweenService")
+local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local ItemsList = {}
 local CashierModule = {}
+local currentShoppingList = nil
 
 local function CameraToCashier(player)
 	local camPos = workspace.Shop.Cashier.CameraPos
@@ -33,6 +37,21 @@ local function FakeExitRoom(player)
 	hrp.CFrame = hiddenPos.CFrame
 end
 
+function CashierModule.NPCFakeExit(player, customer)
+	local humanoid = customer:FindFirstChild("Humanoid")
+	local hrp = customer:FindFirstChild("HumanoidRootPart")
+	local exitPos = workspace.Shop.SpawnLoc
+	local spawnPos = workspace:FindFirstChild("Shop"):FindFirstChild("CustomerSpawnPos")
+	if not spawnPos then
+		error("Customer spawn position ref not found!")
+	end
+
+	humanoid:MoveTo(exitPos.Position)
+	humanoid.MoveToFinished:Wait()
+	GeneralRemotes.PlaySound:InvokeClient(player, "OpenDoor")
+	hrp.CFrame = spawnPos.CFrame
+end
+
 function CashierModule.Init(player)
 	local hrp = player.Character.HumanoidRootPart
 	hrp.CFrame = workspace.Shop.CashierModeInitialPos.CFrame
@@ -56,9 +75,102 @@ function CashierModule.Init(player)
 		local price = obj:FindFirstChild("Price")
 		local quantity = obj:FindFirstChild("Quantity")
 		if price and quantity then
-			table.insert(ItemsList, { obj.Name, price.Value, quantity.Value })
+			table.insert(ItemsList, {
+				Name = obj.Name,
+				Price = price.Value,
+				Quantity = quantity.Value,
+			})
 		end
 	end
+end
+
+local function GetRandomItems()
+	local itemsList = {}
+	for _ = 1, math.random(10) do
+		local randomIdx = math.random(1, #ItemsList)
+		table.insert(itemsList, ItemsList[randomIdx])
+	end
+
+	currentShoppingList = itemsList
+end
+
+function CashierModule.CheckPrice()
+	local total = 0
+	if #currentShoppingList > 0 then
+		for _, product in ipairs(currentShoppingList) do
+			total = total + product.Price
+		end
+		return total
+		--return string.format("%.2f", total)
+	else
+		return nil
+	end
+end
+
+function CashierModule.Complete(player)
+	print("Complete!")
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+end
+
+function CashierModule.NextCustomerNPC(customer)
+	local humanoid = customer:FindFirstChild("Humanoid")
+	local hrp = customer:FindFirstChild("HumanoidRootPart")
+
+	-- move to cashier point
+	local cashierPosition = workspace.Shop:FindFirstChild("CashierModeInitialPos")
+	humanoid:MoveTo(cashierPosition.Position)
+	humanoid.MoveToFinished:Wait()
+	task.wait(0.5)
+	-- look towards cashier
+	local goalCFrame = CFrame.new(cashierPosition.Position, cashierPosition.Position + Vector3.new(0, 0, -1))
+	local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(hrp, tweenInfo, { CFrame = goalCFrame })
+	tween:Play()
+	tween.Completed:Wait()
+end
+
+function CashierModule.NextCustomer(player, currentTime)
+	GetRandomItems()
+	local itemListLabel = CollectionService:GetTagged("CashierItemsLabel")[1]
+	local itemListPriceLabel = CollectionService:GetTagged("CashierItemsPriceLabel")[1]
+	local cardSkimmerLabel = CollectionService:GetTagged("CashierCardSkimmer")[1]
+
+	if currentTime <= 0 then
+		CashierModule.Complete(player)
+		GeneralRemotes.DisconnectGUI:FireClient(player, "Cashier")
+	end
+
+	if not itemListLabel or not itemListPriceLabel then
+		error("Cashier item/price label ref not found!")
+	end
+
+	local customer = workspace:FindFirstChild("Customer")
+	if not customer then
+		customer = HelperFunctions.SpawnModelAtPosition("NPCs", "Cashier", "Customer", nil)
+	else
+		CashierModule.NPCFakeExit(player, customer)
+	end
+	CashierModule.NextCustomerNPC(customer)
+
+	local formattedItemList = ""
+	local formattedPriceList = ""
+	for _, product in ipairs(currentShoppingList) do
+		formattedItemList ..= `{product.Name} x{product.Quantity}<br/>`
+		formattedPriceList ..= `£{string.format("%.2f<br/>", product.Price)}`
+	end
+
+	itemListLabel.Text = formattedItemList
+	itemListPriceLabel.Text = formattedPriceList
+
+	-- 50/50 chance
+	cardSkimmerLabel.Visible = math.random() < 0.5
+	GeneralRemotes.Cashier.EnableButton:FireClient(player, true)
+end
+
+function CashierModule.Start(player)
+	local timeLeft = CollectionService:GetTagged("CashierTimeLeft")[1]
+	GeneralRemotes.InitializeGUI:FireClient(player, "Cashier")
+	CashierModule.NextCustomer(player, tonumber(timeLeft.Text))
 end
 
 return CashierModule
