@@ -202,10 +202,21 @@ GeneralRemotes.DisconnectGUI.OnClientEvent:Connect(function(name)
 	InitializeGUIModule.DisconnectAll(name)
 end)
 
-GeneralRemotes.Cashier.EnableButton.OnClientEvent:Connect(function(shouldEnable)
+GeneralRemotes.Cashier.UpdateScreen.OnClientEvent:Connect(function(itemList, priceList)
 	local submitButton = CollectionService:GetTagged("CashierSubmitButton")[1]
-	submitButton.Active = shouldEnable
-	submitButton.Interactable = shouldEnable
+	local cardSkimmerLabel = CollectionService:GetTagged("CashierCardSkimmer")[1]
+	local itemListLabel = CollectionService:GetTagged("CashierItemsLabel")[1]
+	local itemListPriceLabel = CollectionService:GetTagged("CashierItemsPriceLabel")[1]
+	if not itemListLabel or not itemListPriceLabel then
+		error("Cashier item/price label ref not found!")
+	end
+
+	itemListLabel.Text = itemList
+	itemListPriceLabel.Text = priceList
+
+	cardSkimmerLabel.Visible = math.random() < 0.5
+	submitButton.Active = true
+	submitButton.Interactable = true
 end)
 
 -- set player's collision group
