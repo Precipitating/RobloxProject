@@ -247,6 +247,7 @@ end
 MissionEventHandlers["CashierAnger"] = function(player)
 	print("Cashier Anger event")
 	CashierModule.Init(player)
+	CashierModule.Start(player)
 end
 
 return MissionEventHandlers

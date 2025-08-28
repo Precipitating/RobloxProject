@@ -1,3 +1,4 @@
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
@@ -121,4 +122,68 @@ InitializeGUIModule["Terminal"] = function()
 	end
 end
 
+InitializeGUIModule["Cashier"] = function()
+	local submitButton = CollectionService:GetTagged("CashierSubmitButton")[1]
+	local priceInput = CollectionService:GetTagged("CashierEnterPrice")[1]
+	local timeLeft = CollectionService:GetTagged("CashierTimeLeft")[1]
+	local cardSkimmerText = CollectionService:GetTagged("CashierCardSkimmer")[1]
+	local canClick = true
+
+	local function fail()
+		SoundModule.PlaySound("Error")
+		local textToNum = tonumber(timeLeft.Text)
+		local increased = math.max(0, textToNum + 10)
+		timeLeft.Text = tostring(increased)
+		GeneralRemotes.Cashier.NextCustomer:FireServer(increased)
+	end
+
+	local function correct()
+		local textToNum = tonumber(timeLeft.Text) or 0
+		local decreaseAmount = cardSkimmerText.Visible and math.max(5, math.floor(textToNum / 2)) or 5
+
+		SoundModule.PlaySound("Correct")
+
+		local decreased = math.max(0, textToNum - decreaseAmount)
+
+		timeLeft.Text = tostring(decreased)
+		GeneralRemotes.Cashier.NextCustomer:FireServer(decreased)
+	end
+
+	trackConnect("Cashier", submitButton.MouseButton1Click, function()
+		if not canClick then
+			return
+		end
+		submitButton.Active = false
+		submitButton.Interactable = false
+		canClick = false
+
+		local correctPrice = GeneralRemotes.Cashier.CheckPrice:InvokeServer()
+		if not correctPrice then
+			fail()
+		end
+
+		if correctPrice then
+			local userInputToNum = tonumber(priceInput.Text)
+			print(`Actual price: {correctPrice}`)
+			-- ensure user input is a valid number
+			if not userInputToNum then
+				fail()
+			end
+
+			if cardSkimmerText.Visible then
+				if userInputToNum == (correctPrice * 2) then
+					correct()
+				else
+					fail()
+				end
+			elseif userInputToNum == correctPrice then
+				correct()
+			else
+				fail()
+			end
+		end
+		task.wait(3)
+		canClick = true
+	end)
+end
 return InitializeGUIModule
