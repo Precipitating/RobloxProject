@@ -131,17 +131,10 @@ end
 
 function CashierModule.NextCustomer(player, currentTime)
 	GetRandomItems()
-	local itemListLabel = CollectionService:GetTagged("CashierItemsLabel")[1]
-	local itemListPriceLabel = CollectionService:GetTagged("CashierItemsPriceLabel")[1]
-	local cardSkimmerLabel = CollectionService:GetTagged("CashierCardSkimmer")[1]
 
 	if currentTime <= 0 then
 		CashierModule.Complete(player)
 		GeneralRemotes.DisconnectGUI:FireClient(player, "Cashier")
-	end
-
-	if not itemListLabel or not itemListPriceLabel then
-		error("Cashier item/price label ref not found!")
 	end
 
 	local customer = workspace:FindFirstChild("Customer")
@@ -159,12 +152,7 @@ function CashierModule.NextCustomer(player, currentTime)
 		formattedPriceList ..= `£{string.format("%.2f<br/>", product.Price)}`
 	end
 
-	itemListLabel.Text = formattedItemList
-	itemListPriceLabel.Text = formattedPriceList
-
-	-- 50/50 chance
-	cardSkimmerLabel.Visible = math.random() < 0.5
-	GeneralRemotes.Cashier.EnableButton:FireClient(player, true)
+	GeneralRemotes.Cashier.UpdateScreen:FireClient(player, formattedItemList, formattedPriceList)
 end
 
 function CashierModule.Start(player)
