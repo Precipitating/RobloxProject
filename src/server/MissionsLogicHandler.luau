@@ -250,4 +250,8 @@ MissionEventHandlers["CashierAnger"] = function(player)
 	CashierModule.Start(player)
 end
 
+MissionEventHandlers["CashierAngerEnd"] = function(player)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+end
+
 return MissionEventHandlers
