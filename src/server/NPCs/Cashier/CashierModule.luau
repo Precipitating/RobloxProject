@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
+local NPCOutfit = require(ServerScriptService.Server.NPCs.NPCOutfit)
 local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local ItemsList = {}
@@ -26,15 +27,18 @@ local function FakeExitRoom(player)
 	local hiddenPos = workspace.Shop.HiddenPos
 	local ttsHandle = TextToSpeech.GetHandle()
 
-	TextToSpeech.Speak(
+	local speech = TextToSpeech.Speak(
 		"Thanks for your body, i'll use it well. The body swap will only work for 1 hour, so... heh heh... SEE YA, WANNA BE YAH!"
 	)
-	ttsHandle.Ended:Wait()
+	if speech then
+		ttsHandle.Ended:Wait()
+	end
 	task.wait(2)
 	humanoid:MoveTo(exitPos.Position)
 	task.wait(1)
 	GeneralRemotes.PlaySound:InvokeClient(player, "OpenDoor")
 	hrp.CFrame = hiddenPos.CFrame
+	GeneralRemotes.PlayTheme:FireClient(player, "CashierTheme")
 end
 
 function CashierModule.NPCFakeExit(player, customer)
@@ -108,13 +112,24 @@ function CashierModule.CheckPrice()
 end
 
 function CashierModule.Complete(player)
-	print("Complete!")
+	print("Complete! Spawning asylum...")
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	local asylum = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Asylum", nil)
+	task.wait(2)
+	player.Character:FindFirstChild("HumanoidRootPart").CFrame = asylum:FindFirstChild("SpawnPos").CFrame
+	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
+	GeneralRemotes.PlayTheme:FireClient(player, "SchizoTheme")
+	GeneralRemotes.BlackFade:FireClient(player, 2, 1)
+	GeneralRemotes.EnableControls:FireClient(player, "UI")
 end
 
 function CashierModule.NextCustomerNPC(customer)
 	local humanoid = customer:FindFirstChild("Humanoid")
 	local hrp = customer:FindFirstChild("HumanoidRootPart")
+
+	-- change outfit
+	NPCOutfit.RemoveOutfit(customer)
+	NPCOutfit.ApplyRandomOutfit(customer)
 
 	-- move to cashier point
 	local cashierPosition = workspace.Shop:FindFirstChild("CashierModeInitialPos")
