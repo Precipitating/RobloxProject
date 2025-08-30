@@ -23,7 +23,7 @@ local function GetFakeTotalDialogue()
 		total += info.Price * info.Quantity
 	end
 
-	local text = `The total is: £{string.format("%.2f", total * 2)} apparently.`
+	local text = `The total is: {string.format("%.2f", total * 2)} pounds apparently.`
 	return text
 end
 
@@ -188,29 +188,54 @@ return {
 			Responses = {
 				{
 					Text = "Yeah i'm stealing this.<br/> Toodle-Loo!",
-					Type = "Close",
-					ExecuteScenarioEvent = "CashierShopLift",
+					Type = "NextMessage",
+					NextId = "Steal",
 				},
 				{
-					Text = "Yeah not buying this BYE!",
+					Text = "Yeah not buying this, BYE!",
 					Type = "Close",
 				},
 			},
 		},
 
-		Scammed = {
+		Steal = {
 			Name = "Shayden",
-			Portrait = "rbxassetid://5842977421",
-			Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>, heh.",
+			Portrait = "rbxassetid://14975338783",
+			Dialogue = "I'm just an underpaid cashier - do what you want.<br/>I believe the bad karma will have to be paid back someday...<br/>Watch your back <b>PAL.</b>",
 			Responses = {
 				{
-					Text = "(Why does he have a smug face?)",
+					Text = "Shiver me timbers!<br/>Just put the groceries in the bag bro.",
 					Type = "Close",
+					GiveTool = "GroceryBag",
+					ExecuteScenarioEvent = "CashierShopLift",
+					SetDialogueFile = { { CashierNameTag = "CashierNoTalk" } },
+				},
+				{
+					Text = "I'm atheist <b>BUD.</b><br/>NOTHING WILL HAPPEN.",
+					Type = "Close",
+					GiveTool = "GroceryBag",
+					ExecuteScenarioEvent = "CashierShopLift",
+					SetDialogueFile = { { CashierNameTag = "CashierNoTalk" } },
+				},
+			},
+		},
+
+		Scammed = {
+			Name = "Shayden W",
+			Portrait = "rbxassetid://5842977421",
+			Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>, heh.",
+			PlaySound = "Contactless",
+			Responses = {
+				{
+					Text = "What are you looking so smug about?",
+					Type = "Close",
+					GiveTool = "GroceryBag",
 					ExecuteScenarioEvent = "CashierScammed",
 				},
 				{
 					Text = "...Sure.",
 					Type = "Close",
+					GiveTool = "GroceryBag",
 					ExecuteScenarioEvent = "CashierScammed",
 				},
 			},

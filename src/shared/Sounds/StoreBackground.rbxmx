@@ -2,14 +2,14 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBX69AF8E03FDFE4146A5DFC804AFBB5BAB">
+	<Item class="Sound" referent="RBXF781B245F96B4A689F5B14032F4996EB">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
 			<bool name="IsMutedForCapture">false</bool>
 			<NumberRange name="LoopRegion">0 60000 </NumberRange>
-			<bool name="Looped">false</bool>
+			<bool name="Looped">true</bool>
 			<string name="Name">StoreBackground</string>
 			<bool name="PlayOnRemove">false</bool>
 			<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
@@ -21,10 +21,10 @@
 			<token name="RollOffMode">0</token>
 			<Ref name="SoundGroup">null</Ref>
 			<Content name="SoundId"><url>rbxassetid://9112787259</url></Content>
-			<int64 name="SourceAssetId">9112787259</int64>
+			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<double name="TimePosition">0</double>
-			<float name="Volume">0.3</float>
+			<float name="Volume">0.300000012</float>
 		</Properties>
 	</Item>
 </roblox>
