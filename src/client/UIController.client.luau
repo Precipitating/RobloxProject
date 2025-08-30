@@ -79,7 +79,7 @@ local function typeText(text)
 	end
 
 	-- prevent TTS playing issues if typewriter is too fast
-	while ttsHandle.IsPlaying do
+	while ttsHandle.IsPlaying and ttsSuccess do
 		task.wait()
 	end
 	btn1.Interactable = true

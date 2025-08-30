@@ -80,7 +80,7 @@ return {
 		Four = {
 			Name = "Asylum Doctor",
 			Portrait = "rbxassetid://8991722426",
-			Dialogue = "You expect me to believe that depressed cashier from <i>Rebelism Essentials</i> is responsible for your actions?<br/>Do me a favour and stay contained in there - <b>FOREVER</b>",
+			Dialogue = "You expect me to believe that the depressed cashier from <i>Rebelism Essentials</i> is responsible for your actions?<br/>Do me a favour and stay contained in there - <b>FOREVER</b>",
 			Responses = {
 				{
 					Text = "WAIT PLEASE SIR... SIR?.... SIR!",
@@ -98,7 +98,7 @@ return {
 		End = {
 			Name = "Asylum Doctor",
 			Portrait = "rbxassetid://11163990252",
-			Dialogue = "Goodbye forever, you ruthless beast!",
+			Dialogue = "Stay locked in there forever, SCP 8008!",
 			Responses = {
 				{
 					Text = "SHAAAAYDEEEEEEEEEENNNNNNN!!!",

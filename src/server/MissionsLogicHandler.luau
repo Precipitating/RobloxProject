@@ -4,7 +4,9 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
+local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -238,10 +240,14 @@ end
 -- Cashier
 MissionEventHandlers["CashierShopLift"] = function(player)
 	print("Cashier shoplift event")
+	GroceryBagModule.UpdateGroceries()
+	ShopBasketModule.ClearBasket()
 end
 
 MissionEventHandlers["CashierScammed"] = function(player)
 	print("Cashier scammed event")
+	GroceryBagModule.UpdateGroceries()
+	ShopBasketModule.ClearBasket()
 end
 
 MissionEventHandlers["CashierAnger"] = function(player)
@@ -251,7 +257,8 @@ MissionEventHandlers["CashierAnger"] = function(player)
 end
 
 MissionEventHandlers["CashierAngerEnd"] = function(player)
-	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	GeneralRemotes.PlayCutscene:FireClient(player, "CashierAngerEnd")
+	BadgeHandler.awardBadge(player, 352477117785792)
 end
 
 return MissionEventHandlers

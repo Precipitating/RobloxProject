@@ -1,16 +1,4 @@
-<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
-	<Meta name="ExplicitAutoJoints">true</Meta>
-	<External>null</External>
-	<External>nil</External>
-	<Item class="ModuleScript" referent="RBX5EC886C0C32749FD909035A14EB70E91">
-		<Properties>
-			<BinaryString name="AttributesSerialize"></BinaryString>
-			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-			<bool name="DefinesCapabilities">false</bool>
-			<Content name="LinkedSource"><null></null></Content>
-			<string name="Name">CutsceneClientHandler</string>
-			<string name="ScriptGuid">{5061BE4B-5AA4-49A0-9465-F28743A5CDC1}</string>
-			<ProtectedString name="Source"><![CDATA[-- Services
+-- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
@@ -38,6 +26,7 @@ local Destroy = true
 local NoYield = false
 local SafeMode = true
 
+local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local Cutscene = require(CutsceneModule)
 local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls)
 local SoundFolder = ReplicatedStorage.Shared.Sounds
@@ -45,7 +34,8 @@ local SoundFolder = ReplicatedStorage.Shared.Sounds
 local Player = Players.LocalPlayer
 local ProtectTheCharacterWhilePlaying = true
 local CharacterProtector = script:FindFirstChild("CharacterProtector")
-local Music = script:FindFirstChild("Music")
+local Music = Instance.new("Sound")
+Music.Parent = script
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
 local SoundModule = require(script.Parent.Parent.SoundModule)
@@ -177,8 +167,6 @@ CutsceneClientHandler.KeyframeHandler = {
 			Music:Play()
 			task.wait(1)
 			SoundModule.PlaySound("Bruh")
-			
-
 		end
 	end,
 
@@ -191,10 +179,18 @@ CutsceneClientHandler.KeyframeHandler = {
 			task.wait(8)
 			SoundModule.PlaySound("SoGood")
 		end
-
-
 	end,
 
+	CashierAngerEnd = function(instruction, nextInstruction, X)
+		if instruction == 6 then
+			task.wait(4)
+			SoundModule.PlaySound("CashierCustomerTroll")
+		elseif instruction == 7 then
+			TextToSpeech.UpdateVoiceConfig(5, -12, 1, 3)
+			task.wait(6)
+			TextToSpeech.Speak("What did you just say....")
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -213,23 +209,22 @@ CutsceneClientHandler.CutsceneFinishedHandler = {
 }
 
 CutsceneClientHandler.Initialize = {
-	
+
 	GuestMissionComplete = function()
 		Music.SoundId = "rbxassetid://108841455819405"
 		Music.Volume = 0.5
 	end,
-	
+
 	GuestPwn = function()
 		Music.SoundId = "rbxassetid://6477407899"
 		Music.Volume = 0.5
-
 	end,
-	
+
 	PsychoMantisFailLie = function()
 		Music.SoundId = "rbxassetid://9119386571"
 		Music.Volume = 0.5
 	end,
-	
+
 	PsychoMantisFailTruth = function()
 		Music.SoundId = "rbxassetid://9119386571"
 		Music.Volume = 0.5
@@ -256,7 +251,6 @@ CutsceneClientHandler.Initialize = {
 		Music.Volume = 0.5
 	end,
 
-	
 	SafechatterFailedObby = function()
 		Music.SoundId = "rbxassetid://122447840112621"
 		Music.Volume = 0.5
@@ -273,10 +267,14 @@ CutsceneClientHandler.Initialize = {
 	end,
 
 	GlitcherRealVIP = function()
-	Music.SoundId = "rbxassetid://1836157888"
-	Music.Volume = 0.3
+		Music.SoundId = "rbxassetid://1836157888"
+		Music.Volume = 0.3
 	end,
 
+	CashierAngerEnd = function()
+		Music.SoundId = "rbxassetid://9048856967"
+		Music.Volume = 0.3
+	end,
 }
 
 -- Load a cutscene by name
@@ -291,7 +289,6 @@ function CutsceneClientHandler.LoadCutscene(name)
 		CutsceneClientHandler.Initialize[name]()
 	end
 end
-
 
 -- Play a cutscene with optional per-keyframe function
 function CutsceneClientHandler.Play(name)
@@ -334,45 +331,3 @@ function CutsceneClientHandler.Play(name)
 end
 
 return CutsceneClientHandler
-]]></ProtectedString>
-			<int64 name="SourceAssetId">-1</int64>
-			<BinaryString name="Tags"></BinaryString>
-		</Properties>
-		<Item class="Sound" referent="RBXFBAB4830835049C09E8F6AC63E5E79E4">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-				<bool name="DefinesCapabilities">false</bool>
-				<bool name="IsMutedForCapture">false</bool>
-				<NumberRange name="LoopRegion">0 60000 </NumberRange>
-				<bool name="Looped">true</bool>
-				<string name="Name">Music</string>
-				<bool name="PlayOnRemove">false</bool>
-				<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
-				<bool name="PlaybackRegionsEnabled">false</bool>
-				<float name="PlaybackSpeed">1</float>
-				<bool name="Playing">false</bool>
-				<float name="RollOffMaxDistance">10000</float>
-				<float name="RollOffMinDistance">10</float>
-				<token name="RollOffMode">3</token>
-				<Ref name="SoundGroup">null</Ref>
-				<Content name="SoundId"><null></null></Content>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<double name="TimePosition">0</double>
-				<float name="Volume">0.100000001</float>
-			</Properties>
-		</Item>
-		<Item class="ForceField" referent="RBX361A2612098946F290FA16692DC23F6A">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-				<bool name="DefinesCapabilities">false</bool>
-				<string name="Name">CharacterProtector</string>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-				<bool name="Visible">false</bool>
-			</Properties>
-		</Item>
-	</Item>
-</roblox>
