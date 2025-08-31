@@ -10,6 +10,7 @@ local SoundModule = require(script:WaitForChild("SoundModule"))
 local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
 local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChild("CutsceneClientHandler"))
 local InitializeGUIModule = require(script.InitializeGUI.InitializeGUIModule)
+local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
 -- disable respawn button
 local coreCall
 do
@@ -218,6 +219,13 @@ GeneralRemotes.Cashier.UpdateScreen.OnClientEvent:Connect(function(itemList, pri
 	submitButton.Active = true
 	submitButton.Interactable = true
 end)
+GeneralRemotes.Cashier.ClearBasket.OnClientEvent:Connect(function()
+	ShopBasketModule.ClearBasket()
+end)
+
+GeneralRemotes.Cashier.GetClientBasketItems.OnClientInvoke = function()
+	return ShopBasketModule.GetItemsInBasket()
+end
 
 -- set player's collision group
 for _, descendant in pairs(Character:GetDescendants()) do

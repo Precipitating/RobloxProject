@@ -6,14 +6,23 @@ local Events = ReplicatedStorage.Shared.Missions.Events
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local hasItemsInBasket = false
 
-local function getEquippedTool()
+local function GetShopItems()
+	local shopItems = {}
+	-- check equipped first
 	for _, item in pairs(Character:GetChildren()) do
 		if item:IsA("Tool") and CollectionService:HasTag(item, "ShopItem") then
-			return item
+			table.insert(shopItems, item)
 		end
 	end
 
-	return nil
+	-- then backpack
+	for _, item in pairs(Player.Backpack:GetChildren()) do
+		if item:IsA("Tool") and CollectionService:HasTag(item, "ShopItem") then
+			table.insert(shopItems, item)
+		end
+	end
+
+	return shopItems
 end
 
 game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, _)
@@ -21,27 +30,23 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 	local ShopItemGiver = CollectionService:HasTag(prompt.Parent, "ShopItemGiver")
 
 	if ShopBasket then
-		local equippedTool = getEquippedTool()
+		local shopItems = GetShopItems()
 
-		if not equippedTool then
+		if next(shopItems) == nil then
+			warn("No shop items in backpack.")
 			return
 		end
 
-		ShopBasketModule.AddItem(
-			equippedTool.Name,
-			equippedTool:WaitForChild("Price").Value,
-			equippedTool:WaitForChild("Quantity").Value
-		)
-
-		if not hasItemsInBasket then
-			Events.SetDialogueFileEvent:FireServer({ { CashierNameTag = "CashierItems" } })
-			hasItemsInBasket = true
+		for _, item in ipairs(shopItems) do
+			ShopBasketModule.AddItem(item.Name, item:WaitForChild("Price").Value, item:WaitForChild("Quantity").Value)
 		end
+
+		Events.SetDialogueFileEvent:FireServer({ { CashierNameTag = "CashierItems" } })
 	elseif ShopItemGiver then
 		local itemName = prompt:FindFirstChild("ItemName")
 
 		if itemName then
-			Events.GiveToolEvent:FireServer(itemName.Value)
+			Events.GiveToolEvent:FireServer({ itemName.Value, false })
 			print(`Item given: {itemName}`)
 		end
 	end

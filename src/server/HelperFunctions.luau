@@ -17,23 +17,29 @@ end
 -- goes thru backpack each iteration incase you have a duplicate (somehow)
 -- also checks player model as they may have equipped it already
 
-function HelperFunctions.RemoveTools(player, toolsStringList)
-	for _, toolName in pairs(toolsStringList) do
-		-- check backpack
-		for _, item in pairs(player.Backpack:GetChildren()) do
-			if item:IsA("Tool") and item.Name == toolName then
-				item:Destroy()
-			end
-		end
+function HelperFunctions.RemoveTools(player, toolsStringList, tag)
+	local function removeFromContainer(container)
+		for _, item in pairs(container:GetChildren()) do
+			if item:IsA("Tool") then
+				if tag and CollectionService:HasTag(item, tag) then
+					item:Destroy()
+				end
 
-		-- check character (equipped tools)
-		if player.Character then
-			for _, item in pairs(player.Character:GetChildren()) do
-				if item:IsA("Tool") and item.Name == toolName then
+				if not tag and toolsStringList and table.find(toolsStringList, item.Name) then
 					item:Destroy()
 				end
 			end
 		end
+	end
+
+	-- Remove from backpack
+	if player.Backpack then
+		removeFromContainer(player.Backpack)
+	end
+
+	-- Remove from character
+	if player.Character then
+		removeFromContainer(player.Character)
 	end
 end
 
@@ -60,9 +66,14 @@ function HelperFunctions.SetNPCDialogueFile(fromToTable)
 
 		for _, inst in ipairs(tagged) do
 			if inst:IsA("StringValue") then
-				inst.Value = newName
-				print(`Successfully set {dialogueRef} value to {newName}`)
-				success = true
+				if inst.Value ~= newName then
+					inst.Value = newName
+					print(`Successfully set {dialogueRef} value to {newName}`)
+					success = true
+				else
+					print(`Already set to {newName}`)
+					success = true
+				end
 			end
 		end
 
@@ -119,16 +130,22 @@ function HelperFunctions.SpawnMissionPositionedModels(storageFolderName, folderN
 end
 
 -- clone a tool from ServerStorage to player backpack
-function HelperFunctions.GiveTool(player, name)
-	local tool = ServerTools:FindFirstChild(name)
+-- data[1] = toolName
+-- data[2] = only one allowed
+function HelperFunctions.GiveTool(player, data)
+	if data[2] ~= nil and data[2] == true then
+		HelperFunctions.RemoveTools(player, { data[1] }, nil)
+		print("ONLY ONE TOOL OF THIS TYPE ALLOWED IN BP")
+	end
+	local tool = ServerTools:FindFirstChild(data[1])
 	if not tool then
-		error("Tool not found:", name)
+		error("Tool not found:", data[1])
 		return
 	end
 	local clone = tool:Clone()
 	clone.Parent = player.Backpack
 
-	print(name .. " should be in your backpack")
+	print(data[1] .. " should be in your backpack")
 end
 
 -- set a tagged mesh visible/invisible with collision/no collison

@@ -124,13 +124,13 @@ return {
 				{
 					Text = "Really bro?<br/>MORE INFO PLZ",
 					Type = "NextMessage",
-					GiveTool = "Terminal",
+					GiveTool = { "Terminal", true },
 					NextId = "Inside",
 				},
 				{
 					Text = "Whats inside?",
 					Type = "NextMessage",
-					GiveTool = "Terminal",
+					GiveTool = { "Terminal", true },
 					NextId = "Inside",
 				},
 			},

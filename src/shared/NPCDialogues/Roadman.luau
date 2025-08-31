@@ -85,7 +85,7 @@ return {
 					Text = "Sir yes sir!",
 					Type = "Close",
 					UnlockMission = "StealPhone",
-					GiveTool = "Skeng",
+					GiveTool = { "Skeng", true },
 					SetMeshVisibility = { { RoadmanKnife = false } },
 					SetDialogueFile = { { RoadmanNameTag = "RoadmanAccepted" } },
 				},
