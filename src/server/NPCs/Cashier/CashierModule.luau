@@ -171,6 +171,7 @@ function CashierModule.NextCustomer(player, currentTime)
 end
 
 function CashierModule.Start(player)
+	print("Cashier mode start!")
 	local timeLeft = CollectionService:GetTagged("CashierTimeLeft")[1]
 	GeneralRemotes.InitializeGUI:FireClient(player, "Cashier")
 	CashierModule.NextCustomer(player, tonumber(timeLeft.Text))

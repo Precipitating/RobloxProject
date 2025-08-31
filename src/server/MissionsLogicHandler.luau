@@ -240,14 +240,14 @@ end
 -- Cashier
 MissionEventHandlers["CashierShopLift"] = function(player)
 	print("Cashier shoplift event")
-	GroceryBagModule.UpdateGroceries()
-	ShopBasketModule.ClearBasket()
+	GroceryBagModule.UpdateGroceries(player)
+	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
 end
 
 MissionEventHandlers["CashierScammed"] = function(player)
 	print("Cashier scammed event")
-	GroceryBagModule.UpdateGroceries()
-	ShopBasketModule.ClearBasket()
+	GroceryBagModule.UpdateGroceries(player)
+	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
 end
 
 MissionEventHandlers["CashierAnger"] = function(player)

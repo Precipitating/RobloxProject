@@ -55,11 +55,13 @@ ReplicatedStorage.Missions.Events.ProgressMissionEvent.OnServerEvent:Connect(fun
 	end
 end)
 
-ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(player, toolName)
-	print(`Server received GiveToolEvent, attempting to give you the tool {toolName} `)
-	if typeof(toolName) == "string" then
-		HelperFunctions.GiveTool(player, toolName)
-		GeneralRemotes.InitializeGUI:FireClient(player, toolName)
+ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(player, data)
+	print(`Server received GiveToolEvent, attempting to give you the tool {data[1]} `)
+	if typeof(data) == "table" then
+		HelperFunctions.GiveTool(player, data)
+
+		-- if tool uses GUI
+		GeneralRemotes.InitializeGUI:FireClient(player, data[1])
 	end
 end)
 
