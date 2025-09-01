@@ -261,4 +261,10 @@ MissionEventHandlers["CashierAngerEnd"] = function(player)
 	BadgeHandler.awardBadge(player, 352477117785792)
 end
 
+MissionEventHandlers["CashierScammedFinished"] = function(player)
+	HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Warehouse", nil)
+	GeneralRemotes.PlayCutscene:FireClient(player, "CashierScammed")
+	BadgeHandler.awardBadge(player, 2453227885155938)
+end
+
 return MissionEventHandlers

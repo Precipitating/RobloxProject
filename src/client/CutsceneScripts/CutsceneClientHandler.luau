@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
+local TweenService = game:GetService("TweenService")
 
 local CodesOtaku = ReplicatedStorage.Shared.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
@@ -191,6 +192,78 @@ CutsceneClientHandler.KeyframeHandler = {
 			TextToSpeech.Speak("What did you just say....")
 		end
 	end,
+
+	CashierScammed = function(instruction, nextInstruction, X)
+		local player = Players.LocalPlayer.Character
+		local warehouse = workspace:WaitForChild("Warehouse")
+		local homeless = warehouse:WaitForChild("HomelessWarehouse")
+		if instruction == 1 then
+			task.wait(1)
+			player.Humanoid:MoveTo(warehouse:WaitForChild("PlayerMovePos").Position)
+		elseif instruction == 4 then
+			-- homeless move to door
+			task.wait(5)
+			local pos1 = warehouse:WaitForChild("MovePos1").Position
+			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos1)
+
+			-- open door
+			task.wait(3)
+			local door = warehouse:WaitForChild("Door")
+			local openPos = door:WaitForChild("OpenPos").CFrame
+			local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+			local tween = TweenService:Create(door, tweenInfo, { CFrame = openPos })
+			tween:Play()
+		elseif instruction == 5 then
+			task.wait(4)
+			local pos2 = warehouse:WaitForChild("MovePos2").Position
+			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos2)
+		elseif instruction == 6 then
+			local ttsHandle = TextToSpeech.GetHandle
+			task.wait(2)
+			local pos3 = warehouse:WaitForChild("MovePos3").Position
+			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos3)
+			task.wait(3)
+			local voices = {
+				Homeless = { 3, 1, 1, 1 },
+				Cashier = { 5, -12, 1, 1 },
+			}
+
+			local function Speak(who, text)
+				TextToSpeech.UpdateVoiceConfig(unpack(voices[who]))
+				if TextToSpeech.Speak(text) then
+					ttsHandle().Ended:Wait()
+				end
+			end
+
+			-- talk
+			Speak("Homeless", "Did you get it?")
+			Speak("Cashier", "Yeah, got the blox card details and doubled the victim's price as well.What a jackpot!")
+			Speak(
+				"Homeless",
+				"This homeless honeypot gimmick to get people to buy items is working spendidly, we're getting RICH baby!"
+			)
+			Speak(
+				"Cashier",
+				"Yeah. Even the fake slow machine tactic is making them willingly disregard obvious issues, meaning bling bling bling. GAH HAH HAH HAH HAAAAAH"
+			)
+			Speak(
+				"Homeless",
+				"Did you see what I told that donkey to buy? 10 Rebel colas ya know? Got greedy and threw in some random stuff. JEE-HEE-HEE-HEE-HAAAH"
+			)
+			Speak(
+				"Cashier",
+				"Why do you always ask for outrageous quantities Dan?, we just needed him to scan his card onto the skimmer. You're the reason we have so much stored rebel colas, man!"
+			)
+			Speak(
+				"Homeless",
+				"Nothing wrong with some free snacks after we dunk the victim of their cold, hard earned, Great British Pounds. Im I right Shayden?"
+			)
+			Speak("Cashier", "You're right bro, lets just say it was a two for one meal deal.GAH HAH HAH HAH HAAAAAH")
+		elseif instruction == 7 then
+			task.wait(60)
+			SoundModule.PlaySound("EvilLaugh")
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -273,6 +346,11 @@ CutsceneClientHandler.Initialize = {
 
 	CashierAngerEnd = function()
 		Music.SoundId = "rbxassetid://9048856967"
+		Music.Volume = 0.3
+	end,
+
+	CashierScammed = function()
+		Music.SoundId = "rbxassetid://1838969178"
 		Music.Volume = 0.3
 	end,
 }

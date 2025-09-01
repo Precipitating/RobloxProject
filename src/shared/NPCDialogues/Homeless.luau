@@ -219,15 +219,34 @@ return {
 		CorrectOne = {
 			Name = "Homeless Individual",
 			Portrait = "rbxassetid://102630924355734",
-			Dialogue = "Thank you so much benefactor.<br/>Thank you so much benefactor.<br/>Thank you so much benefactor.<br/>Thank you so much benefactor.<br/>Thank you so much benefactor.",
+			Dialogue = "Thank you so much benefactor.<br/>Thank you so much donor.<br/>Thank you so much patron.<br/>Thank you so much maecenas.<br/>Thank you so much.",
 			Responses = {
 				{
 					Text = "Alright calm down and enjoy.",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "CorrectTwo",
 				},
 				{
-					Text = "(Leave)",
-					Type = "Close",
+					Text = "...",
+					Type = "NextMessage",
+					NextId = "CorrectTwo",
+				},
+			},
+		},
+
+		CorrectTwo = {
+			Name = "Home.",
+			Portrait = "rbxassetid://17423337731",
+			Dialogue = "Thank you so much!<br/>I will leave you alone my friend.<br/>I will leave to share these items after you leave.<br/>Haha.<br/>Not enough space on this sidewalk haha.<br/>Sorry pavement haha.<br/>AHAHHAHAH.",
+			Responses = {
+				{
+					Text = "...Right... (leave)",
+					Type = "CloseCutscene",
+					ExecuteScenarioEvent = "",
+				},
+				{
+					Text = "...(leave)",
+					Type = "CloseCutscene",
 				},
 			},
 		},
