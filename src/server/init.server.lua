@@ -45,6 +45,10 @@ ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(pla
 	end
 end)
 
+ReplicatedStorage.Remotes.HumanoidMoveTo.OnServerEvent:Connect(function(_, targetHumanoid, targetPosition)
+	targetHumanoid:MoveTo(targetPosition)
+end)
+
 -- MODEL
 ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
 	function(_, storageFolderName, folderName, modelName, pos)
@@ -53,7 +57,7 @@ ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
 	end
 )
 
--- GLITCHER MISSION
+-- GLITCHER
 ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally.OnServerInvoke = function(_)
 	return TShirtChecker.HasGlitchedIn()
 end
@@ -72,6 +76,7 @@ GeneralRemotes.GlitcherMission.SubmitBombTimeReduction.OnServerEvent:Connect(fun
 	BosnianRoulette.ReduceBombTime(reductionVal)
 end)
 
+-- CASHIER
 GeneralRemotes.Cashier.CheckPrice.OnServerInvoke = function(_)
 	return CashierModule.CheckPrice()
 end
