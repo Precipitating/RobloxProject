@@ -242,11 +242,12 @@ return {
 				{
 					Text = "...Right... (leave)",
 					Type = "CloseCutscene",
-					ExecuteScenarioEvent = "",
+					ExecuteScenarioEvent = "CashierScammedFinished",
 				},
 				{
 					Text = "...(leave)",
 					Type = "CloseCutscene",
+					ExecuteScenarioEvent = "CashierScammedFinished",
 				},
 			},
 		},

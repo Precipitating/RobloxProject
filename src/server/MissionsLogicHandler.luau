@@ -242,6 +242,80 @@ MissionEventHandlers["CashierShopLift"] = function(player)
 	print("Cashier shoplift event")
 	GroceryBagModule.UpdateGroceries(player)
 	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
+	local character = player.Character
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	while true do
+		task.wait(math.random(5, 7))
+
+		-- spawn jacker 150 studs in front of player
+		--local spawnPos = hrp.Position + (hrp.CFrame.LookVector * 150)
+
+		local spawnPos: Vector3 = hrp.Position
+			+ hrp.CFrame.RightVector
+			+ hrp.CFrame.UpVector * 3
+			+ (hrp.CFrame.LookVector * -150)
+		local jacker = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Jacker", spawnPos)
+		local collisionBox = jacker:FindFirstChild("CollisionBox")
+		local primary = jacker.PrimaryPart
+
+		-- face the player
+		jacker:SetPrimaryPartCFrame(CFrame.lookAt(spawnPos, hrp.Position))
+
+		-- tween forwards
+		local stepDistance = 500
+		local stepDuration = 2
+
+		local goalPosition = primary.Position + primary.CFrame.LookVector * stepDistance
+		local goalCFrame = CFrame.new(goalPosition) * primary.CFrame.Rotation
+
+		local tween =
+			TweenService:Create(primary, TweenInfo.new(stepDuration, Enum.EasingStyle.Linear), { CFrame = goalCFrame })
+
+		-- remove accessories and limbs until bare bones
+		local debounce = false
+		local attackTouchEvent = collisionBox.Touched:Connect(function(hit)
+			if debounce then
+				return
+			end
+			debounce = true
+			local character = hit.Parent
+			local humanoid = character and character:FindFirstChild("Humanoid")
+			if humanoid then
+				print("Hit player")
+				local accessoryFound = false
+				-- destroy accessories first
+				for _, child in ipairs(character:GetChildren()) do
+					if child:IsA("Accessory") then
+						child:Destroy()
+						accessoryFound = true
+						break
+					end
+				end
+
+				if not accessoryFound then
+					for _, child in ipairs(character:GetChildren()) do
+						if child:IsA("BasePart") then
+							local name = child.Name
+							if name:lower():find("arm") or name:lower():find("leg") then
+								child:Destroy()
+								break
+							end
+						end
+					end
+				end
+			end
+
+			task.wait(0.5)
+			debounce = false
+		end)
+		tween:Play()
+
+		-- destroy after tween finishes
+		tween.Completed:Connect(function()
+			jacker:Destroy()
+			attackTouchEvent:Disconnect()
+		end)
+	end
 end
 
 MissionEventHandlers["CashierScammed"] = function(player)

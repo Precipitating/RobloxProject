@@ -259,9 +259,14 @@ CutsceneClientHandler.KeyframeHandler = {
 				"Nothing wrong with some free snacks after we dunk the victim of their cold, hard earned, Great British Pounds. Im I right Shayden?"
 			)
 			Speak("Cashier", "You're right bro, lets just say it was a two for one meal deal.GAH HAH HAH HAH HAAAAAH")
+			Demo:Resume()
 		elseif instruction == 7 then
-			task.wait(60)
-			SoundModule.PlaySound("EvilLaugh")
+			Demo:Pause()
+			local resumeEvent
+			resumeEvent = Demo.EResume.Event:Connect(function()
+				SoundModule.PlaySound("EvilLaugh")
+				resumeEvent:Disconnect()
+			end)
 		end
 	end,
 }

@@ -1,7 +1,15 @@
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local UIHelperFunctions = require(script.Parent.UIHelperFunctions)
 local HouseRemote = ReplicatedStorage.Shared.Remotes.House.HouseDoorInteracted
+
+local RoomExitFunctions = {
+	ShopExit = function()
+		GeneralRemotes.RemoveAllToolsOfTag:FireServer("ShopItem")
+	end,
+}
+
 game:GetService("ProximityPromptService").PromptTriggered:Connect(function(prompt, _)
 	if not CollectionService:HasTag(prompt.Parent, "HouseDoor") then
 		return
@@ -35,5 +43,8 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		print(`Leaving room {modelName}`)
 		UIHelperFunctions.AdjustBlur(0.1, 100)
 		HouseRemote:FireServer("Exit", modelName)
+		if RoomExitFunctions[houseName] then
+			RoomExitFunctions[houseName]()
+		end
 	end
 end)
