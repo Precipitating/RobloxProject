@@ -1,4 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local player = game.Players.LocalPlayer
@@ -11,6 +12,7 @@ local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
 local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChild("CutsceneClientHandler"))
 local InitializeGUIModule = require(script.InitializeGUI.InitializeGUIModule)
 local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
+local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 -- disable respawn button
 local coreCall
 do
@@ -101,6 +103,10 @@ GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	SoundModule.StopAllSounds()
 	return true
 end
+GeneralRemotes.PlayTTS.OnClientEvent:Connect(function(text, voiceId, pitch, speed, volume)
+	TextToSpeech.UpdateVoiceConfig(voiceId, pitch, speed, volume)
+	TextToSpeech.Speak(text)
+end)
 
 GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
 	local camera = workspace.CurrentCamera
@@ -113,6 +119,19 @@ GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
 	camera.CameraType = Enum.CameraType.Scriptable
 
 	camera.CFrame = partPosition
+end)
+GeneralRemotes.InvertControls.OnClientEvent:Connect(function(invert)
+	local thisPlayer = Players.LocalPlayer
+	local playerScripts = thisPlayer:WaitForChild("PlayerScripts")
+	local playerModule = require(playerScripts:WaitForChild("PlayerModule"))
+	local movementController = playerModule:GetControls()
+	if invert then
+		movementController.moveFunction = function(player, direction, relative)
+			thisPlayer.Move(player, -direction, relative)
+		end
+	else
+		movementController.moveFunction = thisPlayer.Move
+	end
 end)
 
 -- PsychoMantis
@@ -203,6 +222,7 @@ GeneralRemotes.DisconnectGUI.OnClientEvent:Connect(function(name)
 	InitializeGUIModule.DisconnectAll(name)
 end)
 
+-- Cashier
 GeneralRemotes.Cashier.UpdateScreen.OnClientEvent:Connect(function(itemList, priceList)
 	local submitButton = CollectionService:GetTagged("CashierSubmitButton")[1]
 	local cardSkimmerLabel = CollectionService:GetTagged("CashierCardSkimmer")[1]
