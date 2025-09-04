@@ -259,14 +259,20 @@ MissionEventHandlers["CashierShopLift"] = function(player)
 		function()
 			ShopLiftConsequences.Berate(player)
 		end,
+		function()
+			ShopLiftConsequences.SpawnLightningBolt(player)
+		end,
 	}
 
-	while true do
+	while not ShopLiftConsequences.IsBlackedOut() do
 		task.wait(math.random(5, 7))
 
 		local choice = spawns[math.random(1, #spawns)]
 		choice()
 	end
+
+	-- player's screen is blacked out
+	ShopLiftConsequences.SpawnMeteorite(player)
 end
 
 MissionEventHandlers["CashierScammed"] = function(player)

@@ -13,13 +13,15 @@ local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChi
 local InitializeGUIModule = require(script.InitializeGUI.InitializeGUIModule)
 local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
 local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
+local TeleportService = game:GetService("TeleportService")
+local RunService = game:GetService("RunService")
+local CameraFollowConnection = nil
 -- disable respawn button
 local coreCall
 do
 	local MAX_RETRIES = 8
 
 	local StarterGui = game:GetService("StarterGui")
-	local RunService = game:GetService("RunService")
 
 	function coreCall(method, ...)
 		local result = {}
@@ -103,10 +105,26 @@ GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	SoundModule.StopAllSounds()
 	return true
 end
-GeneralRemotes.PlayTTS.OnClientEvent:Connect(function(text, voiceId, pitch, speed, volume)
-	TextToSpeech.UpdateVoiceConfig(voiceId, pitch, speed, volume)
-	TextToSpeech.Speak(text)
+
+GeneralRemotes.Rejoin.OnClientEvent:Connect(function(waitTime)
+	task.wait(waitTime)
+	TeleportService:Teleport(game.PlaceId, player)
 end)
+GeneralRemotes.PlayTTS.OnClientInvoke = function(text, voiceId, pitch, speed, volume)
+	if voiceId and pitch and speed and volume then
+		TextToSpeech.UpdateVoiceConfig(voiceId, pitch, speed, volume)
+	end
+
+	local success = TextToSpeech.Speak(text)
+
+	if success then
+		local handle = TextToSpeech.GetHandle()
+		if handle then
+			return handle.TimeLength
+		end
+	end
+	return nil
+end
 
 GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
 	local camera = workspace.CurrentCamera
@@ -119,6 +137,31 @@ GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
 	camera.CameraType = Enum.CameraType.Scriptable
 
 	camera.CFrame = partPosition
+end)
+
+GeneralRemotes.CameraLookAt.OnClientEvent:Connect(function(target)
+	local camera = workspace.CurrentCamera
+	camera.CameraType = Enum.CameraType.Scriptable
+	target = workspace:WaitForChild(target)
+
+	local followPart
+	if target:IsA("Model") then
+		followPart = target.PrimaryPart or target:FindFirstChild("HumanoidRootPart")
+	else
+		followPart = target
+	end
+
+	CameraFollowConnection = RunService.RenderStepped:Connect(function()
+		if followPart then
+			camera.CFrame = CFrame.lookAt(camera.CFrame.Position, followPart.Position)
+		end
+	end)
+end)
+
+GeneralRemotes.CameraLookAtDisconnect.OnClientEvent:Connect(function()
+	if CameraFollowConnection then
+		CameraFollowConnection:Disconnect()
+	end
 end)
 GeneralRemotes.InvertControls.OnClientEvent:Connect(function(invert)
 	local thisPlayer = Players.LocalPlayer
