@@ -1,9 +1,13 @@
+local BadgeService = game:GetService("BadgeService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local CurrentFade = 1
+local FullyBlack = false
 local BerateLines = {
 	"Thief",
 	"Robber",
@@ -21,12 +25,19 @@ local BerateLines = {
 }
 local ShopLiftConsequences = {}
 
+function ShopLiftConsequences.IsBlackedOut()
+	return FullyBlack
+end
+
 function ShopLiftConsequences.FadeOut(player)
-	if CurrentFade == 0 then
+	CurrentFade = math.max(0, CurrentFade - 0.1)
+	GeneralRemotes.BlackFade:FireClient(player, 1, CurrentFade)
+	print(CurrentFade)
+	if CurrentFade <= 0.001 then
+		print("Should be fully faded")
+		FullyBlack = true
 		return
 	end
-	CurrentFade = CurrentFade - 0.1
-	GeneralRemotes.BlackFade:FireClient(player, 1, CurrentFade)
 end
 
 function ShopLiftConsequences.SpawnJacker(player)
@@ -136,9 +147,9 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 		humanoid.PlatformStand = true
 		GeneralRemotes.DisableControls:FireClient(player)
 		GeneralRemotes.Blur:FireClient(player, 1, 100)
-		ShopLiftConsequences.FadeOut(player)
-
 		trapTouched:Disconnect()
+
+		ShopLiftConsequences.FadeOut(player)
 
 		-- restore after stun time
 		task.delay(stunTime or 3, function()
@@ -163,18 +174,101 @@ function ShopLiftConsequences.InvertControls(player)
 end
 
 function ShopLiftConsequences.Berate(player)
+	local displayName = player.DisplayName
+	local line = `You're a {BerateLines[math.random(1, #BerateLines)]}, {displayName}`
 	-- speed range: 0.5, 2.0
 	-- pitch range - -12, 12
 	-- voice Id range - 1 - 10
 	-- volume range - 1, 3
-	GeneralRemotes.PlayTTS:FireClient(
+	GeneralRemotes.PlayTTS:InvokeClient(
 		player,
-		BerateLines[math.random(1, #BerateLines)],
+		line,
 		math.random(1, 10),
 		math.random(-12, 12),
 		math.random(0.5, 2),
 		math.random(1, 3)
 	)
+end
+
+function ShopLiftConsequences.SpawnLightningBolt(player)
+	local character = player.Character
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+
+	local lightningBolt =
+		HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "LightningBolt", hrp.Position)
+	local bolt = lightningBolt:FindFirstChild("Bolt")
+
+	-- flash
+	bolt.Transparency = 1
+	bolt.Transparency = 0.5
+	task.wait(0.1)
+	bolt.Transparency = 0
+	task.wait(0.1)
+	bolt.Transparency = 0.5
+	task.wait(0.1)
+	bolt.Transparency = 1
+	task.wait(0.1)
+
+	-- explosion
+	local explosionPart = bolt:FindFirstChild("BlastCenter")
+	local explosion = Instance.new("Explosion")
+	explosion.Parent = game.Workspace
+	explosion.Position = explosionPart.Position
+	explosion.BlastRadius = 0
+
+	-- black bodyparts
+	for _, child in ipairs(character:GetChildren()) do
+		if child:IsA("BasePart") then
+			child.Color = Color3.fromRGB(0, 0, 0)
+		end
+	end
+
+	-- stun
+	GeneralRemotes.DisableControls:FireClient(player)
+	ShopLiftConsequences.FadeOut(player)
+
+	task.delay(2, function()
+		GeneralRemotes.EnableControls:FireClient(player)
+		lightningBolt:Destroy()
+	end)
+end
+
+function ShopLiftConsequences.SpawnMeteorite(player)
+	GeneralRemotes.StopAllMusic:InvokeClient(player)
+	BadgeHandler.awardBadge(player, 2207943165943416)
+	local timeLength = GeneralRemotes.PlayTTS:InvokeClient(
+		player,
+		`Stanley - I mean {player.DisplayName} couldn't believe his bad luck, how was this possible, and why? Surely it wasn't the groceries wasn't the culprit. Surely. Just when things were down, this happened.`,
+		1,
+		1,
+		1,
+		1
+	)
+
+	task.wait(timeLength)
+
+	GeneralRemotes.PlayTheme:FireClient(player, "AirSiren")
+	local character = player.Character
+	local hrp = character:FindFirstChild("HumanoidRootPart")
+	local targetPos = CFrame.new(hrp.Position + Vector3.new(0, 1000, 0))
+
+	local meteorite = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Meteorite", nil)
+
+	local tween =
+		TweenService:Create(meteorite.PrimaryPart, TweenInfo.new(5, Enum.EasingStyle.Linear), { CFrame = targetPos })
+
+	tween:Play()
+	GeneralRemotes.CameraLookAt:FireClient(player, meteorite.Name)
+	GeneralRemotes.BlackFade:FireClient(player, 0.2, 1)
+	tween.Completed:Connect(function()
+		GeneralRemotes.BlackFade:FireClient(player, 0, 0)
+		local done = GeneralRemotes.StopAllMusic:InvokeClient(player)
+		GeneralRemotes.CameraLookAtDisconnect:FireClient(player)
+		if done then
+			GeneralRemotes.PlaySound:InvokeClient(player, "Nuke")
+		end
+		GeneralRemotes.Rejoin:FireClient(player, 7)
+	end)
 end
 
 return ShopLiftConsequences
