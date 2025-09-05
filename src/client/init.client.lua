@@ -16,6 +16,8 @@ local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local CameraFollowConnection = nil
+local TalkModule = require(script.TalkModule)
+
 -- disable respawn button
 local coreCall
 do
@@ -289,6 +291,10 @@ end)
 GeneralRemotes.Cashier.GetClientBasketItems.OnClientInvoke = function()
 	return ShopBasketModule.GetItemsInBasket()
 end
+
+GeneralRemotes.SetCanTalkToNPC.OnClientEvent:Connect(function(canTalk)
+	TalkModule.SetCanTalk(canTalk)
+end)
 
 -- set player's collision group
 for _, descendant in pairs(Character:GetDescendants()) do
