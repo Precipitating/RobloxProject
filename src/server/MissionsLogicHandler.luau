@@ -3,6 +3,7 @@ local BadgeHandler = require(script.Parent.BadgeHandler)
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
@@ -18,14 +19,15 @@ local MissionEventHandlers = {}
 -- Roadman
 MissionEventHandlers["StealPhone"] = function(_)
 	-- spawn the next NPC that progresses this mission
-	local pos = Vector3.new(math.random(-360, 360), 5.23, -26.1)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", pos)
+	local victim = HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", nil)
+	local spawnPosList = ServerStorage.MissionModels.Roadman:FindFirstChild("PhoneVictimSpawns"):GetChildren()
+	local spawnPos = spawnPosList[math.random(1, #spawnPosList)]
+	victim:SetPrimaryPartCFrame(spawnPos.CFrame)
 end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
 	-- spawn surrounding cops around player
 	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "Cops", nil)
-
 	-- award badge
 	BadgeHandler.awardBadge(player, 4119036600108215)
 	-- call cutscene
@@ -243,6 +245,8 @@ MissionEventHandlers["CashierShopLift"] = function(player)
 	print("Cashier shoplift event")
 	GroceryBagModule.UpdateGroceries(player)
 	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
+	GeneralRemotes.SetCanTalkToNPC:FireClient(player, false)
+
 	local spawns = {
 		function()
 			ShopLiftConsequences.SpawnJacker(player)

@@ -70,15 +70,19 @@ function ShopLiftConsequences.SpawnJacker(player)
 		TweenService:Create(primary, TweenInfo.new(stepDuration, Enum.EasingStyle.Linear), { CFrame = goalCFrame })
 
 	-- remove accessories and limbs until bare bones
-	local debounce = false
-	local attackTouchEvent = collisionBox.Touched:Connect(function(hit)
-		if debounce then
-			return
-		end
+	local attackTouchEvent
+	local hasAttacked = false
+	attackTouchEvent = collisionBox.Touched:Connect(function(hit)
 		local character = hit.Parent
 		local humanoid = character and character:FindFirstChild("Humanoid")
 		if humanoid then
+			if hasAttacked then
+				return
+			end
+			hasAttacked = true
+
 			print("Hit player")
+			GeneralRemotes.PlaySound:InvokeClient(player, "Chomp")
 			ShopLiftConsequences.FadeOut(player)
 			local accessoryFound = false
 			-- destroy accessories first
@@ -86,7 +90,6 @@ function ShopLiftConsequences.SpawnJacker(player)
 				if child:IsA("Accessory") then
 					child:Destroy()
 					accessoryFound = true
-					debounce = true
 					break
 				end
 			end
@@ -97,25 +100,22 @@ function ShopLiftConsequences.SpawnJacker(player)
 						local name = child.Name
 						if name:lower():find("arm") or name:lower():find("leg") then
 							child:Destroy()
-							debounce = true
 							break
 						end
 					end
 				end
 			end
-		end
-
-		if debounce then
-			task.wait(0.5)
-			debounce = false
+			attackTouchEvent:Disconnect()
 		end
 	end)
 	tween:Play()
 
 	-- destroy after tween finishes
 	tween.Completed:Connect(function()
+		if attackTouchEvent then
+			attackTouchEvent:Disconnect()
+		end
 		jacker:Destroy()
-		attackTouchEvent:Disconnect()
 	end)
 end
 
@@ -147,7 +147,6 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 		humanoid.PlatformStand = true
 		GeneralRemotes.DisableControls:FireClient(player)
 		GeneralRemotes.Blur:FireClient(player, 1, 100)
-		trapTouched:Disconnect()
 
 		ShopLiftConsequences.FadeOut(player)
 
@@ -159,9 +158,13 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 				GeneralRemotes.Blur:FireClient(player, 1, 0)
 			end
 		end)
+		trapTouched:Disconnect()
 	end)
 	-- destroy trap after life time
 	task.delay(lifeTime or 3, function()
+		if trapTouched then
+			trapTouched:Disconnect()
+		end
 		trap:Destroy()
 	end)
 end
@@ -226,6 +229,7 @@ function ShopLiftConsequences.SpawnLightningBolt(player)
 	-- stun
 	GeneralRemotes.DisableControls:FireClient(player)
 	ShopLiftConsequences.FadeOut(player)
+	GeneralRemotes.PlaySound:InvokeClient(player, "LightningBolt")
 
 	task.delay(2, function()
 		GeneralRemotes.EnableControls:FireClient(player)
@@ -238,7 +242,7 @@ function ShopLiftConsequences.SpawnMeteorite(player)
 	BadgeHandler.awardBadge(player, 2207943165943416)
 	local timeLength = GeneralRemotes.PlayTTS:InvokeClient(
 		player,
-		`Stanley - I mean {player.DisplayName} couldn't believe his bad luck, how was this possible, and why? Surely it wasn't the groceries wasn't the culprit. Surely. Just when things were down, this happened.`,
+		`Stanley - I mean {player.DisplayName} couldn't believe his bad luck... how was this possible, and why? Surely it wasn't the groceries wasn't the culprit. Surely... Just when things were down, this happened.`,
 		1,
 		1,
 		1,
@@ -246,7 +250,6 @@ function ShopLiftConsequences.SpawnMeteorite(player)
 	)
 
 	task.wait(timeLength)
-
 	GeneralRemotes.PlayTheme:FireClient(player, "AirSiren")
 	local character = player.Character
 	local hrp = character:FindFirstChild("HumanoidRootPart")

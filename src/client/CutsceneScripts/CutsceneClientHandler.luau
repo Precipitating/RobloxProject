@@ -148,7 +148,7 @@ CutsceneClientHandler.KeyframeHandler = {
 
 	RoadmanMugged = function(instruction, nextInstruction, X)
 		if instruction == 3 then
-			task.wait(1)
+			task.wait(3)
 			SoundFolder.License:Play()
 		end
 	end,
