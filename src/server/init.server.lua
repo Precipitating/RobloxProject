@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local HelperFunctions = require(script.HelperFunctions)
 local CashierModule = require(script.NPCs.Cashier.CashierModule)
@@ -5,7 +6,8 @@ local GroceryBagModule = require(script.NPCs.Cashier.GroceryBagModule)
 local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
 local TShirtChecker = require(script.NPCs.Glitcher.TShirtChecker)
 local NPCModule = require(script.NPCs.NPCModule)
-local ProfileDataModule = require(script.PlayerProfileData.GetPlayerInfo)
+local ProfileDataModule = require(script.Player.GetPlayerInfo)
+local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
@@ -64,7 +66,7 @@ end
 
 GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, interactType, roomName)
 	if interactType == "Enter" then
-		RoomHandler.SpawnRoomAndEnter(player, roomName)
+		RoomHandler.SpawnRoomAndEnter(player, roomName, true)
 	else
 		if interactType == "Exit" then
 			RoomHandler.LeaveRoom(player)
@@ -92,3 +94,36 @@ end)
 GeneralRemotes.Cashier.GetGroceryItems.OnServerInvoke = function(_)
 	return GroceryBagModule.GetCurrentGroceries()
 end
+
+-- set player's achievements
+
+-- spawn player in their room when spawned
+Players.PlayerAdded:Connect(function(player)
+	local deathConn = nil
+	PlayerInitialize.SetupAchievements(player)
+
+	-- Function to spawn and teleport character
+	local function spawnAndTeleport()
+		player:LoadCharacter() -- spawn character
+		local character = player.Character or player.CharacterAdded:Wait()
+		local spawnPos = PlayerInitialize.SpawnHome()
+		PlayerInitialize.TeleportHome(character, spawnPos)
+
+		if not deathConn then
+			local humanoid = character:WaitForChild("Humanoid")
+			deathConn = humanoid.Died:Connect(function()
+				task.wait(3)
+				spawnAndTeleport() -- spawns again
+			end)
+		end
+	end
+
+	-- First spawn
+	spawnAndTeleport()
+
+	-- Handle respawns after death
+	player.CharacterAdded:Connect(function(character)
+		local spawnPos = PlayerInitialize.SpawnHome()
+		PlayerInitialize.TeleportHome(character, spawnPos)
+	end)
+end)

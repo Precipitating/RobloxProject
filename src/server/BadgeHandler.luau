@@ -1,7 +1,5 @@
 local BadgeHandler = {}
-
 local BadgeService = game:GetService("BadgeService")
-
 function BadgeHandler.awardBadge(player, badgeId)
 	-- Fetch badge information
 	local success, badgeInfo = pcall(function()
@@ -26,6 +24,30 @@ function BadgeHandler.awardBadge(player, badgeId)
 		end
 	else
 		warn("Error while fetching badge info: " .. badgeInfo)
+	end
+end
+
+function BadgeHandler.HasBadge(player, badgeId)
+	local success, result = pcall(function()
+		return BadgeService:UserHasBadgeAsync(player.UserId, badgeId)
+	end)
+	if success then
+		return result -- true if player owns it
+	else
+		warn("Badge check failed:", result)
+		return false
+	end
+end
+
+function BadgeHandler.GetBadgeInfo(id)
+	local success, result = pcall(function()
+		return BadgeService:GetBadgeInfoAsync(id)
+	end)
+	if success then
+		return result
+	else
+		warn("Badge check failed:", result)
+		return false
 	end
 end
 

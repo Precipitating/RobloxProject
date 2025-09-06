@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local UIHelperFunctions = require(script.Parent.UIHelperFunctions)
 local HouseRemote = ReplicatedStorage.Shared.Remotes.House.HouseDoorInteracted
+local Debounce = false
 
 local RoomExitFunctions = {
 	ShopExit = function()
@@ -22,6 +23,9 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 		return
 	end
 
+	if Debounce then
+		return
+	end
 	local modelName
 	local isEnter = string.find(houseName, "Enter")
 	local isExit = string.find(houseName, "Exit")
@@ -34,17 +38,21 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 	print(houseName)
 
 	if isEnter then
+		Debounce = true
 		modelName = string.sub(houseName, 1, isEnter - 1)
 		print(`Entering room {modelName}`)
-		UIHelperFunctions.AdjustBlur(0.1, 100)
 		HouseRemote:FireServer("Enter", modelName)
+		task.wait(2)
+		Debounce = false
 	elseif isExit then
+		Debounce = true
 		modelName = string.sub(houseName, 1, isExit - 1)
 		print(`Leaving room {modelName}`)
-		UIHelperFunctions.AdjustBlur(0.1, 100)
 		HouseRemote:FireServer("Exit", modelName)
 		if RoomExitFunctions[houseName] then
 			RoomExitFunctions[houseName]()
 		end
+		task.wait(2)
+		Debounce = false
 	end
 end)

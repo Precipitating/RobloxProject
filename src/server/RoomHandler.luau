@@ -6,25 +6,34 @@ local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local PositionBeforeEntering = nil
 local SpawnedRoom = nil
 local RoomHandler = {}
-local Debounce = false
 
-function RoomHandler.SpawnRoomAndEnter(player, name)
-	if Debounce then
-		return
+-- CFrame
+function RoomHandler.SetPositionBeforeEntering(CFrame)
+	PositionBeforeEntering = CFrame
+end
+
+local function OpenDoor(player, character, spawnLoc)
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	task.wait(1)
+	SoundModule.PlaySound("OpenDoor")
+	character:SetPrimaryPartCFrame(spawnLoc)
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
+end
+
+function RoomHandler.SpawnRoomAndEnter(player, name, enter)
+	SpawnedRoom = workspace:FindFirstChild(name)
+	if SpawnedRoom then
+		SpawnedRoom:Destroy()
 	end
 	SpawnedRoom = HelperFunctions.SpawnModelAtPosition("Rooms", name, name, nil)
-	if SpawnedRoom then
+
+	if SpawnedRoom and enter then
 		local spawnLoc = SpawnedRoom:FindFirstChild("SpawnLoc")
 		local character = player.Character
 
 		if character then
-			Debounce = true
 			PositionBeforeEntering = character:FindFirstChild("HumanoidRootPart").CFrame
-			SoundModule.PlaySound("OpenDoor")
-			character:SetPrimaryPartCFrame(spawnLoc.CFrame)
-			GeneralRemotes.Blur:FireClient(player, 0.5, 0)
-			task.wait(0.5)
-			Debounce = false
+			OpenDoor(player, character, spawnLoc.CFrame)
 		else
 			warn("CHARACTER NOT FOUND (ROOM HANDLER SPAWN ROOM)")
 		end
@@ -32,17 +41,9 @@ function RoomHandler.SpawnRoomAndEnter(player, name)
 end
 
 function RoomHandler.LeaveRoom(player)
-	if Debounce then
-		return
-	end
 	local character = player.Character
 	if character then
-		Debounce = true
-		SoundModule.PlaySound("OpenDoor")
-		character:SetPrimaryPartCFrame(PositionBeforeEntering)
-		GeneralRemotes.Blur:FireClient(player, 0.5, 0)
-		task.wait(0.5)
-		Debounce = false
+		OpenDoor(player, character, PositionBeforeEntering)
 	else
 		warn("Room leave character not found")
 	end
