@@ -240,7 +240,7 @@ CutsceneClientHandler.KeyframeHandler = {
 			Speak("Cashier", "Yeah, got the blox card details and doubled the victim's price as well.What a jackpot!")
 			Speak(
 				"Homeless",
-				"This homeless honeypot gimmick to get people to buy items is working spendidly, we're getting RICH baby!"
+				"This homeless man gimmick to get people to buy items is working spendidly, we're getting RICH baby!"
 			)
 			Speak(
 				"Cashier",
@@ -248,11 +248,11 @@ CutsceneClientHandler.KeyframeHandler = {
 			)
 			Speak(
 				"Homeless",
-				"Did you see what I told that donkey to buy? 10 Rebel colas ya know? Got greedy and threw in some random stuff. JEE-HEE-HEE-HEE-HAAAH"
+				"Did you see what I told that donkey to buy? 10 Rebel Colas you know? Got greedy and threw in some random stuff. JEE-HEE-HEE-HEE-HAAAH"
 			)
 			Speak(
 				"Cashier",
-				"Why do you always ask for outrageous quantities Dan?, we just needed him to scan his card onto the skimmer. You're the reason we have so much stored rebel colas, man!"
+				"Why do you always ask for massive quantities, Dan?, we just needed him to scan his card onto the skimmer. These boxes are full of Rebel Colas bro."
 			)
 			Speak(
 				"Homeless",
