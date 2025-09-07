@@ -2,6 +2,7 @@ local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local NPCOutfit = require(ServerScriptService.Server.NPCs.NPCOutfit)
 local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
@@ -25,14 +26,13 @@ local function FakeExitRoom(player)
 	local humanoid = player.Character.Humanoid
 	local exitPos = workspace.Shop.SpawnLoc
 	local hiddenPos = workspace.Shop.HiddenPos
-	local ttsHandle = TextToSpeech.GetHandle()
 
-	local speech = TextToSpeech.Speak(
+	local speechTime = GeneralRemotes.PlayTTS:InvokeClient(
+		player,
 		"Thanks for your body, i'll use it well. The body swap will only work for 1 hour, so... heh heh... SEE YA, WANNA BE YAH!"
 	)
-	if speech then
-		ttsHandle.Ended:Wait()
-	end
+	task.wait(speechTime)
+
 	task.wait(2)
 	humanoid:MoveTo(exitPos.Position)
 	task.wait(1)
@@ -41,7 +41,7 @@ local function FakeExitRoom(player)
 	GeneralRemotes.PlayTheme:FireClient(player, "CashierTheme")
 end
 
-function CashierModule.NPCFakeExit(player, customer)
+function CashierModule.NPCFakeExit(player, customer, lastCustomer)
 	local humanoid = customer:FindFirstChild("Humanoid")
 	local hrp = customer:FindFirstChild("HumanoidRootPart")
 	local exitPos = workspace.Shop.SpawnLoc
@@ -53,7 +53,12 @@ function CashierModule.NPCFakeExit(player, customer)
 	humanoid:MoveTo(exitPos.Position)
 	humanoid.MoveToFinished:Wait()
 	GeneralRemotes.PlaySound:InvokeClient(player, "OpenDoor")
-	hrp.CFrame = spawnPos.CFrame
+
+	if lastCustomer then
+		customer:Destroy()
+	else
+		hrp.CFrame = spawnPos.CFrame
+	end
 end
 
 function CashierModule.Init(player)
@@ -156,7 +161,7 @@ function CashierModule.NextCustomer(player, currentTime)
 	if not customer then
 		customer = HelperFunctions.SpawnModelAtPosition("NPCs", "Cashier", "Customer", nil)
 	else
-		CashierModule.NPCFakeExit(player, customer)
+		CashierModule.NPCFakeExit(player, customer, false)
 	end
 	CashierModule.NextCustomerNPC(customer)
 
@@ -168,6 +173,47 @@ function CashierModule.NextCustomer(player, currentTime)
 	end
 
 	GeneralRemotes.Cashier.UpdateScreen:FireClient(player, formattedItemList, formattedPriceList)
+end
+
+function CashierModule.FailedEvent(player)
+	GeneralRemotes.DisconnectGUI:FireClient(player, "Cashier")
+	GeneralRemotes.StopAllMusic:InvokeClient(player)
+	local monster = workspace:FindFirstChild("Monster")
+	local customer = workspace:FindFirstChild("Customer")
+
+	if not monster and customer then
+		CashierModule.NPCFakeExit(player, customer, true)
+		monster = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Monster", nil)
+	end
+
+	local humanoid = monster:FindFirstChild("Humanoid")
+	local hrp = monster:FindFirstChild("HumanoidRootPart")
+
+	-- move to cashier point
+	local cashierPosition = workspace.Shop:FindFirstChild("CashierModeInitialPos")
+	humanoid:MoveTo(cashierPosition.Position)
+	humanoid.MoveToFinished:Wait()
+	task.wait(0.5)
+	-- look towards cashier
+	local goalCFrame = CFrame.new(cashierPosition.Position, cashierPosition.Position + Vector3.new(0, 0, -1))
+	local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(hrp, tweenInfo, { CFrame = goalCFrame })
+	tween:Play()
+	tween.Completed:Wait()
+
+	-- speak
+	local sound = GeneralRemotes.PlaySound:InvokeClient(player, "CashierManager")
+	task.wait(sound.TimeLength - 1)
+
+	-- tween to camera
+	local cashierPos = workspace.Shop.Cashier.Cashier.PrimaryPart.Position
+	local monsterTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+	local goal = { Position = cashierPos }
+	local monsterTween = TweenService:Create(hrp, monsterTweenInfo, goal)
+	monsterTween:Play()
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	BadgeHandler.awardBadge(player, 2719901366655803)
+	GeneralRemotes.Rejoin:FireClient(player, 7)
 end
 
 function CashierModule.Start(player)

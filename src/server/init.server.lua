@@ -83,8 +83,13 @@ GeneralRemotes.Cashier.CheckPrice.OnServerInvoke = function(_)
 	return CashierModule.CheckPrice()
 end
 
-GeneralRemotes.Cashier.NextCustomer.OnServerEvent:Connect(function(player, currentTime)
-	CashierModule.NextCustomer(player, currentTime)
+GeneralRemotes.Cashier.NextCustomer.OnServerEvent:Connect(function(player, currentTime, failed)
+	print("DEBUG:", currentTime, failed, typeof(failed))
+	if not failed then
+		CashierModule.NextCustomer(player, currentTime)
+	else
+		CashierModule.FailedEvent(player)
+	end
 end)
 
 GeneralRemotes.RemoveAllToolsOfTag.OnServerEvent:Connect(function(player, tag)

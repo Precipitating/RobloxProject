@@ -134,7 +134,14 @@ InitializeGUIModule["Cashier"] = function()
 		local textToNum = tonumber(timeLeft.Text)
 		local increased = math.max(0, textToNum + 10)
 		timeLeft.Text = tostring(increased)
-		GeneralRemotes.Cashier.NextCustomer:FireServer(increased)
+
+		-- failed
+		print(increased)
+		if increased >= 100 then
+			GeneralRemotes.Cashier.NextCustomer:FireServer(increased, true)
+		else
+			GeneralRemotes.Cashier.NextCustomer:FireServer(increased, false)
+		end
 	end
 
 	local function correct()
@@ -146,30 +153,34 @@ InitializeGUIModule["Cashier"] = function()
 		local decreased = math.max(0, textToNum - decreaseAmount)
 
 		timeLeft.Text = tostring(decreased)
-		GeneralRemotes.Cashier.NextCustomer:FireServer(decreased)
+		GeneralRemotes.Cashier.NextCustomer:FireServer(decreased, false)
 	end
 
 	trackConnect("Cashier", submitButton.MouseButton1Click, function()
 		if not canClick then
 			return
 		end
+
 		submitButton.Active = false
 		submitButton.Interactable = false
 		canClick = false
 
 		local correctPrice = GeneralRemotes.Cashier.CheckPrice:InvokeServer()
 		if not correctPrice then
+			warn("Shopping list empty!")
 			fail()
+			task.wait(3)
+			canClick = true
+			return
 		end
 
-		if correctPrice then
-			local userInputToNum = tonumber(priceInput.Text)
-			print(`Actual price: {correctPrice}`)
-			-- ensure user input is a valid number
-			if not userInputToNum then
-				fail()
-			end
+		local userInputToNum = tonumber(priceInput.Text)
+		print(`Actual price: {correctPrice}`)
 
+		if not userInputToNum then
+			warn("Invalid price input: Ensure its the correct format")
+			fail()
+		else
 			if cardSkimmerText.Visible then
 				if userInputToNum == (correctPrice * 2) then
 					correct()
@@ -182,6 +193,7 @@ InitializeGUIModule["Cashier"] = function()
 				fail()
 			end
 		end
+
 		task.wait(3)
 		canClick = true
 	end)

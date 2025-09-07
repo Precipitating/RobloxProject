@@ -14,8 +14,8 @@ end
 
 local function OpenDoor(player, character, spawnLoc)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
-	task.wait(1)
 	SoundModule.PlaySound("OpenDoor")
+	task.wait(1)
 	character:SetPrimaryPartCFrame(spawnLoc)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 end
