@@ -84,7 +84,6 @@ GeneralRemotes.Cashier.CheckPrice.OnServerInvoke = function(_)
 end
 
 GeneralRemotes.Cashier.NextCustomer.OnServerEvent:Connect(function(player, currentTime, failed)
-	print("DEBUG:", currentTime, failed, typeof(failed))
 	if not failed then
 		CashierModule.NextCustomer(player, currentTime)
 	else
@@ -103,32 +102,65 @@ end
 -- set player's achievements
 
 -- spawn player in their room when spawned
-Players.PlayerAdded:Connect(function(player)
-	local deathConn = nil
-	PlayerInitialize.SetupAchievements(player)
+local RunService = game:GetService("RunService")
 
-	-- Function to spawn and teleport character
-	local function spawnAndTeleport()
-		player:LoadCharacter() -- spawn character
-		local character = player.Character or player.CharacterAdded:Wait()
+Players.PlayerAdded:Connect(function(player)
+	PlayerInitialize.SetupAchievements(player)
+	local safePosition = nil
+
+	local function setupCharacter(character)
 		local spawnPos = PlayerInitialize.SpawnHome()
 		PlayerInitialize.TeleportHome(character, spawnPos)
 
-		if not deathConn then
-			local humanoid = character:WaitForChild("Humanoid")
-			deathConn = humanoid.Died:Connect(function()
-				task.wait(3)
-				spawnAndTeleport() -- spawns again
-			end)
+		local humanoid = character:WaitForChild("Humanoid")
+		local hrp = character:WaitForChild("HumanoidRootPart")
+
+		local function isOnGround()
+			local root = character:FindFirstChild("HumanoidRootPart")
+			if not root then
+				return false
+			end
+
+			local rayOrigin = root.Position
+			local rayDirection = Vector3.new(0, -3, 0)
+
+			local raycastParams = RaycastParams.new()
+			raycastParams.FilterDescendantsInstances = { character }
+			raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+
+			return workspace:Raycast(rayOrigin, rayDirection, raycastParams)
 		end
+
+		-- update safe position periodically
+		task.spawn(function()
+			while character.Parent do
+				task.wait(2)
+				local groundPos = isOnGround()
+				if groundPos then
+					safePosition = groundPos.Position
+				end
+			end
+		end)
+
+		-- teleport if fallen below -450
+
+		task.spawn(function()
+			while character.Parent do
+				task.wait(0.1)
+				if hrp.Position.Y <= -400 and safePosition then
+					character:MoveTo(safePosition)
+				end
+			end
+		end)
+
+		-- disconnect heartbeat when character dies
+		humanoid.Died:Connect(function()
+			task.wait(3)
+			player:LoadCharacter()
+		end)
 	end
 
 	-- First spawn
-	spawnAndTeleport()
-
-	-- Handle respawns after death
-	player.CharacterAdded:Connect(function(character)
-		local spawnPos = PlayerInitialize.SpawnHome()
-		PlayerInitialize.TeleportHome(character, spawnPos)
-	end)
+	player.CharacterAdded:Connect(setupCharacter)
+	player:LoadCharacter()
 end)
