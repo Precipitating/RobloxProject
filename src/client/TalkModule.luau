@@ -228,6 +228,16 @@ function TalkModule.updateUI(data, dialogueId)
 		SoundModule.StopSound(selectedDialogue.StopSound)
 	end
 
+	if selectedDialogue.VoiceId or selectedDialogue.Pitch or selectedDialogue.Speed or selectedDialogue.Volume then
+		print("changed TTS config")
+		TextToSpeech.UpdateVoiceConfig(
+			selectedDialogue.VoiceId or "1",
+			selectedDialogue.Pitch or 1,
+			selectedDialogue.Speed or 1,
+			selectedDialogue.Volume or 1
+		)
+	end
+
 	if btn1Conn then
 		btn1Conn:Disconnect()
 	end
@@ -257,15 +267,6 @@ function TalkModule.updateUI(data, dialogueId)
 		end)
 	end)
 
-	if selectedDialogue.VoiceId or selectedDialogue.Pitch or selectedDialogue.Speed or selectedDialogue.Volume then
-		print("changed TTS config")
-		TextToSpeech.UpdateVoiceConfig(
-			selectedDialogue.VoiceId or "1",
-			selectedDialogue.Pitch or 1,
-			selectedDialogue.Speed or 1,
-			selectedDialogue.Volume or 1
-		)
-	end
 	if typeof(selectedDialogue.Dialogue) == "function" then
 		typeText(selectedDialogue.Dialogue())
 	else
