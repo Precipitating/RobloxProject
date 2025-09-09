@@ -9,6 +9,7 @@ local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBaske
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
+local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Shared.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -300,6 +301,10 @@ MissionEventHandlers["CashierScammedFinished"] = function(player)
 	HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Warehouse", nil)
 	GeneralRemotes.PlayCutscene:FireClient(player, "CashierScammed")
 	BadgeHandler.awardBadge(player, 2453227885155938)
+end
+
+MissionEventHandlers["DrivingTest"] = function(player)
+	DrivingTest.Init(player)
 end
 
 return MissionEventHandlers
