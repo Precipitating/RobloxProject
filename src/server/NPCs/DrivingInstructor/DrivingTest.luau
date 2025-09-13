@@ -5,15 +5,32 @@ local ServerStorage = game:GetService("ServerStorage")
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local Roads = ServerStorage.MissionModels.DrivingInstructor:GetChildren()
-local RoadNames = {}
 local CurrentRoads = {}
+local PooledRoads = {}
 local DrivingTest = {}
-local RoadCount = 0
+
+-- roundabout
+local CorrectRoundAboutDirections = {}
+local RoundAboutDirectionSpoken = false
+local RoundAboutDirectionConversion = {
+	Left = "first exit",
+	Forward = "second exit",
+	Right = "third exit",
+}
+
+-- values are measured as 'per road'
+local RoadsSpawned = 0
 local CheckpointReachBeforeDeletion = 10
 local CheckpointsReached = 0
-local CurrentRoadIdx = 1
 local RoundAboutCooldown = 20
-local TurnCooldown = 5
+local TurnCooldown = 10
+local RoadFinishCount = 500
+local TrafficLightCooldown = 10
+local FakeRoadsToSpawnAtRoundabout = 3
+
+-- demerits
+local RanRedLightCount = 0
+local WrongRoundAboutExitsEntered = 0
 
 local function GetRayDirection(attachment, direction: string, distance: number)
 	local cf = attachment.WorldCFrame
@@ -43,7 +60,11 @@ local function GetPartsByName(model, nameFragment)
 end
 
 local function SpawnTrafficLight(currentRoad)
-	if math.random() < 0.2 then
+	if currentRoad:FindFirstChild("TrafficLight") then
+		return
+	end
+
+	if (RoadsSpawned % TrafficLightCooldown) == 0 and math.random() < 0.5 then
 		local trafficLight =
 			HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "TrafficLight", nil)
 		trafficLight:PivotTo(currentRoad:FindFirstChild("TrafficLightPos"):GetPivot())
@@ -74,6 +95,7 @@ local function GetOffsetPosition(attachment, forwardOffset: number, rightOffset:
 
 	return origin + offset
 end
+
 -- raycast and if it doesn't hit another road, its a valid road name to spawn
 local function GetSafeRoadsList(endAttachment)
 	local SafeRoadsToSpawn = {}
@@ -94,7 +116,7 @@ local function GetSafeRoadsList(endAttachment)
 	local function AddSafeRoads(rayResult, roadName)
 		-- if this is a roundabout, require all 3 rays to be clear
 		if roadName == "RoundaboutRoad" then
-			if not forwardResult and not leftResult and not rightResult and RoadCount % RoundAboutCooldown == 0 then
+			if not forwardResult and not leftResult and not rightResult and RoadsSpawned % RoundAboutCooldown == 0 then
 				table.insert(SafeRoadsToSpawn, roadName)
 			end
 			return
@@ -107,7 +129,7 @@ local function GetSafeRoadsList(endAttachment)
 		end
 
 		-- add turns if cooldown allows
-		if (roadName == "RoadLeft" or roadName == "RoadRight") and RoadCount % TurnCooldown == 0 then
+		if (roadName == "RoadLeft" or roadName == "RoadRight") and RoadsSpawned % TurnCooldown == 0 then
 			table.insert(SafeRoadsToSpawn, roadName)
 			return
 		end
@@ -129,8 +151,30 @@ local function GetSafeRoadsList(endAttachment)
 	return SafeRoadsToSpawn
 end
 
+function DrivingTest.FindRoadInPool(name)
+	if #PooledRoads <= 0 then
+		return nil
+	end
+
+	for i, road in ipairs(PooledRoads) do
+		if road.Name == name then
+			table.remove(PooledRoads, i)
+			return road
+		end
+	end
+
+	return nil
+end
+
 local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player: Player)
-	local nextRoad = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", name, nil)
+	local nextRoad = nil
+	local roadInPool = DrivingTest.FindRoadInPool(name)
+	if roadInPool then
+		nextRoad = roadInPool
+	else
+		nextRoad = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", name, nil)
+	end
+
 	local newRoadStartAttachment = nextRoad:FindFirstChild("Start")
 	local newRoadEndAttachment = nextRoad:FindFirstChild("End")
 	if attachmentToSpawnAt then
@@ -150,15 +194,24 @@ local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player:
 			newRoadEndAttachment = chosenExit
 			-- set the valid exit so we can detect if player has drove through it
 			chosenExitStringVal.Value = string.sub(newRoadEndAttachment.Name, 1, -4)
+			table.insert(CorrectRoundAboutDirections, chosenExitStringVal.Value)
+			print(CorrectRoundAboutDirections)
 
 			-- generate some fake roads on wrong exits to prevent emptiness
 			for _, endAttachment in ipairs(exits) do
 				if endAttachment ~= chosenExit then
-					DrivingTest.GenerateRoads(player, 5, endAttachment, true)
+					DrivingTest.GenerateRoads(
+						player,
+						FakeRoadsToSpawnAtRoundabout,
+						endAttachment,
+						true,
+						false,
+						"RoundaboutRoad"
+					)
 				end
 			end
 		else
-			if name ~= "EndRoad" then
+			if name ~= "EndRoad" and name ~= "FinishedRoad" then
 				error(`No end attachment on road {name}`)
 			end
 		end
@@ -170,40 +223,166 @@ local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player:
 	end
 
 	table.insert(CurrentRoads, nextRoad)
-	RoadCount = RoadCount + 1
+	RoadsSpawned = RoadsSpawned + 1
 
 	return nextRoad, newRoadStartAttachment, newRoadEndAttachment
 end
-function DrivingTest.GetRoadModelNames()
-	if #Roads > 0 then
-		for _, model in Roads do
-			if string.find(model.Name:lower(), "road") then
-				table.insert(RoadNames, model.Name)
-			end
-		end
-	end
-end
 
+-- runs on each Completed part collision if the current road's red light is active
 local function RedLightHandler(player, currentRoad)
 	local ranRedLight = currentRoad:GetAttribute("IsRedLight")
 	if ranRedLight then
 		print("RAN RED LIGHT!")
 		GeneralRemotes.PlaySound:InvokeClient(player, "Error")
+		RanRedLightCount = RanRedLightCount + 1
 	end
 end
 
-local function GetNextRoadName(currentEndAttachment)
+-- returns a single random road string after using GetSafeRoadsList to detect safe roads to spawn
+local function GetNextRoadName(currentEndAttachment, excludeRoad: string?)
 	local nextRoadName = "StraightRoad" -- default
 	if currentEndAttachment then
 		local safeRoadNames = GetSafeRoadsList(currentEndAttachment)
+
+		-- exclude roads if specified
+		if excludeRoad then
+			if excludeRoad then
+				for i, v in ipairs(safeRoadNames) do
+					if v == excludeRoad then
+						table.remove(safeRoadNames, i)
+						break
+					end
+				end
+			end
+		end
+
+		-- pick random road out of list
 		if safeRoadNames and #safeRoadNames > 0 then
 			nextRoadName = safeRoadNames[math.random(1, #safeRoadNames)]
 		else
-			error("No direction valid")
+			nextRoadName = "StraightDownRoad"
+			warn("No direction valid, so default to Straight Down")
 		end
 	end
 
 	return nextRoadName
+end
+
+-- last road that ends the minigame, determined by roadcount being >= RoadFinishCount
+local function AddFinishedRoad(player)
+	local lastRoad = CurrentRoads[#CurrentRoads]
+	local newEndAttachment = lastRoad:FindFirstChild("End")
+	local endRoad, _, _ = SpawnRoad("FinishedRoad", newEndAttachment, player)
+	local endCollide = endRoad:FindFirstChild("EndCollide")
+
+	endCollide.Touched:Connect(function(hit)
+		if not CollectionService:HasTag(hit, "DrivingTestCar") then
+			return
+		end
+		GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+		GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
+		player.Character.Humanoid.Sit = false
+	end)
+end
+
+local function AnnounceNextRoundAbout(player)
+	-- voiceline speaker for roundabout directions
+	if not RoundAboutDirectionSpoken and #CorrectRoundAboutDirections > 0 then
+		RoundAboutDirectionSpoken = true
+		local voiceline = GeneralRemotes.PlayTTS:InvokeClient(
+			player,
+			`At the next roundabout, please enter the {RoundAboutDirectionConversion[CorrectRoundAboutDirections[1]]}`
+		)
+		if not voiceline then
+			RoundAboutDirectionSpoken = false
+		end
+	end
+end
+
+function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
+	local completedNames = { "LeftCompleted", "RightCompleted", "ForwardCompleted" }
+	local correctCompletedName = `{roundAboutModel.ChosenExit.Value}Completed`
+
+	for _, name in ipairs(completedNames) do
+		-- if entering correct way
+		local touchPart = roundAboutModel:FindFirstChild(name)
+		if name == correctCompletedName then
+			local conn
+			conn = touchPart.Touched:Connect(function(hit)
+				if not CollectionService:HasTag(hit, "DrivingTestCar") then
+					return
+				end
+				conn:Disconnect()
+
+				-- ok to speak next roundabout if we have one stored in CorrectRoundAboutDirections
+				if RoundAboutDirectionSpoken then
+					RoundAboutDirectionSpoken = false
+					if #CorrectRoundAboutDirections > 0 then
+						table.remove(CorrectRoundAboutDirections, 1)
+						AnnounceNextRoundAbout(player)
+					end
+				end
+
+				-- count as if we've entered FakeRoadsToSpawnAtRoundabout * 2 roads, as they don't have checkpoints enabled,
+				-- without this, causes road deletion/creation will lag behind every time we go thru a roundabout
+				-- as we determine when to delete/generate per checkpoint touched
+				for _ = 1, FakeRoadsToSpawnAtRoundabout * 2 do
+					DrivingTest.HandleGeneratingAndDeletingRoads(player)
+				end
+			end)
+		else
+			-- wrong exits
+			local conn2
+			conn2 = touchPart.Touched:Connect(function(hit)
+				if not CollectionService:HasTag(hit, "DrivingTestCar") then
+					return
+				end
+				conn2:Disconnect()
+				GeneralRemotes.PlaySound:InvokeClient(player, "Error")
+				WrongRoundAboutExitsEntered = WrongRoundAboutExitsEntered + 1
+			end)
+		end
+	end
+end
+
+function DrivingTest.HandleGeneratingAndDeletingRoads(player)
+	-- handle deleting and generating infinite roads
+	CheckpointsReached = CheckpointsReached + 1
+	if (CheckpointsReached % CheckpointReachBeforeDeletion) == 0 then
+		print("Start pooling roads")
+		-- regenerate at ends
+		-- get updated last road end attachment
+		local lastRoad = CurrentRoads[#CurrentRoads]
+		local newEndAttachment = lastRoad:FindFirstChild("End")
+		DrivingTest.GenerateRoads(player, CheckpointReachBeforeDeletion, newEndAttachment, false, true)
+
+		-- store deleted roads in pool
+		for _ = 1, CheckpointReachBeforeDeletion do
+			-- theres only going to be one "start", so just destroy and not pool
+			if CurrentRoads[1].Name == "Start" then
+				CurrentRoads[1]:Destroy()
+				table.remove(CurrentRoads, 1)
+				continue
+			end
+
+			table.insert(PooledRoads, CurrentRoads[1])
+			PooledRoads[#PooledRoads]:PivotTo(CFrame.new(0, -9999, 0))
+			table.remove(CurrentRoads, 1)
+		end
+
+		-- add an invis wall incase player decides to go back & drive off the map
+		local firstRoad = CurrentRoads[1]
+		local fallBarrier = workspace:FindFirstChild("FallBarrier")
+		if not fallBarrier then
+			fallBarrier = Instance.new("Part")
+			fallBarrier.Anchored = true
+			fallBarrier.Name = "FallBarrier"
+			fallBarrier.Size = Vector3.new(80, 40, 1)
+			fallBarrier.Transparency = 1
+			fallBarrier.Parent = workspace
+		end
+		fallBarrier.CFrame = firstRoad:FindFirstChild("Start").WorldCFrame
+	end
 end
 
 function DrivingTest.CheckpointTouchedHandler(player, nextRoad)
@@ -215,28 +394,24 @@ function DrivingTest.CheckpointTouchedHandler(player, nextRoad)
 		end
 
 		print("Checkpoint touched!")
-		CurrentRoadIdx = CurrentRoadIdx + 1
 		conn:Disconnect()
 
-		-- handle deleting and generating infinite roads
-		CheckpointsReached = CheckpointsReached + 1
-		if (CheckpointsReached % CheckpointReachBeforeDeletion) == 0 then
-			-- regenerate at ends
-			-- get updated last road end attachment as well
-			local lastRoad = CurrentRoads[#CurrentRoads]
-			local newEndAttachment = lastRoad:FindFirstChild("End")
-			DrivingTest.GenerateRoads(player, CheckpointReachBeforeDeletion, newEndAttachment)
-
-			-- delete roads X behind
-			for _ = 1, CheckpointReachBeforeDeletion do
-				CurrentRoads[1]:Destroy()
-				table.remove(CurrentRoads, 1)
-				RoadCount = RoadCount - 1
+		-- stop generating and cap off the road if RoadFinishCount is exceeded
+		if RoadsSpawned >= RoadFinishCount then
+			if not workspace:FindFirstChild("FinishedRoad") then
+				AddFinishedRoad(player)
 			end
+			return
 		end
+
+		-- generate & delete roads per checkpoint reached & conditions met
+		DrivingTest.HandleGeneratingAndDeletingRoads(player)
 
 		-- red light handler
 		RedLightHandler(player, nextRoad)
+
+		-- announce next roundabout if spawned and not already doing one
+		AnnounceNextRoundAbout(player)
 	end)
 end
 
@@ -244,7 +419,9 @@ function DrivingTest.GenerateRoads(
 	player: Player,
 	amountToSpawn: number,
 	currentEndAttachment: Attachment?,
-	capOff: boolean?
+	capOff: boolean?,
+	considerCheckpoints: boolean?,
+	excludeRoad: string?
 )
 	for _ = 1, amountToSpawn do
 		if not currentEndAttachment then
@@ -252,7 +429,7 @@ function DrivingTest.GenerateRoads(
 			return
 		end
 		-- choose a valid road type
-		local nextRoadName = GetNextRoadName(currentEndAttachment)
+		local nextRoadName = GetNextRoadName(currentEndAttachment, excludeRoad)
 
 		-- spawn road at end of current road and get attachment references
 		local nextRoad, _, nextRoadEndAttachment = SpawnRoad(nextRoadName, currentEndAttachment, player)
@@ -260,7 +437,14 @@ function DrivingTest.GenerateRoads(
 		currentEndAttachment = nextRoadEndAttachment
 
 		-- handle checkpoint
-		DrivingTest.CheckpointTouchedHandler(player, nextRoad)
+		if considerCheckpoints then
+			if nextRoadName == "RoundaboutRoad" then
+				print("Roundabout checkpoint")
+				DrivingTest.RoundAboutCheckpointTouchedHandler(player, nextRoad)
+			else
+				DrivingTest.CheckpointTouchedHandler(player, nextRoad)
+			end
+		end
 	end
 
 	if capOff then
@@ -291,7 +475,8 @@ function DrivingTest.Init(player)
 	if not Roads then
 		error("No road models found")
 	end
-	DrivingTest.GetRoadModelNames()
+
+	GeneralRemotes.PlayTheme:FireClient(player, "Chill")
 
 	-- spawn start roads
 	local startRoad, _, startRoadEndAttachment = SpawnRoad("Start", nil, player)
@@ -305,7 +490,7 @@ function DrivingTest.Init(player)
 	local seat = SpawnCar(startRoad)
 	SeatPlayerToCar(player, seat)
 
-	DrivingTest.GenerateRoads(player, 20, startRoad2EndAttachment)
+	DrivingTest.GenerateRoads(player, 20, startRoad2EndAttachment, false, true)
 end
 
 return DrivingTest
