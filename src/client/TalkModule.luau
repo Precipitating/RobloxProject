@@ -230,12 +230,21 @@ function TalkModule.updateUI(data, dialogueId)
 
 	if selectedDialogue.VoiceId or selectedDialogue.Pitch or selectedDialogue.Speed or selectedDialogue.Volume then
 		print("changed TTS config")
-		TextToSpeech.UpdateVoiceConfig(
-			selectedDialogue.VoiceId or "1",
-			selectedDialogue.Pitch or 1,
-			selectedDialogue.Speed or 1,
-			selectedDialogue.Volume or 1
-		)
+		local config = {}
+		if selectedDialogue.VoiceId then
+			config.VoiceId = selectedDialogue.VoiceId
+		end
+		if selectedDialogue.Pitch then
+			config.Pitch = selectedDialogue.Pitch
+		end
+		if selectedDialogue.Speed then
+			config.Speed = selectedDialogue.Speed
+		end
+		if selectedDialogue.Volume then
+			config.Volume = selectedDialogue.Volume
+		end
+
+		TextToSpeech.UpdateVoiceConfig(config)
 	end
 
 	if btn1Conn then

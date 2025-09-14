@@ -1,7 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local CollectionService = game:GetService("CollectionService")
+local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local Roads = ServerStorage.MissionModels.DrivingInstructor:GetChildren()
@@ -17,6 +19,12 @@ local RoundAboutDirectionConversion = {
 	Forward = "second exit",
 	Right = "third exit",
 }
+local RoundAboutExitsToID = {
+	Left = 1,
+	Forward = 2,
+	Right = 3,
+}
+local RoundAboutExpectedCheckpoint = 1
 
 -- values are measured as 'per road'
 local RoadsSpawned = 0
@@ -30,7 +38,7 @@ local FakeRoadsToSpawnAtRoundabout = 3
 
 -- demerits
 local RanRedLightCount = 0
-local WrongRoundAboutExitsEntered = 0
+local FailedRoundAbout = 0
 
 local function GetRayDirection(attachment, direction: string, distance: number)
 	local cf = attachment.WorldCFrame
@@ -60,8 +68,12 @@ local function GetPartsByName(model, nameFragment)
 end
 
 local function SpawnTrafficLight(currentRoad)
-	if currentRoad:FindFirstChild("TrafficLight") then
-		return
+	local hasTrafficLight = currentRoad:FindFirstChild("TrafficLight")
+	if hasTrafficLight then
+		-- since we pooled, we need to remove it if it already has a traffic light and recalculate
+		-- since it will ruin the TrafficLightCooldown pattern if not.
+		hasTrafficLight:Destroy()
+		currentRoad:SetAttribute("IsRedLight", false)
 	end
 
 	if (RoadsSpawned % TrafficLightCooldown) == 0 and math.random() < 0.5 then
@@ -73,14 +85,17 @@ local function SpawnTrafficLight(currentRoad)
 		-- change the attribute true if red light else false
 		local changer = trafficLight:FindFirstChild("LightStateChanger")
 		local bindable = changer:FindFirstChild("LightChanged")
+		local conn
 
-		bindable.Event:Connect(function(state)
+		conn = bindable.Event:Connect(function(state)
 			if state == "Red" then
 				currentRoad:SetAttribute("IsRedLight", true)
 			else
 				currentRoad:SetAttribute("IsRedLight", false)
 			end
 		end)
+
+		ConnectionManager.Add(currentRoad:GetAttribute("ID"), conn)
 	end
 end
 
@@ -173,6 +188,10 @@ local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player:
 		nextRoad = roadInPool
 	else
 		nextRoad = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", name, nil)
+		-- set unique ID for each road spawned
+		if nextRoad:GetAttribute("ID") then
+			nextRoad:SetAttribute("ID", HttpService:GenerateGUID(false))
+		end
 	end
 
 	local newRoadStartAttachment = nextRoad:FindFirstChild("Start")
@@ -299,12 +318,63 @@ local function AnnounceNextRoundAbout(player)
 	end
 end
 
-function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
-	local completedNames = { "LeftCompleted", "RightCompleted", "ForwardCompleted" }
-	local correctCompletedName = `{roundAboutModel.ChosenExit.Value}Completed`
+-- connect the roundabout validators, to determine if the player has driven around the
+-- roundabout correctly.
+local function HandleRoundAboutValidation(player, roundAboutModel, correctExit)
+	local roundAboutValidators = roundAboutModel:FindFirstChild("ValidationCheckpoints")
+	local correctExitToID = RoundAboutExitsToID[correctExit]
 
+	if roundAboutValidators then
+		local validators = roundAboutValidators:GetChildren()
+
+		for _, touchedValidator in ipairs(validators) do
+			local conn
+			conn = touchedValidator.Touched:Connect(function(hit)
+				if not CollectionService:HasTag(hit, "DrivingTestCar") then
+					return
+				end
+				conn:Disconnect()
+
+				-- check if touched in correct order
+				local touchedCheckpointID = touchedValidator:GetAttribute("CheckpointID")
+				if touchedCheckpointID then
+					-- touched correct order
+					if touchedCheckpointID == RoundAboutExpectedCheckpoint then
+						-- if not last checkpoint before correct exit, add one to RoundAboutExpectedCheckpoint
+						if touchedCheckpointID ~= correctExitToID then
+							RoundAboutExpectedCheckpoint = RoundAboutExpectedCheckpoint + 1
+							print("Correct roundabout checkpoint touched! not finished yet!")
+						else
+							-- indicates final checkpoint reached to exit correctly
+							RoundAboutExpectedCheckpoint = 1
+							print("Final roundabout checkpoint reached! safe to exit")
+						end
+						GeneralRemotes.PlaySound:InvokeClient(player, "Correct")
+					else
+						-- wrong order, fail outright & reset
+						print(`Expected {RoundAboutExpectedCheckpoint}, touched {touchedCheckpointID} `)
+						GeneralRemotes.PlaySound:InvokeClient(player, "Error")
+						ConnectionManager.Clear(roundAboutModel:GetAttribute("ID"))
+						FailedRoundAbout = FailedRoundAbout + 1
+						RoundAboutExpectedCheckpoint = 1
+					end
+				end
+			end)
+			-- it only disconnects IF we touch it, so if we pool we need to store the
+			-- other connections that aren't touched to disconnect it all
+			ConnectionManager.Add(roundAboutModel:GetAttribute("ID"), conn)
+		end
+	end
+end
+
+function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
+	local completedNames = { "LeftCompleted", "ForwardCompleted", "RightCompleted" }
+	local correctCompletedName = `{roundAboutModel.ChosenExit.Value}Completed`
+	local id = roundAboutModel:GetAttribute("ID")
+
+	-- handle roundabout exit connections
 	for _, name in ipairs(completedNames) do
-		-- if entering correct way
+		-- if entered correct way
 		local touchPart = roundAboutModel:FindFirstChild(name)
 		if name == correctCompletedName then
 			local conn
@@ -313,8 +383,7 @@ function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
 					return
 				end
 				conn:Disconnect()
-
-				-- ok to speak next roundabout if we have one stored in CorrectRoundAboutDirections
+				-- ok to announce next roundabout if we have one stored in CorrectRoundAboutDirections
 				if RoundAboutDirectionSpoken then
 					RoundAboutDirectionSpoken = false
 					if #CorrectRoundAboutDirections > 0 then
@@ -324,11 +393,14 @@ function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
 				end
 
 				-- count as if we've entered FakeRoadsToSpawnAtRoundabout * 2 roads, as they don't have checkpoints enabled,
-				-- without this, causes road deletion/creation will lag behind every time we go thru a roundabout
-				-- as we determine when to delete/generate per checkpoint touched
+				-- without this, road deletion/creation will lag behind every time we go thru a roundabout
+				-- (as we determine when to delete/generate per checkpoint touched)
 				for _ = 1, FakeRoadsToSpawnAtRoundabout * 2 do
 					DrivingTest.HandleGeneratingAndDeletingRoads(player)
 				end
+
+				-- disconnect lingering exits that haven't been entered (pooling the model keeps this old connection)
+				ConnectionManager.Clear(id)
 			end)
 		else
 			-- wrong exits
@@ -339,10 +411,15 @@ function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
 				end
 				conn2:Disconnect()
 				GeneralRemotes.PlaySound:InvokeClient(player, "Error")
-				WrongRoundAboutExitsEntered = WrongRoundAboutExitsEntered + 1
+				FailedRoundAbout = FailedRoundAbout + 1
 			end)
+
+			ConnectionManager.Add(id, conn2)
 		end
 	end
+
+	-- handle the roundabout validation
+	HandleRoundAboutValidation(player, roundAboutModel, roundAboutModel.ChosenExit.Value)
 end
 
 function DrivingTest.HandleGeneratingAndDeletingRoads(player)
@@ -358,7 +435,7 @@ function DrivingTest.HandleGeneratingAndDeletingRoads(player)
 
 		-- store deleted roads in pool
 		for _ = 1, CheckpointReachBeforeDeletion do
-			-- theres only going to be one "start", so just destroy and not pool
+			-- theres only going to be one "start model", so just destroy and not pool
 			if CurrentRoads[1].Name == "Start" then
 				CurrentRoads[1]:Destroy()
 				table.remove(CurrentRoads, 1)
@@ -366,7 +443,9 @@ function DrivingTest.HandleGeneratingAndDeletingRoads(player)
 			end
 
 			table.insert(PooledRoads, CurrentRoads[1])
+			-- hide the pooled models somewhere impossible to see
 			PooledRoads[#PooledRoads]:PivotTo(CFrame.new(0, -9999, 0))
+			ConnectionManager.Clear(PooledRoads[#PooledRoads]:GetAttribute("ID"))
 			table.remove(CurrentRoads, 1)
 		end
 
@@ -475,7 +554,10 @@ function DrivingTest.Init(player)
 	if not Roads then
 		error("No road models found")
 	end
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 
+	-- ensure EndCutscene stops the current main theme before calling this
+	task.wait(1)
 	GeneralRemotes.PlayTheme:FireClient(player, "Chill")
 
 	-- spawn start roads
@@ -491,6 +573,7 @@ function DrivingTest.Init(player)
 	SeatPlayerToCar(player, seat)
 
 	DrivingTest.GenerateRoads(player, 20, startRoad2EndAttachment, false, true)
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 end
 
 return DrivingTest
