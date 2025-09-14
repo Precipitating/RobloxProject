@@ -142,6 +142,8 @@ return {
 			Name = "Bertha (AI)",
 			Portrait = "rbxassetid://190473558",
 			Dialogue = ".............",
+			VoiceId = 2,
+			Pitch = -12,
 			PlaySound = "Static",
 			Responses = {
 				{
@@ -159,8 +161,7 @@ return {
 			Name = "Bertha",
 			Portrait = "rbxassetid://281439737",
 			Dialogue = "This is Bertha speaking, how may I help you?",
-			VoiceId = "2",
-			Pitch = -12,
+
 			Responses = {
 				{
 					Text = "One driving lesson.<br/>For a car<br/>How much?",
@@ -177,7 +178,7 @@ return {
 		Ten = {
 			Name = "Bertha",
 			Portrait = "rbxassetid://749274798",
-			Dialogue = "Two pentatrillion Woe-Buckaroos per lesson.<br/>No refunds.<br/>100% success rate.<br/>Worth it.­",
+			Dialogue = "Two trillion L-Puzzles from Everything Upgrade Tree per lesson.<br/>No refunds.<br/>100% success rate.<br/>Worth it.­",
 			Responses = {
 				{
 					Text = "(Ignore the absurd price and<br/>pay up quick before AI comes back)",
