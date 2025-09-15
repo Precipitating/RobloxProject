@@ -183,14 +183,13 @@ function ShopLiftConsequences.Berate(player)
 	-- pitch range - -12, 12
 	-- voice Id range - 1 - 10
 	-- volume range - 1, 3
-	GeneralRemotes.PlayTTS:InvokeClient(
-		player,
-		line,
-		math.random(1, 10),
-		math.random(-12, 12),
-		math.random(0.5, 2),
-		math.random(1, 3)
-	)
+	local randomConfig = {
+		VoiceId = tostring(math.random(1, 10)),
+		Pitch = math.random(-12, 12),
+		Speed = math.random(0.5, 2),
+		Volume = math.random(1, 3),
+	}
+	GeneralRemotes.PlayTTS:InvokeClient(player, line, randomConfig)
 end
 
 function ShopLiftConsequences.SpawnLightningBolt(player)
@@ -240,13 +239,16 @@ end
 function ShopLiftConsequences.SpawnMeteorite(player)
 	GeneralRemotes.StopAllMusic:InvokeClient(player)
 	BadgeHandler.awardBadge(player, 2207943165943416)
+	local config = {
+		VoiceId = "1",
+		Pitch = 1,
+		Speed = 1,
+		Volume = 1,
+	}
 	local timeLength = GeneralRemotes.PlayTTS:InvokeClient(
 		player,
 		`Stanley - I mean {player.DisplayName} couldn't believe his bad luck... how was this possible, and why? Surely it wasn't the groceries wasn't the culprit. Surely... Just when things were down, this happened.`,
-		1,
-		1,
-		1,
-		1
+		config
 	)
 
 	task.wait(timeLength)

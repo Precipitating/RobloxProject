@@ -4,7 +4,7 @@ return {
 			Name = "Sauce-us",
 			Portrait = "rbxassetid://7910429061",
 			Dialogue = "Let me guess, <font color='#ffde32'>tickets?</font>",
-			VoiceId = 5,
+			VoiceId = "5",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,

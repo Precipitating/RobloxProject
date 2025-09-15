@@ -112,9 +112,9 @@ GeneralRemotes.Rejoin.OnClientEvent:Connect(function(waitTime)
 	task.wait(waitTime)
 	TeleportService:Teleport(game.PlaceId, player)
 end)
-GeneralRemotes.PlayTTS.OnClientInvoke = function(text, voiceId, pitch, speed, volume)
-	if voiceId and pitch and speed and volume then
-		TextToSpeech.UpdateVoiceConfig(voiceId, pitch, speed, volume)
+GeneralRemotes.PlayTTS.OnClientInvoke = function(text, config)
+	if config then
+		TextToSpeech.UpdateVoiceConfig(config)
 	end
 
 	local success = TextToSpeech.Speak(text)

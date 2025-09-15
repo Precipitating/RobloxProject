@@ -304,7 +304,17 @@ MissionEventHandlers["CashierScammedFinished"] = function(player)
 end
 
 MissionEventHandlers["DrivingTest"] = function(player)
-	DrivingTest.Init(player)
+	DrivingTest.Init(player, player.Character:GetPivot())
+end
+
+MissionEventHandlers["DrivingTestPassed"] = function(player)
+	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestPassed")
+end
+
+MissionEventHandlers["DrivingTestFailed"] = function(player)
+	BadgeHandler.awardBadge(player, 1698025412209346)
+	GeneralRemotes.PlayTheme:FireClient(player, "SadTheme")
+	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestFailed")
 end
 
 return MissionEventHandlers

@@ -4,7 +4,7 @@ return {
 			Name = "Adurite",
 			Portrait = "rbxassetid://277685067",
 			Dialogue = "<b>Adurite</b> for life hahah",
-			VoiceId = 7,
+			VoiceId = "7",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,

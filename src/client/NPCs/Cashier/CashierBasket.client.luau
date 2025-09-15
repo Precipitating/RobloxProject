@@ -41,7 +41,7 @@ game:GetService("ProximityPromptService").PromptTriggered:Connect(function(promp
 			ShopBasketModule.AddItem(item.Name, item:WaitForChild("Price").Value, item:WaitForChild("Quantity").Value)
 		end
 
-		Events.SetDialogueFileEvent:FireServer({ { CashierNameTag = "CashierItems" } })
+		Events.SetDialogueFileEvent:FireServer({ CashierNameTag = "CashierItems" })
 	elseif ShopItemGiver then
 		local itemName = prompt:FindFirstChild("ItemName")
 

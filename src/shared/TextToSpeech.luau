@@ -34,9 +34,9 @@ function TextToSpeech.Speak(text)
 	return true
 end
 
+-- voice Id range - 1 - 10
 -- speed range: 0.5, 2.0
 -- pitch range - -12, 12
--- voice Id range - 1 - 10
 -- volume range - 1, 3
 function TextToSpeech.UpdateVoiceConfig(config)
 	-- Only update the values that are provided

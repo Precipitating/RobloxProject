@@ -41,7 +41,7 @@ return {
 		Two = {
 			Name = "Bertha (AI)",
 			Portrait = "rbxassetid://189484244",
-			Dialogue = "Yes I am AI designed to assist Driving School Init on simple matters.<br/>Please state your request, if I cannot solve it, a human will take over.",
+			Dialogue = "Yes I am AI designed to assist Driving School Init on simple matters.<br/>Please state your request.<br/>If I can't solve it, a human will take over.",
 			Responses = {
 				{
 					Text = "How much for a lesson?",
@@ -142,7 +142,7 @@ return {
 			Name = "Bertha (AI)",
 			Portrait = "rbxassetid://190473558",
 			Dialogue = ".............",
-			VoiceId = 2,
+			VoiceId = "2",
 			Pitch = -12,
 			PlaySound = "Static",
 			Responses = {

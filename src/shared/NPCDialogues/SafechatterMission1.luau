@@ -4,7 +4,7 @@ return {
 			Name = "Ancient Coot",
 			Portrait = "rbxassetid://13692620728",
 			Dialogue = "yo lil bro u want sum free <font color='#ffde32'>tix</font>??? lol",
-			VoiceId = 10,
+			VoiceId = "10",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,
@@ -46,7 +46,7 @@ return {
 			PlaySound = "OldSplat",
 			Responses = {
 				{
-					Text = "ts crazy old man...",
+					Text = "This crazy old man...",
 					Type = "Close",
 				},
 				{
