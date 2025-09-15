@@ -57,7 +57,7 @@ end
 function HelperFunctions.SetNPCDialogueFile(fromToTable)
 	print("Setting dialogue file...")
 
-	local dialogueRef, newName = next(fromToTable[1])
+	local dialogueRef, newName = next(fromToTable)
 	print(dialogueRef, "->", newName)
 
 	if dialogueRef then

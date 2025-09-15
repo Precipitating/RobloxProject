@@ -9,6 +9,7 @@ local NPCModule = require(script.NPCs.NPCModule)
 local ProfileDataModule = require(script.Player.GetPlayerInfo)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
+local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- PSYCHOMANTIS
@@ -52,12 +53,16 @@ ReplicatedStorage.Remotes.HumanoidMoveTo.OnServerEvent:Connect(function(_, targe
 end)
 
 -- MODEL
-ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerEvent:Connect(
-	function(_, storageFolderName, folderName, modelName, pos)
-		print(`Client -> Server spawn {modelName}`)
-		HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
-	end
+ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerInvoke = function(
+	_,
+	storageFolderName,
+	folderName,
+	modelName,
+	pos
 )
+	print(`Client -> Server spawn {modelName}`)
+	return HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
+end
 
 -- GLITCHER
 ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally.OnServerInvoke = function(_)
@@ -99,10 +104,12 @@ GeneralRemotes.Cashier.GetGroceryItems.OnServerInvoke = function(_)
 	return GroceryBagModule.GetCurrentGroceries()
 end
 
--- set player's achievements
+GeneralRemotes.DrivingInstructor.GetDrivingTestResults.OnServerInvoke = function(_)
+	return DrivingTest.GetDrivingTestResults()
+end
 
+-- set player's achievements
 -- spawn player in their room when spawned
-local RunService = game:GetService("RunService")
 
 Players.PlayerAdded:Connect(function(player)
 	PlayerInitialize.SetupAchievements(player)

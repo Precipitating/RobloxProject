@@ -4,7 +4,7 @@ return {
 			Name = "Jack",
 			Portrait = "rbxassetid://1228431715",
 			Dialogue = "ROBLOX does not give a- Oh, what do you want, i'm livestreaming here!",
-			VoiceId = 3,
+			VoiceId = "3",
 			Pitch = 3,
 			Speed = 1,
 			Volume = 1,

@@ -4,7 +4,7 @@ return {
 			Name = "Stuck in 2013",
 			Portrait = "rbxassetid://134009593",
 			Dialogue = "God what an event that was... I was one of the <b>2011</b> people that beat the event... <i>Jesus..</i>",
-			VoiceId = 1,
+			VoiceId = "1",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,

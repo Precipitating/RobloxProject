@@ -3,7 +3,7 @@ return {
 		OwnerTerminalGiven = {
 			Name = "Owner",
 			Portrait = "rbxassetid://15603749034",
-			VoiceId = 7,
+			VoiceId = "7",
 			Pitch = -12,
 			Speed = 1,
 			Volume = 3,

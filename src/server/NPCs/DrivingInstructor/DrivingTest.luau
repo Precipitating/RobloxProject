@@ -6,6 +6,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
+local PositionBeforeTeleport = nil
 local Roads = ServerStorage.MissionModels.DrivingInstructor:GetChildren()
 local CurrentRoads = {}
 local PooledRoads = {}
@@ -32,13 +33,17 @@ local CheckpointReachBeforeDeletion = 10
 local CheckpointsReached = 0
 local RoundAboutCooldown = 20
 local TurnCooldown = 10
-local RoadFinishCount = 500
+local RoadFinishCount = 100
 local TrafficLightCooldown = 10
 local FakeRoadsToSpawnAtRoundabout = 3
 
 -- demerits
 local RanRedLightCount = 0
 local FailedRoundAbout = 0
+
+function DrivingTest.GetDrivingTestResults()
+	return { RedLight = RanRedLightCount, Roundabout = FailedRoundAbout }
+end
 
 local function GetRayDirection(attachment, direction: string, distance: number)
 	local cf = attachment.WorldCFrame
@@ -77,6 +82,7 @@ local function SpawnTrafficLight(currentRoad)
 	end
 
 	if (RoadsSpawned % TrafficLightCooldown) == 0 and math.random() < 0.5 then
+		print("Traffic light should spawn")
 		local trafficLight =
 			HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "TrafficLight", nil)
 		trafficLight:PivotTo(currentRoad:FindFirstChild("TrafficLightPos"):GetPivot())
@@ -179,6 +185,20 @@ function DrivingTest.FindRoadInPool(name)
 	end
 
 	return nil
+end
+
+local function AnnounceNextRoundAbout(player)
+	-- voiceline speaker for roundabout directions
+	if not RoundAboutDirectionSpoken and #CorrectRoundAboutDirections > 0 then
+		RoundAboutDirectionSpoken = true
+		local voiceline = GeneralRemotes.PlayTTS:InvokeClient(
+			player,
+			`At the next roundabout, please enter the {RoundAboutDirectionConversion[CorrectRoundAboutDirections[1]]}`
+		)
+		if not voiceline then
+			RoundAboutDirectionSpoken = false
+		end
+	end
 end
 
 local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player: Player)
@@ -294,28 +314,29 @@ local function AddFinishedRoad(player)
 	local endRoad, _, _ = SpawnRoad("FinishedRoad", newEndAttachment, player)
 	local endCollide = endRoad:FindFirstChild("EndCollide")
 
-	endCollide.Touched:Connect(function(hit)
+	local conn
+	conn = endCollide.Touched:Connect(function(hit)
 		if not CollectionService:HasTag(hit, "DrivingTestCar") then
 			return
 		end
+		conn:Disconnect()
+		-- transition
 		GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
-		GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
-		player.Character.Humanoid.Sit = false
-	end)
-end
+		GeneralRemotes.DisableControls:FireClient(player, nil)
 
-local function AnnounceNextRoundAbout(player)
-	-- voiceline speaker for roundabout directions
-	if not RoundAboutDirectionSpoken and #CorrectRoundAboutDirections > 0 then
-		RoundAboutDirectionSpoken = true
-		local voiceline = GeneralRemotes.PlayTTS:InvokeClient(
-			player,
-			`At the next roundabout, please enter the {RoundAboutDirectionConversion[CorrectRoundAboutDirections[1]]}`
-		)
-		if not voiceline then
-			RoundAboutDirectionSpoken = false
-		end
-	end
+		player.Character.Humanoid.Sit = false
+		player.Character.Humanoid.JumpPower = 50
+		task.wait(1)
+		-- teleport back to room
+		player.Character:PivotTo(PositionBeforeTeleport)
+
+		task.wait(1)
+		-- revert music, enable controls and change instructor dialogue.
+		GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
+		GeneralRemotes.EnableControls:FireClient(player, nil)
+		GeneralRemotes.PlayTheme:FireClient(player, "Main")
+		HelperFunctions.SetNPCDialogueFile({ DrivingInstructorNameTag = "DrivingInstructorResults" })
+	end)
 end
 
 -- connect the roundabout validators, to determine if the player has driven around the
@@ -412,6 +433,7 @@ function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
 				conn2:Disconnect()
 				GeneralRemotes.PlaySound:InvokeClient(player, "Error")
 				FailedRoundAbout = FailedRoundAbout + 1
+				ConnectionManager.Clear(id)
 			end)
 
 			ConnectionManager.Add(id, conn2)
@@ -550,10 +572,11 @@ local function SeatPlayerToCar(player, seat)
 	seat:Sit(humanoid)
 end
 
-function DrivingTest.Init(player)
+function DrivingTest.Init(player, posBeforeTeleport)
 	if not Roads then
 		error("No road models found")
 	end
+	PositionBeforeTeleport = posBeforeTeleport
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 
 	-- ensure EndCutscene stops the current main theme before calling this

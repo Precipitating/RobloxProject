@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
+local StarterPlayer = game:GetService("StarterPlayer")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
 
@@ -27,6 +28,7 @@ local Destroy = true
 local NoYield = false
 local SafeMode = true
 
+local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local Cutscene = require(CutsceneModule)
 local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls)
@@ -99,9 +101,16 @@ end
 
 local CutsceneClientHandler = {}
 
+local function Speak(ttsHandle, voices, who, text)
+	TextToSpeech.UpdateVoiceConfig(voices[who])
+	if TextToSpeech.Speak(text) then
+		ttsHandle.Ended:Wait()
+	end
+end
+
 CutsceneClientHandler.KeyframeHandler = {
 
-	PsychoMantisWin = function(instruction, nextInstruction, X)
+	PsychoMantisWin = function(instruction, _, _)
 		if instruction == 1 then
 			task.wait(2)
 			SoundFolder.Laugh:Play()
@@ -111,7 +120,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	PsychoMantisFailTruth = function(instruction, nextInstruction, X)
+	PsychoMantisFailTruth = function(instruction, _, _)
 		if instruction == 1 then
 			task.wait(5)
 			SoundFolder.PsychoMantisTruthDialogue1:Play()
@@ -125,7 +134,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	PsychoMantisFailLie = function(instruction, nextInstruction, X)
+	PsychoMantisFailLie = function(instruction, _, _)
 		if instruction == 1 then
 			SoundFolder.Knock:Play()
 		elseif instruction == 4 then
@@ -136,7 +145,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	RoadmanFail = function(instruction, nextInstruction, X)
+	RoadmanFail = function(instruction, _, _)
 		if instruction > 2 then
 			if instruction == 8 then
 				SoundFolder.Maccies:Play()
@@ -146,20 +155,20 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	RoadmanMugged = function(instruction, nextInstruction, X)
+	RoadmanMugged = function(instruction, _, _)
 		if instruction == 3 then
 			task.wait(3)
 			SoundFolder.License:Play()
 		end
 	end,
 
-	RoadmanWin = function(instruction, nextInstruction, X)
+	RoadmanWin = function(instruction, _, _)
 		if instruction == 1 then
 			SoundFolder.BlocklandBan:Play()
 		end
 	end,
 
-	GlitcherWin = function(instruction, nextInstruction, X)
+	GlitcherWin = function(instruction, _, _)
 		if instruction == 4 then
 			SoundModule.PlaySound("Surprise")
 			Music:Stop()
@@ -182,18 +191,23 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	CashierAngerEnd = function(instruction, nextInstruction, X)
+	CashierAngerEnd = function(instruction, _, _)
 		if instruction == 6 then
 			task.wait(4)
 			SoundModule.PlaySound("CashierCustomerTroll")
 		elseif instruction == 7 then
-			TextToSpeech.UpdateVoiceConfig(5, -12, 1, 3)
+			local config = {}
+			config.VoiceId = "5"
+			config.Pitch = 5
+			config.Speed = 1
+			config.Volume = 3
+			TextToSpeech.UpdateVoiceConfig(config)
 			task.wait(6)
 			TextToSpeech.Speak("What did you just say....")
 		end
 	end,
 
-	CashierScammed = function(instruction, nextInstruction, X)
+	CashierScammed = function(instruction, _, _)
 		local player = Players.LocalPlayer.Character
 		local warehouse = workspace:WaitForChild("Warehouse")
 		local homeless = warehouse:WaitForChild("HomelessWarehouse")
@@ -224,41 +238,54 @@ CutsceneClientHandler.KeyframeHandler = {
 			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos3)
 			task.wait(3)
 			local voices = {
-				Homeless = { 3, 1, 1, 1 },
-				Cashier = { 5, -12, 1, 1 },
+				Homeless = { VoiceId = "3", Pitch = 1, Speed = 1, Volume = 1 },
+				Cashier = { VoiceId = "5", Pitch = -12, Speed = 1, Volume = 1 },
 			}
 
-			local function Speak(who, text)
-				TextToSpeech.UpdateVoiceConfig(unpack(voices[who]))
-				if TextToSpeech.Speak(text) then
-					ttsHandle().Ended:Wait()
-				end
-			end
-
 			-- talk
-			Speak("Homeless", "Did you get it?")
-			Speak("Cashier", "Yeah, got the blox card details and doubled the victim's price as well.What a jackpot!")
+			Speak(ttsHandle, voices, "Homeless", "Did you get it?")
 			Speak(
+				ttsHandle,
+				voices,
+				"Cashier",
+				"Yeah, got the blox card details and doubled the victim's price as well.What a jackpot!"
+			)
+			Speak(
+				ttsHandle,
+				voices,
 				"Homeless",
 				"This homeless man gimmick to get people to buy items is working spendidly, we're getting RICH baby!"
 			)
 			Speak(
+				ttsHandle,
+				voices,
 				"Cashier",
 				"Yeah. Even the fake slow machine tactic is making them willingly disregard obvious issues, meaning bling bling bling. GAH HAH HAH HAH HAAAAAH"
 			)
 			Speak(
+				ttsHandle,
+				voices,
 				"Homeless",
 				"Did you see what I told that donkey to buy? 10 Rebel Colas you know? Got greedy and threw in some random stuff. JEE-HEE-HEE-HEE-HAAAH"
 			)
 			Speak(
+				ttsHandle,
+				voices,
 				"Cashier",
 				"Why do you always ask for massive quantities, Dan?, we just needed him to scan his card onto the skimmer. These boxes are full of Rebel Colas bro."
 			)
 			Speak(
+				ttsHandle,
+				voices,
 				"Homeless",
 				"Nothing wrong with some free snacks after we dunk the victim of their cold, hard earned, Great British Pounds. Im I right Shayden?"
 			)
-			Speak("Cashier", "You're right bro, lets just say it was a two for one meal deal.GAH HAH HAH HAH HAAAAAH")
+			Speak(
+				ttsHandle,
+				voices,
+				"Cashier",
+				"You're right bro, lets just say it was a two for one meal deal.GAH HAH HAH HAH HAAAAAH"
+			)
 			Demo:Resume()
 		elseif instruction == 7 then
 			Demo:Pause()
@@ -267,6 +294,62 @@ CutsceneClientHandler.KeyframeHandler = {
 				SoundModule.PlaySound("EvilLaugh")
 				resumeEvent:Disconnect()
 			end)
+		end
+	end,
+
+	DrivingTestFailed = function(instruction, _, _)
+		if instruction == 1 then
+			local bus =
+				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
+
+			local tweenInfo = TweenInfo.new(10, Enum.EasingStyle.Linear)
+			local goalCFrame = CFrame.new(130, 3.138, -65.8)
+
+			local tween = TweenService:Create(bus.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
+			tween:Play()
+		elseif instruction == 5 then
+			Demo:Pause()
+			-- dialogue
+			local ttsHandle = TextToSpeech.GetHandle()
+			local voices = {
+				Player = { VoiceId = "8", Pitch = 1, Speed = 1, Volume = 1 },
+				Driver = { VoiceId = "7", Pitch = 6, Speed = 1, Volume = 1 },
+			}
+			Speak(ttsHandle, voices, "Player", "One single to Bosnia please. A laptop must be delivered.")
+			Speak(ttsHandle, voices, "Driver", "Six trillion marks please. Fee is adjusted due to it being a war zone.")
+			Speak(ttsHandle, voices, "Player", "ARE YOU KIDDING ME? YOU CAN FEED A COUNTRY WITH THAT MONEY!")
+			Speak(ttsHandle, voices, "Driver", "You can get your own car and drive there yourself then. Oh wait.")
+			Speak(ttsHandle, voices, "Player", "It's free after nine o clock isn't it?")
+			Speak(ttsHandle, voices, "Driver", "Yeah, for the elderly. Clearly you're not.")
+			Speak(
+				ttsHandle,
+				voices,
+				"Player",
+				"Oh my back hurts so much whippersnapper, back in those days, we used to use a tool for vehicles and pressed Y to start it."
+			)
+			Speak(
+				ttsHandle,
+				voices,
+				"Driver",
+				"Fine, we're running late on schedule, hurry up, i'll let it go just once."
+			)
+			Demo:Resume()
+		elseif instruction == 7 then
+			local bus = workspace:WaitForChild("Bus")
+			task.wait(2)
+
+			-- after cutscene finish camera should stick to the bus whilst moving
+			local cam = workspace.CurrentCamera
+			cam.CameraType = Enum.CameraType.Follow
+			cam.CameraSubject = bus:WaitForChild("CameraPos")
+			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+
+			-- move bus
+			local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Linear)
+			local goalCFrame = CFrame.new(530, 3.138, -65.8)
+			local tween = TweenService:Create(bus.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
+			tween:Play()
+			UIHelperFunctions.AdjustBlackScreen(5, 0)
 		end
 	end,
 }

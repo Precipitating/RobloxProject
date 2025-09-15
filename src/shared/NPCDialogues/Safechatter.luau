@@ -4,7 +4,7 @@ return {
 			Name = "Guest",
 			Portrait = "rbxassetid://60376597",
 			Dialogue = "Hello",
-			VoiceId = 10,
+			VoiceId = "10",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,
@@ -135,7 +135,7 @@ return {
 			Responses = {
 				{
 					Text = "xD Have a nice day :) aha! xD",
-					SetDialogueFile = { { SafechatterNameTag = "SafechatterAccepted" } },
+					SetDialogueFile = { SafechatterNameTag = "SafechatterAccepted" },
 					UnlockMission = "GuestMoney",
 					Type = "Close",
 				},

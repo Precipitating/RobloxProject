@@ -4,7 +4,7 @@ return {
 			Name = "???OG USER???",
 			Portrait = "rbxassetid://150933824",
 			Dialogue = "Wait black milli at RT? Maybe I could jump him with my Auto 5 or PPSH",
-			VoiceId = 5,
+			VoiceId = "5",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,

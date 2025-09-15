@@ -4,7 +4,7 @@ return {
 			Name = "Asylum Doctor",
 			Portrait = "rbxassetid://1710521885",
 			Dialogue = "Stay away from the door, you freak!",
-			VoiceId = 5,
+			VoiceId = "5",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 3,

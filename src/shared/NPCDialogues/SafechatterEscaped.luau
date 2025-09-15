@@ -4,7 +4,7 @@ return {
 			Name = "Guest 1337",
 			Portrait = "rbxassetid://15815325811",
 			Dialogue = "<b>Lights out</b>",
-			VoiceId = 10,
+			VoiceId = "10",
 			Pitch = 1,
 			Speed = 1,
 			Volume = 1,

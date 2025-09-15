@@ -3,6 +3,7 @@ return {
 		RoadmanComplete = {
 			Name = "Gentlemanly",
 			Portrait = "rbxassetid://11640689559",
+			VoiceId = "1",
 			Dialogue = "Bruv, you’re movin’ like a wasteman - man should be out there skimmin' a burner for me",
 			Pitch = 12,
 			Speed = 2,
