@@ -3,6 +3,7 @@ local CollectionService = game:GetService("CollectionService")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local TweenService = game:GetService("TweenService")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -35,14 +36,16 @@ local RoundAboutCooldown = 20
 local TurnCooldown = 10
 local RoadFinishCount = 100
 local TrafficLightCooldown = 10
+local SheepCooldown = 10
 local FakeRoadsToSpawnAtRoundabout = 3
 
 -- demerits
 local RanRedLightCount = 0
 local FailedRoundAbout = 0
+local SheepsHit = 0
 
 function DrivingTest.GetDrivingTestResults()
-	return { RedLight = RanRedLightCount, Roundabout = FailedRoundAbout }
+	return { RedLight = RanRedLightCount, Roundabout = FailedRoundAbout, Sheep = SheepsHit }
 end
 
 local function GetRayDirection(attachment, direction: string, distance: number)
@@ -70,6 +73,58 @@ local function GetPartsByName(model, nameFragment)
 		end
 	end
 	return result
+end
+
+local function SpawnSheep(player, currentRoad)
+	-- remove existing sheep
+	local hasSheep = currentRoad:FindFirstChild("Sheep")
+	if hasSheep then
+		hasSheep:Destroy()
+	end
+
+	-- spawn condition
+	if (RoadsSpawned % SheepCooldown) == 0 then
+		print("Sheep spawned!")
+
+		-- spawn MeshPart sheep
+		local sheep = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "Sheep", nil)
+		sheep:PivotTo(currentRoad:FindFirstChild("SheepPosStart"):GetPivot())
+		sheep.Parent = currentRoad
+
+		-- Touched connection
+		local conn
+		conn = sheep.Touched:Connect(function(hit)
+			if CollectionService:HasTag(hit, "DrivingTestCar") then
+				GeneralRemotes.PlaySound:InvokeClient(player, "Baa")
+				SheepsHit += 1
+				if conn then
+					conn:Disconnect()
+				end
+				if sheep and sheep.Parent then
+					sheep:Destroy()
+				end
+			end
+		end)
+
+		-- Move sheep across the road
+		local tweenInfo = TweenInfo.new(15, Enum.EasingStyle.Linear)
+		local endPosPart = currentRoad:FindFirstChild("SheepPosEnd")
+		if endPosPart then
+			local goalCFrame = endPosPart:GetPivot()
+			local tween = TweenService:Create(sheep, tweenInfo, { CFrame = goalCFrame })
+			tween:Play()
+			tween.Completed:Connect(function()
+				if conn then
+					conn:Disconnect()
+				end
+				if sheep and sheep.Parent then
+					sheep:Destroy()
+				end
+			end)
+		else
+			warn("SheepPosEnd missing for currentRoad:", currentRoad:GetFullName())
+		end
+	end
 end
 
 local function SpawnTrafficLight(currentRoad)
@@ -102,7 +157,9 @@ local function SpawnTrafficLight(currentRoad)
 		end)
 
 		ConnectionManager.Add(currentRoad:GetAttribute("ID"), conn)
+		return true
 	end
+	return false
 end
 
 local function GetOffsetPosition(attachment, forwardOffset: number, rightOffset: number, upOffset: number)
@@ -258,7 +315,10 @@ local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player:
 
 	-- spawn traffic light if straight road is being spawned (30% chance)
 	if name == "StraightRoad" then
-		SpawnTrafficLight(nextRoad)
+		local spawnedTrafficLight = SpawnTrafficLight(nextRoad)
+		if not spawnedTrafficLight then
+			SpawnSheep(player, nextRoad)
+		end
 	end
 
 	table.insert(CurrentRoads, nextRoad)

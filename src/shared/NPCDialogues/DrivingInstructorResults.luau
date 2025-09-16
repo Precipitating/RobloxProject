@@ -1,18 +1,24 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local DrivingTestResults = nil
 
-local function GetRedLightsPassed()
+local function GetDrivingTestResults()
 	DrivingTestResults = ReplicatedStorage.Remotes.DrivingInstructor.GetDrivingTestResults:InvokeServer()
+
+	return ""
+end
+local function GetRedLightsPassed()
 	return DrivingTestResults["RedLight"]
 end
 
 local function GetRoundaboutsFailed()
-	DrivingTestResults = ReplicatedStorage.Remotes.DrivingInstructor.GetDrivingTestResults:InvokeServer()
 	return DrivingTestResults["Roundabout"]
 end
+
+local function GetSheepsHit()
+	return DrivingTestResults["Sheep"]
+end
 local function HasFailed()
-	DrivingTestResults = ReplicatedStorage.Remotes.DrivingInstructor.GetDrivingTestResults:InvokeServer()
-	return GetRedLightsPassed() > 0 or GetRoundaboutsFailed() > 0
+	return GetRedLightsPassed() > 0 or GetRoundaboutsFailed() > 0 or GetSheepsHit() > 0
 end
 local function ResultsDialogue()
 	local result = {}
@@ -80,7 +86,7 @@ return {
 		One = {
 			Name = "Bertha",
 			Portrait = "rbxassetid://15490532405",
-			Dialogue = `Here are the results that are checked during the test.<br/>Red lights passed: {GetRedLightsPassed()}<br/>Roundabouts failed: {GetRoundaboutsFailed()}`,
+			Dialogue = `{GetDrivingTestResults()}Here are the results that are checked during the test.<br/>Red lights passed: {GetRedLightsPassed()}<br/>Roundabouts failed: {GetRoundaboutsFailed()}<br/>Sheeps hit: {GetSheepsHit()}`,
 			Responses = {
 				{
 					Text = "Well? is that good?",
@@ -114,7 +120,7 @@ return {
 		Passed1 = {
 			Name = "Bertha",
 			Portrait = "rbxassetid://6076798179",
-			Dialogue = "Anyways, here's the driving license.<br/>Enjoy.",
+			Dialogue = "Anyways, here's the driving license.<br/>Take the Robin Reliant as well, a gift to celebrate this occasion.<br/>Enjoy.",
 			Responses = {
 				{
 					Text = "(Take & move at haste)",
@@ -153,12 +159,12 @@ return {
 			Responses = {
 				{
 					Text = "I will pass one day...<br/>I will wipe that SMIRK off your face.",
-					Type = "Close",
+					Type = "CloseCutscene",
 					ExecuteScenarioEvent = "DrivingTestFailed",
 				},
 				{
 					Text = "...(He's lying, but I can't prove it...)",
-					Type = "Close",
+					Type = "CloseCutscene",
 					ExecuteScenarioEvent = "DrivingTestFailed",
 				},
 			},
