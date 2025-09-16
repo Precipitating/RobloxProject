@@ -299,6 +299,7 @@ CutsceneClientHandler.KeyframeHandler = {
 
 	DrivingTestFailed = function(instruction, _, _)
 		if instruction == 1 then
+			UIHelperFunctions.AdjustBlackScreen(1, 1)
 			local bus =
 				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
 
@@ -333,6 +334,7 @@ CutsceneClientHandler.KeyframeHandler = {
 				"Driver",
 				"Fine, we're running late on schedule, hurry up, i'll let it go just once."
 			)
+			Speak(ttsHandle, voices, "Player", "Thank you young man.")
 			Demo:Resume()
 		elseif instruction == 7 then
 			local bus = workspace:WaitForChild("Bus")
@@ -340,7 +342,10 @@ CutsceneClientHandler.KeyframeHandler = {
 
 			-- after cutscene finish camera should stick to the bus whilst moving
 			local cam = workspace.CurrentCamera
-			cam.CameraType = Enum.CameraType.Follow
+			repeat
+				wait()
+				cam.CameraType = Enum.CameraType.Follow
+			until cam.CameraType == Enum.CameraType.Follow
 			cam.CameraSubject = bus:WaitForChild("CameraPos")
 			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
 
@@ -350,6 +355,60 @@ CutsceneClientHandler.KeyframeHandler = {
 			local tween = TweenService:Create(bus.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
 			tween:Play()
 			UIHelperFunctions.AdjustBlackScreen(5, 0)
+		end
+	end,
+
+	DrivingTestPassed = function(instruction, _, _)
+		if instruction == 1 then
+			Demo:Pause()
+			local car = GeneralRemotes.SpawnServerStorageModel:InvokeServer(
+				"MissionModels",
+				"DrivingInstructor",
+				"CutsceneCar",
+				nil
+			)
+
+			local cam = workspace.CurrentCamera
+			repeat
+				wait()
+				cam.CameraType = Enum.CameraType.Follow
+			until cam.CameraType == Enum.CameraType.Follow
+			cam.CameraSubject = car:WaitForChild("CameraPos")
+			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
+			UIHelperFunctions.AdjustBlackScreen(1, 1)
+
+			local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Linear)
+			local goalCFrame = CFrame.new(-9.32, 3.538, -324.215) * car.PrimaryPart.CFrame.Rotation
+
+			local tween = TweenService:Create(car.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
+			tween:Play()
+			tween.Completed:Wait()
+
+			Demo:Resume()
+		elseif instruction == 2 then
+			Demo:Pause()
+			local car = workspace:WaitForChild("CutsceneCar")
+			local sheep = car:WaitForChild("Car"):WaitForChild("Sheep")
+			sheep.Transparency = 0
+			local ttsHandle = TextToSpeech.GetHandle()
+			local voices = {
+				Player = { VoiceId = "5", Pitch = 1, Speed = 1, Volume = 1 },
+				Sheep = { VoiceId = "1", Pitch = 1, Speed = 1, Volume = 1 },
+			}
+			Speak(
+				ttsHandle,
+				voices,
+				"Player",
+				"Always wanted to go here after I got my license. Next stop: Clan-vire-pool-gwin-gill-go-ger-uh-kwern-dro-bool-clan-tuh-sill-yo-go-go-goch"
+			)
+			Speak(ttsHandle, voices, "Sheep", "I believe this town is called:")
+			Demo:Resume()
+		elseif instruction == 3 then
+			task.wait(1)
+			local townName = SoundModule.PlaySound("Llanfair")
+			townName.Ended:Wait()
+			SoundModule.PlaySound("WhatDogDoin")
+			UIHelperFunctions.AdjustBlackScreen(3, 0)
 		end
 	end,
 }

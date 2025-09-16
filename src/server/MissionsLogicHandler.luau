@@ -1,5 +1,6 @@
 local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
+local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -308,10 +309,36 @@ MissionEventHandlers["DrivingTest"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestPassed"] = function(player)
+	local drivingInstructor = CollectionService:GetTagged("DrivingInstructor")
+	if #drivingInstructor > 0 then
+		for _, instructor in ipairs(drivingInstructor) do
+			local proxPrompt = instructor:FindFirstChild("ProximityPrompt")
+			if proxPrompt then
+				proxPrompt.Enabled = false
+			end
+		end
+	end
+
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	task.wait(0.5)
+	BadgeHandler.awardBadge(player, 2493042217612033)
+	GeneralRemotes.PlayTheme:FireClient(player, "CoolTheme")
 	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestPassed")
 end
 
 MissionEventHandlers["DrivingTestFailed"] = function(player)
+	local drivingInstructor = CollectionService:GetTagged("DrivingInstructor")
+	if #drivingInstructor > 0 then
+		for _, instructor in ipairs(drivingInstructor) do
+			local proxPrompt = instructor:FindFirstChild("ProximityPrompt")
+			if proxPrompt then
+				proxPrompt.Enabled = false
+			end
+		end
+	end
+
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 1698025412209346)
 	GeneralRemotes.PlayTheme:FireClient(player, "SadTheme")
 	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestFailed")
