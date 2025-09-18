@@ -1,17 +1,16 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
-local Glitcher = require(ReplicatedStorage.Shared.NPCDialogues.Glitcher)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local GeneralRemotes = ReplicatedStorage.Remotes
 local BosnianRoulette = {}
 local LandMine = nil
 local LandMineTimer = math.floor(math.random(60, 300))
 local BeepSound = nil
 local BoomSound = nil
 local CurrentTime = LandMineTimer
-local GUILocation = ReplicatedStorage.Shared.GUI.Glitcher.BosnianRouletteGUI
+local GUILocation = ReplicatedStorage.GUI.Glitcher.BosnianRouletteGUI
 local GUIInstance = nil
 local YourTurn = true
 local PlayerRef = nil
@@ -174,7 +173,7 @@ function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
 	-- player lose
 	if yourTurnAtDetonation then
 		print("Lose")
-		local playerClone = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "PlayerClone", nil)
+		local playerClone = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "PlayerClone", nil)
 		GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
 		task.wait(5)
 		GeneralRemotes.BlackFade:FireClient(PlayerRef, 2, 1)
@@ -197,8 +196,8 @@ function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
 		GeneralRemotes.BlackFade:FireClient(PlayerRef, 0.1, 0)
 		workspace:FindFirstChild("GlitchRoom"):FindFirstChild("Owner"):Destroy()
 		workspace:FindFirstChild("GlitchRoom"):FindFirstChild("LandMine"):Destroy()
-		local deadOwner = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "OwnerDead", nil)
-		local fakeRoom = HelperFunctions.SpawnModelAtPosition("Rooms", "ScamRoom", "ScamRoom", nil)
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "OwnerDead", nil)
+		ServerHelperFunctions.SpawnModelAtPosition("Rooms", "ScamRoom", "ScamRoom", nil)
 		task.wait(1)
 		BadgeHandler.awardBadge(PlayerRef, 2760480705679050)
 		GeneralRemotes.BlackFade:FireClient(PlayerRef, 2, 1)

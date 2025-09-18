@@ -1,11 +1,11 @@
 local HttpService = game:GetService("HttpService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local PlayThemeRemote = ReplicatedStorage.Shared.Remotes.PlayTheme
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local PlayThemeRemote = ReplicatedStorage.Remotes.PlayTheme
 local APIs = { "https://random-word-api.vercel.app/api?words=", "https://random-word-api.herokuapp.com/word?number=" }
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
-local Missions = require(ReplicatedStorage.Shared.Missions.Server.Missions)
+local GeneralRemotes = ReplicatedStorage.Remotes
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 
 local WORD_AMOUNT = 30
 local DURATION = 60
@@ -64,7 +64,7 @@ end
 function WordType.Init(player)
 	-- get refs
 	wordList = WordType.GenerateWordList(WORD_AMOUNT)
-	examRoom = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamRoom", nil)
+	examRoom = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamRoom", nil)
 	clockText = examRoom.Clock.Screen.SurfaceGui.TextLabel
 	whiteBoard = examRoom.Whiteboard.SurfaceGui.TextLabel
 	currentScore = examRoom.CurrentScore.Screen.SurfaceGui.TextLabel
@@ -133,12 +133,12 @@ function WordType.Finished(won, player)
 
 	if won then
 		whiteBoard.Text = "YOU WIN!"
-		local model = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamWin", nil)
+		local model = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamWin", nil)
 		model.Parent = workspace.ExamRoom
 		Missions.addProgressToTask(player, "TypingCompetition", "Type", 1)
 	else
 		whiteBoard.Text = "YOU LOSE!"
-		local model = HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamLose", nil)
+		local model = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "ExamLose", nil)
 		model.Parent = workspace.ExamRoom
 		Missions.FailMission(player, "TypingCompetition")
 	end

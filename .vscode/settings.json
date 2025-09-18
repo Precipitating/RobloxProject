@@ -1,3 +1,140 @@
 {
-    "stylua.targetReleaseVersion": "latest"
+    "stylua.targetReleaseVersion": "latest",
+    "folder-color.pathColors": [
+        {
+            "folderPath": "UnknownGame\\src\\client\\",
+            "color": "foldercolorizer.color_ff0000"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\CodesOtaku\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\CodesOtaku\\CutsceneModule.lua\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Events\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\GUI\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Models\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCDialogues\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\Cashier\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\Cashier\\ShopBasketModule.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\ManualLabor\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\ManualLabor\\Jobs\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\ManualLabor\\Jobs\\HaulJob.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\NPCs\\ManualLabor\\HaulJob.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Remotes\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Sounds\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Cutscenes.rbxmx\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\FeaturePackagesCore.rbxmx\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\Missions.rbxmx\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\TextToSpeech.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\Cashier\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\DrivingInstructor\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\Glitcher\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\PsychoMantis\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\Safechatter\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\NPCInit.server.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\NPCModule.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\NPCOutfit.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\NPCs\\SafeChatter.server.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\Player\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\RoadEvents\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\BadgeHandler.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\ConnectionManager.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\init.server.lua\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\MissionsCompleteHandler.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\MissionsFailedHandler.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\MissionsHandler.server.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\MissionsLogicHandler.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\PlayerBadgeDisplayer.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\RoomHandler.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\ServerHelperFunctions.luau\\"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\server\\",
+            "color": "foldercolorizer.color_00cc66"
+        },
+        {
+            "folderPath": "UnknownGame\\src\\shared\\",
+            "color": "foldercolorizer.color_666666"
+        }
+    ]
 }

@@ -1,8 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
-local UIHelperFunctions = require(script.Parent.UIHelperFunctions)
-local HouseRemote = ReplicatedStorage.Shared.Remotes.House.HouseDoorInteracted
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local GeneralRemotes = ReplicatedStorage.Remotes
+local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local Debounce = false
 
 local RoomExitFunctions = {

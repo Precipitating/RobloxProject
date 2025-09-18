@@ -1,8 +1,9 @@
-local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local Players = game:GetService("Players")
+local ServerScriptService = game:GetService("ServerScriptService")
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+
 local IsActive = false
 local RoadEvents = {}
 local FlingForce = 200
@@ -18,7 +19,7 @@ function RoadEvents.SpawnLearnerDriver()
 	local collide
 	local hasBeenHit = false
 	if not driver then
-		driver = HelperFunctions.SpawnModelAtPosition("Road", "LearnerDriver", "Clunker", nil)
+		driver = ServerHelperFunctions.SpawnModelAtPosition("Road", "LearnerDriver", "Clunker", nil)
 		driver.PrimaryPart.CFrame = spawnPos.CFrame
 		collide = driver:FindFirstChild("Collide")
 

@@ -1,6 +1,5 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local HelperFunctions = require(script.HelperFunctions)
 local CashierModule = require(script.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(script.NPCs.Cashier.GroceryBagModule)
 local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
@@ -10,6 +9,7 @@ local ProfileDataModule = require(script.Player.GetPlayerInfo)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
+local ServerHelperFunctions = require(script.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- PSYCHOMANTIS
@@ -61,7 +61,7 @@ ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerInvoke = function(
 	pos
 )
 	print(`Client -> Server spawn {modelName}`)
-	return HelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
+	return ServerHelperFunctions.SpawnModelAtPosition(storageFolderName, folderName, modelName, pos)
 end
 
 -- GLITCHER
@@ -97,7 +97,7 @@ GeneralRemotes.Cashier.NextCustomer.OnServerEvent:Connect(function(player, curre
 end)
 
 GeneralRemotes.RemoveAllToolsOfTag.OnServerEvent:Connect(function(player, tag)
-	HelperFunctions.RemoveTools(player, nil, tag)
+	ServerHelperFunctions.RemoveTools(player, nil, tag)
 end)
 
 GeneralRemotes.Cashier.GetGroceryItems.OnServerInvoke = function(_)

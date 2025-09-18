@@ -1,8 +1,8 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Player = game.Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local humanoid = Character and Character:FindFirstChild("Humanoid")
-local HasEnteredLegallyRemote = ReplicatedStorage.Shared.Remotes.GlitcherMission.EnteredLegally
+local HasEnteredLegallyRemote = ReplicatedStorage.Remotes.GlitcherMission.EnteredLegally
 
 local function DetermineDialogue()
 	local isSeated = humanoid and humanoid.SeatPart ~= nil

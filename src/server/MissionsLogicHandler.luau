@@ -1,19 +1,19 @@
-local HelperFunctions = require(script.Parent.HelperFunctions)
 local BadgeHandler = require(script.Parent.BadgeHandler)
 local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
-local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
+local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
+local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 
 local MissionEventHandlers = {}
 -- handle all game events
@@ -21,7 +21,7 @@ local MissionEventHandlers = {}
 -- Roadman
 MissionEventHandlers["StealPhone"] = function(_)
 	-- spawn the next NPC that progresses this mission
-	local victim = HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", nil)
+	local victim = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", nil)
 	local spawnPosList = ServerStorage.MissionModels.Roadman:FindFirstChild("PhoneVictimSpawns"):GetChildren()
 	local spawnPos = spawnPosList[math.random(1, #spawnPosList)]
 	victim:SetPrimaryPartCFrame(spawnPos.CFrame)
@@ -29,7 +29,7 @@ end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
 	-- spawn surrounding cops around player
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "Cops", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "Cops", nil)
 	-- award badge
 	BadgeHandler.awardBadge(player, 4119036600108215)
 	-- call cutscene
@@ -37,7 +37,7 @@ MissionEventHandlers["RoadmanCaught"] = function(player)
 end
 
 MissionEventHandlers["RoadmanWin"] = function(player)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PC", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PC", nil)
 
 	-- award badge
 	BadgeHandler.awardBadge(player, 126301904067129)
@@ -53,7 +53,7 @@ MissionEventHandlers["RoadmanMugged"] = function(player)
 
 	if humanoid and rootPart then
 		-- spawn signs
-		local signs = HelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "MuggedSigns", nil)
+		local signs = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "MuggedSigns", nil)
 
 		-- award badge
 		BadgeHandler.awardBadge(player, 1658087564169818)
@@ -74,7 +74,7 @@ end
 -- Safechatter
 MissionEventHandlers["GuestMoney"] = function(_)
 	print("GUEST MISSIO NBEGIN")
-	HelperFunctions.SpawnMissionPositionedModels("Safechatter", "Mission")
+	ServerHelperFunctions.SpawnMissionPositionedModels("Safechatter", "Mission")
 end
 
 MissionEventHandlers["GuestHorrorMode"] = function(player)
@@ -90,7 +90,7 @@ end
 MissionEventHandlers["GuestPwn"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
 	local character = player.Character
-	local alley = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway")
+	local alley = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway")
 	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
 	GeneralRemotes.PlayAnimation:FireClient(player, "73806503045226")
 	BadgeHandler.awardBadge(player, 550797482323175)
@@ -102,7 +102,7 @@ end
 MissionEventHandlers["GuestComplete"] = function(player)
 	local character = player.Character
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
-	local hallway = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "BrainwashHallway", nil)
+	local hallway = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "BrainwashHallway", nil)
 	rootPart.CFrame = hallway:FindFirstChild("SpawnLoc").CFrame
 	BadgeHandler.awardBadge(player, 3791811322299538)
 	GeneralRemotes.PlayAnimation:FireClient(player, "135338300387862")
@@ -133,7 +133,7 @@ end
 
 MissionEventHandlers["PsychoMantisFailLie"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailLie")
@@ -142,7 +142,7 @@ end
 
 MissionEventHandlers["PsychoMantisFailTruth"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailTruth")
@@ -151,7 +151,7 @@ end
 
 MissionEventHandlers["PsychoMantisWin"] = function(player)
 	GeneralRemotes.Blur:FireClient(player, 1, 100)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "HallwayWin", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "HallwayWin", nil)
 	task.wait(3)
 	GeneralRemotes.Blur:FireClient(player, 1, 0)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisWin")
@@ -182,7 +182,7 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 			+ (primaryPart.CFrame.UpVector * -5)
 			+ (primaryPart.CFrame.LookVector * -150)
 
-		local van = HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "Van", spawnPos)
+		local van = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "Van", spawnPos)
 		local hand = van:FindFirstChild("Hand")
 		van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
 
@@ -230,7 +230,7 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 		GeneralRemotes.BlackFade:FireClient(player, 3, 0)
 
 		-- cutscene
-		HelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "RealVIPLocation", nil)
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "RealVIPLocation", nil)
 		escapeTween.Completed:Wait()
 		GeneralRemotes.StopAllMusic:InvokeClient(player)
 
@@ -299,7 +299,7 @@ MissionEventHandlers["CashierAngerEnd"] = function(player)
 end
 
 MissionEventHandlers["CashierScammedFinished"] = function(player)
-	HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Warehouse", nil)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Warehouse", nil)
 	GeneralRemotes.PlayCutscene:FireClient(player, "CashierScammed")
 	BadgeHandler.awardBadge(player, 2453227885155938)
 end
@@ -342,6 +342,10 @@ MissionEventHandlers["DrivingTestFailed"] = function(player)
 	BadgeHandler.awardBadge(player, 1698025412209346)
 	GeneralRemotes.PlayTheme:FireClient(player, "SadTheme")
 	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestFailed")
+end
+
+MissionEventHandlers["HaulJob"] = function(player)
+	HaulJob.ServerInit(player)
 end
 
 return MissionEventHandlers

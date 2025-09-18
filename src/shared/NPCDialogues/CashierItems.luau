@@ -1,5 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
 
 local function AddUpItemsDialogue()
 	local items = ShopBasketModule.GetItemsInBasket()

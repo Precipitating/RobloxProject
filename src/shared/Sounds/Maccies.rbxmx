@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBX34BA2852BCFF4B07A734346960159B5C">
+	<Item class="Sound" referent="RBX7D68FF0AA2FE4E22A41C5592A8CABCCB">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -20,7 +20,7 @@
 			<float name="RollOffMinDistance">10</float>
 			<token name="RollOffMode">3</token>
 			<Ref name="SoundGroup">null</Ref>
-			<Content name="SoundId"><url>rbxassetid://124576413320242</url></Content>
+			<Content name="SoundId"><url>rbxassetid://125225899259441</url></Content>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<double name="TimePosition">0</double>

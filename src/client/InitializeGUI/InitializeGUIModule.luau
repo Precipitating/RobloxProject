@@ -1,12 +1,12 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
-local MissionRemotes = ReplicatedStorage.Shared.Missions.Events
+local GeneralRemotes = ReplicatedStorage.Remotes
+local MissionRemotes = ReplicatedStorage.Missions.Events
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -80,7 +80,7 @@ InitializeGUIModule["BosnianRoulette"] = function()
 end
 
 InitializeGUIModule["Terminal"] = function()
-	local GUI = ReplicatedStorage.Shared.GUI.Glitcher.TerminalGUI
+	local GUI = ReplicatedStorage.GUI.Glitcher.TerminalGUI
 	local tool = Player.Backpack:FindFirstChild("Terminal")
 	local playerGUI = Player:WaitForChild("PlayerGui")
 	local existingGUI = playerGUI:FindFirstChild("TerminalGUI")

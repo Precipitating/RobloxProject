@@ -9,7 +9,7 @@ local Cutscenes = {}
 local DEBUG_MODE = false
 
 if not DEBUG_MODE then
-	for i, v in pairs(game:GetService("ReplicatedStorage").Shared.Cutscenes:GetDescendants()) do
+	for _, v in pairs(game:GetService("ReplicatedStorage").Shared.Cutscenes:GetDescendants()) do
 		if v:IsA("BasePart") then
 			v.Transparency = 1
 		end

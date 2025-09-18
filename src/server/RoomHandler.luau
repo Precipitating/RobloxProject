@@ -1,8 +1,8 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
+local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
-local HelperFunctions = require(script.Parent.HelperFunctions)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Remotes
 local PositionBeforeEntering = nil
 local SpawnedRoom = nil
 local RoomHandler = {}
@@ -25,7 +25,7 @@ function RoomHandler.SpawnRoomAndEnter(player, name, enter)
 	if SpawnedRoom then
 		SpawnedRoom:Destroy()
 	end
-	SpawnedRoom = HelperFunctions.SpawnModelAtPosition("Rooms", name, name, nil)
+	SpawnedRoom = ServerHelperFunctions.SpawnModelAtPosition("Rooms", name, name, nil)
 
 	if SpawnedRoom and enter then
 		local spawnLoc = SpawnedRoom:FindFirstChild("SpawnLoc")

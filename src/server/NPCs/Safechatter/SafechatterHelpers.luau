@@ -1,11 +1,11 @@
 local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = {}
 
 function SafechatterHelpers.ResetGuestHorrorEnvironment(player)
@@ -52,7 +52,7 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 	light.Parent = head
 
 	-- spawn obby
-	local pathModel = HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "InvisiblePaths", nil)
+	local pathModel = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "InvisiblePaths", nil)
 	if not pathModel then
 		warn("Failed to spawn pathModel")
 		return
@@ -114,8 +114,12 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 					GeneralRemotes.Blur:FireClient(player, 2, 100)
 					GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
 					-- spawn cutscene model
-					local prodRoom =
-						HelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "ProductionRoom", nil)
+					local prodRoom = ServerHelperFunctions.SpawnModelAtPosition(
+						"MissionModels",
+						"Safechatter",
+						"ProductionRoom",
+						nil
+					)
 
 					-- disable events
 					GeneralRemotes.EnableClickToMove:FireClient(player, false)
@@ -210,7 +214,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 				end
 
 				-- set new NPC dialogue
-				HelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterEscaped" })
+				ServerHelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterEscaped" })
 				NPC:SetMode("Interacting", player)
 				NPC:EnableProximityChat(true)
 				GeneralRemotes.DisableControls:FireClient(player, "UI")
