@@ -1,12 +1,12 @@
 -- Services
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
 
-local CodesOtaku = ReplicatedStorage.Shared.CodesOtaku
+local CodesOtaku = ReplicatedStorage.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
 
 -- Wait for camera
@@ -23,23 +23,23 @@ local Speed = 1
 local FreezeControls = false
 
 -- Loading
-local CutsceneFolderRoot = ReplicatedStorage.Shared.Cutscenes
+local CutsceneFolderRoot = ReplicatedStorage.Cutscenes
 local Destroy = true
 local NoYield = false
 local SafeMode = true
 
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
-local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
+local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local Cutscene = require(CutsceneModule)
 local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls)
-local SoundFolder = ReplicatedStorage.Shared.Sounds
+local SoundFolder = ReplicatedStorage.Sounds
 
 local Player = Players.LocalPlayer
 local ProtectTheCharacterWhilePlaying = true
 local CharacterProtector = script:FindFirstChild("CharacterProtector")
 local Music = Instance.new("Sound")
 Music.Parent = script
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local GeneralRemotes = ReplicatedStorage.Remotes
 local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
 local SoundModule = require(script.Parent.Parent.SoundModule)
 

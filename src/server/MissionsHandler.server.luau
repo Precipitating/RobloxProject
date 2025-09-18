@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
 local MissionEventHandlers = require(script.Parent:FindFirstChild("MissionsLogicHandler"))
-local HelperFunctions = require(script.Parent:FindFirstChild("HelperFunctions"))
 local MissionCompleteHandlers = require(script.Parent:FindFirstChild("MissionsCompleteHandler"))
 local MissionFailedHandlers = require(script.Parent:FindFirstChild("MissionsFailedHandler"))
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -58,7 +58,7 @@ end)
 ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(player, data)
 	print(`Server received GiveToolEvent, attempting to give you the tool {data[1]} `)
 	if typeof(data) == "table" then
-		HelperFunctions.GiveTool(player, data)
+		ServerHelperFunctions.GiveTool(player, data)
 
 		-- if tool uses GUI
 		GeneralRemotes.InitializeGUI:FireClient(player, data[1])
@@ -68,33 +68,33 @@ end)
 ReplicatedStorage.Missions.Events.ForceEquipEvent.OnServerEvent:Connect(function(player, toolName)
 	print("Force equip tool arrived at server")
 	if typeof(toolName) == "string" then
-		HelperFunctions.ForceEquip(player, toolName)
+		ServerHelperFunctions.ForceEquip(player, toolName)
 	end
 end)
 
 ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerEvent:Connect(function(player, toolsStringList)
 	print("Remove tool arrived at server")
 	if typeof(toolsStringList) == "table" then
-		HelperFunctions.RemoveTools(player, toolsStringList)
+		ServerHelperFunctions.RemoveTools(player, toolsStringList)
 	end
 end)
 
 ReplicatedStorage.Missions.Events.RemoveEquippedToolEvent.OnServerEvent:Connect(function(player)
 	print("Remove equipped tools arrived at server")
-	HelperFunctions.RemoveEquippedTool(player)
+	ServerHelperFunctions.RemoveEquippedTool(player)
 end)
 
 ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(_, meshTagList)
 	print("Set mesh visibility arrived at server")
 	if typeof(meshTagList) == "table" then
-		HelperFunctions.SetMeshVisibility(meshTagList)
+		ServerHelperFunctions.SetMeshVisibility(meshTagList)
 	end
 end)
 
 ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(function(_, fromToTable)
 	print("Set dialogue arrived at server")
 	if typeof(fromToTable) == "table" then
-		HelperFunctions.SetNPCDialogueFile(fromToTable)
+		ServerHelperFunctions.SetNPCDialogueFile(fromToTable)
 	end
 end)
 
@@ -111,7 +111,7 @@ end)
 ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(function(_, objectTagList)
 	print("Destroy object arrived at server")
 	if typeof(objectTagList) == "table" then
-		HelperFunctions.DestroyObject(objectTagList)
+		ServerHelperFunctions.DestroyObject(objectTagList)
 	end
 end)
 

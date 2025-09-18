@@ -1,11 +1,9 @@
-local BadgeService = game:GetService("BadgeService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local GeneralRemotes = ReplicatedStorage.Remotes
 local CurrentFade = 1
 local FullyBlack = false
 local BerateLines = {
@@ -49,7 +47,7 @@ function ShopLiftConsequences.SpawnJacker(player)
 		+ hrp.CFrame.RightVector
 		+ hrp.CFrame.UpVector * 3
 		+ (hrp.CFrame.LookVector * -150)
-	local jacker = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Jacker", spawnPos)
+	local jacker = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Jacker", spawnPos)
 	local collisionBox = jacker:FindFirstChild("CollisionBox")
 	local primary = jacker.PrimaryPart
 
@@ -133,7 +131,7 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 	-- spawn position: forward + upward offset
 	local spawnPos = hrp.Position + hrp.CFrame.LookVector * forwardDist + Vector3.new(0, topOffset or 0, 0)
 
-	local trap = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", modelName, spawnPos)
+	local trap = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", modelName, spawnPos)
 
 	local trapTouched
 	trapTouched = trap.Base.Touched:Connect(function(hit)
@@ -197,7 +195,7 @@ function ShopLiftConsequences.SpawnLightningBolt(player)
 	local hrp = character:FindFirstChild("HumanoidRootPart")
 
 	local lightningBolt =
-		HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "LightningBolt", hrp.Position)
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "LightningBolt", hrp.Position)
 	local bolt = lightningBolt:FindFirstChild("Bolt")
 
 	-- flash
@@ -257,7 +255,7 @@ function ShopLiftConsequences.SpawnMeteorite(player)
 	local hrp = character:FindFirstChild("HumanoidRootPart")
 	local targetPos = CFrame.new(hrp.Position + Vector3.new(0, 1000, 0))
 
-	local meteorite = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Meteorite", nil)
+	local meteorite = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Meteorite", nil)
 
 	local tween =
 		TweenService:Create(meteorite.PrimaryPart, TweenInfo.new(5, Enum.EasingStyle.Linear), { CFrame = targetPos })

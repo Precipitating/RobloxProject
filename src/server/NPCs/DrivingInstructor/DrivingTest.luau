@@ -5,7 +5,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local PositionBeforeTeleport = nil
 local Roads = ServerStorage.MissionModels.DrivingInstructor:GetChildren()
@@ -87,7 +87,7 @@ local function SpawnSheep(player, currentRoad)
 		print("Sheep spawned!")
 
 		-- spawn MeshPart sheep
-		local sheep = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "Sheep", nil)
+		local sheep = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "Sheep", nil)
 		sheep:PivotTo(currentRoad:FindFirstChild("SheepPosStart"):GetPivot())
 		sheep.Parent = currentRoad
 
@@ -139,7 +139,7 @@ local function SpawnTrafficLight(currentRoad)
 	if (RoadsSpawned % TrafficLightCooldown) == 0 and math.random() < 0.5 then
 		print("Traffic light should spawn")
 		local trafficLight =
-			HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "TrafficLight", nil)
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "TrafficLight", nil)
 		trafficLight:PivotTo(currentRoad:FindFirstChild("TrafficLightPos"):GetPivot())
 		trafficLight.Parent = currentRoad
 
@@ -264,7 +264,7 @@ local function SpawnRoad(name: string, attachmentToSpawnAt: Attachment?, player:
 	if roadInPool then
 		nextRoad = roadInPool
 	else
-		nextRoad = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", name, nil)
+		nextRoad = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", name, nil)
 		-- set unique ID for each road spawned
 		if nextRoad:GetAttribute("ID") then
 			nextRoad:SetAttribute("ID", HttpService:GenerateGUID(false))
@@ -395,7 +395,7 @@ local function AddFinishedRoad(player)
 		GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 		GeneralRemotes.EnableControls:FireClient(player, nil)
 		GeneralRemotes.PlayTheme:FireClient(player, "Main")
-		HelperFunctions.SetNPCDialogueFile({ DrivingInstructorNameTag = "DrivingInstructorResults" })
+		ServerHelperFunctions.SetNPCDialogueFile({ DrivingInstructorNameTag = "DrivingInstructorResults" })
 	end)
 end
 
@@ -615,7 +615,7 @@ end
 
 local function SpawnCar(startRoad)
 	-- spawn car
-	local car = HelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "Car", nil)
+	local car = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "DrivingInstructor", "Car", nil)
 	car:PivotTo(startRoad:GetPivot() * CFrame.new(0, 10, 20) * CFrame.Angles(0, 0, math.rad(180)))
 	task.wait(1)
 	local seat = car["Reliant Robin"]:FindFirstChild("DriveSeat")

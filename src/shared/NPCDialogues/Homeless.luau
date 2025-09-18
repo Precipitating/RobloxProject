@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GetGroceryListFromServer = ReplicatedStorage.Shared.Remotes.Cashier.GetGroceryItems
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local GetGroceryListFromServer = ReplicatedStorage.Remotes.Cashier.GetGroceryItems
 
 local function HasCorrectGrocery()
 	print("Checking if correct groceries...")

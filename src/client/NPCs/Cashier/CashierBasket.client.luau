@@ -1,8 +1,8 @@
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
 local Player = game.Players.LocalPlayer
-local Events = ReplicatedStorage.Shared.Missions.Events
+local Events = ReplicatedStorage.Missions.Events
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local hasItemsInBasket = false
 

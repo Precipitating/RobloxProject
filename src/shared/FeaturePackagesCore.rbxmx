@@ -36,7 +36,7 @@
 	Connects sounds to tagged GUIObjects.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local bindToTaggedInstances = require(ReplicatedStorage.FeaturePackagesCore.Utils.bindToTaggedInstances)
@@ -84,12 +84,12 @@ initialize()
 	Connects various UI animations to tagged GUIObjects.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
 local bindToTaggedInstances = require(ReplicatedStorage.FeaturePackagesCore.Utils.bindToTaggedInstances)
-
+ 
 -- Animation constants
 local ROTATION_DURATION = 15
 local ROTATION_VALUE = 360
@@ -204,7 +204,7 @@ initialize()
 	It also contains a getter for a centralized ScreenGui for all HUD buttons to be parented to so they can be centrally organized.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 local Players = game:GetService("Players")
 
 local UITween = require(ReplicatedStorage.FeaturePackagesCore.Modules.UITween)
@@ -384,7 +384,7 @@ return ModalManager
 --]]
 
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
@@ -698,7 +698,7 @@ return Attributes
 	A source of truth list of all in-experience currencies known by FeaturePackages.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local CurrencyTypes = require(ReplicatedStorage.FeaturePackagesCore.Configs.CurrencyTypes)
 
@@ -913,7 +913,7 @@ return CurrencyTypes
 					<ProtectedString name="Source"><![CDATA[--!strict
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
 local playSound = require(ReplicatedStorage.FeaturePackagesCore.Utils.playSound)
@@ -2181,7 +2181,7 @@ return ProtectRunContext
 	Counters are stored in the shared FeaturePackages data store (FeaturePackagesStore).
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -2430,7 +2430,7 @@ return CounterSystem
 	Using this module will help reduce the number of DataStore calls made by the game, as it caches the data locally.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -2784,7 +2784,7 @@ return FeaturePackagesStore
 	DataStoreWrapper request methods yield until the request (and its retries) have been completed.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 -- Protect the run context, this ModuleScript is only intended to run on the server
 require(ReplicatedStorage.FeaturePackagesCore.Modules.ProtectRunContext).server()
@@ -3123,7 +3123,7 @@ return retryAsync
 	Utility for attempting to play sound. If soundId is invalid, or permission is insufficient, it will not play.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 local SoundService = game:GetService("SoundService")
 
 local SharedConstants = require(ReplicatedStorage.FeaturePackagesCore.Configs.SharedConstants)
@@ -3202,7 +3202,7 @@ return getInstance
 		- suffix: The suffix to append to the end of the formatted string. If padding is enabled, the suffix will be appended before the extra spaces.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local TranslationStrings = require(ReplicatedStorage.FeaturePackagesCore.Configs.TranslationStrings)
 
@@ -3290,7 +3290,7 @@ return formatTime
 	to exist, and we therefore want it to error.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 
 local Attributes = require(ReplicatedStorage.FeaturePackagesCore.Configs.Attributes)
 
@@ -3321,7 +3321,7 @@ return getAttribute
 	Utility for fetching product information from MarketplaceService asynchronously with retry.
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local ReplicatedStorage=game:GetService("ReplicatedStorage").Shared
 local MarketplaceService = game:GetService("MarketplaceService")
 
 local retryAsync = require(ReplicatedStorage.FeaturePackagesCore.Utils.retryAsync)

@@ -1,12 +1,11 @@
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
-local HelperFunctions = require(ServerScriptService.Server.HelperFunctions)
 local NPCOutfit = require(ServerScriptService.Server.NPCs.NPCOutfit)
-local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local GeneralRemotes = ReplicatedStorage.Remotes
 local ItemsList = {}
 local CashierModule = {}
 local currentShoppingList = nil
@@ -119,7 +118,7 @@ end
 function CashierModule.Complete(player)
 	print("Complete! Spawning asylum...")
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
-	local asylum = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Asylum", nil)
+	local asylum = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Asylum", nil)
 	task.wait(2)
 	player.Character:FindFirstChild("HumanoidRootPart").CFrame = asylum:FindFirstChild("SpawnPos").CFrame
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
@@ -159,7 +158,7 @@ function CashierModule.NextCustomer(player, currentTime)
 
 	local customer = workspace:FindFirstChild("Customer")
 	if not customer then
-		customer = HelperFunctions.SpawnModelAtPosition("NPCs", "Cashier", "Customer", nil)
+		customer = ServerHelperFunctions.SpawnModelAtPosition("NPCs", "Cashier", "Customer", nil)
 	else
 		CashierModule.NPCFakeExit(player, customer, false)
 	end
@@ -183,7 +182,7 @@ function CashierModule.FailedEvent(player)
 
 	if not monster and customer then
 		CashierModule.NPCFakeExit(player, customer, true)
-		monster = HelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Monster", nil)
+		monster = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Monster", nil)
 	end
 
 	local humanoid = monster:FindFirstChild("Humanoid")

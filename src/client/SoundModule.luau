@@ -1,6 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local SoundLocation = ReplicatedStorage.Shared.Sounds
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local SoundLocation = ReplicatedStorage.Sounds
 local CurrentTheme = nil
 local SoundHandler = {}
 

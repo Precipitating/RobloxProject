@@ -1,7 +1,7 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
-local CameraEnableRemote = ReplicatedStorage.Shared.Remotes.EnableCameraLookDetection
-local IsCameraLookingAtPartRemote = ReplicatedStorage.Shared.Remotes.IsCameraLookingAtPart
+local CameraEnableRemote = ReplicatedStorage.Remotes.EnableCameraLookDetection
+local IsCameraLookingAtPartRemote = ReplicatedStorage.Remotes.IsCameraLookingAtPart
 local loopHandle
 local wasVisible = false
 local function IsModelVisible(part)

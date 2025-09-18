@@ -3565,7 +3565,7 @@ initialize()
 	Edit this if you would like to use a call to action button for a mission. 
 --]]
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 
 local Types = require(ReplicatedStorage.Missions.Configs.Types)
 

@@ -26,6 +26,7 @@ local moveableNPCName = nil
 local CanTalk = true
 
 -- modules
+local MissionsClientHandler = require(script.Parent.MissionsClientHandler)
 local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local SoundModule = require(script.Parent:WaitForChild("SoundModule"))
@@ -163,6 +164,7 @@ local function fireAndLog(event, data, label)
 		end
 
 		event:FireServer(data)
+
 		print(`Remote fired! {label}: {data}`)
 	end
 end
@@ -197,6 +199,14 @@ function TalkModule.handleResponse(data, responseData)
 		if event and value ~= nil then
 			local label = (key == "ExecuteScenarioEvent" and `Execute scenario {value}`) or key
 			fireAndLog(event, value, label)
+
+			-- client logic handler if applicable
+			if key == "ExecuteScenarioEvent" then
+				print("Client called MissionsClientHandler")
+				if MissionsClientHandler[value] then
+					MissionsClientHandler[value]()
+				end
+			end
 		end
 	end
 end

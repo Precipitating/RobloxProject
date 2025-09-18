@@ -1,7 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GeneralRemotes = ReplicatedStorage.Shared.Remotes
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local GeneralRemotes = ReplicatedStorage.Remotes
 local player = game.Players.LocalPlayer
 local Character = player.Character or player.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
@@ -11,12 +11,13 @@ local SoundModule = require(script:WaitForChild("SoundModule"))
 local UIHelperFunctions = require(script:WaitForChild("UIHelperFunctions"))
 local CutsceneModule = require(script:WaitForChild("CutsceneScripts"):WaitForChild("CutsceneClientHandler"))
 local InitializeGUIModule = require(script.InitializeGUI.InitializeGUIModule)
-local ShopBasketModule = require(ReplicatedStorage.Shared.NPCs.Cashier.ShopBasketModule)
-local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
+local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
+local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local CameraFollowConnection = nil
 local TalkModule = require(script.TalkModule)
+local ClientHelperFunctions = require(script.ClientHelperFunctions)
 
 -- disable respawn button
 local coreCall
@@ -27,7 +28,7 @@ do
 
 	function coreCall(method, ...)
 		local result = {}
-		for retries = 1, MAX_RETRIES do
+		for _ = 1, MAX_RETRIES do
 			result = { pcall(StarterGui[method], StarterGui, ...) }
 			if result[1] then
 				break
@@ -129,16 +130,7 @@ GeneralRemotes.PlayTTS.OnClientInvoke = function(text, config)
 end
 
 GeneralRemotes.ChangeCameraSubject.OnClientEvent:Connect(function(partPosition)
-	local camera = workspace.CurrentCamera
-	if not partPosition then
-		camera.CameraType = Enum.CameraType.Custom
-		print("Camera back to player")
-		return
-	end
-
-	camera.CameraType = Enum.CameraType.Scriptable
-
-	camera.CFrame = partPosition
+	ClientHelperFunctions.ChangeCameraSubject(partPosition)
 end)
 
 GeneralRemotes.CameraLookAt.OnClientEvent:Connect(function(target)
@@ -171,8 +163,8 @@ GeneralRemotes.InvertControls.OnClientEvent:Connect(function(invert)
 	local playerModule = require(playerScripts:WaitForChild("PlayerModule"))
 	local movementController = playerModule:GetControls()
 	if invert then
-		movementController.moveFunction = function(player, direction, relative)
-			thisPlayer.Move(player, -direction, relative)
+		movementController.moveFunction = function(player_, direction, relative)
+			thisPlayer.Move(player_, -direction, relative)
 		end
 	else
 		movementController.moveFunction = thisPlayer.Move

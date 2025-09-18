@@ -1,18 +1,18 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
 local Player = Players.LocalPlayer
 local mouse = Player:GetMouse()
 
-local originalCircle = ReplicatedStorage.Shared.Models.GreenCircle
+local originalCircle = ReplicatedStorage.Models.GreenCircle
 
 local clonedCircle = nil
 local canMove = false
 local maxDistance = 55
 local enabled = false
 local clicktowalkcircle
-local enabledRemote = ReplicatedStorage.Shared.Remotes.EnableClickToMove
+local enabledRemote = ReplicatedStorage.Remotes.EnableClickToMove
 local loop
 local clickConn
 local charConn
