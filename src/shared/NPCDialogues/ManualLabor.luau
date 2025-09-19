@@ -3,7 +3,7 @@ return {
 		ManualLabor = {
 			Name = "Recruiter",
 			Portrait = "rbxassetid://13881226702",
-			Dialogue = "Want some quick cash?<br/>Help unload some goods from the van, and i'll pay 5 bucks per item.",
+			Dialogue = "Want some quick cash?<br/>Help unload some goods from the van, and i'll pay 2 bucks per unload.",
 			VoiceId = "1",
 			Pitch = 1,
 			Speed = 1,
