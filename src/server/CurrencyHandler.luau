@@ -11,4 +11,8 @@ function CurrencyHandler.ReduceMoney(val)
 	print(`Total money after DECREASE by {val}: {Money}`)
 end
 
+function CurrencyHandler.GetMoney()
+	return Money
+end
+
 return CurrencyHandler

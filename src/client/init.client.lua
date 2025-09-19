@@ -288,6 +288,8 @@ GeneralRemotes.SetCanTalkToNPC.OnClientEvent:Connect(function(canTalk)
 	TalkModule.SetCanTalk(canTalk)
 end)
 
+-- ManualLabor
+
 -- set player's collision group
 for _, descendant in pairs(Character:GetDescendants()) do
 	if descendant:IsA("BasePart") then

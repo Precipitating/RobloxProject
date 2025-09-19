@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local CurrencyHandler = require(script.CurrencyHandler)
 local CashierModule = require(script.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(script.NPCs.Cashier.GroceryBagModule)
 local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
@@ -106,6 +107,10 @@ end
 
 GeneralRemotes.DrivingInstructor.GetDrivingTestResults.OnServerInvoke = function(_)
 	return DrivingTest.GetDrivingTestResults()
+end
+
+GeneralRemotes.GetCurrentMoney.OnServerInvoke = function()
+	return CurrencyHandler.GetMoney()
 end
 
 -- set player's achievements
