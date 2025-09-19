@@ -38,15 +38,15 @@ local function GameFinished(player, model)
 	MB1Connection = nil
 	ItemHolderConn = nil
 
+	-- add the money ($2 per item)
+	CurrencyHandler.AddMoney(Score * 2)
+
 	-- along with client events
 	Remotes.HaulJob.GameFinished:FireClient(player)
 	-- to prevent invocation error, remove this server connection after client mouse position connection is gone
 	task.wait(0.5)
 	MovementConnection:Disconnect()
 	MovementConnection = nil
-
-	-- add the money ($2 per item)
-	CurrencyHandler.AddMoney(Score * 2)
 
 	-- reset variables
 	Score = 0
@@ -305,6 +305,14 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
+		local currentCash = GeneralRemotes.GetCurrentMoney:InvokeServer()
+		local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
+		if not cashGUI then
+			warn("CashGui not found!")
+			return
+		end
+		local cashLabel = cashGUI:WaitForChild("MoneyLabel")
+		cashLabel.Text = `£{tostring(currentCash)}`
 	end)
 end
 
