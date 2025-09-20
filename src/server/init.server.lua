@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CurrencyHandler = require(script.CurrencyHandler)
 local CashierModule = require(script.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(script.NPCs.Cashier.GroceryBagModule)
@@ -109,10 +110,22 @@ GeneralRemotes.DrivingInstructor.GetDrivingTestResults.OnServerInvoke = function
 	return DrivingTest.GetDrivingTestResults()
 end
 
+-- money
 GeneralRemotes.GetCurrentMoney.OnServerInvoke = function()
 	return CurrencyHandler.GetMoney()
 end
 
+-- trash pickup
+GeneralRemotes.PickupTrash.TrashPickedUp.OnServerInvoke = function(_, trashModel)
+	return TrashPickup.PickedUp(trashModel)
+end
+GeneralRemotes.PickupTrash.TrashGameFinished.OnServerInvoke = function(_)
+	return TrashPickup.ServerFinishedGame()
+end
+
+GeneralRemotes.PickupTrash.TrashData.OnServerInvoke = function(_)
+	return TrashPickup.TrashData()
+end
 -- set player's achievements
 -- spawn player in their room when spawned
 
