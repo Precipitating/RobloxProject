@@ -6,16 +6,17 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local GeneralRemotes = ReplicatedStorage.Remotes
 local IS_SERVER = RunService:IsServer()
+local IS_CLIENT = RunService:IsClient()
 local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService") or nil
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler) or nil
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions) or nil
+local UpdateMoneyEvent = IS_CLIENT and ReplicatedStorage.Events.Currency.UpdateMoneyGUI
 
 local MovementConnection = nil
 local MB1Connection = nil
 local LaunchPosition = nil
 local ItemHolderConn = nil
 local StackPlacePos = Vector3.new(-247.9, 249.836, 65.5)
-local BaseMovePos = nil
 local HoldPosIncrement = 0
 local Timelimit = 60
 local SpawnCooldown = 5
@@ -38,7 +39,7 @@ local function GameFinished(player, model)
 	MB1Connection = nil
 	ItemHolderConn = nil
 
-	-- add the money ($2 per item)
+	-- add the money (£2 per item)
 	CurrencyHandler.AddMoney(Score * 2)
 
 	-- along with client events
@@ -297,7 +298,7 @@ function HaulJob.ClientInit()
 		Remotes.MB1Down:FireServer()
 	end)
 
-	-- game finished disconnect connections
+	-- game finished disconnect connections client
 	local conn
 	conn = Remotes.HaulJob.GameFinished.OnClientEvent:Connect(function()
 		MousePositionConn:Disconnect()
@@ -305,14 +306,7 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
-		local currentCash = GeneralRemotes.GetCurrentMoney:InvokeServer()
-		local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
-		if not cashGUI then
-			warn("CashGui not found!")
-			return
-		end
-		local cashLabel = cashGUI:WaitForChild("MoneyLabel")
-		cashLabel.Text = `£{tostring(currentCash)}`
+		UpdateMoneyEvent:Fire()
 	end)
 end
 

@@ -6,6 +6,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
+local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
@@ -346,6 +347,10 @@ end
 
 MissionEventHandlers["HaulJob"] = function(player)
 	HaulJob.ServerInit(player)
+end
+
+MissionEventHandlers["TrashPickup"] = function(player)
+	TrashPickup.ServerInit()
 end
 
 return MissionEventHandlers

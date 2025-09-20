@@ -288,7 +288,17 @@ GeneralRemotes.SetCanTalkToNPC.OnClientEvent:Connect(function(canTalk)
 	TalkModule.SetCanTalk(canTalk)
 end)
 
--- ManualLabor
+-- Currency
+ReplicatedStorage.Events.Currency.UpdateMoneyGUI.Event:Connect(function()
+	local currentCash = GeneralRemotes.GetCurrentMoney:InvokeServer()
+	local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
+	if not cashGUI then
+		warn("CashGui not found!")
+		return
+	end
+	local cashLabel = cashGUI:WaitForChild("MoneyLabel")
+	cashLabel.Text = `£{tostring(currentCash)}`
+end)
 
 -- set player's collision group
 for _, descendant in pairs(Character:GetDescendants()) do
