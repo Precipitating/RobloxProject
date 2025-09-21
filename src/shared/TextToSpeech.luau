@@ -39,21 +39,11 @@ end
 -- pitch range - -12, 12
 -- volume range - 1, 3
 function TextToSpeech.UpdateVoiceConfig(config)
-	-- Only update the values that are provided
-	if config.VoiceId ~= nil then
-		TextToSpeechHandle.VoiceId = config.VoiceId
-	end
-
-	if config.Pitch ~= nil then
-		TextToSpeechHandle.Pitch = config.Pitch
-	end
-
-	if config.Speed ~= nil then
-		TextToSpeechHandle.Speed = config.Speed
-	end
-
-	if config.Volume ~= nil then
-		TextToSpeechHandle.Volume = config.Volume
+	for _, key in ipairs({ "VoiceId", "Pitch", "Speed", "Volume" }) do
+		if config[key] ~= nil then
+			print(`{key} to {config[key]}`)
+			TextToSpeechHandle[key] = config[key]
+		end
 	end
 end
 

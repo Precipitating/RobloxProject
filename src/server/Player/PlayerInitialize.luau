@@ -37,4 +37,12 @@ function PlayerInitialize.TeleportHome(character, spawnLoc)
 	end
 end
 
+function PlayerInitialize.SetCollisionGroup(character)
+	-- set player's collision group
+	for _, descendant in pairs(character:GetDescendants()) do
+		if descendant:IsA("BasePart") then
+			descendant.CollisionGroup = "Player"
+		end
+	end
+end
 return PlayerInitialize

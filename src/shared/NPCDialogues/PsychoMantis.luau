@@ -154,7 +154,7 @@ return {
 			Portrait = "rbxassetid://7129644829",
 			Dialogue = Introduction(),
 			VoiceId = "1",
-			Pitch = 12,
+			Pitch = 4,
 			Speed = 0.5,
 			Volume = 1,
 			PlayTheme = "Calm",

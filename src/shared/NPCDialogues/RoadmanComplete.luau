@@ -5,7 +5,7 @@ return {
 			Portrait = "rbxassetid://11640689559",
 			VoiceId = "1",
 			Dialogue = "Bruv, you’re movin’ like a wasteman - man should be out there skimmin' a burner for me",
-			Pitch = 12,
+			Pitch = 7,
 			Speed = 2,
 			Volume = 3,
 			PlayTheme = "RoadmanTune",
@@ -49,7 +49,7 @@ return {
 
 		Parry = {
 			Name = "????Parry????",
-			Pitch = -12,
+			Pitch = -7,
 			Speed = 2,
 			Volume = 3,
 			Portrait = "rbxassetid://729001246",
@@ -113,7 +113,7 @@ return {
 
 		GentZ = {
 			Name = "Gent-Z",
-			Pitch = 12,
+			Pitch = 6,
 			Speed = 1.5,
 			Volume = 3,
 			Portrait = "rbxassetid://11394123247",

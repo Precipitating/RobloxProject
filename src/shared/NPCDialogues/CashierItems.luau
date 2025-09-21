@@ -35,7 +35,7 @@ return {
 			Portrait = "rbxassetid://10418960920",
 			Dialogue = "I see you have items in the basket.",
 			VoiceId = "6",
-			Pitch = 12,
+			Pitch = 6,
 			Speed = 1,
 			Volume = 1,
 			PlayTheme = "StoreBackground",

@@ -26,6 +26,7 @@ local moveableNPCName = nil
 local CanTalk = true
 
 -- modules
+local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local MissionsClientHandler = require(script.Parent.MissionsClientHandler)
 local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
@@ -133,6 +134,7 @@ function TalkModule.hideUI(responseData)
 			MovementModule.EnableControls("UI")
 		elseif responseData.Type == "CloseCutscene" then
 			SoundModule.StopAllSounds()
+			ClientHelperFunctions.EnableAllNPCPrompts(false)
 		elseif responseData.Type == "CloseKeepTheme" then
 			MovementModule.EnableControls("UI")
 		end
@@ -141,13 +143,7 @@ function TalkModule.hideUI(responseData)
 		frame.Visible = false
 		ui.Enabled = false
 
-		-- don't allow interaction again after dialogue close
-		if responseData.DisablePrompt then
-			CurrentPrompt = nil
-			return
-		end
-
-		if CurrentPrompt then
+		if CurrentPrompt and responseData.Type ~= "CloseCutscene" then
 			CurrentPrompt.Enabled = true
 			CurrentPrompt = nil
 		end
@@ -238,19 +234,24 @@ function TalkModule.updateUI(data, dialogueId)
 		SoundModule.StopSound(selectedDialogue.StopSound)
 	end
 
-	if selectedDialogue.VoiceId or selectedDialogue.Pitch or selectedDialogue.Speed or selectedDialogue.Volume then
+	if
+		selectedDialogue.VoiceId ~= nil
+		or selectedDialogue.Pitch ~= nil
+		or selectedDialogue.Speed ~= nil
+		or selectedDialogue.Volume ~= nil
+	then
 		print("changed TTS config")
 		local config = {}
-		if selectedDialogue.VoiceId then
+		if selectedDialogue.VoiceId ~= nil then
 			config.VoiceId = selectedDialogue.VoiceId
 		end
-		if selectedDialogue.Pitch then
+		if selectedDialogue.Pitch ~= nil then
 			config.Pitch = selectedDialogue.Pitch
 		end
-		if selectedDialogue.Speed then
+		if selectedDialogue.Speed ~= nil then
 			config.Speed = selectedDialogue.Speed
 		end
-		if selectedDialogue.Volume then
+		if selectedDialogue.Volume ~= nil then
 			config.Volume = selectedDialogue.Volume
 		end
 

@@ -17,7 +17,7 @@ return {
 				},
 				{
 					Text = "Y-yes",
-					Type = "Close",
+					Type = "CloseKeepTheme",
 				},
 			},
 		},

@@ -11,7 +11,6 @@ local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService")
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler) or nil
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions) or nil
 local UpdateMoneyEvent = IS_CLIENT and ReplicatedStorage.Events.Currency.UpdateMoneyGUI
-
 local MovementConnection = nil
 local MB1Connection = nil
 local LaunchPosition = nil
@@ -253,6 +252,7 @@ function HaulJob.ServerInit(player)
 	PlaceOnPallet(player, playerModel, pallet, receiveItemCollider)
 	GameLoop(player, clockLabel)
 
+	-- won't run until GameLoop is finished
 	print("game end")
 	GameFinished(player, model)
 end
@@ -278,6 +278,7 @@ end
 
 function HaulJob.ClientInit()
 	local StarterPlayer = game:GetService("StarterPlayer")
+	local ClientHelperFunctions = IS_CLIENT and require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
 	local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 	-- wait for server to spawn models
 	task.wait(1)
@@ -306,6 +307,7 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
+		ClientHelperFunctions.EnableAllNPCPrompts(true)
 		UpdateMoneyEvent:Fire()
 	end)
 end

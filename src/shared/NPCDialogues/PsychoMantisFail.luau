@@ -5,7 +5,7 @@ return {
 			Portrait = "rbxassetid://16642438470",
 			Dialogue = "... You <s>WON</s> right?",
 			VoiceId = "1",
-			Pitch = 12,
+			Pitch = 4,
 			Speed = 0.5,
 			Volume = 1,
 			PlayTheme = "Calm",

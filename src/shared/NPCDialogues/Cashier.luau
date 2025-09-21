@@ -5,7 +5,7 @@ return {
 			Portrait = "rbxassetid://6749370850",
 			Dialogue = "Bzzt. Please take your change!",
 			VoiceId = "6",
-			Pitch = 12,
+			Pitch = 6,
 			Speed = 1,
 			Volume = 1,
 			PlayTheme = "StoreBackground",
@@ -109,7 +109,7 @@ return {
 			Portrait = "rbxassetid://6749370850",
 			Dialogue = "Place the items on the table bruh... Wake up... Jesus...",
 			VoiceId = "5",
-			Pitch = -12,
+			Pitch = -3,
 			Speed = 1,
 			Volume = 1,
 			Responses = {

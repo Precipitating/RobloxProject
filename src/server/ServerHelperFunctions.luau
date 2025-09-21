@@ -62,6 +62,7 @@ function ServerHelperFunctions.SpawnModelAtPosition(storageFolderName, folderNam
 		if pos then
 			model:MoveTo(pos)
 		end
+
 		return model
 	else
 		error("Cannot find model to spawn")

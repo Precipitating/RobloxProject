@@ -70,7 +70,7 @@ return {
 		JackBeast = {
 			Name = "Jack.",
 			Portrait = "rbxassetid://7069589164",
-			Pitch = -12,
+			Pitch = -6,
 			Speed = 1,
 			Volume = 3,
 			Dialogue = "You really thought you could steal my phone with that confidence.<br/>Heh. You little, little boy.<br/>You know what they called me back then?<br/><i><font color='#FF0000'>The Beast Of Last Christmas.</font></i><br/>Why?<br/><font color='#FFFF00'>GRAH-GRUH-RAAAUR-FUAAARRRR-GRAAAAH-SAAAAAAH-FAAAH.</font><br/>How about this.<br/>Give me YOUR PHONE, NOW!",

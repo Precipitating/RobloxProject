@@ -144,7 +144,7 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 		GeneralRemotes.PlaySound:InvokeClient(player, soundName)
 		humanoid.PlatformStand = true
 		GeneralRemotes.DisableControls:FireClient(player)
-		GeneralRemotes.Blur:FireClient(player, 1, 100)
+		GeneralRemotes.BlackFade:FireClient(player, 1, 100)
 
 		ShopLiftConsequences.FadeOut(player)
 

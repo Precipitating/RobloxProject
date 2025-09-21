@@ -1,5 +1,4 @@
 local BadgeHandler = require(script.Parent.BadgeHandler)
-local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -89,15 +88,15 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 end
 
 MissionEventHandlers["GuestPwn"] = function(player)
-	GeneralRemotes.Blur:FireClient(player, 1, 100)
+	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 	local character = player.Character
 	local alley = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway")
 	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
 	GeneralRemotes.PlayAnimation:FireClient(player, "73806503045226")
 	BadgeHandler.awardBadge(player, 550797482323175)
 	GeneralRemotes.PlayCutscene:FireClient(player, "GuestPwn")
-	--cutsceneRemotes.PlayGuestPwn:FireClient(player)
-	GeneralRemotes.Blur:FireClient(player, 1, 0)
+	task.wait(1)
+	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 end
 
 MissionEventHandlers["GuestComplete"] = function(player)
@@ -133,28 +132,28 @@ MissionEventHandlers["TypingCompetition"] = function(player)
 end
 
 MissionEventHandlers["PsychoMantisFailLie"] = function(player)
-	GeneralRemotes.Blur:FireClient(player, 1, 100)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
-	GeneralRemotes.Blur:FireClient(player, 1, 0)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailLie")
 	BadgeHandler.awardBadge(player, 1768903662252309)
 end
 
 MissionEventHandlers["PsychoMantisFailTruth"] = function(player)
-	GeneralRemotes.Blur:FireClient(player, 1, 100)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "Hallway", nil)
 	task.wait(3)
-	GeneralRemotes.Blur:FireClient(player, 1, 0)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisFailTruth")
 	BadgeHandler.awardBadge(player, 1517353246082078)
 end
 
 MissionEventHandlers["PsychoMantisWin"] = function(player)
-	GeneralRemotes.Blur:FireClient(player, 1, 100)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "PsychoMantis", "HallwayWin", nil)
 	task.wait(3)
-	GeneralRemotes.Blur:FireClient(player, 1, 0)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 	GeneralRemotes.PlayCutscene:FireClient(player, "PsychoMantisWin")
 	BadgeHandler.awardBadge(player, 2250718080144467)
 end
@@ -202,6 +201,8 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 			tweenHand.Completed:Wait()
 		end
 
+		print("NEIN")
+
 		-- tween hand to player
 		local handWeld = hand:FindFirstChild("WeldConstraint")
 		handWeld.Part0 = nil
@@ -210,15 +211,13 @@ MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
 
 		-- attach player to hand
 		local root = character:FindFirstChild("HumanoidRootPart")
-		local ap = Instance.new("AlignPosition")
-		ap.Attachment0 = character.HumanoidRootPart:FindFirstChild("RootAttachment")
-		ap.Attachment1 = hand:FindFirstChild("Attachment") -- make an Attachment in your moving part
-		ap.RigidityEnabled = true
-		ap.Parent = root
+		local attachment = hand:FindFirstChild("AlignPosition")
+		attachment.Attachment0 = root:FindFirstChild("RootAttachment")
+		attachment.Attachment1 = hand:FindFirstChild("Attachment")
 
 		-- tween hand (player attached) to van
 		handTween(10)
-		handWeld.Part0 = hand
+		handWeld.Part0 = van.PrimaryPart
 
 		-- move van somewhere else + fade to black
 		local escapeTweenInfo = TweenInfo.new(10, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
@@ -310,16 +309,7 @@ MissionEventHandlers["DrivingTest"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestPassed"] = function(player)
-	local drivingInstructor = CollectionService:GetTagged("DrivingInstructor")
-	if #drivingInstructor > 0 then
-		for _, instructor in ipairs(drivingInstructor) do
-			local proxPrompt = instructor:FindFirstChild("ProximityPrompt")
-			if proxPrompt then
-				proxPrompt.Enabled = false
-			end
-		end
-	end
-
+	GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 2493042217612033)
@@ -328,16 +318,7 @@ MissionEventHandlers["DrivingTestPassed"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestFailed"] = function(player)
-	local drivingInstructor = CollectionService:GetTagged("DrivingInstructor")
-	if #drivingInstructor > 0 then
-		for _, instructor in ipairs(drivingInstructor) do
-			local proxPrompt = instructor:FindFirstChild("ProximityPrompt")
-			if proxPrompt then
-				proxPrompt.Enabled = false
-			end
-		end
-	end
-
+	GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 1698025412209346)
@@ -349,7 +330,7 @@ MissionEventHandlers["HaulJob"] = function(player)
 	HaulJob.ServerInit(player)
 end
 
-MissionEventHandlers["TrashPickup"] = function(player)
+MissionEventHandlers["TrashPickup"] = function(_)
 	TrashPickup.ServerInit()
 end
 

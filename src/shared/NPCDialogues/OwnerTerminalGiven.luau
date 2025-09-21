@@ -4,7 +4,7 @@ return {
 			Name = "Owner",
 			Portrait = "rbxassetid://15603749034",
 			VoiceId = "7",
-			Pitch = -12,
+			Pitch = -6,
 			Speed = 1,
 			Volume = 3,
 			Dialogue = "Stuck? tough luck.<br/>(<b>Tweet Or Xeet.I Called Someone A Literal Trotter</b>)",

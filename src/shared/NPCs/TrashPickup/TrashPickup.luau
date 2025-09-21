@@ -5,6 +5,7 @@ local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService")
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler)
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions)
 local ServerStorage = IS_SERVER and game:GetService("ServerStorage")
+local GeneralRemotes = ReplicatedStorage.Remotes
 local TrashPickedUp = 0
 local TotalTrashSpawned = 0
 local TrashPickup = {}
@@ -48,7 +49,6 @@ function TrashPickup.ClientInit(player)
 
 	task.wait(0.5)
 	-- set trash counter values
-	local GeneralRemotes = ReplicatedStorage.Remotes
 	local result = GeneralRemotes.PickupTrash.TrashData:InvokeServer()
 	local guiLabel = gui:WaitForChild("Counter")
 	guiLabel.Text = `Trash Picked:<br/>{tostring(result.PickedUp)}/{tostring(result.TotalTrash)}`
@@ -57,7 +57,6 @@ end
 function TrashPickup.ServerFinishedGame()
 	-- add the money (£10 per item)
 	CurrencyHandler.AddMoney(TrashPickedUp * 10)
-	ServerHelperFunctions.SetNPCDialogueFile({ TrashPickupNPCNameTag = "TrashPickup" })
 	TrashPickedUp = 0
 	TotalTrashSpawned = 0
 	return true
