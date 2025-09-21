@@ -111,6 +111,7 @@ function WordType.Begin(player)
 			currentScore.Text = tostring(currentWordIdx - 1)
 			WordType.Finished(true, player)
 			print("Competition Complete!")
+			GeneralRemotes.EnableAllNPCPrompts:FireClient(player, true)
 			return "(Finished)"
 		end
 
@@ -142,15 +143,16 @@ function WordType.Finished(won, player)
 		model.Parent = workspace.ExamRoom
 		Missions.FailMission(player, "TypingCompetition")
 	end
+	GeneralRemotes.BlackFade:FireClient(player, 7, 0)
 	task.wait(7)
-	GeneralRemotes.Blur:FireClient(player, 1, 100)
+
 	GeneralRemotes.StopAllMusic:InvokeClient(player)
 	GeneralRemotes.EnableControls:FireClient(player, nil)
 	examRoom:Destroy()
 	PlayThemeRemote:FireClient(player, "Main")
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
 	task.wait(1)
-	GeneralRemotes.Blur:FireClient(player, 2, 0)
+	GeneralRemotes.BlackFade:FireClient(player, 2, 1)
 
 	--
 end

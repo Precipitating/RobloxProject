@@ -136,9 +136,9 @@ Players.PlayerAdded:Connect(function(player)
 	local function setupCharacter(character)
 		local spawnPos = PlayerInitialize.SpawnHome()
 		PlayerInitialize.TeleportHome(character, spawnPos)
-
 		local humanoid = character:WaitForChild("Humanoid")
 		local hrp = character:WaitForChild("HumanoidRootPart")
+		PlayerInitialize.SetCollisionGroup(character)
 
 		local function isOnGround()
 			local root = character:FindFirstChild("HumanoidRootPart")

@@ -119,10 +119,11 @@ function CashierModule.Complete(player)
 	print("Complete! Spawning asylum...")
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	local asylum = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Asylum", nil)
+	GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "CashierDoctor", true)
 	task.wait(2)
 	player.Character:FindFirstChild("HumanoidRootPart").CFrame = asylum:FindFirstChild("SpawnPos").CFrame
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
-	GeneralRemotes.PlayTheme:FireClient(player, "SchizoTheme")
+	GeneralRemotes.PlayTheme:FireClient(player, "Gloomy")
 	GeneralRemotes.BlackFade:FireClient(player, 2, 1)
 	GeneralRemotes.EnableControls:FireClient(player, "UI")
 end

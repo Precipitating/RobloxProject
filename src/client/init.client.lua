@@ -109,6 +109,14 @@ GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	return true
 end
 
+GeneralRemotes.EnableAllNPCPrompts.OnClientEvent:Connect(function(enabled)
+	ClientHelperFunctions.EnableAllNPCPrompts(enabled)
+end)
+
+GeneralRemotes.ToggleNPCProximityPrompt.OnClientEvent:Connect(function(name, state)
+	ClientHelperFunctions.ToggleNPCProximityPrompt(name, state)
+end)
+
 GeneralRemotes.Rejoin.OnClientEvent:Connect(function(waitTime)
 	task.wait(waitTime)
 	TeleportService:Teleport(game.PlaceId, player)
@@ -299,13 +307,6 @@ ReplicatedStorage.Events.Currency.UpdateMoneyGUI.Event:Connect(function()
 	local cashLabel = cashGUI:WaitForChild("MoneyLabel")
 	cashLabel.Text = `£{tostring(currentCash)}`
 end)
-
--- set player's collision group
-for _, descendant in pairs(Character:GetDescendants()) do
-	if descendant:IsA("BasePart") then
-		descendant.CollisionGroup = "Player"
-	end
-end
 
 -- play main theme
 SoundModule.PlayTheme("Main")

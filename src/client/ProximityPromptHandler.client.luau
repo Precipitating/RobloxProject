@@ -9,6 +9,7 @@ local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
+local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -185,6 +186,7 @@ local function PickupTrashProximityPrompt(prompt)
 		GeneralRemotes.PickupTrash.TrashGameFinished:InvokeServer()
 		gui:Destroy()
 		ReplicatedStorage.Events.Currency.UpdateMoneyGUI:Fire()
+		ClientHelperFunctions.EnableAllNPCPrompts(true)
 		SoundModule.PlaySound("Correct")
 	end
 end

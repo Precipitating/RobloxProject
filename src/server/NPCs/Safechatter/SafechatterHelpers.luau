@@ -35,6 +35,11 @@ function SafechatterHelpers.ResetCamera(player)
 end
 
 function SafechatterHelpers.InitializeGuestHorrorMode(player)
+	-- handle camera settings
+	player.CameraMaxZoomDistance = 20
+	player.CameraMinZoomDistance = 20
+	GeneralRemotes.ChangeFOV:FireClient(player, 20)
+
 	local safeChatterModel = CollectionService:GetTagged("Safechatter")[1]
 	local NPC = NPCModule:GetNPC("Safechatter")
 	local character = player.Character
@@ -88,11 +93,6 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 		warn("safeChatterModel missing or has no PrimaryPart")
 	end
 
-	-- handle camera settings
-	player.CameraMaxZoomDistance = 20
-	player.CameraMinZoomDistance = 20
-	GeneralRemotes.ChangeFOV:FireClient(player, 20)
-
 	return light, pathModel, prevPlayerPos, prevEnemyPos
 end
 
@@ -108,56 +108,45 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 		failed = failPart.Touched:Connect(function(hit)
 			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 				failed:Disconnect()
-				local blur = Lighting:FindFirstChild("Blur")
-				if blur then
-					-- blur player
-					GeneralRemotes.Blur:FireClient(player, 2, 100)
-					GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
-					-- spawn cutscene model
-					local prodRoom = ServerHelperFunctions.SpawnModelAtPosition(
-						"MissionModels",
-						"Safechatter",
-						"ProductionRoom",
-						nil
-					)
+				GeneralRemotes.BlackFade:FireClient(player, 0, 0)
+				GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
+				-- spawn cutscene model
+				local prodRoom =
+					ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "ProductionRoom", nil)
 
-					-- disable events
-					GeneralRemotes.EnableClickToMove:FireClient(player, false)
-					GeneralRemotes.EnableCameraLookDetection:FireClient(player, false)
-					NPC:DisconnectAllConnections() -- disable the onTouch trip player
+				-- disable events
+				GeneralRemotes.EnableClickToMove:FireClient(player, false)
+				GeneralRemotes.EnableCameraLookDetection:FireClient(player, false)
+				NPC:DisconnectAllConnections() -- disable the onTouch trip player
 
-					-- -- stop all player physics movement
-					SafechatterHelpers.ResetPlayerState(hrp, humanoid)
+				-- -- stop all player physics movement
+				SafechatterHelpers.ResetPlayerState(hrp, humanoid)
 
-					hrp.Anchored = true
+				hrp.Anchored = true
 
-					-- change to guest clothes
-					GeneralRemotes.ChangeClothes:FireClient(player, "rbxassetid://17380206", "rbxassetid://1069842201")
+				-- change to guest clothes
+				GeneralRemotes.ChangeClothes:FireClient(player, "rbxassetid://17380206", "rbxassetid://1069842201")
 
-					-- tp to cutscene spot
-					local playerCutsceneLoc = prodRoom:FindFirstChild("SpawnLoc")
+				-- tp to cutscene spot
+				local playerCutsceneLoc = prodRoom:FindFirstChild("SpawnLoc")
 
-					if playerCutsceneLoc then
-						character:SetPrimaryPartCFrame(playerCutsceneLoc.CFrame)
-					else
-						warn("prodRoom player spawn loc is missing!")
-					end
-
-					-- stop all music
-					GeneralRemotes.StopAllMusic:InvokeClient(player)
-
-					BadgeHandler.awardBadge(player, 2723844059823653)
-
-					-- back to day and remove player light
-					SafechatterHelpers.ResetGuestHorrorEnvironment(player)
-					light:Destroy()
-
-					task.wait(3)
-
-					-- unblur
-					GeneralRemotes.Blur:FireClient(player, 1, 0)
-					GeneralRemotes.PlayCutscene:FireClient(player, "SafechatterFailedObby")
+				if playerCutsceneLoc then
+					character:SetPrimaryPartCFrame(playerCutsceneLoc.CFrame)
+				else
+					warn("prodRoom player spawn loc is missing!")
 				end
+
+				-- stop all music
+				GeneralRemotes.StopAllMusic:InvokeClient(player)
+
+				BadgeHandler.awardBadge(player, 2723844059823653)
+
+				-- back to day and remove player light
+				SafechatterHelpers.ResetGuestHorrorEnvironment(player)
+				light:Destroy()
+				task.wait(3)
+				GeneralRemotes.PlayCutscene:FireClient(player, "SafechatterFailedObby")
+				GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 			end
 		end)
 		return failed
@@ -186,7 +175,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 		winConnection = winPart.Touched:Connect(function(hit)
 			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 				winConnection:Disconnect()
-				GeneralRemotes.Blur:FireClient(player, 1, 100)
+				GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 
 				-- disconnect all related events
 				failed:Disconnect()
@@ -219,7 +208,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 				NPC:EnableProximityChat(true)
 				GeneralRemotes.DisableControls:FireClient(player, "UI")
 
-				GeneralRemotes.Blur:FireClient(player, 1, 0)
+				GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 			end
 		end)
 	end

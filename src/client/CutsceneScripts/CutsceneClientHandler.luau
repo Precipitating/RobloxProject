@@ -39,6 +39,7 @@ local ProtectTheCharacterWhilePlaying = true
 local CharacterProtector = script:FindFirstChild("CharacterProtector")
 local Music = Instance.new("Sound")
 Music.Parent = script
+Music.Looped = true
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
 local SoundModule = require(script.Parent.Parent.SoundModule)
@@ -138,7 +139,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		if instruction == 1 then
 			SoundFolder.Knock:Play()
 		elseif instruction == 4 then
-			SpawnModelFromServer:FireServer("PsychoMantis", "HallwayOder", nil)
+			SpawnModelFromServer:InvokeServer("MissionModels", "PsychoMantis", "HallwayOder", nil)
 			if SoundFolder.Knock.IsPlaying then
 				SoundFolder.Knock:Stop()
 			end
@@ -180,7 +181,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 
-	GlitcherRealVIP = function(instruction, nextInstruction, X)
+	GlitcherRealVIP = function(instruction, _, _)
 		if instruction == 3 then
 			SoundModule.PlaySound("Land")
 		elseif instruction == 5 then
@@ -198,7 +199,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		elseif instruction == 7 then
 			local config = {}
 			config.VoiceId = "5"
-			config.Pitch = 5
+			config.Pitch = -6
 			config.Speed = 1
 			config.Volume = 3
 			TextToSpeech.UpdateVoiceConfig(config)
@@ -232,14 +233,14 @@ CutsceneClientHandler.KeyframeHandler = {
 			local pos2 = warehouse:WaitForChild("MovePos2").Position
 			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos2)
 		elseif instruction == 6 then
-			local ttsHandle = TextToSpeech.GetHandle
+			local ttsHandle = TextToSpeech.GetHandle()
 			task.wait(2)
 			local pos3 = warehouse:WaitForChild("MovePos3").Position
 			GeneralRemotes.HumanoidMoveTo:FireServer(homeless.Humanoid, pos3)
 			task.wait(3)
 			local voices = {
 				Homeless = { VoiceId = "3", Pitch = 1, Speed = 1, Volume = 1 },
-				Cashier = { VoiceId = "5", Pitch = -12, Speed = 1, Volume = 1 },
+				Cashier = { VoiceId = "5", Pitch = -3, Speed = 1, Volume = 1 },
 			}
 
 			-- talk
@@ -493,7 +494,7 @@ CutsceneClientHandler.Initialize = {
 
 	CashierAngerEnd = function()
 		Music.SoundId = "rbxassetid://9048856967"
-		Music.Volume = 0.3
+		Music.Volume = 0.1
 	end,
 
 	CashierScammed = function()

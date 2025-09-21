@@ -3,7 +3,6 @@ local UIHelperFunctions = {}
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
--- Reference to your Blur effect
 local BlurRef = game.Lighting:FindFirstChildOfClass("BlurEffect")
 UIHelperFunctions.CurrentBlurTween = nil
 

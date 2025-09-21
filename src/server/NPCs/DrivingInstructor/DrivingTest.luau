@@ -34,7 +34,7 @@ local CheckpointReachBeforeDeletion = 10
 local CheckpointsReached = 0
 local RoundAboutCooldown = 20
 local TurnCooldown = 10
-local RoadFinishCount = 100
+local RoadFinishCount = 10
 local TrafficLightCooldown = 10
 local SheepCooldown = 10
 local FakeRoadsToSpawnAtRoundabout = 3
@@ -374,6 +374,7 @@ local function AddFinishedRoad(player)
 	local endRoad, _, _ = SpawnRoad("FinishedRoad", newEndAttachment, player)
 	local endCollide = endRoad:FindFirstChild("EndCollide")
 
+	-- game complete!
 	local conn
 	conn = endCollide.Touched:Connect(function(hit)
 		if not CollectionService:HasTag(hit, "DrivingTestCar") then
@@ -387,6 +388,7 @@ local function AddFinishedRoad(player)
 		player.Character.Humanoid.Sit = false
 		player.Character.Humanoid.JumpPower = 50
 		task.wait(1)
+		GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", true)
 		-- teleport back to room
 		player.Character:PivotTo(PositionBeforeTeleport)
 
