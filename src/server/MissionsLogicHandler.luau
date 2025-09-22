@@ -3,20 +3,20 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
-local TweenService = game:GetService("TweenService")
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
+local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 
 local MissionEventHandlers = {}
--- handle all game events
+-- handle all server game events
 
 -- Roadman
 MissionEventHandlers["StealPhone"] = function(_)
@@ -164,82 +164,7 @@ MissionEventHandlers["BosnianRoulette"] = function(player)
 end
 
 MissionEventHandlers["GlitcherTerminalUnlocked"] = function(player)
-	GeneralRemotes.PlayTheme:FireClient(player, "McDonaldTheme")
-	GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
-
-	-- spawn van at X distance away from player, and arrive next to the player
-	local character = player.Character
-	if character and character.PrimaryPart then
-		local primaryPart = character.PrimaryPart
-		local arrivePos = primaryPart.Position
-			+ (primaryPart.CFrame.RightVector * 10)
-			+ (primaryPart.CFrame.UpVector * -2)
-
-		local targetCFrame = CFrame.new(arrivePos, arrivePos + primaryPart.CFrame.LookVector)
-
-		local spawnPos: Vector3 = primaryPart.Position
-			+ (primaryPart.CFrame.RightVector * 10)
-			+ (primaryPart.CFrame.UpVector * -5)
-			+ (primaryPart.CFrame.LookVector * -150)
-
-		local van = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "Van", spawnPos)
-		local hand = van:FindFirstChild("Hand")
-		van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
-
-		-- tween van to player
-		local tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-		local tween = TweenService:Create(van.PrimaryPart, tweenInfo, { CFrame = targetCFrame })
-		tween:Play()
-		tween.Completed:Wait()
-
-		local function handTween(lookVectorDist)
-			local tweenInfoHand = TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-			local tweenHand = TweenService:Create(hand, tweenInfoHand, {
-				CFrame = hand.CFrame + hand.CFrame.LookVector * lookVectorDist,
-			})
-			tweenHand:Play()
-			tweenHand.Completed:Wait()
-		end
-
-		print("NEIN")
-
-		-- tween hand to player
-		local handWeld = hand:FindFirstChild("WeldConstraint")
-		handWeld.Part0 = nil
-		hand:SetNetworkOwner(nil)
-		handTween(-10)
-
-		-- attach player to hand
-		local root = character:FindFirstChild("HumanoidRootPart")
-		local attachment = hand:FindFirstChild("AlignPosition")
-		attachment.Attachment0 = root:FindFirstChild("RootAttachment")
-		attachment.Attachment1 = hand:FindFirstChild("Attachment")
-
-		-- tween hand (player attached) to van
-		handTween(10)
-		handWeld.Part0 = van.PrimaryPart
-
-		-- move van somewhere else + fade to black
-		local escapeTweenInfo = TweenInfo.new(10, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-		local escapeTween = TweenService:Create(
-			van.PrimaryPart,
-			escapeTweenInfo,
-			{ CFrame = van.PrimaryPart.CFrame * CFrame.new(0, 0, -100) }
-		)
-		escapeTween:Play()
-		GeneralRemotes.BlackFade:FireClient(player, 3, 0)
-
-		-- cutscene
-		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Glitcher", "RealVIPLocation", nil)
-		escapeTween.Completed:Wait()
-		GeneralRemotes.StopAllMusic:InvokeClient(player)
-
-		GeneralRemotes.PlayCutscene:FireClient(player, "GlitcherRealVIP")
-		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
-		BadgeHandler.awardBadge(player, 3494073379327445)
-
-		print("done")
-	end
+	TerminalUnlocked.Run(player)
 end
 
 -- Cashier

@@ -1,5 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
 local BadgeHandler = require(script.Parent.BadgeHandler)
+local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local PlayerBadgeDisplayer = {}
 local ObtainedBadgesList = {}
 local Badges = {
@@ -18,6 +19,9 @@ local Badges = {
 	352477117785792,
 	2453227885155938,
 	2207943165943416,
+	2493042217612033,
+	1698025412209346,
+	2719901366655803,
 }
 
 function PlayerBadgeDisplayer.GetObtainedBadges(player)
@@ -32,19 +36,36 @@ function PlayerBadgeDisplayer.GetObtainedBadges(player)
 end
 
 function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
-	local decals = CollectionService:GetTagged("AchievementImage")
+	local positions = CollectionService:GetTagged("AchievementPos")
 
-	if #decals == 0 then
+	if #positions <= 0 then
+		error("Missing position part for achievement displaying")
 		return
 	end
 
-	for idx, decal in ipairs(decals) do
-		local badgeInfo = ObtainedBadgesList[idx]
-		if badgeInfo and badgeInfo.IconImageId then
-			decal.Texture = `rbxassetid://{badgeInfo.IconImageId}`
-			print("SET")
+	-- for each badge the player owns, spawn a display case and set its badge info
+	for idx, info in ipairs(ObtainedBadgesList) do
+		if #positions >= idx then
+			local display = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Home", "Display", nil)
+			display.Parent = workspace:FindFirstChild("Home")
+			local decal = display.Frame.LargePictureFrame.Picture.Decal
+			local textInfo = display.Info.SurfaceGui.TextLabel
+
+			if not display or not decal or not textInfo then
+				error(`Missing badge display references: display = {display}, decal = {decal}, info = {textInfo}`)
+			end
+			display:PivotTo(positions[idx].CFrame)
+
+			if info.IconImageId then
+				decal.Texture = `rbxassetid://{info.IconImageId}`
+
+				if info.Name and info.Description then
+					textInfo.Text = `<sc><font color="#FF0000">{info.Name}</font></sc><br/>{info.Description}`
+					print(`{textInfo.Name} set successfully to display room!`)
+				end
+			end
 		else
-			break
+			warn("No space for badge display to spawn (missing/ran out position part")
 		end
 	end
 end

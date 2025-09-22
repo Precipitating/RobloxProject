@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
+local PlayerBadgeDisplayer = require(script.Parent.PlayerBadgeDisplayer)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -25,7 +26,11 @@ function RoomHandler.SpawnRoomAndEnter(player, name, enter)
 	if SpawnedRoom then
 		SpawnedRoom:Destroy()
 	end
+
 	SpawnedRoom = ServerHelperFunctions.SpawnModelAtPosition("Rooms", name, name, nil)
+	if name == "Home" then
+		PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
+	end
 
 	if SpawnedRoom and enter then
 		local spawnLoc = SpawnedRoom:FindFirstChild("SpawnLoc")

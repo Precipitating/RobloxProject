@@ -11,6 +11,7 @@ local ProfileDataModule = require(script.Player.GetPlayerInfo)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
+local SlotMachine = require(script.RoomScripts.Gamba.SlotMachine)
 local ServerHelperFunctions = require(script.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
@@ -119,16 +120,41 @@ end
 GeneralRemotes.PickupTrash.TrashPickedUp.OnServerInvoke = function(_, trashModel)
 	return TrashPickup.PickedUp(trashModel)
 end
-GeneralRemotes.PickupTrash.TrashGameFinished.OnServerInvoke = function(_)
-	return TrashPickup.ServerFinishedGame()
+GeneralRemotes.PickupTrash.TrashGameFinished.OnServerInvoke = function(player)
+	return TrashPickup.ServerFinishedGame(player)
 end
 
 GeneralRemotes.PickupTrash.TrashData.OnServerInvoke = function(_)
 	return TrashPickup.TrashData()
 end
+
+-- gamba
+GeneralRemotes.Gamba.InitializeSlotMachines.OnServerEvent:Connect(function()
+	local slotMachines = workspace:FindFirstChild("Gamba"):FindFirstChild("SlotMachines"):GetChildren()
+	if #slotMachines > 0 then
+		for _, model in ipairs(slotMachines) do
+			SlotMachine.Init(model)
+		end
+	end
+end)
+GeneralRemotes.Gamba.RemoveAllSlotMachines.OnServerEvent:Connect(function()
+	SlotMachine.RemoveAll()
+end)
+
+GeneralRemotes.Gamba.IncreaseBet.OnServerEvent:Connect(function(_, modelName)
+	SlotMachine.IncreaseBetPrompt(modelName)
+end)
+
+GeneralRemotes.Gamba.DecreaseBet.OnServerEvent:Connect(function(_, modelName)
+	SlotMachine.DecreaseBetPrompt(modelName)
+end)
+
+GeneralRemotes.Gamba.SpinSlotMachine.OnServerEvent:Connect(function(player, modelName)
+	SlotMachine.SpinPrompt(player, modelName)
+end)
+
 -- set player's achievements
 -- spawn player in their room when spawned
-
 Players.PlayerAdded:Connect(function(player)
 	PlayerInitialize.SetupAchievements(player)
 	local safePosition = nil

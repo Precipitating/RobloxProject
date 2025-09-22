@@ -2,12 +2,12 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="BindableEvent" referent="RBXE2DDC5FDBD7E4AFA9343457399428292">
+	<Item class="RemoteEvent" referent="RBXB0261FA6605043AF9718E4D4ED04C699">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
-			<string name="Name">UpdateMoneyGUI</string>
+			<string name="Name">RemoveAllSlotMachines</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
