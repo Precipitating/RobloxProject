@@ -297,8 +297,7 @@ GeneralRemotes.SetCanTalkToNPC.OnClientEvent:Connect(function(canTalk)
 end)
 
 -- Currency
-ReplicatedStorage.Events.Currency.UpdateMoneyGUI.Event:Connect(function()
-	local currentCash = GeneralRemotes.GetCurrentMoney:InvokeServer()
+ReplicatedStorage.Remotes.UpdateMoneyGUI.OnClientEvent:Connect(function(currentCash)
 	local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
 	if not cashGUI then
 		warn("CashGui not found!")

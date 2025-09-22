@@ -26,6 +26,18 @@ local RoomExitFunctions = {
 	ShopExit = function()
 		GeneralRemotes.RemoveAllToolsOfTag:FireServer("ShopItem")
 	end,
+
+	GambaEnter = function()
+		GeneralRemotes.Gamba.RemoveAllSlotMachines:FireServer()
+	end,
+}
+
+local RoomEnterFunctions = {
+	GambaEnter = function(modelName)
+		-- ensure its loaded first
+		workspace:WaitForChild(modelName)
+		GeneralRemotes.Gamba.InitializeSlotMachines:FireServer()
+	end,
 }
 
 local function GetShopItems()
@@ -78,6 +90,9 @@ local function HouseDoorProximityPrompt(prompt)
 		modelName = string.sub(houseName, 1, isEnter - 1)
 		print(`Entering room {modelName}`)
 		HouseRemote:FireServer("Enter", modelName)
+		if RoomEnterFunctions[houseName] then
+			RoomEnterFunctions[houseName](modelName)
+		end
 		task.wait(2)
 		HouseDoorDebounce = false
 	elseif isExit then
@@ -185,9 +200,25 @@ local function PickupTrashProximityPrompt(prompt)
 	if result.PickedUp >= result.TotalTrash then
 		GeneralRemotes.PickupTrash.TrashGameFinished:InvokeServer()
 		gui:Destroy()
-		ReplicatedStorage.Events.Currency.UpdateMoneyGUI:Fire()
 		ClientHelperFunctions.EnableAllNPCPrompts(true)
 		SoundModule.PlaySound("Correct")
+	end
+end
+
+local function SlotMachineProximityPrompts(prompt)
+	local GambaRemotes = GeneralRemotes.Gamba
+	if CollectionService:HasTag(prompt, "IncreaseBetPrompt") then
+		GambaRemotes.IncreaseBet:FireServer(prompt.Parent.Parent.Name)
+		return
+	end
+	if CollectionService:HasTag(prompt, "DecreaseBetPrompt") then
+		GambaRemotes.DecreaseBet:FireServer(prompt.Parent.Parent.Name)
+		return
+	end
+
+	if CollectionService:HasTag(prompt, "SpinPrompt") then
+		GambaRemotes.SpinSlotMachine:FireServer(prompt.Parent.Parent.Name)
+		return
 	end
 end
 
@@ -196,4 +227,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	TalkProximityPrompt(prompt)
 	ShopBasketProximityPrompt(prompt)
 	PickupTrashProximityPrompt(prompt)
+	SlotMachineProximityPrompts(prompt)
 end)

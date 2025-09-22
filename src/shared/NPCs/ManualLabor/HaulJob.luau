@@ -10,7 +10,6 @@ local IS_CLIENT = RunService:IsClient()
 local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService") or nil
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler) or nil
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions) or nil
-local UpdateMoneyEvent = IS_CLIENT and ReplicatedStorage.Events.Currency.UpdateMoneyGUI
 local MovementConnection = nil
 local MB1Connection = nil
 local LaunchPosition = nil
@@ -308,7 +307,6 @@ function HaulJob.ClientInit()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
 		ClientHelperFunctions.EnableAllNPCPrompts(true)
-		UpdateMoneyEvent:Fire()
 	end)
 end
 

@@ -54,9 +54,9 @@ function TrashPickup.ClientInit(player)
 	guiLabel.Text = `Trash Picked:<br/>{tostring(result.PickedUp)}/{tostring(result.TotalTrash)}`
 end
 
-function TrashPickup.ServerFinishedGame()
+function TrashPickup.ServerFinishedGame(player)
 	-- add the money (£10 per item)
-	CurrencyHandler.AddMoney(TrashPickedUp * 10)
+	CurrencyHandler.AddMoney(player, TrashPickedUp * 10)
 	TrashPickedUp = 0
 	TotalTrashSpawned = 0
 	return true
