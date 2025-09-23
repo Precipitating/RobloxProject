@@ -158,8 +158,18 @@ end
 local function ShopBasketProximityPrompt(prompt)
 	local ShopBasket = CollectionService:HasTag(prompt.Parent, "Basket")
 	local ShopItemGiver = CollectionService:HasTag(prompt.Parent, "ShopItemGiver")
+	local ClearBasket = CollectionService:HasTag(prompt, "ClearBasket")
 
 	if ShopBasket then
+		-- clear basket
+		if ClearBasket then
+			print("Cleared basket!")
+			ShopBasketModule.ClearBasket()
+			Events.SetDialogueFileEvent:FireServer({ CashierNameTag = "Cashier" })
+			return
+		end
+
+		-- add to basket
 		local shopItems = GetShopItems()
 
 		if next(shopItems) == nil then
@@ -199,7 +209,7 @@ local function PickupTrashProximityPrompt(prompt)
 	-- completed
 	if result.PickedUp >= result.TotalTrash then
 		GeneralRemotes.PickupTrash.TrashGameFinished:InvokeServer()
-		gui:Destroy()
+		gui.Parent:Destroy()
 		ClientHelperFunctions.EnableAllNPCPrompts(true)
 		SoundModule.PlaySound("Correct")
 	end
@@ -222,10 +232,19 @@ local function SlotMachineProximityPrompts(prompt)
 	end
 end
 
+local function WheelSpinner(prompt)
+	if not (CollectionService:HasTag(prompt, "SpinWheel")) then
+		return
+	end
+	print("Wheel prompt activate")
+	GeneralRemotes.Gamba.StartWheelSpin:FireServer()
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
 	ShopBasketProximityPrompt(prompt)
 	PickupTrashProximityPrompt(prompt)
 	SlotMachineProximityPrompts(prompt)
+	WheelSpinner(prompt)
 end)

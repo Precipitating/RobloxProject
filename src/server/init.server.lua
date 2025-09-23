@@ -12,6 +12,7 @@ local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
 local SlotMachine = require(script.RoomScripts.Gamba.SlotMachine)
+local WheelSpinner = require(script.RoomScripts.Gamba.WheelSpinner)
 local ServerHelperFunctions = require(script.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
@@ -151,6 +152,10 @@ end)
 
 GeneralRemotes.Gamba.SpinSlotMachine.OnServerEvent:Connect(function(player, modelName)
 	SlotMachine.SpinPrompt(player, modelName)
+end)
+
+GeneralRemotes.Gamba.StartWheelSpin.OnServerEvent:Connect(function(player)
+	WheelSpinner.Start(player)
 end)
 
 -- set player's achievements

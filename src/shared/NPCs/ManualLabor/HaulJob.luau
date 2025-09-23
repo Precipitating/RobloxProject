@@ -38,7 +38,9 @@ local function GameFinished(player, model)
 	ItemHolderConn = nil
 
 	-- add the money (£2 per item)
-	CurrencyHandler.AddMoney(Score * 2)
+	local finalScore = Score * 2
+	print(finalScore)
+	CurrencyHandler.AddMoney(player, finalScore)
 
 	-- along with client events
 	Remotes.HaulJob.GameFinished:FireClient(player)
