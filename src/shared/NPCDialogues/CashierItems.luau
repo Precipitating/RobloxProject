@@ -23,8 +23,46 @@ local function GetFakeTotalDialogue()
 		total += info.Price * info.Quantity
 	end
 
-	local text = `The total is: {string.format("%.2f", total * 2)} pounds apparently.`
-	return text
+	total = total * 2
+	local currentCash = ReplicatedStorage.Remotes.GetCurrentMoney:InvokeServer()
+
+	local text = `The total is: {string.format("%.2f", total)} pounds apparently.`
+
+	if currentCash >= total then
+		return {
+			Name = "Shayden",
+			Portrait = "rbxassetid://2678352699",
+			Dialogue = text,
+			Responses = {
+				{
+					Text = "You're joking right?<br/>Thats like DOUBLE!",
+					Type = "NextMessage",
+					NextId = "FakePrice",
+				},
+				{
+					Text = "Whatever, here you go.<br/>This is taking too long...",
+					Type = "NextMessage",
+					NextId = "Scammed",
+				},
+			},
+		}
+	else
+		return {
+			Name = "Shayden",
+			Portrait = "rbxassetid://2678352699",
+			Dialogue = text,
+			Responses = {
+				{
+					Text = "Can't afford it...",
+					Type = "Close",
+				},
+				{
+					Text = "Too expensive...",
+					Type = "Close",
+				},
+			},
+		}
+	end
 end
 
 return {
@@ -163,23 +201,7 @@ return {
 			},
 		},
 
-		Seven = {
-			Name = "Shayden",
-			Portrait = "rbxassetid://2678352699",
-			Dialogue = GetFakeTotalDialogue,
-			Responses = {
-				{
-					Text = "You're joking right?<br/>Thats like DOUBLE!",
-					Type = "NextMessage",
-					NextId = "FakePrice",
-				},
-				{
-					Text = "Whatever, here you go.<br/>This is taking too long...",
-					Type = "NextMessage",
-					NextId = "Scammed",
-				},
-			},
-		},
+		Seven = GetFakeTotalDialogue,
 
 		FakePrice = {
 			Name = "Shayden",

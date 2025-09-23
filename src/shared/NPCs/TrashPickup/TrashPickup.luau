@@ -24,8 +24,6 @@ function TrashPickup.ServerInit()
 	local trashModel = ServerStorage.MissionModels.TrashPickup
 	local spawnPoints = ServerStorage.MissionModels.TrashPickup.TrashPoints:GetChildren()
 
-	ServerHelperFunctions.SetNPCDialogueFile({ TrashPickupNPCNameTag = "TrashPickupInProgress" })
-
 	if not trashModel or not spawnPoints then
 		error("TrashModel and TrashPoints failed to get reference")
 		return

@@ -1,3 +1,44 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local GetMoneyRemote = ReplicatedStorage.Remotes.GetCurrentMoney
+local function CanAffordText()
+	local cash = GetMoneyRemote:InvokeServer()
+
+	if cash >= 200 then
+		return {
+			Name = "Bertha",
+			Portrait = "rbxassetid://749274798",
+			Dialogue = "Two trillion L-Puzzles from Everything Upgrade Tree per lesson.<br/>No refunds.<br/>100% success rate.<br/>Worth it.­",
+			Responses = {
+				{
+					Text = "(Hand over cash even though its extortion)",
+					Type = "Close",
+				},
+				{
+					Text = "WHAT IS THAT PRICE??<br/>IS THIS A ROBBERY?",
+					Type = "NextMessage",
+					NextId = "Declined",
+				},
+			},
+		}
+	else
+		return {
+			Name = "Bertha",
+			Portrait = "rbxassetid://749274798",
+			Dialogue = "Two trillion L-Puzzles from Everything Upgrade Tree per lesson.<br/>No refunds.<br/>100% success rate.<br/>Worth it.­",
+			Responses = {
+				{
+					Text = "Can't afford it...<br/>(£200 required)",
+					Type = "Close",
+				},
+				{
+					Text = "<",
+					Type = "Close",
+				},
+			},
+		}
+	end
+end
+
 return {
 	Nodes = {
 		DrivingInstructor = {
@@ -175,23 +216,7 @@ return {
 			},
 		},
 
-		Ten = {
-			Name = "Bertha",
-			Portrait = "rbxassetid://749274798",
-			Dialogue = "Two trillion L-Puzzles from Everything Upgrade Tree per lesson.<br/>No refunds.<br/>100% success rate.<br/>Worth it.­",
-			Responses = {
-				{
-					Text = "(Ignore the absurd price and<br/>pay up quick before AI comes back)",
-					Type = "NextMessage",
-					NextId = "Accepted",
-				},
-				{
-					Text = "WHAT IS THAT PRICE??<br/>IS THIS A ROBBERY?",
-					Type = "NextMessage",
-					NextId = "Declined",
-				},
-			},
-		},
+		Ten = CanAffordText,
 
 		Declined = {
 			Name = "Bertha",
