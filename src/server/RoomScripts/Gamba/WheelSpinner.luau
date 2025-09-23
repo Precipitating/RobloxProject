@@ -8,7 +8,7 @@ local numSlices = #Prizes
 local AnglePerSlice = 360 / numSlices
 local StartAngle = nil
 local SpinConn = nil
-local Cost = 50
+local Cost = 0
 local Active = false
 local WheelSpinner = {}
 
@@ -28,7 +28,9 @@ local function StartSpinning(player)
 	if not hinge or not base then
 		error("Hinge/Base not found in wheel")
 	end
-	StartAngle = hinge.CurrentAngle
+	if not StartAngle then
+		StartAngle = hinge.CurrentAngle
+	end
 	Active = true
 	hinge.ActuatorType = Enum.ActuatorType.Motor
 	hinge.AngularVelocity = math.random(-20, -5)
@@ -41,7 +43,7 @@ local function StartSpinning(player)
 			SpinConn:Disconnect()
 			Active = false
 		end
-		if base.RotVelocity.Magnitude < 0.05 then
+		if base.AssemblyAngularVelocity.Magnitude < 0.05 then
 			-- wheel stopped
 			local angle = (hinge.CurrentAngle - StartAngle + 360) % 360
 			local adjustedAngle = (angle + AnglePerSlice / 2) % 360
@@ -61,6 +63,8 @@ function WheelSpinner.Start(player)
 		print("Can't afford or still active!")
 		return
 	end
+
+	CurrencyHandler.ReduceMoney(player, Cost)
 
 	Wheel = CollectionService:GetTagged("WheelSpinner")
 	for _, model in Wheel do
