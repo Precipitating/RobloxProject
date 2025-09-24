@@ -2,7 +2,11 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
+local ClientHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
+local MovementHandler = require(StarterPlayer.StarterPlayerScripts.Client.MovementHandler)
+local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
+local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -197,5 +201,59 @@ InitializeGUIModule["Cashier"] = function()
 		task.wait(3)
 		canClick = true
 	end)
+end
+
+InitializeGUIModule["BulletGuesser"] = function()
+	print("Client initialize BulletGuesser GUI")
+	local GUI = ReplicatedStorage.GUI.BulletGuesser.RevolverScreen
+	local exists = PlayerGui:FindFirstChild("RevolverScreen")
+	if exists then
+		exists:Destroy()
+	end
+	if GUI then
+		local clonedGUI = GUI:Clone()
+		clonedGUI.Parent = PlayerGui
+		local buttons = clonedGUI:WaitForChild("Buttons"):GetChildren()
+		if #buttons > 0 then
+			for i, button in ipairs(buttons) do
+				trackConnect("BulletGuesser", button.Activated, function()
+					print("Clicked button" .. i)
+					clonedGUI:Destroy()
+					UIHelperFunctions.AdjustBlackScreen(1, 0)
+					SoundModule.StopAllSounds()
+					task.wait(1)
+					local function GoodChoice()
+						SoundModule.PlaySound("RevolverShot")
+						task.wait(1)
+						SoundModule.PlaySound("Correct2")
+						GeneralRemotes.AddMoney:FireServer(250)
+						UIHelperFunctions.AdjustBlackScreen(1, 1)
+						MovementHandler.EnableControls(nil)
+					end
+
+					local BadChoice = function()
+						local currMoney = GeneralRemotes.GetCurrentMoney:InvokeServer()
+						SoundModule.PlaySound("RevolverEmpty")
+						task.wait(1)
+						SoundModule.PlaySound("FailTrombone")
+						GeneralRemotes.ReduceMoney:FireServer(currMoney)
+						UIHelperFunctions.AdjustBlackScreen(1, 1)
+						MovementHandler.EnableControls(nil)
+					end
+					local bulletHoleIndex = GeneralRemotes.Gamba.BulletGuesser.GetBulletIndex:InvokeServer()
+					-- picks hole with bullet
+					if tonumber(button.Name) == bulletHoleIndex then
+						GoodChoice()
+					else
+						warn(`Chosen {button.Name} when it should be {bulletHoleIndex}`)
+						BadChoice()
+					end
+					InitializeGUIModule.DisconnectAll("BulletGuesser")
+					ClientHelperFunctions.EnableAllNPCPrompts(true)
+					GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex:FireServer()
+				end)
+			end
+		end
+	end
 end
 return InitializeGUIModule

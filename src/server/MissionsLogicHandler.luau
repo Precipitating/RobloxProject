@@ -10,6 +10,7 @@ local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.Grocery
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
+local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -257,6 +258,10 @@ end
 
 MissionEventHandlers["TrashPickup"] = function(_)
 	TrashPickup.ServerInit()
+end
+
+MissionEventHandlers["BulletGuesser"] = function(player)
+	BulletGuesser.Start(player)
 end
 
 return MissionEventHandlers
