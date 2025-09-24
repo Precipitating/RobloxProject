@@ -8,7 +8,7 @@ local numSlices = #Prizes
 local AnglePerSlice = 360 / numSlices
 local StartAngle = nil
 local SpinConn = nil
-local Cost = 0
+local Cost = 50
 local Active = false
 local WheelSpinner = {}
 

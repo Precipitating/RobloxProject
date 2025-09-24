@@ -11,6 +11,7 @@ local ProfileDataModule = require(script.Player.GetPlayerInfo)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
+local BulletGuesser = require(script.RoomScripts.Gamba.BulletGuesser)
 local SlotMachine = require(script.RoomScripts.Gamba.SlotMachine)
 local WheelSpinner = require(script.RoomScripts.Gamba.WheelSpinner)
 local ServerHelperFunctions = require(script.ServerHelperFunctions)
@@ -117,6 +118,14 @@ GeneralRemotes.GetCurrentMoney.OnServerInvoke = function()
 	return CurrencyHandler.GetMoney()
 end
 
+GeneralRemotes.AddMoney.OnServerEvent:Connect(function(player, val)
+	return CurrencyHandler.AddMoney(player, val)
+end)
+
+GeneralRemotes.ReduceMoney.OnServerEvent:Connect(function(player, val)
+	return CurrencyHandler.ReduceMoney(player, val)
+end)
+
 -- trash pickup
 GeneralRemotes.PickupTrash.TrashPickedUp.OnServerInvoke = function(_, trashModel)
 	return TrashPickup.PickedUp(trashModel)
@@ -156,6 +165,14 @@ end)
 
 GeneralRemotes.Gamba.StartWheelSpin.OnServerEvent:Connect(function(player)
 	WheelSpinner.Start(player)
+end)
+
+GeneralRemotes.Gamba.BulletGuesser.GetBulletIndex.OnServerInvoke = function(_)
+	return BulletGuesser.GetStoredBulletIdx()
+end
+
+GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex.OnServerEvent:Connect(function()
+	BulletGuesser.ResetBulletIdx()
 end)
 
 -- set player's achievements
