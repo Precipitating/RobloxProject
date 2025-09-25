@@ -1,10 +1,18 @@
+local MarketplaceService = game:GetService("MarketplaceService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local PlayerBadgeDisplayer = require(ServerScriptService.Server.PlayerBadgeDisplayer)
 local RoomHandler = require(ServerScriptService.Server.RoomHandler)
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local PlayerInitialize = {}
 
 function PlayerInitialize.SetupAchievements(player)
 	PlayerBadgeDisplayer.GetObtainedBadges(player)
+end
+
+function PlayerInitialize.GiveSpeedCoil(player)
+	if MarketplaceService:UserOwnsGamePassAsync(player.UserId, 1492720359) then
+		ServerHelperFunctions.GiveTool(player, { "SpeedCoil", true })
+	end
 end
 
 -- returns spawn location

@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBXF3B7399151C94E3BBFAC56F4F2FF135C">
+	<Item class="ScreenGui" referent="RBXC89F634A5037410790AEA1BD6C106B76">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="AutoLocalize">true</bool>
@@ -25,7 +25,7 @@
 			<BinaryString name="Tags"></BinaryString>
 			<token name="ZIndexBehavior">1</token>
 		</Properties>
-		<Item class="ImageLabel" referent="RBX6ECD52E0C1AB435E962164994131F180">
+		<Item class="ImageLabel" referent="RBXD96BECF5FF35473EAFDC2C541D5D67E0">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -122,7 +122,7 @@
 				<int name="ZIndex">1</int>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX657F24586727467C81C123B6374680A8">
+		<Item class="Folder" referent="RBXBF06C4A02B07470AAC458ED16390F7A2">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -131,7 +131,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ImageButton" referent="RBX52E5FF6DBA31465DAF4D4A6777109A63">
+			<Item class="ImageButton" referent="RBX5CA1FF9E450D44819894E9F71B75F296">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -236,7 +236,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="ImageButton" referent="RBX69E85A5D42B54341A62B046A2D46F210">
+			<Item class="ImageButton" referent="RBXFF58E1EEA0744563830B32838C0D925D">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -341,7 +341,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="ImageButton" referent="RBXB3F4B37D93A64F4EB83D72402E98EFB0">
+			<Item class="ImageButton" referent="RBXCAAF032AD0EC413F92A3DB94233CFFE4">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -446,7 +446,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="ImageButton" referent="RBX6A2409FC42B44FBB85403BD3D53590D8">
+			<Item class="ImageButton" referent="RBX25BC0D8B6A7E4D10978C11F14E15B3FB">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -551,7 +551,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="ImageButton" referent="RBX156C9A7B5CF049EF98CAAC94DC584BE0">
+			<Item class="ImageButton" referent="RBX871B7216336740A197DBD1DFC840EBA6">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -656,7 +656,7 @@
 					<int name="ZIndex">1</int>
 				</Properties>
 			</Item>
-			<Item class="ImageButton" referent="RBX4F69D468F57C4890A2E53681E1ED935B">
+			<Item class="ImageButton" referent="RBX916D81EC15A84F648662FA461E54C206">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
