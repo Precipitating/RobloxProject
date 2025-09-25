@@ -187,6 +187,7 @@ Players.PlayerAdded:Connect(function(player)
 		local humanoid = character:WaitForChild("Humanoid")
 		local hrp = character:WaitForChild("HumanoidRootPart")
 		PlayerInitialize.SetCollisionGroup(character)
+		PlayerInitialize.GiveSpeedCoil(player)
 
 		local function isOnGround()
 			local root = character:FindFirstChild("HumanoidRootPart")
@@ -215,8 +216,7 @@ Players.PlayerAdded:Connect(function(player)
 			end
 		end)
 
-		-- teleport if fallen below -450
-
+		-- teleport if fallen below -450 Y
 		task.spawn(function()
 			while character.Parent do
 				task.wait(0.1)

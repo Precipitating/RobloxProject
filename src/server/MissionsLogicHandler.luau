@@ -124,7 +124,7 @@ MissionEventHandlers["TypingCompetition"] = function(player)
 	end
 	local init = competition.Init(player)
 
-	player.Character:SetPrimaryPartCFrame(workspace.Dumpster.Poop:GetPrimaryPartCFrame())
+	player.Character:SetPrimaryPartCFrame(workspace.StreetProps.Dumpster.Poop:GetPrimaryPartCFrame())
 	if not init then
 		error("Initialize word competition failed")
 	end

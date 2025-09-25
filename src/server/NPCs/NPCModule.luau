@@ -170,7 +170,19 @@ function NPC:StartPathing(targetPos, obj)
 	end
 
 	self.PathCancelled = false
-	local path = PathfindingService:CreatePath()
+	local path = PathfindingService:CreatePath({
+		AgentRadius = 2,
+		Costs = {
+			Pavement = 1,
+			ZebraCrossing = 2,
+			Road = 100,
+			Grass = 50,
+			Conrete = 50,
+			Glass = 100,
+			Snow = 100,
+			Plastic = 50,
+		},
+	})
 
 	path:ComputeAsync(self.HumanoidRootPart.Position, targetPos.Position)
 
