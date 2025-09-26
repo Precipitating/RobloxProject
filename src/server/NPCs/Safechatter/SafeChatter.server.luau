@@ -1,24 +1,17 @@
 local Players = game:GetService("Players")
+local ServerScriptService = game:GetService("ServerScriptService")
+local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local NPCModule = require(script.Parent.NPCModule)
-local InitializedRemote = ReplicatedStorage.Events.NPC.InitializedNPC
-local ArrivedRemote = ReplicatedStorage.Events.NPC.ArrivedDestination
 local WeepingAngelModeEvent = ReplicatedStorage.Events.NPC.WeepingAngelMode
 local IsCameraLookingAtSafechatterRemote = ReplicatedStorage.Remotes.IsCameraLookingAtPart
 local EnableCameraLook = ReplicatedStorage.Remotes.EnableCameraLookDetection
 local TripRemote = ReplicatedStorage.Remotes.Trip
-local SafeChatterRef
 local DelayHandle = nil
 local HitEventConnected = false
 local TouchedDebounce = false
 
-local function PatrolMode()
-	local pathData = SafeChatterRef:GetPathStorage():GetChildren()
-	local nextLocation = pathData[math.random(1, #pathData)]
-	SafeChatterRef:StartPathing(nextLocation)
-end
-
 local function WeepingAngelMode(player, isLooking)
+	local SafeChatterRef = NPCModule:GetNPC("Safechatter")
 	if isLooking then
 		--player is looking: cancel any delayed move and stop movement
 		if DelayHandle ~= nil then
@@ -32,7 +25,7 @@ local function WeepingAngelMode(player, isLooking)
 			DelayHandle = task.delay(2, function()
 				-- Double-check character still exists
 				if player.Character then
-					SafeChatterRef:StartPathing(player.Character:GetPivot(), player)
+					SafeChatterRef:StartPathing(player.Character:GetPivot())
 					print("Path resume")
 				end
 				DelayHandle = nil
@@ -46,13 +39,8 @@ IsCameraLookingAtSafechatterRemote.OnServerEvent:Connect(function(player, lookin
 	WeepingAngelMode(player, looking)
 end)
 
--- init
-InitializedRemote.Event:Connect(function()
-	SafeChatterRef = NPCModule:GetNPC("Safechatter")
-	SafeChatterRef:SetMode("Patrol")
-end)
-
 WeepingAngelModeEvent.Event:Connect(function(player)
+	local SafeChatterRef = NPCModule:GetNPC("Safechatter")
 	EnableCameraLook:FireClient(player, true, SafeChatterRef.HumanoidRootPart)
 	WeepingAngelMode(player, false)
 
@@ -73,12 +61,5 @@ WeepingAngelModeEvent.Event:Connect(function(player)
 			end
 		end
 		HitEventConnected = true
-	end
-end)
-
-ArrivedRemote.Event:Connect(function()
-	if SafeChatterRef:GetMode() == "Patrol" then
-		PatrolMode()
-		print("Arrived. Go to next destination ")
 	end
 end)

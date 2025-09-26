@@ -2,17 +2,20 @@ local NPC = {}
 local NPCStorage = {}
 local Collections = game:GetService("CollectionService")
 local PathfindingService = game:GetService("PathfindingService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local InitializedRemote = ReplicatedStorage.Events.NPC.InitializedNPC
 local ArrivedRemote = ReplicatedStorage.Events.NPC.ArrivedDestination
 local WeepingAngelModeEvent = ReplicatedStorage.Events.NPC.WeepingAngelMode
 local TweenService = game:GetService("TweenService")
-local ModeDebounce = false
+
 NPC.__index = NPC
 
 function NPC.new(model)
 	local self = setmetatable({}, NPC)
+	self.ModeDebounce = false
 	self.Model = model
+	self.Name = nil
 	self.Health = 100
 	self.AvailablePaths = nil
 	self.LastMode = nil
@@ -43,51 +46,59 @@ function NPC:DisconnectAllConnections()
 	table.clear(self.Connections)
 end
 
-function NPC:SetMode(mode, player)
-	if ModeDebounce then
-		return
-	end
+function NPC:SetMode(mode)
 	if self.Mode == mode then
 		return
 	end
-	print(`NPC going to state {mode}, prev state {self.Mode}`)
-
-	self.LastMode = self.Mode
-	self.Mode = mode
-	ModeDebounce = true
-	if mode == "Interacting" then
-		self:ForceStopMovement()
-		if player then
-			local character = player.Character or player.CharacterAdded:Wait()
-			local playerPos = character:GetPivot().Position
-			local modelPosition = self.Model:GetPivot().Position
-			local targetPosition = Vector3.new(playerPos.X, modelPosition.Y, playerPos.Z)
-
-			-- rotate towards player via tween on seperate, non blocking thread
-			task.spawn(function()
-				local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out)
-				local facingCFrame = CFrame.lookAt(modelPosition, targetPosition)
-				local tween = TweenService:Create(self.Model.PrimaryPart, tweenInfo, { CFrame = facingCFrame })
-				tween:Play()
-			end)
-		end
-	elseif mode == "Patrol" then
-		ArrivedRemote:Fire()
-	elseif mode == "Angel" then
-		WeepingAngelModeEvent:Fire(player)
+	-- debounce: ignore if already changing mode
+	if self.ModeDebounce then
+		print("MODE DEBOUNCE")
+		return
 	end
 
-	task.wait(1)
-	ModeDebounce = false
+	self.ModeDebounce = true
+	print(`{self.Name} going to state {mode}, prev state {self.Mode}`)
+	self.LastMode = self.Mode
+	self.Mode = mode
+
+	local function getPlayer()
+		return Players:GetPlayers()[1] or Players.PlayerAdded:Wait()
+	end
+
+	if mode == "Interacting" then
+		local player = getPlayer()
+		self:ForceStopMovement()
+
+		local character = player.Character or player.CharacterAdded:Wait()
+		local playerPos = character:GetPivot().Position
+		local modelPos = self.Model:GetPivot().Position
+		local targetPos = Vector3.new(playerPos.X, modelPos.Y, playerPos.Z)
+
+		-- rotate towards player without blocking
+		task.spawn(function()
+			local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out)
+			local facingCFrame = CFrame.lookAt(modelPos, targetPos)
+			TweenService:Create(self.Model.PrimaryPart, tweenInfo, { CFrame = facingCFrame }):Play()
+		end)
+	elseif mode == "Patrol" then
+		ArrivedRemote:Fire(self.Name)
+	elseif mode == "Angel" then
+		WeepingAngelModeEvent:Fire(getPlayer())
+	end
+
+	-- Non-blocking debounce reset
+	task.delay(0.5, function()
+		self.ModeDebounce = false
+	end)
 end
 
-function NPC:SetBackPreviousMode(player)
+function NPC:SetBackPreviousMode()
 	print(self.LastMode)
 	if self.LastMode == self.Mode then
 		warn("NPC GOING BACK TO SAME MODE???")
 		return
 	end
-	self:SetMode(self.LastMode, player)
+	self:SetMode(self.LastMode)
 end
 
 function NPC:GetMode()
@@ -118,7 +129,7 @@ function NPC:GetNPC(name)
 	if NPCStorage[name] then
 		return NPCStorage[name]
 	else
-		error(name .. "isnt stored in NPCList")
+		error(`{name} isnt stored in NPCList`)
 		return nil
 	end
 end
@@ -128,11 +139,14 @@ function NPC:Init()
 	-- get all MoveableNPC tagged objects and initialize it
 	for _, currNPC in pairs(NPCList) do
 		if currNPC:IsA("Model") and currNPC:FindFirstChildOfClass("Humanoid") then
+			-- new NPC object to be stored into a table
 			local assignedNPC = NPC.new(currNPC)
-			-- check for valid destination points and set if so
+			assignedNPC.Name = currNPC.Name
+
+			-- check for valid destination points and set if so, optional
 			if currNPC.Parent:FindFirstChild("NavLocations") then
 				assignedNPC:SetPathStorage(currNPC.Parent:FindFirstChild("NavLocations"))
-				print("NPC has path data, storing...")
+				print(`{currNPC.Name} NPC has path data, storing...`)
 			end
 			NPCStorage[currNPC.Name] = assignedNPC
 
@@ -142,12 +156,13 @@ function NPC:Init()
 					part:SetNetworkOwner(nil)
 				end
 			end
+
+			task.defer(function()
+				print(`Intialize remote for {currNPC.Name}`)
+				InitializedRemote:Fire(currNPC.Name)
+			end)
 		end
 	end
-
-	task.defer(function()
-		InitializedRemote:Fire()
-	end)
 end
 
 function NPC:ForceStopMovement()
@@ -162,8 +177,8 @@ function NPC:SetWalkspeed(val)
 	end
 end
 
-function NPC:StartPathing(targetPos, obj)
-	print("should start moving npc")
+function NPC:StartPathing(targetPos)
+	print(`{self.Name} should start moving to waypoints!`)
 	if not self.Humanoid then
 		error("NPC Humanoid not found to pathfind!")
 		return
@@ -199,7 +214,7 @@ function NPC:StartPathing(targetPos, obj)
 		end
 	end
 
-	ArrivedRemote:Fire(obj)
+	ArrivedRemote:Fire(self.Name)
 end
 
 return NPC

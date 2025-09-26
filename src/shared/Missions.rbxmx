@@ -2148,6 +2148,28 @@ StealPhone = {
 		manualOnly = true,	
 	},
 
+		Laptop = {
+		categoryId = "Bosnian",
+		tasks = {
+			BuyLaptop = {
+				taskType = Types.TaskType.Count,
+				goalCount = 1,
+			},
+		},
+		metadata = {
+			displayName = "Buy a £5000 laptop",
+			visibleAfterComplete = true,
+			visibleBeforeUnlocked = false,
+			rewards = {
+				{
+					icon = 1245227490,
+					displayName = "Overkill Laptop",
+				},
+			},
+		},
+		manualOnly = true,	
+	},
+
 
 }
 
