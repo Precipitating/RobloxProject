@@ -87,7 +87,7 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 		end
 
 		NPC:EnableProximityChat(false)
-		NPC:SetMode("Angel", player)
+		NPC:SetMode("Angel")
 		NPC:SetWalkspeed(10)
 	else
 		warn("safeChatterModel missing or has no PrimaryPart")
@@ -204,7 +204,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 
 				-- set new NPC dialogue
 				ServerHelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterEscaped" })
-				NPC:SetMode("Interacting", player)
+				NPC:SetMode("Interacting")
 				NPC:EnableProximityChat(true)
 				GeneralRemotes.DisableControls:FireClient(player, "UI")
 

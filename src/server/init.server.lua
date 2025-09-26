@@ -47,7 +47,7 @@ ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(pla
 	print(`{NPCName} pathfinding state on server: {pause}`)
 	local targetNPC = NPCModule:GetNPC(NPCName)
 	if pause then
-		targetNPC:SetMode("Interacting", player)
+		targetNPC:SetMode("Interacting")
 	else
 		targetNPC:SetBackPreviousMode(player)
 	end
@@ -84,7 +84,7 @@ GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, 
 	end
 end)
 
-GeneralRemotes.GlitcherMission.SubmitBombTimeReduction.OnServerEvent:Connect(function(player, reductionVal)
+GeneralRemotes.GlitcherMission.SubmitBombTimeReduction.OnServerEvent:Connect(function(_, reductionVal)
 	BosnianRoulette.ReduceBombTime(reductionVal)
 end)
 
