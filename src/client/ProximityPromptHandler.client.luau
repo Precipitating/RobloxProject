@@ -9,7 +9,6 @@ local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
-local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -109,22 +108,25 @@ local function HouseDoorProximityPrompt(prompt)
 end
 
 local function TalkProximityPrompt(prompt)
-	-- for NPCS only
-	if not TalkModule.CanTalk() then
-		print("Shouldn't talk")
-		return
-	end
-
 	if
 		not (CollectionService:HasTag(prompt.Parent, "MoveableNPC") or CollectionService:HasTag(prompt.Parent, "NPC"))
 	then
 		return
+	end
+	-- for NPCS only
+	local canTalk = GeneralRemotes.CanTalk:InvokeServer()
+	if not canTalk then
+		print("Shouldn't talk")
+		return
+	else
+		print(`Can talk`)
 	end
 
 	if TalkModule.IsTalking() then
 		return
 	end
 	TalkModule.SetTalking(true)
+	prompt.Enabled = false
 
 	-- check if moveable NPC, and if so pause its movement
 	if CollectionService:HasTag(prompt.Parent, "MoveableNPC") then
@@ -183,6 +185,7 @@ local function ShopBasketProximityPrompt(prompt)
 
 		Events.SetDialogueFileEvent:FireServer({ CashierNameTag = "CashierItems" })
 	elseif ShopItemGiver then
+		-- give tool from shelf
 		local itemName = prompt:FindFirstChild("ItemName")
 
 		if itemName then
@@ -210,7 +213,7 @@ local function PickupTrashProximityPrompt(prompt)
 	if result.PickedUp >= result.TotalTrash then
 		GeneralRemotes.PickupTrash.TrashGameFinished:InvokeServer()
 		gui.Parent:Destroy()
-		ClientHelperFunctions.EnableAllNPCPrompts(true)
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 		SoundModule.PlaySound("Correct")
 	end
 end

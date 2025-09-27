@@ -279,8 +279,8 @@ end
 
 function HaulJob.ClientInit()
 	local StarterPlayer = game:GetService("StarterPlayer")
-	local ClientHelperFunctions = IS_CLIENT and require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
 	local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
+
 	-- wait for server to spawn models
 	task.wait(1)
 	workspace:WaitForChild("HaulJob")
@@ -308,7 +308,7 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
-		ClientHelperFunctions.EnableAllNPCPrompts(true)
+		GeneralRemotes.SetCanTalkToNPC:FireServer(true)
 	end)
 end
 

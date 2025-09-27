@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local IS_SERVER = RunService:IsServer()
 local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService")
+local TalkModuleHelpers = IS_SERVER and require(ServerScriptService.Server.TalkModuleHelpers)
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler)
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions)
 local ServerStorage = IS_SERVER and game:GetService("ServerStorage")
@@ -37,6 +38,7 @@ function TrashPickup.ServerInit()
 			TotalTrashSpawned = TotalTrashSpawned + 1
 		end
 	end
+	TalkModuleHelpers.SetCanTalk(false)
 end
 
 function TrashPickup.ClientInit(player)

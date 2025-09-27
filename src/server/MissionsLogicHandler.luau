@@ -3,6 +3,7 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local CurrencyHandler = require(script.Parent.CurrencyHandler)
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
@@ -15,7 +16,8 @@ local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
-
+local Missions = require(ReplicatedStorage.Missions.Server.Missions)
+local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local MissionEventHandlers = {}
 -- handle all server game events
 
@@ -119,6 +121,7 @@ end
 MissionEventHandlers["TypingCompetition"] = function(player)
 	print("Typing competition start!")
 	local competition = require(script.Parent.NPCs.PsychoMantis.TypingCompetition)
+
 	if not competition then
 		error("Word type competition failed to begin: Failed to obtain module")
 	end
@@ -173,7 +176,7 @@ MissionEventHandlers["CashierShopLift"] = function(player)
 	print("Cashier shoplift event")
 	GroceryBagModule.UpdateGroceries(player)
 	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
-	GeneralRemotes.SetCanTalkToNPC:FireClient(player, false)
+	TalkModuleHelpers.SetCanTalk(false)
 
 	local spawns = {
 		function()
@@ -210,6 +213,12 @@ end
 MissionEventHandlers["CashierScammed"] = function(player)
 	print("Cashier scammed event")
 	GroceryBagModule.UpdateGroceries(player)
+
+	if GroceryBagModule.HasItem("Laptop") and Missions.MissionExists("Laptop") then
+		Missions.addProgressToTask(player, "Laptop", "BuyLaptop", 1)
+		workspace:FindFirstChild("BosnianDad"):Destroy()
+	end
+
 	GeneralRemotes.Cashier.ClearBasket:FireClient(player)
 end
 
@@ -235,7 +244,7 @@ MissionEventHandlers["DrivingTest"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestPassed"] = function(player)
-	GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", false)
+	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 2493042217612033)
@@ -244,7 +253,7 @@ MissionEventHandlers["DrivingTestPassed"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestFailed"] = function(player)
-	GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", false)
+	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 1698025412209346)
@@ -263,5 +272,22 @@ end
 MissionEventHandlers["BulletGuesser"] = function(player)
 	BulletGuesser.Start(player)
 end
+MissionEventHandlers["BosnianStart"] = function(_)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Bosnian", "BosnianDad", nil)
+end
+MissionEventHandlers["BosnianComplete"] = function(player)
+	CurrencyHandler.AddMoney(player, 1)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+end
 
+MissionEventHandlers["BosnianScammed"] = function(player)
+	GeneralRemotes.PlaySound:InvokeClient(player, "CartoonRun")
+	workspace:FindFirstChild("BosnianDad"):Destroy()
+	Missions.FailMission(player, "Laptop")
+end
+
+MissionEventHandlers["BosnianFailEvent"] = function(player)
+	CurrencyHandler.AddMoney(player, 1)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+end
 return MissionEventHandlers

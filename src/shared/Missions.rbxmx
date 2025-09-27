@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Folder" referent="RBX8B6DCE160FB7460AA36E05FD6A12AEE2">
+	<Item class="Folder" referent="RBXDC7DC05B572744F1A4D1529F2349D0F5">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -11,7 +11,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Script" referent="RBX1CC4A127DA294D20AF4570458E8451A0">
+		<Item class="Script" referent="RBX795E844638B34C0CBB4C8AC99938028F">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -37,7 +37,7 @@ initialize()
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXCF9441E1C2634B56B5018EB992786BE5">
+			<Item class="ModuleScript" referent="RBX04F172C61A064322BE71D83700DD7EB1">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -658,7 +658,7 @@ return MissionsClient
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX24B4B4084BC54D79888F249EEE40BB0D">
+			<Item class="ModuleScript" referent="RBX5BE3C927CF7944059B4B402E3731D6F2">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1584,7 +1584,7 @@ return MissionsUI
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Script" referent="RBXC75A5AF23E744728B2031E4E2F49E0CF">
+		<Item class="Script" referent="RBX5E092FA47D294A9C90ED8B42C58E2745">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1809,7 +1809,7 @@ If your experience already has an existing UI that you would like to integrate w
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBX25292CCBB1AE485180AA2CD10546331F">
+		<Item class="Folder" referent="RBXB0D96EDF807D4E5BB456129124BA7C3E">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1818,7 +1818,7 @@ If your experience already has an existing UI that you would like to integrate w
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXFDD0EDE9F872498982C97E173D0970DB">
+			<Item class="ModuleScript" referent="RBXF444052D723643F3BF1F347D86833E41">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1975,7 +1975,7 @@ return Types
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXFE4FF7A0838549A7BD49DF946DDE8E7D">
+			<Item class="ModuleScript" referent="RBX9818A88E9A684F928328E4D4273438C3">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -1999,7 +1999,7 @@ return Categories
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX4885E5E98EC8497AABC90E0D5381F233">
+			<Item class="ModuleScript" referent="RBX235CB501384447F1974F1E531103DA00">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2036,7 +2036,7 @@ return Constants
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXE0ACE5468D3E47FA97977A5AD1FBE7AC">
+			<Item class="ModuleScript" referent="RBX23ADA551A3A04E8386F958B7B5196C45">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2064,7 +2064,7 @@ return Types
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX7F7889074A8D4DE992D4A4ECA96C0DBB">
+			<Item class="ModuleScript" referent="RBX272A2E2736BD41C1A0CD7C33D5D1A0B4">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2082,7 +2082,7 @@ local Types = require(script.Parent.Types)
 
 local Missions: Types.MissionsList = {
 
-StealPhone = {
+	StealPhone = {
 		categoryId = "Roadman",
 		tasks = {
 			Steal = {
@@ -2126,7 +2126,7 @@ StealPhone = {
 		manualOnly = true,	
 	},
 
-		TypingCompetition = {
+	TypingCompetition = {
 		categoryId = "Psycho Mantis",
 		tasks = {
 			Type = {
@@ -2148,7 +2148,7 @@ StealPhone = {
 		manualOnly = true,	
 	},
 
-		Laptop = {
+	Laptop = {
 		categoryId = "Bosnian",
 		tasks = {
 			BuyLaptop = {
@@ -2180,7 +2180,7 @@ return Missions
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX1B2608BFD754442DAD70DC21065B0E00">
+		<Item class="Folder" referent="RBXCB7ECA389B8C4F99A44F54FF47F58640">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2189,7 +2189,7 @@ return Missions
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="RemoteEvent" referent="RBX7CCC00A01C5F4B679132C9CAC64D8BA5">
+			<Item class="RemoteEvent" referent="RBXA889FF5B234D465EAFBE0EFBCFFACDA8">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2199,7 +2199,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="BindableEvent" referent="RBXD04976D3667C4154A36525B21CF81DF0">
+			<Item class="BindableEvent" referent="RBXB288711292F449908FB897B00C005A04">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2209,7 +2209,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBXA2D2D620A6954A5EA823A8BBA91E8DA7">
+			<Item class="RemoteEvent" referent="RBX978B9A14F49346CC8EB6D864612F0921">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2219,7 +2219,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX3448E68BD8D1460C8006E3564FB8E2AD">
+			<Item class="RemoteEvent" referent="RBXF45A46CF4F9A44F8B43DC8E25C6DF882">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2229,7 +2229,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBXC581BBEBA3BF4831BBFFA373122E64C9">
+			<Item class="RemoteEvent" referent="RBX46FF7D9B6E59484F8667F9DAF8939E02">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2239,7 +2239,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX514B3688EBCF452686E4F0177732A90A">
+			<Item class="RemoteEvent" referent="RBXCBDC9ED2BB1349FD98A3FE7B3EE75078">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2249,7 +2249,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="BindableEvent" referent="RBXCDBDBBBB18A34146BE220F534389F88B">
+			<Item class="BindableEvent" referent="RBX6407068841754ADEBD15AE7072F59AC3">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2259,7 +2259,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX788F10F65746404EBB087DF4D6DA96BE">
+			<Item class="RemoteEvent" referent="RBXB13E5A0E7F574A8FB817F6B490A19CC9">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2269,7 +2269,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBXDCC2690D42D74900987BBE45A2C55CD8">
+			<Item class="RemoteEvent" referent="RBX56BDAD3F75D6448DB2BDD2619EACAFB9">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2279,7 +2279,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX0FC56F0AF2214C0689A76C561AB9E3AF">
+			<Item class="RemoteEvent" referent="RBX741AD92952A346CEA3FB081243797F4D">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2289,7 +2289,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX31E66F9176D748A7B58CD10B9FBAE977">
+			<Item class="RemoteEvent" referent="RBXFC28E5145D3D4A6FB94D8BA6E0AFBC73">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2299,7 +2299,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX80DBCE4A0123433397CC6C1560540C7F">
+			<Item class="RemoteEvent" referent="RBXEEABA3DEBE7F422592F823F60E7B0530">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2309,7 +2309,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX0C0295D3A86A41059A611D2087594254">
+			<Item class="RemoteEvent" referent="RBX6DC92F385BA042E9ADB0B615C7C10701">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2319,7 +2319,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX2A4CC6DF43E3498C843D02B8B7D082E3">
+			<Item class="RemoteEvent" referent="RBXE621BAB5BE8D4AFF8D9DA1218DFB63D1">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2329,7 +2329,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX37B8137EB1744C46B44CA31F830722BE">
+			<Item class="RemoteEvent" referent="RBX59DA43CDBE0F412F813172706CD56E5A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2339,7 +2339,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX55644D9EF8A148A7BB635384B992F58E">
+			<Item class="RemoteEvent" referent="RBX55D691884EBD4928BFF3F98D35966CCC">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2349,7 +2349,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBXDEF257A818A2462B96FAE4C0E932C11D">
+			<Item class="RemoteEvent" referent="RBXE689260BBB3C4A8481F48AA357D497B4">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2359,7 +2359,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBX59CBF4695D024085AFFE69BEAA17BFBF">
+			<Item class="RemoteEvent" referent="RBXB6BA272546E44D6AAB14686EE6006CA7">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2370,7 +2370,7 @@ return Missions
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX89CAF3F491C34641A75E31DF46EE0C4E">
+		<Item class="Folder" referent="RBX1C2D9E33869B44558390986958C3F2B9">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2379,7 +2379,7 @@ return Missions
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="RemoteFunction" referent="RBX46E6AB7523E345698A5C5C26D79B16C7">
+			<Item class="RemoteFunction" referent="RBXB98584B22D8344DE8F73E85DA4D9AE7F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2389,7 +2389,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteFunction" referent="RBX911C2E635AC248928A71D80E46A43465">
+			<Item class="RemoteFunction" referent="RBX1E1F6655D230468D8F182CF022344952">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2399,7 +2399,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="BindableFunction" referent="RBX0414D88782234067868FCF99F9717AF5">
+			<Item class="BindableFunction" referent="RBX2A8EC6000EE9463AB88BE4F2B40B297E">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2410,7 +2410,7 @@ return Missions
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX69486354453B40C9B536ECE9C23B91E6">
+		<Item class="Folder" referent="RBXC1F20D4673434C86ADAD08342B35146B">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2419,7 +2419,7 @@ return Missions
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBX5E8768925258479187E767469C27AD91">
+			<Item class="ModuleScript" referent="RBXDCE9A1A880A14A1CAF25EE194D83BF40">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -2796,6 +2796,10 @@ end
 
 function Missions.FailMission(player: Player,  missionId: Types.MissionId)
 	updateMissionCompletion(player, missionId, true)
+end
+
+function Missions.MissionExists(missionId: Types.MissionId): boolean
+	return MissionsConfig[missionId] ~= nil
 end
 
 -- Check if a mission can be unlocked for a player.
@@ -3367,7 +3371,7 @@ return Missions
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBXE72F4BF57B294989BF3E3853DE45E541">
+				<Item class="ModuleScript" referent="RBX632CC4302AF34233B85536F28F5DD565">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3451,7 +3455,7 @@ return MissionsAnalytics
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="ModuleScript" referent="RBX7FD6B71C301241A49D51D4B77A2856FF">
+				<Item class="ModuleScript" referent="RBXEF93EF9EC05847F5B846A805B96D7810">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3513,7 +3517,7 @@ return MissionStore
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="Script" referent="RBX324A8F4593E24E58A8D27CA40104A11B">
+				<Item class="Script" referent="RBX7C9F8B09DC1C4B2DB454D580680944FC">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3563,7 +3567,7 @@ initialize()
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Folder" referent="RBX534279AE9C6848EA9D311B5000FA2F6E">
+			<Item class="Folder" referent="RBX964C9F5FEEDC4C719C6B884131BB9D0A">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3572,7 +3576,7 @@ initialize()
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="ModuleScript" referent="RBX127A3F2B299149628E86F7A7DC783A5E">
+				<Item class="ModuleScript" referent="RBX208649DDB16D4B50A0A14E2AFE42E6CB">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3606,7 +3610,7 @@ return OtherGameModule]]></ProtectedString>
 				</Item>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBXE251816CC263458AA58228818F1B0F6F">
+		<Item class="Folder" referent="RBX23236AE002194AB59EBF9E4AE8F78098">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3615,7 +3619,7 @@ return OtherGameModule]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXAC4564C276FB46B9BAB46CA850CCB18C">
+			<Item class="ModuleScript" referent="RBX863931386891498EB7A18CACF1582600">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3680,7 +3684,7 @@ return MissionUtils]]></ProtectedString>
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="Folder" referent="RBX7D4ABDE9127E440BB509A067A698F526">
+		<Item class="Folder" referent="RBX9E0F1A82BDF448958FA343E9CF6F6404">
 			<Properties>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3689,7 +3693,7 @@ return MissionUtils]]></ProtectedString>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="CanvasGroup" referent="RBX22C25544EA0D45A58A44FDE4BEFC5BD3">
+			<Item class="CanvasGroup" referent="RBX21C02CC8E9364769A5721B7B938DD3F2">
 				<Properties>
 					<bool name="Active">false</bool>
 					<Vector2 name="AnchorPoint">
@@ -3757,7 +3761,7 @@ return MissionUtils]]></ProtectedString>
 					<bool name="Visible">true</bool>
 					<int name="ZIndex">1</int>
 				</Properties>
-				<Item class="ImageLabel" referent="RBX70E85F315CB54A20B643906072F03262">
+				<Item class="ImageLabel" referent="RBX590A3704E69E43F9819FBDB577DF6EED">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -3853,7 +3857,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">0</int>
 					</Properties>
-					<Item class="UIGradient" referent="RBXF2D7C76F8F8640E1B8CDEE0C62AC5501">
+					<Item class="UIGradient" referent="RBX9C00F10CB4DD46D19BD053BCE6F31273">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3871,7 +3875,7 @@ return MissionUtils]]></ProtectedString>
 							<NumberSequence name="Transparency">0 0.07 0 1 0.07 0 </NumberSequence>
 						</Properties>
 					</Item>
-					<Item class="UICorner" referent="RBX2BF95D92805448B7AE280BDD6A44FB29">
+					<Item class="UICorner" referent="RBX3ED8374B7BB84DD7AC16351962E9CCDF">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3885,7 +3889,7 @@ return MissionUtils]]></ProtectedString>
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="UISizeConstraint" referent="RBXD70C26F6386B448AA9BEAFE2769E8FDE">
+					<Item class="UISizeConstraint" referent="RBXCD6F0975449A4BB2AFDFBEC9F955F9FC">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3904,7 +3908,7 @@ return MissionUtils]]></ProtectedString>
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="Frame" referent="RBX2601151D5200460E9677CB10B1581163">
+				<Item class="Frame" referent="RBXA12D6E833CE246068C4344313B1DFB5D">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -3967,7 +3971,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="Frame" referent="RBXD6E4D1111D64463A8B883C2DD2EC6FC6">
+					<Item class="Frame" referent="RBX7F6CBFF8249F4B108E5FD43E4B8EF81A">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -4030,7 +4034,7 @@ return MissionUtils]]></ProtectedString>
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">1</int>
 						</Properties>
-						<Item class="Frame" referent="RBX1E6D001226EC43009FA1052E0876CA3C">
+						<Item class="Frame" referent="RBXB16173224A75412EAFD7427733C158B8">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -4093,7 +4097,7 @@ return MissionUtils]]></ProtectedString>
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">1</int>
 							</Properties>
-							<Item class="ScrollingFrame" referent="RBXDF603D2B264F4B259A21ABDD33DA3290">
+							<Item class="ScrollingFrame" referent="RBX24D06157E2B54FA4B7E5DC849EB88FD4">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -4182,7 +4186,7 @@ return MissionUtils]]></ProtectedString>
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">1</int>
 								</Properties>
-								<Item class="UIListLayout" referent="RBXD7CE0B49E57E4D298B0AD82656DA7CBE">
+								<Item class="UIListLayout" referent="RBX666A492424D94787ACBB955B57C733E0">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -4204,7 +4208,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Wraps">false</bool>
 									</Properties>
 								</Item>
-								<Item class="Frame" referent="RBX01DE76F6BF9B449E9A8342208362AD34">
+								<Item class="Frame" referent="RBXCED44243F3934989A27D929398E0737C">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -4267,7 +4271,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="Frame" referent="RBX5E3C674BC7914680827F57587CEBB593">
+									<Item class="Frame" referent="RBX06B5989AC0C549A9921167AA9CC19DB3">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -4331,7 +4335,7 @@ return MissionUtils]]></ProtectedString>
 											<int name="ZIndex">1</int>
 										</Properties>
 									</Item>
-									<Item class="Frame" referent="RBXAC3DBB50B9714850A1B4E5A2ED67895C">
+									<Item class="Frame" referent="RBX2671FD1E4D0B492CBACD757BA946145C">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -4395,7 +4399,7 @@ return MissionUtils]]></ProtectedString>
 											<int name="ZIndex">1</int>
 										</Properties>
 									</Item>
-									<Item class="Frame" referent="RBX4E0030F63A14479396AA0272A320CDC3">
+									<Item class="Frame" referent="RBXF91698821D11451E91869E93D3EA6246">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -4458,7 +4462,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Visible">true</bool>
 											<int name="ZIndex">1</int>
 										</Properties>
-										<Item class="UIListLayout" referent="RBXADC498DF52B641E2A83AC37F09430B7C">
+										<Item class="UIListLayout" referent="RBX22320AAB52674C69A22942F0F4EB989E">
 											<Properties>
 												<BinaryString name="AttributesSerialize"></BinaryString>
 												<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -4480,7 +4484,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Wraps">false</bool>
 											</Properties>
 										</Item>
-										<Item class="Frame" referent="RBXCA485116DE9849F493EF5F2A385C1F0F">
+										<Item class="Frame" referent="RBXBA3E622E86AA41E18B50B4B61DEC505D">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -4543,7 +4547,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Visible">true</bool>
 												<int name="ZIndex">1</int>
 											</Properties>
-											<Item class="ImageLabel" referent="RBXF46E3628D80B4447B0206CE0124F7594">
+											<Item class="ImageLabel" referent="RBX149BEC6AFD974D4D9AA47E0AD8D83472">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -4640,7 +4644,7 @@ return MissionUtils]]></ProtectedString>
 													<int name="ZIndex">1</int>
 												</Properties>
 											</Item>
-											<Item class="TextLabel" referent="RBX3BB1644AECEA4C0EB0285C5E33AFC1BE">
+											<Item class="TextLabel" referent="RBX8124E1E03BBD480DA59BB577AF90995E">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -4734,7 +4738,7 @@ return MissionUtils]]></ProtectedString>
 													<int name="ZIndex">1</int>
 												</Properties>
 											</Item>
-											<Item class="TextLabel" referent="RBX4B32EA7299B2478FAE96E9F188FCEB9C">
+											<Item class="TextLabel" referent="RBXD8B7D996AB2045BF8142B8A5014E9056">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -4827,7 +4831,7 @@ return MissionUtils]]></ProtectedString>
 													<bool name="Visible">true</bool>
 													<int name="ZIndex">1</int>
 												</Properties>
-												<Item class="UIPadding" referent="RBX6B26CA4B9A3840119D7067DD9B5D26FB">
+												<Item class="UIPadding" referent="RBXEBB8B519BA5B49DEB95016552C9978A7">
 													<Properties>
 														<BinaryString name="AttributesSerialize"></BinaryString>
 														<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -4854,7 +4858,7 @@ return MissionUtils]]></ProtectedString>
 													</Properties>
 												</Item>
 											</Item>
-											<Item class="Frame" referent="RBX6DE05C11C70341B28B8FCDEE269FF255">
+											<Item class="Frame" referent="RBXAF64E1B7F96A487D9C2728A9B0CAEAEF">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -4917,7 +4921,7 @@ return MissionUtils]]></ProtectedString>
 													<bool name="Visible">true</bool>
 													<int name="ZIndex">1</int>
 												</Properties>
-												<Item class="Frame" referent="RBX537FA2DA6D1444529F3438CF1A7C0991">
+												<Item class="Frame" referent="RBX65A50BF8AA8246C9802653FEDEB9C51A">
 													<Properties>
 														<bool name="Active">false</bool>
 														<Vector2 name="AnchorPoint">
@@ -4980,7 +4984,7 @@ return MissionUtils]]></ProtectedString>
 														<bool name="Visible">true</bool>
 														<int name="ZIndex">1</int>
 													</Properties>
-													<Item class="UICorner" referent="RBX7747BE134A2745CA92616694B9EE0F31">
+													<Item class="UICorner" referent="RBX7F1FD7E48C4D41DAA9B7FDB341A54D3C">
 														<Properties>
 															<BinaryString name="AttributesSerialize"></BinaryString>
 															<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -4995,7 +4999,7 @@ return MissionUtils]]></ProtectedString>
 														</Properties>
 													</Item>
 												</Item>
-												<Item class="UICorner" referent="RBX6385E33193FC40B79EF76019E4BF2709">
+												<Item class="UICorner" referent="RBXB62D797E8F1F4FE89F801AF83BD63AF0">
 													<Properties>
 														<BinaryString name="AttributesSerialize"></BinaryString>
 														<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5011,7 +5015,7 @@ return MissionUtils]]></ProtectedString>
 												</Item>
 											</Item>
 										</Item>
-										<Item class="Frame" referent="RBX6E38C1DB8C9C430887E206E65275DA71">
+										<Item class="Frame" referent="RBX7FDED7945CD0484B90881EFD1C18A7D2">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -5074,7 +5078,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Visible">true</bool>
 												<int name="ZIndex">1</int>
 											</Properties>
-											<Item class="TextButton" referent="RBXDEC422BF51D744829905B6D317302A06">
+											<Item class="TextButton" referent="RBX51E6CFCE9D3C45D2B0A5716DC9527635">
 												<Properties>
 													<bool name="Active">true</bool>
 													<Vector2 name="AnchorPoint">
@@ -5174,7 +5178,7 @@ return MissionUtils]]></ProtectedString>
 													<bool name="Visible">true</bool>
 													<int name="ZIndex">1</int>
 												</Properties>
-												<Item class="TextLabel" referent="RBXACCEDD0B588047B8A7546E1240D763C9">
+												<Item class="TextLabel" referent="RBXBC572A1123834C49BD0DDAE30492F265">
 													<Properties>
 														<bool name="Active">false</bool>
 														<Vector2 name="AnchorPoint">
@@ -5268,7 +5272,7 @@ return MissionUtils]]></ProtectedString>
 														<int name="ZIndex">1</int>
 													</Properties>
 												</Item>
-												<Item class="UICorner" referent="RBX1A70E43E8AE84A46A1B14E67997EDF72">
+												<Item class="UICorner" referent="RBXF448422B637D49A5904E269347277864">
 													<Properties>
 														<BinaryString name="AttributesSerialize"></BinaryString>
 														<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5282,7 +5286,7 @@ return MissionUtils]]></ProtectedString>
 														<BinaryString name="Tags"></BinaryString>
 													</Properties>
 												</Item>
-												<Item class="UIStroke" referent="RBX121FBEEB987947B88FCC4975B9568D4A">
+												<Item class="UIStroke" referent="RBXE0B0D471E4C0464EA7F0C85173B72E5D">
 													<Properties>
 														<token name="ApplyStrokeMode">1</token>
 														<BinaryString name="AttributesSerialize"></BinaryString>
@@ -5310,7 +5314,7 @@ return MissionUtils]]></ProtectedString>
 													</Properties>
 												</Item>
 											</Item>
-											<Item class="UIPadding" referent="RBXB6B6F6C4976B4FA2AE6535F1DFD0C7EC">
+											<Item class="UIPadding" referent="RBX91F66C49A73C40DCA524DD0F95462453">
 												<Properties>
 													<BinaryString name="AttributesSerialize"></BinaryString>
 													<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5339,7 +5343,7 @@ return MissionUtils]]></ProtectedString>
 										</Item>
 									</Item>
 								</Item>
-								<Item class="TextLabel" referent="RBXB93C1FACF216495F83051EC99B8AC597">
+								<Item class="TextLabel" referent="RBX3F424E8E2F584B14BBA5C809AEB0B4C9">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -5432,7 +5436,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="UIPadding" referent="RBX7247D743D2EE46FF97F6FAB833695727">
+									<Item class="UIPadding" referent="RBX6A2F88EAB1724E99B06C601B92EE8B41">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5459,7 +5463,7 @@ return MissionUtils]]></ProtectedString>
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="Frame" referent="RBX30F844FB2FB3451C93EB08C506DE33CA">
+								<Item class="Frame" referent="RBX6DA6BDB1AD134A91AC43A759D96B154E">
 									<Properties>
 										<bool name="Active">true</bool>
 										<Vector2 name="AnchorPoint">
@@ -5522,7 +5526,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="UIPadding" referent="RBX496306E18BA0424985F602E957424C10">
+									<Item class="UIPadding" referent="RBX37AFC652035D40AD8F919481DDBAEFEB">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5548,7 +5552,7 @@ return MissionUtils]]></ProtectedString>
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="Frame" referent="RBX875D105CBFC54DD89203B4E8C7893C6E">
+									<Item class="Frame" referent="RBX51CEF8AE503B4EC4A12E01F0610902EC">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -5611,7 +5615,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Visible">true</bool>
 											<int name="ZIndex">1</int>
 										</Properties>
-										<Item class="UIAspectRatioConstraint" referent="RBXF167A2133E2D427BA1F363BA2E737B74">
+										<Item class="UIAspectRatioConstraint" referent="RBX405E9E59E89D4496BD16F645665851F9">
 											<Properties>
 												<float name="AspectRatio">1</float>
 												<token name="AspectType">0</token>
@@ -5624,7 +5628,7 @@ return MissionUtils]]></ProtectedString>
 												<BinaryString name="Tags"></BinaryString>
 											</Properties>
 										</Item>
-										<Item class="ImageLabel" referent="RBXAE240C25B11C4574A1958BD89205B0A8">
+										<Item class="ImageLabel" referent="RBXCB0FF6DEB0D84834842CD57704DF1AB2">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -5721,7 +5725,7 @@ return MissionUtils]]></ProtectedString>
 												<int name="ZIndex">1</int>
 											</Properties>
 										</Item>
-										<Item class="TextLabel" referent="RBXAF82078434BF4AAF860DEFC550160DD1">
+										<Item class="TextLabel" referent="RBXA9C08F048EEF4078BCA1A835F9B31F68">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -5815,7 +5819,7 @@ return MissionUtils]]></ProtectedString>
 												<int name="ZIndex">1</int>
 											</Properties>
 										</Item>
-										<Item class="UIPadding" referent="RBX6ED5F737518E4EF681FD8492E179DF5F">
+										<Item class="UIPadding" referent="RBX0F6EFECFF102474CB9704E3E26022B8B">
 											<Properties>
 												<BinaryString name="AttributesSerialize"></BinaryString>
 												<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5842,7 +5846,7 @@ return MissionUtils]]></ProtectedString>
 											</Properties>
 										</Item>
 									</Item>
-									<Item class="UIListLayout" referent="RBXE90D0A57E40B412FB6B0B5D0A214D02E">
+									<Item class="UIListLayout" referent="RBXF327F1AE92724694BC533CC3184797D1">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5866,7 +5870,7 @@ return MissionUtils]]></ProtectedString>
 									</Item>
 								</Item>
 							</Item>
-							<Item class="ScrollingFrame" referent="RBX51E34CCE0040442F83BDF23FA6782DB3">
+							<Item class="ScrollingFrame" referent="RBX494770BE2E2F4438A91955C7BB97AE7C">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -5955,7 +5959,7 @@ return MissionUtils]]></ProtectedString>
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">1</int>
 								</Properties>
-								<Item class="UIListLayout" referent="RBXE7332B9A793041D4B7DE8E4BC8D931D9">
+								<Item class="UIListLayout" referent="RBXB4252F42D6D149618BAE0E7CEBCF6465">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -5977,7 +5981,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Wraps">false</bool>
 									</Properties>
 								</Item>
-								<Item class="ImageButton" referent="RBXC8358708272944D086A25602AFC63162">
+								<Item class="ImageButton" referent="RBX97037664DC33488DB0180A933E70A6C5">
 									<Properties>
 										<bool name="Active">true</bool>
 										<Vector2 name="AnchorPoint">
@@ -6081,7 +6085,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="UIPadding" referent="RBX971332515CC14C239A1A3C6ECF493439">
+									<Item class="UIPadding" referent="RBX725A423E3E854512BDB0588A6B33E6EA">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -6107,7 +6111,7 @@ return MissionUtils]]></ProtectedString>
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="TextLabel" referent="RBX24E71005AD5D41A98A25799EAA507EAB">
+									<Item class="TextLabel" referent="RBX12A31D0091BC46E087E3D4DEC31F3826">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -6201,7 +6205,7 @@ return MissionUtils]]></ProtectedString>
 											<int name="ZIndex">1</int>
 										</Properties>
 									</Item>
-									<Item class="Frame" referent="RBXFA2EF422CB164456BF692FED2A1D4E6B">
+									<Item class="Frame" referent="RBX3405ABAF73E240CAAA33AEA7F58EFB9F">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -6264,7 +6268,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Visible">true</bool>
 											<int name="ZIndex">1</int>
 										</Properties>
-										<Item class="TextLabel" referent="RBX3D689B3EE85D4576902508C33714A058">
+										<Item class="TextLabel" referent="RBX9DB636619AAA47B697A017788105C263">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -6358,7 +6362,7 @@ return MissionUtils]]></ProtectedString>
 												<int name="ZIndex">1</int>
 											</Properties>
 										</Item>
-										<Item class="TextLabel" referent="RBXDD2162793EDA431B8959C5B213BE8D4A">
+										<Item class="TextLabel" referent="RBXE6CDF8E1628349DCA00355DF3033F8D5">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -6452,7 +6456,7 @@ return MissionUtils]]></ProtectedString>
 												<int name="ZIndex">1</int>
 											</Properties>
 										</Item>
-										<Item class="Frame" referent="RBX981B99256BB34CB499FC37AAAA6A66BC">
+										<Item class="Frame" referent="RBX8A40BA083A4B402F970AAA10C2B021D6">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -6515,7 +6519,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Visible">true</bool>
 												<int name="ZIndex">1</int>
 											</Properties>
-											<Item class="ImageLabel" referent="RBX9A27186920C5490EB134C937B7B8E7CB">
+											<Item class="ImageLabel" referent="RBXA77E4D2F490E4EE8862105A3D91A584B">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -6612,7 +6616,7 @@ return MissionUtils]]></ProtectedString>
 													<int name="ZIndex">1</int>
 												</Properties>
 											</Item>
-											<Item class="TextLabel" referent="RBX1C1FF88017D842329DBFBF4D0B3F7BA4">
+											<Item class="TextLabel" referent="RBXE5D73DFA1C2847C3A064F5663CA8D019">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -6706,7 +6710,7 @@ return MissionUtils]]></ProtectedString>
 													<int name="ZIndex">1</int>
 												</Properties>
 											</Item>
-											<Item class="UICorner" referent="RBXC12F4C39C6C14633892949DDAEC36F1B">
+											<Item class="UICorner" referent="RBX5299835BAE294798AD98A9ED3F5626F0">
 												<Properties>
 													<BinaryString name="AttributesSerialize"></BinaryString>
 													<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -6721,7 +6725,7 @@ return MissionUtils]]></ProtectedString>
 												</Properties>
 											</Item>
 										</Item>
-										<Item class="Frame" referent="RBX36AB1D4C94714648B89D5AE55203E43F">
+										<Item class="Frame" referent="RBXB94E3BB638034D80A4C0B311DB2ADC49">
 											<Properties>
 												<bool name="Active">false</bool>
 												<Vector2 name="AnchorPoint">
@@ -6784,7 +6788,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Visible">false</bool>
 												<int name="ZIndex">1</int>
 											</Properties>
-											<Item class="Frame" referent="RBX10826AD979814251AA7A12D2651C43D7">
+											<Item class="Frame" referent="RBXABAB6D88D1024D7CB8E6BD6F3B1AE5AE">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -6847,7 +6851,7 @@ return MissionUtils]]></ProtectedString>
 													<bool name="Visible">true</bool>
 													<int name="ZIndex">1</int>
 												</Properties>
-												<Item class="Frame" referent="RBX6AA583A9D07D4947BC1810C1505E15B5">
+												<Item class="Frame" referent="RBXC39EF8E9042547DE9EAD09FBD4376542">
 													<Properties>
 														<bool name="Active">false</bool>
 														<Vector2 name="AnchorPoint">
@@ -6910,7 +6914,7 @@ return MissionUtils]]></ProtectedString>
 														<bool name="Visible">true</bool>
 														<int name="ZIndex">1</int>
 													</Properties>
-													<Item class="UICorner" referent="RBX33F312D656A04BCCAB5A1ADD1E3EE130">
+													<Item class="UICorner" referent="RBX201E23C5DD70412E88F2D488AB5C2443">
 														<Properties>
 															<BinaryString name="AttributesSerialize"></BinaryString>
 															<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -6925,7 +6929,7 @@ return MissionUtils]]></ProtectedString>
 														</Properties>
 													</Item>
 												</Item>
-												<Item class="UICorner" referent="RBX673CF864233D4A02B2643503D20C226E">
+												<Item class="UICorner" referent="RBXD574C831B5844FB8B3109A34B41F3202">
 													<Properties>
 														<BinaryString name="AttributesSerialize"></BinaryString>
 														<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -6940,7 +6944,7 @@ return MissionUtils]]></ProtectedString>
 													</Properties>
 												</Item>
 											</Item>
-											<Item class="TextLabel" referent="RBXA9855BBD1BC44E79B0801725FA366AA3">
+											<Item class="TextLabel" referent="RBX227B03D1AABC4BB6A4DDC7EFFD310E7B">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -7035,7 +7039,7 @@ return MissionUtils]]></ProtectedString>
 												</Properties>
 											</Item>
 										</Item>
-										<Item class="TextButton" referent="RBX46B5002F23DF4E858171ED80E0D6E332">
+										<Item class="TextButton" referent="RBX1CF9190AFCE246FE89CD07E93C85A044">
 											<Properties>
 												<bool name="Active">true</bool>
 												<Vector2 name="AnchorPoint">
@@ -7134,7 +7138,7 @@ return MissionUtils]]></ProtectedString>
 												<bool name="Visible">true</bool>
 												<int name="ZIndex">1</int>
 											</Properties>
-											<Item class="UICorner" referent="RBX321D6BF0FF964AC38806CAF0981180BB">
+											<Item class="UICorner" referent="RBXF9D378FBB20744F2A308982BE1A840BD">
 												<Properties>
 													<BinaryString name="AttributesSerialize"></BinaryString>
 													<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7148,7 +7152,7 @@ return MissionUtils]]></ProtectedString>
 													<BinaryString name="Tags"></BinaryString>
 												</Properties>
 											</Item>
-											<Item class="UIGradient" referent="RBX5186BC5BA71B4024AE6AB3CC60EC89B6">
+											<Item class="UIGradient" referent="RBXDFEEEF1B4208477F80ACB8673794C8AA">
 												<Properties>
 													<BinaryString name="AttributesSerialize"></BinaryString>
 													<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7166,7 +7170,7 @@ return MissionUtils]]></ProtectedString>
 													<NumberSequence name="Transparency">0 0 0 1 0 0 </NumberSequence>
 												</Properties>
 											</Item>
-											<Item class="TextLabel" referent="RBX0AC8ADC31507492BAB7FCC9B4C1AF073">
+											<Item class="TextLabel" referent="RBX948C6EF797BA43D78E6933FAF34C4F90">
 												<Properties>
 													<bool name="Active">false</bool>
 													<Vector2 name="AnchorPoint">
@@ -7261,7 +7265,7 @@ return MissionUtils]]></ProtectedString>
 												</Properties>
 											</Item>
 										</Item>
-										<Item class="UIListLayout" referent="RBXD63D69FECEC649E29EE56D47A8C74CB1">
+										<Item class="UIListLayout" referent="RBX2D30640631A14A0B8217A9345372F66F">
 											<Properties>
 												<BinaryString name="AttributesSerialize"></BinaryString>
 												<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7284,7 +7288,7 @@ return MissionUtils]]></ProtectedString>
 											</Properties>
 										</Item>
 									</Item>
-									<Item class="Frame" referent="RBXDF71C37575EF4DEBBC5D6B2827E0742C">
+									<Item class="Frame" referent="RBXB6E108CF2FB144D1B51A2939550AE783">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -7347,7 +7351,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Visible">false</bool>
 											<int name="ZIndex">1</int>
 										</Properties>
-										<Item class="UIStroke" referent="RBX4F0D09D2C3DB4BEC8362AA85F43C81B7">
+										<Item class="UIStroke" referent="RBX175A66B8EBAE4BF2B35035454A17A46E">
 											<Properties>
 												<token name="ApplyStrokeMode">1</token>
 												<BinaryString name="AttributesSerialize"></BinaryString>
@@ -7375,7 +7379,7 @@ return MissionUtils]]></ProtectedString>
 											</Properties>
 										</Item>
 									</Item>
-									<Item class="UIGradient" referent="RBX6552F5B178EC46FA80C52579F14556D8">
+									<Item class="UIGradient" referent="RBX41140020D76E413BAC65F5CB4F1F4FD6">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7395,7 +7399,7 @@ return MissionUtils]]></ProtectedString>
 									</Item>
 								</Item>
 							</Item>
-							<Item class="ScrollingFrame" referent="RBXABFCB47798A34D309A3CE8487BC880DF">
+							<Item class="ScrollingFrame" referent="RBXA2C4D3760E5649589FC6C51BD4A66A0C">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -7484,7 +7488,7 @@ return MissionUtils]]></ProtectedString>
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">1</int>
 								</Properties>
-								<Item class="UIListLayout" referent="RBX8A4962BE242E40DCB1D5D0699CC2D8D3">
+								<Item class="UIListLayout" referent="RBX74D6840CCDE84C62B4B571C4C3ACC914">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7506,7 +7510,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Wraps">false</bool>
 									</Properties>
 								</Item>
-								<Item class="UIPadding" referent="RBX4E0AE4FB10EA48888F82CDDF2D9D8E7A">
+								<Item class="UIPadding" referent="RBX5AB6EB32BC1642529F8C42A7B77EBED8">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7532,7 +7536,7 @@ return MissionUtils]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="TextButton" referent="RBXBF5092206ACE4258B21181B167231CF6">
+								<Item class="TextButton" referent="RBXBA1DFAB43C444B718C2727C22BFD2BEC">
 									<Properties>
 										<bool name="Active">true</bool>
 										<Vector2 name="AnchorPoint">
@@ -7631,7 +7635,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="UIListLayout" referent="RBX1600D9C50D4B49FB8552F7B1C5064B4E">
+									<Item class="UIListLayout" referent="RBXE5BB58FFAEF64D838F793C68F1525F85">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7653,7 +7657,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Wraps">false</bool>
 										</Properties>
 									</Item>
-									<Item class="UICorner" referent="RBX5FE1F3B44F444317A9128BF6B47A5AC1">
+									<Item class="UICorner" referent="RBXA5773FA321D7415B92B2E7265DD55271">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7667,7 +7671,7 @@ return MissionUtils]]></ProtectedString>
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UIPadding" referent="RBX527FDD9737514B19965DE896E581F088">
+									<Item class="UIPadding" referent="RBX2EEC835F81F6411A9B7710D27AE09921">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7693,7 +7697,7 @@ return MissionUtils]]></ProtectedString>
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="TextLabel" referent="RBX3CF13EF909814743BD851E80838D7375">
+									<Item class="TextLabel" referent="RBX8B8E247ED82F4895AB34F8786E088F7E">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -7787,7 +7791,7 @@ return MissionUtils]]></ProtectedString>
 											<int name="ZIndex">1</int>
 										</Properties>
 									</Item>
-									<Item class="TextLabel" referent="RBX19F2E03CA6AC49069B8E3B774F1FD85B">
+									<Item class="TextLabel" referent="RBXE5DB2E77EDD446C9BF29F6917C4EE6B8">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -7881,7 +7885,7 @@ return MissionUtils]]></ProtectedString>
 											<int name="ZIndex">1</int>
 										</Properties>
 									</Item>
-									<Item class="Frame" referent="RBXBD7DC4755C4A4F068D1315E96A47FA86">
+									<Item class="Frame" referent="RBXA1C6FE1B9A2B4B3995998D3D22FCDC90">
 										<Properties>
 											<bool name="Active">false</bool>
 											<Vector2 name="AnchorPoint">
@@ -7944,7 +7948,7 @@ return MissionUtils]]></ProtectedString>
 											<bool name="Visible">true</bool>
 											<int name="ZIndex">1</int>
 										</Properties>
-										<Item class="UICorner" referent="RBX94D1E467D8D648B1B27DFA0160C908B3">
+										<Item class="UICorner" referent="RBX8D160A5D41064DCA86E41710B4BD6FD1">
 											<Properties>
 												<BinaryString name="AttributesSerialize"></BinaryString>
 												<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -7958,7 +7962,7 @@ return MissionUtils]]></ProtectedString>
 												<BinaryString name="Tags"></BinaryString>
 											</Properties>
 										</Item>
-										<Item class="UIAspectRatioConstraint" referent="RBXE0B74A8F5C554DA3BAFCBA178E949AE4">
+										<Item class="UIAspectRatioConstraint" referent="RBX1B88A14CAD2A4CEF96BDFFF2761EDB93">
 											<Properties>
 												<float name="AspectRatio">1</float>
 												<token name="AspectType">0</token>
@@ -7974,7 +7978,7 @@ return MissionUtils]]></ProtectedString>
 									</Item>
 								</Item>
 							</Item>
-							<Item class="UIPadding" referent="RBX47A521E269FA4C66937D78B0249BDFC7">
+							<Item class="UIPadding" referent="RBX16AE9D6E8A594848ABBC08CFF5B6B625">
 								<Properties>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8002,7 +8006,7 @@ return MissionUtils]]></ProtectedString>
 							</Item>
 						</Item>
 					</Item>
-					<Item class="Frame" referent="RBXDBA087E2FBD24C00B607C797CF0C4C9F">
+					<Item class="Frame" referent="RBX245E1457DD1A4C208077CCDAA4CEDAEC">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -8065,7 +8069,7 @@ return MissionUtils]]></ProtectedString>
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">100</int>
 						</Properties>
-						<Item class="Frame" referent="RBXDE415555C16149778AC192D8FF617075">
+						<Item class="Frame" referent="RBX367DACCDAC8B4CC6B1F6E997C1BB2732">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -8128,7 +8132,7 @@ return MissionUtils]]></ProtectedString>
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">200</int>
 							</Properties>
-							<Item class="UIAspectRatioConstraint" referent="RBXCF854C66B36D48A29256EB72A908AF8F">
+							<Item class="UIAspectRatioConstraint" referent="RBX2466B03BFBB24CFB864FDE882282DF3C">
 								<Properties>
 									<float name="AspectRatio">1</float>
 									<token name="AspectType">0</token>
@@ -8141,7 +8145,7 @@ return MissionUtils]]></ProtectedString>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="ImageButton" referent="RBXB22D8800C0624A38891C9B61757B05FA">
+							<Item class="ImageButton" referent="RBXC75BF5F1B5144707AF1BAB6FEAC17D4A">
 								<Properties>
 									<bool name="Active">true</bool>
 									<Vector2 name="AnchorPoint">
@@ -8245,7 +8249,7 @@ return MissionUtils]]></ProtectedString>
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">1</int>
 								</Properties>
-								<Item class="UICorner" referent="RBXDA4CA212AD1C44B794C37C6F0D5B8F81">
+								<Item class="UICorner" referent="RBXBDA1D93E04D844AF87E9A197E00431F0">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8259,7 +8263,7 @@ return MissionUtils]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="ImageLabel" referent="RBX2C19C423080F46C19284E93C9FF00DCE">
+								<Item class="ImageLabel" referent="RBX62C33F5B05E7412AA10691E4B527E397">
 									<Properties>
 										<bool name="Active">false</bool>
 										<Vector2 name="AnchorPoint">
@@ -8358,7 +8362,7 @@ return MissionUtils]]></ProtectedString>
 								</Item>
 							</Item>
 						</Item>
-						<Item class="Frame" referent="RBX3DD155BE62454475A6D020600D8D9891">
+						<Item class="Frame" referent="RBXC329DBECE10045149DB364311EA7A5FA">
 							<Properties>
 								<bool name="Active">false</bool>
 								<Vector2 name="AnchorPoint">
@@ -8421,7 +8425,7 @@ return MissionUtils]]></ProtectedString>
 								<bool name="Visible">true</bool>
 								<int name="ZIndex">1</int>
 							</Properties>
-							<Item class="Frame" referent="RBXD3851327825C45CF9DCB24143E39CEC7">
+							<Item class="Frame" referent="RBX5DDB1EEEB8304C75A2EE69393E3EFA0C">
 								<Properties>
 									<bool name="Active">false</bool>
 									<Vector2 name="AnchorPoint">
@@ -8484,7 +8488,7 @@ return MissionUtils]]></ProtectedString>
 									<bool name="Visible">true</bool>
 									<int name="ZIndex">1</int>
 								</Properties>
-								<Item class="TextButton" referent="RBXBB47EC4B4B81494A8B368D9DA29AA3E2">
+								<Item class="TextButton" referent="RBX2951B1B496A74DF6A778C602D4BDB76A">
 									<Properties>
 										<bool name="Active">true</bool>
 										<Vector2 name="AnchorPoint">
@@ -8583,7 +8587,7 @@ return MissionUtils]]></ProtectedString>
 										<bool name="Visible">true</bool>
 										<int name="ZIndex">1</int>
 									</Properties>
-									<Item class="UICorner" referent="RBXDA5D58CBC9C04110B24BC3EAFB18831B">
+									<Item class="UICorner" referent="RBX24CF7EA8E7F84AA6B610B3AD17AC5250">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8597,7 +8601,7 @@ return MissionUtils]]></ProtectedString>
 											<BinaryString name="Tags"></BinaryString>
 										</Properties>
 									</Item>
-									<Item class="UIPadding" referent="RBX2FB71DF0DE374EBD8B9693B470F63989">
+									<Item class="UIPadding" referent="RBX5BD55DE8C4D84E7781C7821D32DEA0DE">
 										<Properties>
 											<BinaryString name="AttributesSerialize"></BinaryString>
 											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8624,7 +8628,7 @@ return MissionUtils]]></ProtectedString>
 										</Properties>
 									</Item>
 								</Item>
-								<Item class="UIListLayout" referent="RBXEA38E36BAD7246EAA16851BA6E416F03">
+								<Item class="UIListLayout" referent="RBXDF1FBF070D3947D395DDE680825E276A">
 									<Properties>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8647,7 +8651,7 @@ return MissionUtils]]></ProtectedString>
 									</Properties>
 								</Item>
 							</Item>
-							<Item class="UIListLayout" referent="RBXBF4E3C5875054E7E98AFF49F01AE2697">
+							<Item class="UIListLayout" referent="RBX6B1B2B4D2D314BC0A1398BF50FAA5561">
 								<Properties>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8670,7 +8674,7 @@ return MissionUtils]]></ProtectedString>
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="UIPadding" referent="RBX77E12914B1C34299B9F3D3BE2D240461">
+						<Item class="UIPadding" referent="RBX5AF37C6AE4F044B29481F010125C4DA1">
 							<Properties>
 								<BinaryString name="AttributesSerialize"></BinaryString>
 								<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8698,7 +8702,7 @@ return MissionUtils]]></ProtectedString>
 						</Item>
 					</Item>
 				</Item>
-				<Item class="UIAspectRatioConstraint" referent="RBXF6CDE1E4A51A48EE944CC7BE873077CF">
+				<Item class="UIAspectRatioConstraint" referent="RBXE967D6D0F53340F4B5AF0B1837040984">
 					<Properties>
 						<float name="AspectRatio">1.70000005</float>
 						<token name="AspectType">0</token>
@@ -8711,7 +8715,7 @@ return MissionUtils]]></ProtectedString>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="UICorner" referent="RBX968920641ADE4463BB951F31DC4024E1">
+				<Item class="UICorner" referent="RBX9BBF43B3CAE7447DAC98DA7B90DB4DA8">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8726,7 +8730,7 @@ return MissionUtils]]></ProtectedString>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="TextButton" referent="RBX67B60802766447F3A5AA10D1DBB2E5FC">
+			<Item class="TextButton" referent="RBX2750ADB2C5804924871A15F2C1584CF0">
 				<Properties>
 					<bool name="Active">true</bool>
 					<Vector2 name="AnchorPoint">
@@ -8826,7 +8830,7 @@ return MissionUtils]]></ProtectedString>
 					<bool name="Visible">true</bool>
 					<int name="ZIndex">2</int>
 				</Properties>
-				<Item class="UIPadding" referent="RBXBFAA2CA442B04E70A6E0353A966CDBCA">
+				<Item class="UIPadding" referent="RBXB8DB2A15AB21401F9DAF150AAEB7771C">
 					<Properties>
 						<BinaryString name="AttributesSerialize"></BinaryString>
 						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8852,7 +8856,7 @@ return MissionUtils]]></ProtectedString>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
-				<Item class="Frame" referent="RBX23F5110DA5314CD3A765676E89F60D9A">
+				<Item class="Frame" referent="RBXDA9FA0C62F644355B60FF3EEA93A1279">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -8915,7 +8919,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">3</int>
 					</Properties>
-					<Item class="UICorner" referent="RBXEB1BA44EC67C4CFCAE0B5D3AEBB02099">
+					<Item class="UICorner" referent="RBX75BD086C5DCF4CBA849AB47D5281A6EA">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -8930,7 +8934,7 @@ return MissionUtils]]></ProtectedString>
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="TextLabel" referent="RBXAC62B57189784CB9A14381C3F657E792">
+				<Item class="TextLabel" referent="RBX32572531B53C4243BD6F9B9A533A0B5C">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -9023,7 +9027,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">7</int>
 					</Properties>
-					<Item class="UIStroke" referent="RBX60DA3E95444C4A9C8308FBC892BA62E4">
+					<Item class="UIStroke" referent="RBX4BE650420DB740E690FCE1105E4F28A0">
 						<Properties>
 							<token name="ApplyStrokeMode">0</token>
 							<BinaryString name="AttributesSerialize"></BinaryString>
@@ -9051,7 +9055,7 @@ return MissionUtils]]></ProtectedString>
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="TextLabel" referent="RBX0B2542C48C7E457684D5E27B370DC4F2">
+				<Item class="TextLabel" referent="RBX7DBCC94E0CFC476882DA1C10C31CB630">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -9144,7 +9148,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">7</int>
 					</Properties>
-					<Item class="UIStroke" referent="RBX02F29E28A7C44A61BD452187FFC95451">
+					<Item class="UIStroke" referent="RBXCC4E04B2DF7D4587B43D3A7746139FFF">
 						<Properties>
 							<token name="ApplyStrokeMode">0</token>
 							<BinaryString name="AttributesSerialize"></BinaryString>
@@ -9172,7 +9176,7 @@ return MissionUtils]]></ProtectedString>
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="Frame" referent="RBX96A95A442C0446409F2A45E2312FF6BC">
+				<Item class="Frame" referent="RBXD020F98A96D3428D883087BE586693D2">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -9235,7 +9239,7 @@ return MissionUtils]]></ProtectedString>
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">5</int>
 					</Properties>
-					<Item class="UIPadding" referent="RBX9EAC90227AA5455DBD56894DBFE242C9">
+					<Item class="UIPadding" referent="RBXADDFBEBC14684BB39BA0CBE8BE108A04">
 						<Properties>
 							<BinaryString name="AttributesSerialize"></BinaryString>
 							<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -9261,7 +9265,7 @@ return MissionUtils]]></ProtectedString>
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
 					</Item>
-					<Item class="ImageLabel" referent="RBX502BF792BC574696BC3E28574442CCF5">
+					<Item class="ImageLabel" referent="RBX42E124CE15AF45A59A1CBC4F3378DAE2">
 						<Properties>
 							<bool name="Active">false</bool>
 							<Vector2 name="AnchorPoint">
@@ -9357,7 +9361,7 @@ return MissionUtils]]></ProtectedString>
 							<bool name="Visible">true</bool>
 							<int name="ZIndex">5</int>
 						</Properties>
-						<Item class="UIAspectRatioConstraint" referent="RBXF9C6A20450134121AA5935FE17909F6F">
+						<Item class="UIAspectRatioConstraint" referent="RBXDFD51BB9A71C4CABBCBD5E714BA686DA">
 							<Properties>
 								<float name="AspectRatio">1</float>
 								<token name="AspectType">0</token>
@@ -9372,7 +9376,7 @@ return MissionUtils]]></ProtectedString>
 						</Item>
 					</Item>
 				</Item>
-				<Item class="UIAspectRatioConstraint" referent="RBX370BBE5D4ADE4AE4A14ED2BAF964D9BF">
+				<Item class="UIAspectRatioConstraint" referent="RBX7F3BF2245A244291884C1F878C5A8D0B">
 					<Properties>
 						<float name="AspectRatio">1</float>
 						<token name="AspectType">0</token>
@@ -9386,7 +9390,7 @@ return MissionUtils]]></ProtectedString>
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="ScreenGui" referent="RBXFBE1EE5DE83F446781A08222AA5E5A77">
+			<Item class="ScreenGui" referent="RBXF71D607169BE4F5BB602AC966F9FF52F">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<bool name="AutoLocalize">true</bool>

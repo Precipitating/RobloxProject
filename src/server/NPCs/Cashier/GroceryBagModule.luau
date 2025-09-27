@@ -14,4 +14,8 @@ function GroceryBagModule.GetCurrentGroceries()
 	return CurrentGroceries
 end
 
+function GroceryBagModule.HasItem(name)
+	return CurrentGroceries[name]
+end
+
 return GroceryBagModule

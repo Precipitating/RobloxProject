@@ -7,7 +7,7 @@ local function Dialogue()
 		return {
 			Name = "Ohulot!",
 			Portrait = "rbxassetid://7254475046",
-			Dialogue = "Here's the deal.<br/>One chance.<br/>One bullet.<br/>6 holes.<br/>Guess which hole the bullet will be in.<br/>You win, you get £250<br/>You lose?<br/>You lose all your money.",
+			Dialogue = "Here's the deal.<br/>One chance.<br/>One bullet.<br/>6 holes.<br/>Guess which hole the bullet will be in.<br/>You win, you get £1337<br/>You lose?<br/>You lose all your money.",
 			VoiceId = "3",
 			Pitch = 2,
 			Speed = 1,

@@ -111,7 +111,7 @@ function WordType.Begin(player)
 			currentScore.Text = tostring(currentWordIdx - 1)
 			WordType.Finished(true, player)
 			print("Competition Complete!")
-			GeneralRemotes.EnableAllNPCPrompts:FireClient(player, true)
+			GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 			return "(Finished)"
 		end
 
