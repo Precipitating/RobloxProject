@@ -388,7 +388,7 @@ local function AddFinishedRoad(player)
 		player.Character.Humanoid.Sit = false
 		player.Character.Humanoid.JumpPower = 50
 		task.wait(1)
-		GeneralRemotes.ToggleNPCProximityPrompt:FireClient(player, "DrivingInstructor", true)
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 		-- teleport back to room
 		player.Character:PivotTo(PositionBeforeTeleport)
 

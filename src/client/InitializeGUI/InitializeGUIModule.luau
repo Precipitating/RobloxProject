@@ -2,9 +2,7 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
-local ClientHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
 local MovementHandler = require(StarterPlayer.StarterPlayerScripts.Client.MovementHandler)
-local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local Player = Players.LocalPlayer
@@ -226,7 +224,7 @@ InitializeGUIModule["BulletGuesser"] = function()
 						SoundModule.PlaySound("RevolverShot")
 						task.wait(1)
 						SoundModule.PlaySound("Correct2")
-						GeneralRemotes.AddMoney:FireServer(250)
+						GeneralRemotes.AddMoney:FireServer(1337)
 						UIHelperFunctions.AdjustBlackScreen(1, 1)
 						MovementHandler.EnableControls(nil)
 					end
@@ -249,7 +247,7 @@ InitializeGUIModule["BulletGuesser"] = function()
 						BadChoice()
 					end
 					InitializeGUIModule.DisconnectAll("BulletGuesser")
-					ClientHelperFunctions.EnableAllNPCPrompts(true)
+					GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 					GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex:FireServer()
 				end)
 			end

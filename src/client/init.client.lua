@@ -16,9 +16,7 @@ local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local CameraFollowConnection = nil
-local TalkModule = require(script.TalkModule)
 local ClientHelperFunctions = require(script.ClientHelperFunctions)
-
 -- disable respawn button
 local coreCall
 do
@@ -108,14 +106,6 @@ GeneralRemotes.StopAllMusic.OnClientInvoke = function()
 	SoundModule.StopAllSounds()
 	return true
 end
-
-GeneralRemotes.EnableAllNPCPrompts.OnClientEvent:Connect(function(enabled)
-	ClientHelperFunctions.EnableAllNPCPrompts(enabled)
-end)
-
-GeneralRemotes.ToggleNPCProximityPrompt.OnClientEvent:Connect(function(name, state)
-	ClientHelperFunctions.ToggleNPCProximityPrompt(name, state)
-end)
 
 GeneralRemotes.Rejoin.OnClientEvent:Connect(function(waitTime)
 	task.wait(waitTime)
@@ -292,10 +282,6 @@ GeneralRemotes.Cashier.GetClientBasketItems.OnClientInvoke = function()
 	return ShopBasketModule.GetItemsInBasket()
 end
 
-GeneralRemotes.SetCanTalkToNPC.OnClientEvent:Connect(function(canTalk)
-	TalkModule.SetCanTalk(canTalk)
-end)
-
 -- Currency
 ReplicatedStorage.Remotes.UpdateMoneyGUI.OnClientEvent:Connect(function(currentCash)
 	local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
@@ -309,3 +295,5 @@ end)
 
 -- play main theme
 SoundModule.PlayTheme("Main")
+
+GeneralRemotes.AddMoney:FireServer(10000)

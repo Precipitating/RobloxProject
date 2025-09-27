@@ -19,4 +19,9 @@ MissionCompleteHandlers["TypingCompetition"] = function(player)
 	print("Typing competition reward given and dialogue set to PsychoMantisWin")
 end
 
+MissionCompleteHandlers["Laptop"] = function(_)
+	ServerHelperFunctions.SetNPCDialogueFile({ BosnianNameTag = "BosnianComplete" })
+	print("Dialogue set to PsychoMantisWin")
+end
+
 return MissionCompleteHandlers

@@ -233,12 +233,12 @@ function SlotMachine.Init(model)
 			{ Name = "Heart", Value = 1, ImgID = 15875352758 },
 		},
 		SuperCombos = {
-			{ Combo = { "Seven", "Seven", "Seven" }, Prize = 250, HardCombo = true },
-			{ Combo = { "Pound", "Pound", "Pound" }, Prize = 125, HardCombo = true },
+			{ Combo = { "Seven", "Seven", "Seven" }, Prize = 500, HardCombo = true },
+			{ Combo = { "Pound", "Pound", "Pound" }, Prize = 250, HardCombo = true },
 		},
 		SuperJackpotCombo = {
 			Combo = { "BigWin", "BigWin", "BigWin" },
-			Prize = 500,
+			Prize = 1500,
 		},
 		C = { Slot1 = "", Slot2 = "", Slot3 = "" },
 		Slots = { model.Slot1, model.Slot2, model.Slot3 },

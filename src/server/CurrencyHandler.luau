@@ -6,12 +6,14 @@ local CurrencyHandler = {}
 function CurrencyHandler.AddMoney(player, val)
 	Money = Money + val
 	GeneralRemotes.UpdateMoneyGUI:FireClient(player, Money)
+	GeneralRemotes.PlaySound:FireClient(player, "CashRegister")
 	print(`Total money after INCREASE by {val}: {Money}`)
 end
 
 function CurrencyHandler.ReduceMoney(player, val)
 	Money = math.max(0, Money - val)
 	GeneralRemotes.UpdateMoneyGUI:FireClient(player, Money)
+	GeneralRemotes.PlaySound:FireClient(player, "Rustle")
 	print(`Total money after DECREASE by {val}: {Money}`)
 end
 

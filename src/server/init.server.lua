@@ -15,6 +15,7 @@ local BulletGuesser = require(script.RoomScripts.Gamba.BulletGuesser)
 local SlotMachine = require(script.RoomScripts.Gamba.SlotMachine)
 local WheelSpinner = require(script.RoomScripts.Gamba.WheelSpinner)
 local ServerHelperFunctions = require(script.ServerHelperFunctions)
+local TalkModuleHelpers = require(script.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- PSYCHOMANTIS
@@ -119,11 +120,11 @@ GeneralRemotes.GetCurrentMoney.OnServerInvoke = function()
 end
 
 GeneralRemotes.AddMoney.OnServerEvent:Connect(function(player, val)
-	return CurrencyHandler.AddMoney(player, val)
+	CurrencyHandler.AddMoney(player, val)
 end)
 
 GeneralRemotes.ReduceMoney.OnServerEvent:Connect(function(player, val)
-	return CurrencyHandler.ReduceMoney(player, val)
+	CurrencyHandler.ReduceMoney(player, val)
 end)
 
 -- trash pickup
@@ -136,6 +137,14 @@ end
 
 GeneralRemotes.PickupTrash.TrashData.OnServerInvoke = function(_)
 	return TrashPickup.TrashData()
+end
+
+GeneralRemotes.EnableAllNPCPrompts.OnServerEvent:Connect(function(canTalk)
+	print(`Set can speak client -> server = {canTalk}`)
+	TalkModuleHelpers.SetCanTalk(canTalk)
+end)
+GeneralRemotes.CanTalk.OnServerInvoke = function()
+	return TalkModuleHelpers.GetCanTalk()
 end
 
 -- gamba

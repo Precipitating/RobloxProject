@@ -3,6 +3,7 @@ local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local Events = ReplicatedStorage.Missions.Events
+local GeneralRemotes = ReplicatedStorage.Remotes
 local NPCEvents = ReplicatedStorage.Events.NPC
 local CurrentPrompt = nil
 local TalkModule = {}
@@ -12,6 +13,7 @@ local RemoteMap = {
 	UnlockMission = Events.UnlockMissionEvent,
 	ProgressMission = Events.ProgressMissionEvent,
 	GiveTool = Events.GiveToolEvent,
+	ReduceMoney = GeneralRemotes.ReduceMoney,
 	ForceEquip = Events.ForceEquipEvent,
 	RemoveTools = Events.RemoveToolsEvent,
 	SetMeshVisibility = Events.SetMeshVisibilityEvent,
@@ -23,10 +25,8 @@ local RemoteMap = {
 -- npc
 local PauseNPCMovement = NPCEvents.PauseNPCMovement
 local moveableNPCName = nil
-local CanTalk = true
 
 -- modules
-local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local MissionsClientHandler = require(script.Parent.MissionsClientHandler)
 local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
@@ -114,12 +114,6 @@ end
 function TalkModule.SetCurrentPrompt(prompt)
 	CurrentPrompt = prompt
 end
-function TalkModule.CanTalk()
-	return CanTalk
-end
-function TalkModule.SetCanTalk(canTalk)
-	CanTalk = canTalk
-end
 
 function TalkModule.hideUI(responseData)
 	task.delay(0.3, function()
@@ -134,7 +128,7 @@ function TalkModule.hideUI(responseData)
 			MovementModule.EnableControls("UI")
 		elseif responseData.Type == "CloseCutscene" then
 			SoundModule.StopAllSounds()
-			ClientHelperFunctions.EnableAllNPCPrompts(false)
+			GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
 		elseif responseData.Type == "CloseKeepTheme" then
 			MovementModule.EnableControls("UI")
 		end

@@ -1,5 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
+local totalPrice = nil
 
 local function AddUpItemsDialogue()
 	local items = ShopBasketModule.GetItemsInBasket()
@@ -17,18 +18,17 @@ end
 
 local function GetFakeTotalDialogue()
 	local items = ShopBasketModule.GetItemsInBasket()
-	local total: number = 0
-
+	totalPrice = 0
 	for _, info in pairs(items) do
-		total += info.Price * info.Quantity
+		totalPrice += info.Price * info.Quantity
 	end
 
-	total = total * 2
+	totalPrice = totalPrice * 2
 	local currentCash = ReplicatedStorage.Remotes.GetCurrentMoney:InvokeServer()
 
-	local text = `The total is: {string.format("%.2f", total)} pounds apparently.`
+	local text = `The total is: {string.format("%.2f", totalPrice)} pounds apparently.`
 
-	if currentCash >= total then
+	if currentCash >= totalPrice then
 		return {
 			Name = "Shayden",
 			Portrait = "rbxassetid://2678352699",
@@ -53,8 +53,9 @@ local function GetFakeTotalDialogue()
 			Dialogue = text,
 			Responses = {
 				{
-					Text = "Can't afford it...",
-					Type = "Close",
+					Text = "You're joking right?<br/>Thats like DOUBLE!",
+					Type = "NextMessage",
+					NextId = "FakePrice",
 				},
 				{
 					Text = "Too expensive...",
@@ -239,28 +240,31 @@ return {
 				},
 			},
 		},
-
-		Scammed = {
-			Name = "Shayden W",
-			Portrait = "rbxassetid://5842977421",
-			Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>, heh.",
-			PlaySound = "Contactless",
-			Responses = {
-				{
-					Text = "What are you looking so smug about?",
-					Type = "Close",
-					GiveTool = { "GroceryBag", true },
-					ExecuteScenarioEvent = "CashierScammed",
-					SetDialogueFile = { CashierNameTag = "Cashier" },
+		Scammed = function()
+			return {
+				Name = "Shayden Williams",
+				Portrait = "rbxassetid://5842977421",
+				Dialogue = "Thank you for shopping at <b>Rebelism Essentials</b>, heh.",
+				PlaySound = "Contactless",
+				Responses = {
+					{
+						Text = "What are you looking so smug about?",
+						GiveTool = { "GroceryBag", true },
+						ExecuteScenarioEvent = "CashierScammed",
+						SetDialogueFile = { CashierNameTag = "Cashier" },
+						ReduceMoney = totalPrice,
+						Type = "Close",
+					},
+					{
+						Text = "...Sure.",
+						GiveTool = { "GroceryBag", true },
+						ExecuteScenarioEvent = "CashierScammed",
+						SetDialogueFile = { CashierNameTag = "Cashier" },
+						ReduceMoney = totalPrice,
+						Type = "Close",
+					},
 				},
-				{
-					Text = "...Sure.",
-					Type = "Close",
-					GiveTool = { "GroceryBag", true },
-					ExecuteScenarioEvent = "CashierScammed",
-					SetDialogueFile = { CashierNameTag = "Cashier" },
-				},
-			},
-		},
+			}
+		end,
 	},
 }
