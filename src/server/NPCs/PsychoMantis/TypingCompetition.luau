@@ -5,6 +5,7 @@ local PlayThemeRemote = ReplicatedStorage.Remotes.PlayTheme
 local APIs = { "https://random-word-api.vercel.app/api?words=", "https://random-word-api.herokuapp.com/word?number=" }
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 
 local WORD_AMOUNT = 30
@@ -111,7 +112,7 @@ function WordType.Begin(player)
 			currentScore.Text = tostring(currentWordIdx - 1)
 			WordType.Finished(true, player)
 			print("Competition Complete!")
-			GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+			TalkModuleHelpers.SetCanTalk(true)
 			return "(Finished)"
 		end
 

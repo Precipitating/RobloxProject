@@ -244,20 +244,18 @@ MissionEventHandlers["DrivingTest"] = function(player)
 end
 
 MissionEventHandlers["DrivingTestPassed"] = function(player)
-	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+	TalkModuleHelpers.SetCanTalk(false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 2493042217612033)
-	GeneralRemotes.PlayTheme:FireClient(player, "CoolTheme")
 	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestPassed")
 end
 
 MissionEventHandlers["DrivingTestFailed"] = function(player)
-	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+	TalkModuleHelpers.SetCanTalk(false)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	task.wait(0.5)
 	BadgeHandler.awardBadge(player, 1698025412209346)
-	GeneralRemotes.PlayTheme:FireClient(player, "SadTheme")
 	GeneralRemotes.PlayCutscene:FireClient(player, "DrivingTestFailed")
 end
 
@@ -278,6 +276,11 @@ end
 MissionEventHandlers["BosnianComplete"] = function(player)
 	CurrencyHandler.AddMoney(player, 1)
 	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	BadgeHandler.awardBadge(player, 4449692306836938)
+	task.delay(1, function()
+		GeneralRemotes.PlayCutscene:FireClient(player, "BosnianComplete")
+		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+	end)
 end
 
 MissionEventHandlers["BosnianScammed"] = function(player)
@@ -289,5 +292,9 @@ end
 MissionEventHandlers["BosnianFailEvent"] = function(player)
 	CurrencyHandler.AddMoney(player, 1)
 	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	task.delay(1, function()
+		GeneralRemotes.PlayCutscene:FireClient(player, "BosnianFailed")
+		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+	end)
 end
 return MissionEventHandlers

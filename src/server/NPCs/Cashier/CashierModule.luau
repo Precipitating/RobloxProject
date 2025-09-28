@@ -5,6 +5,7 @@ local TweenService = game:GetService("TweenService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local NPCOutfit = require(ServerScriptService.Server.NPCs.NPCOutfit)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ItemsList = {}
 local CashierModule = {}
@@ -119,7 +120,7 @@ function CashierModule.Complete(player)
 	print("Complete! Spawning asylum...")
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	local asylum = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Asylum", nil)
-	GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+	TalkModuleHelpers.SetCanTalk(true)
 	task.wait(2)
 	player.Character:FindFirstChild("HumanoidRootPart").CFrame = asylum:FindFirstChild("SpawnPos").CFrame
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)

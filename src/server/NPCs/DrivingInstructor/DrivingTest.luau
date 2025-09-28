@@ -6,6 +6,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local PositionBeforeTeleport = nil
 local Roads = ServerStorage.MissionModels.DrivingInstructor:GetChildren()
@@ -388,7 +389,7 @@ local function AddFinishedRoad(player)
 		player.Character.Humanoid.Sit = false
 		player.Character.Humanoid.JumpPower = 50
 		task.wait(1)
-		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+		TalkModuleHelpers.SetCanTalk(false)
 		-- teleport back to room
 		player.Character:PivotTo(PositionBeforeTeleport)
 

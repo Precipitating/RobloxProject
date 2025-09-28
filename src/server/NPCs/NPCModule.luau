@@ -186,6 +186,7 @@ function NPC:StartPathing(targetPos)
 
 	self.PathCancelled = false
 	local path = PathfindingService:CreatePath({
+		AgentCanJump = true,
 		AgentRadius = 2,
 		Costs = {
 			Pavement = 1,
