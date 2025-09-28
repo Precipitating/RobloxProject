@@ -38,7 +38,6 @@ function TerminalUnlocked.SpawnVan(player)
 	local handWeld = hand and hand:FindFirstChild("WeldConstraint")
 	if handWeld then
 		handWeld.Enabled = true
-		print("WLEDE")
 	end
 
 	van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))

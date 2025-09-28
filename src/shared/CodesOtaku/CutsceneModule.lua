@@ -156,6 +156,8 @@ function Cutscene:Resume()
 		self.CurrentFOVTween:Play()
 		self.Paused = false
 		self.EResume:Fire()
+	else
+		warn("Didn't resume cutscene.")
 	end
 end
 
@@ -165,6 +167,8 @@ function Cutscene:Pause()
 		self.CurrentFOVTween:Pause()
 		self.Paused = true
 		self.EPause:Fire()
+	else
+		warn("Didn't pause cutscene.")
 	end
 end
 
@@ -257,8 +261,10 @@ end
 function Cutscene:Toggle()
 	if self.Playing then
 		if self.Paused then
+			warn("Resumed cutscene")
 			self:Resume()
 		else
+			warn("Paused cutscene")
 			self:Pause()
 		end
 	end

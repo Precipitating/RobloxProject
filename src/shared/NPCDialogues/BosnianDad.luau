@@ -6,7 +6,7 @@ return {
 			Portrait = "rbxassetid://13643869126",
 			Dialogue = "Oi brate, want a really good deal?",
 			VoiceId = "1",
-			Pitch = 8,
+			Pitch = -8,
 			Speed = 1,
 			Volume = 3,
 			PlayTheme = "BosniaTheme",

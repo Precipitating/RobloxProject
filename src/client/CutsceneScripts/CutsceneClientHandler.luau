@@ -47,15 +47,6 @@ local SoundModule = require(script.Parent.Parent.SoundModule)
 local bin = true -- prevents multiple plays at once
 local currentRenderStepped
 
--- Wait alternative
-local function wait_time(duration)
-	local start = tick()
-	repeat
-		RunService.Heartbeat:Wait()
-	until tick() - start >= duration
-	return tick() - start
-end
-
 -- Play cutscene safely
 local function PlayCutscene()
 	if not bin then
@@ -106,6 +97,8 @@ local function Speak(ttsHandle, voices, who, text)
 	TextToSpeech.UpdateVoiceConfig(voices[who])
 	if TextToSpeech.Speak(text) then
 		ttsHandle.Ended:Wait()
+	else
+		warn("TTS FAILED")
 	end
 end
 
@@ -199,7 +192,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		elseif instruction == 7 then
 			local config = {}
 			config.VoiceId = "5"
-			config.Pitch = -6
+			config.Pitch = -3
 			config.Speed = 1
 			config.Volume = 3
 			TextToSpeech.UpdateVoiceConfig(config)
@@ -301,13 +294,13 @@ CutsceneClientHandler.KeyframeHandler = {
 	DrivingTestFailed = function(instruction, _, _)
 		if instruction == 1 then
 			UIHelperFunctions.AdjustBlackScreen(1, 1)
-			local bus =
-				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
+			GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
 
 			local tweenInfo = TweenInfo.new(10, Enum.EasingStyle.Linear)
 			local goalCFrame = CFrame.new(130, 3.138, -65.8)
 
-			local tween = TweenService:Create(bus.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
+			local tween =
+				TweenService:Create(workspace:WaitForChild("Bus").PrimaryPart, tweenInfo, { CFrame = goalCFrame })
 			tween:Play()
 		elseif instruction == 5 then
 			Demo:Pause()
@@ -408,8 +401,123 @@ CutsceneClientHandler.KeyframeHandler = {
 			task.wait(1)
 			local townName = SoundModule.PlaySound("Llanfair")
 			townName.Ended:Wait()
-			SoundModule.PlaySound("WhatDogDoin")
+			task.delay(1, function()
+				SoundModule.PlaySound("WhatDogDoin")
+			end)
 			UIHelperFunctions.AdjustBlackScreen(3, 0)
+		end
+	end,
+	BosnianComplete = function(instruction, _, _)
+		local ttsHandle = TextToSpeech.GetHandle()
+		local voices = {
+			Bosnian = { VoiceId = "1", Pitch = 5, Speed = 1, Volume = 1 },
+			Dad = { VoiceId = "1", Pitch = -8, Speed = 1, Volume = 3 },
+		}
+
+		local function runCutsceneAction(action)
+			Demo.NextInstruction = 999
+			action()
+			Demo.NextInstruction = 0
+		end
+
+		local room, dad, laptop
+		if instruction >= 4 then
+			room = workspace:WaitForChild("BosnianRoom"):WaitForChild("BosnianRoom")
+			dad = room:WaitForChild("BosnianDad2")
+			laptop = room:FindFirstChild("Newtop") -- some instructions use laptop
+		end
+
+		if instruction == 1 then
+			runCutsceneAction(function()
+				warn("1")
+				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "Bosnian", "BosnianRoom", nil)
+				Speak(
+					ttsHandle,
+					voices,
+					"Bosnian",
+					"Oh my god. Finally I installed Linux Ubuntu Arch Sarajevo Edition Three Point Five Two. I am excited finally utilize this monster of a contraption to play the game I dreamed of, Minesweeper."
+				)
+				warn("done")
+			end)
+		elseif instruction == 2 then
+			runCutsceneAction(function()
+				warn("2")
+				Speak(
+					ttsHandle,
+					voices,
+					"Bosnian",
+					"The days have finally passed of me using this trashtop. Days of agony trying to play Roblox Six Siege at 10fps on a 140 pixel resolution. Sayanora."
+				)
+				warn("done")
+			end)
+		elseif instruction == 3 then
+			runCutsceneAction(function()
+				warn("3")
+				Speak(
+					ttsHandle,
+					voices,
+					"Bosnian",
+					`This future proof £5000 beast will serve me so well. Thank you so much {Player.DisplayName}`
+				)
+				Speak(ttsHandle, voices, "Dad", `Did you say 11268 marks?`)
+				warn("done")
+			end)
+		elseif instruction == 4 then
+			runCutsceneAction(function()
+				warn("4")
+				dad:PivotTo(dad:GetPivot() + Vector3.new(0, 4, 0))
+				if laptop then
+					laptop:WaitForChild("WeldConstraint").Enabled = true
+					laptop.Anchored = false
+				end
+				Speak(
+					ttsHandle,
+					voices,
+					"Dad",
+					"I'm your Otac, not 'him', so where did you get that without my permission?"
+				)
+				Speak(
+					ttsHandle,
+					voices,
+					"Bosnian",
+					"It's a donation from the Bosniak Bango charity organisation. You promised me, but you lied, so I took matters in my own hands."
+				)
+				Speak(
+					ttsHandle,
+					voices,
+					"Dad",
+					"I told you before that I will handle it, I'm the man of the house! Give me that laptop, I will deliver on my promises using my own money! We don't rely on handouts! We're the El Bosniaks!"
+				)
+				Speak(ttsHandle, voices, "Bosnian", "No, it's mine now, leave please.")
+				warn("done")
+			end)
+		elseif instruction == 5 then
+			runCutsceneAction(function()
+				warn("5")
+				Speak(
+					ttsHandle,
+					voices,
+					"Dad",
+					"I need some money for electricity rent. I'll be confiscating this young man. Hope the auction house is open."
+				)
+
+				local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+				local tween = TweenService:Create(
+					dad.PrimaryPart,
+					tweenInfo,
+					{ CFrame = dad.PrimaryPart.CFrame * CFrame.new(0, 0, 10) }
+				)
+				tween:Play()
+				tween.Completed:Wait()
+				warn("done")
+			end)
+		elseif instruction == 6 then
+			runCutsceneAction(function()
+				warn("6")
+				SoundModule.PlaySound("ManCry")
+				UIHelperFunctions.AdjustBlackScreen(3, 0)
+				warn("done")
+			end)
 		end
 	end,
 }
@@ -501,6 +609,21 @@ CutsceneClientHandler.Initialize = {
 		Music.SoundId = "rbxassetid://1838969178"
 		Music.Volume = 0.3
 	end,
+
+	DrivingTestPassed = function()
+		Music.SoundId = "rbxassetid://1840684529"
+		Music.Volume = 0.1
+	end,
+
+	DrivingTestFailed = function()
+		Music.SoundId = "rbxassetid://1838635121"
+		Music.Volume = 0.05
+	end,
+
+	BosnianComplete = function()
+		Music.SoundId = "rbxassetid://9120526794"
+		Music.Volume = 0.1
+	end,
 }
 
 -- Load a cutscene by name
@@ -520,7 +643,7 @@ end
 function CutsceneClientHandler.Play(name)
 	-- Reset state
 	bin = true
-
+	SoundModule.StopAllSounds()
 	-- Disconnect previous RenderStepped if exists
 	if currentRenderStepped then
 		currentRenderStepped:Disconnect()
