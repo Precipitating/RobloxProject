@@ -211,6 +211,7 @@ function NPC:StartPathing(targetPos)
 		local reached = self.Humanoid.MoveToFinished:Wait()
 		if not reached or self.PathCancelled then
 			warn("Movement interrupted or waypoint not reached")
+			ArrivedRemote:Fire(self.Name)
 			return
 		end
 	end

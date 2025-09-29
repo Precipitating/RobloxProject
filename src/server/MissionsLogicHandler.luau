@@ -293,8 +293,10 @@ MissionEventHandlers["BosnianFailEvent"] = function(player)
 	CurrencyHandler.AddMoney(player, 1)
 	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 	task.delay(1, function()
+		BadgeHandler.awardBadge(player, 636617031698169)
 		GeneralRemotes.PlayCutscene:FireClient(player, "BosnianFailed")
 		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 	end)
 end
+
 return MissionEventHandlers
