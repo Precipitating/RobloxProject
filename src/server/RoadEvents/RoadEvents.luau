@@ -8,6 +8,7 @@ local IsActive = false
 local RoadEvents = {}
 local FlingForce = 200
 local ApocDriveDuration = 20
+local DNSLDriveDuration = 30
 
 function RoadEvents.IsActive()
 	return IsActive
@@ -144,9 +145,32 @@ function RoadEvents.SpawnApocCar()
 	end)
 end
 
-local RandomEvents = { RoadEvents.SpawnLearnerDriver, RoadEvents.SpawnApocCar }
+function RoadEvents.SpawnDNSL()
+	IsActive = true
+	local spawnPos = ServerStorage.Road.DanielTruck:FindFirstChild("SpawnPos")
+	local targetPos = ServerStorage.Road.DanielTruck:FindFirstChild("Target")
+	local car = workspace:FindFirstChild("Truck")
+
+	if car then
+		car:Destroy()
+	end
+	car = ServerHelperFunctions.SpawnModelAtPosition("Road", "DanielTruck", "Truck", nil)
+	car.PrimaryPart.CFrame = spawnPos.CFrame
+
+	local tweenInfo = TweenInfo.new(DNSLDriveDuration, Enum.EasingStyle.Linear)
+	local goal = { CFrame = targetPos.CFrame }
+	local tween = TweenService:Create(car.PrimaryPart, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+	car:Destroy()
+	IsActive = false
+end
+
+local RandomEvents = { RoadEvents.SpawnLearnerDriver, RoadEvents.SpawnApocCar, RoadEvents.SpawnDNSL }
 function RoadEvents.PlayRandomEvent()
-	RandomEvents[math.random(1, #RandomEvents)]()
+	task.spawn(function()
+		RandomEvents[math.random(1, #RandomEvents)]()
+	end)
 end
 
 return RoadEvents
