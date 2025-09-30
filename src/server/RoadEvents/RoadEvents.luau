@@ -7,6 +7,7 @@ local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFun
 local IsActive = false
 local RoadEvents = {}
 local FlingForce = 200
+local ApocDriveDuration = 20
 
 function RoadEvents.IsActive()
 	return IsActive
@@ -20,7 +21,6 @@ function RoadEvents.SpawnLearnerDriver()
 	local hasBeenHit = false
 	if not driver then
 		driver = ServerHelperFunctions.SpawnModelAtPosition("Road", "LearnerDriver", "Clunker", nil)
-		driver.PrimaryPart.CFrame = spawnPos.CFrame
 		collide = driver:FindFirstChild("Collide")
 
 		-- collide functionality
@@ -52,12 +52,12 @@ function RoadEvents.SpawnLearnerDriver()
 				end
 			end
 		end)
-	else
-		driver.PrimaryPart.CFrame = spawnPos.CFrame
 	end
+	driver.PrimaryPart.CFrame = spawnPos.CFrame
 	local positionsToMove = ServerStorage.Road.LearnerDriver:FindFirstChild("RoadPath"):GetChildren()
 	local primary = driver.PrimaryPart
 
+	-- ensure it's in order (models are numbered 1,2,3,4 etc)
 	table.sort(positionsToMove, function(a, b)
 		return tonumber(a.Name) < tonumber(b.Name)
 	end)
@@ -76,6 +76,77 @@ function RoadEvents.SpawnLearnerDriver()
 	end
 
 	IsActive = false
+end
+
+function RoadEvents.SpawnApocCar()
+	IsActive = true
+	local spawnPos = ServerStorage.Road.ApocCar:FindFirstChild("SpawnPos")
+	local targetPos = ServerStorage.Road.ApocCar:FindFirstChild("Target")
+	local car = workspace:FindFirstChild("Car")
+
+	if not car then
+		car = ServerHelperFunctions.SpawnModelAtPosition("Road", "ApocCar", "Car", nil)
+	end
+	local tree = car:FindFirstChild("Tree")
+	local base = car:FindFirstChild("Base")
+	car.PrimaryPart.CFrame = spawnPos.CFrame
+
+	-- simulate driving to target
+	local tweenInfo = TweenInfo.new(ApocDriveDuration, Enum.EasingStyle.Linear)
+	local goal = { CFrame = targetPos.CFrame }
+	local tween = TweenService:Create(car.PrimaryPart, tweenInfo, goal)
+	tween:Play()
+
+	-- explode car apoc style
+	task.delay(math.random(5, ApocDriveDuration * 0.7), function()
+		local treeParts = tree:GetChildren()
+
+		-- show tree
+		for _, part in treeParts do
+			part.Transparency = 0
+		end
+
+		local crash = base:FindFirstChild("Crash")
+		local explode = base:FindFirstChild("Explode")
+		local anger = base:FindFirstChild("Angry")
+		local drive = base:FindFirstChild("Drive")
+		if not crash and not explode and not anger then
+			error("Apoc car missing sound references")
+		end
+		crash:Play()
+		explode:Play()
+		drive:Stop()
+
+		for _, part in ipairs(car:GetDescendants()) do
+			if not part:IsA("BasePart") or part.Parent.Name == "Tree" then
+				continue
+			end
+			if math.random() > 0.5 then
+				part.Material = Enum.Material.CorrodedMetal
+			end
+			if part.Name == "Wheel" or part.Name == "Tire" then
+				part:Destroy()
+			elseif part.Name == "Engine" then
+				part:FindFirstChild("BigFire").Enabled = true
+			end
+		end
+
+		tween:Cancel()
+
+		task.wait(1)
+		anger:Play()
+
+		-- despawn
+		task.delay(7, function()
+			car:Destroy()
+			IsActive = false
+		end)
+	end)
+end
+
+local RandomEvents = { RoadEvents.SpawnLearnerDriver, RoadEvents.SpawnApocCar }
+function RoadEvents.PlayRandomEvent()
+	RandomEvents[math.random(1, #RandomEvents)]()
 end
 
 return RoadEvents
