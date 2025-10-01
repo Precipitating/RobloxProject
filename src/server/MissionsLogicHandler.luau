@@ -17,6 +17,7 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
+local ZombieJob = require(ReplicatedStorage.NPCs.ZombieJob.ZombieJob)
 local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local MissionEventHandlers = {}
 -- handle all server game events
@@ -297,6 +298,9 @@ MissionEventHandlers["BosnianFailEvent"] = function(player)
 		GeneralRemotes.PlayCutscene:FireClient(player, "BosnianFailed")
 		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
 	end)
+end
+MissionEventHandlers["ZombieJob"] = function(player)
+	ZombieJob.ServerInit(player)
 end
 
 return MissionEventHandlers

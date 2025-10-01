@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Sound" referent="RBX6ADA6E503ABD4E468A1160A10B338D63">
+	<Item class="Sound" referent="RBX050ACCCB8D174247831BA12228B463E8">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -12,8 +12,8 @@
 			<bool name="Looped">false</bool>
 			<string name="Name">RevolverShot</string>
 			<bool name="PlayOnRemove">false</bool>
-			<NumberRange name="PlaybackRegion">0 60000 </NumberRange>
-			<bool name="PlaybackRegionsEnabled">false</bool>
+			<NumberRange name="PlaybackRegion">0 0.5 </NumberRange>
+			<bool name="PlaybackRegionsEnabled">true</bool>
 			<float name="PlaybackSpeed">1</float>
 			<bool name="Playing">false</bool>
 			<float name="RollOffMaxDistance">10000</float>
@@ -21,7 +21,7 @@
 			<token name="RollOffMode">0</token>
 			<Ref name="SoundGroup">null</Ref>
 			<Content name="SoundId"><url>rbxassetid://1583819337</url></Content>
-			<int64 name="SourceAssetId">1583819337</int64>
+			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 			<double name="TimePosition">0</double>
 			<float name="Volume">0.5</float>

@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HaulJob = require(ReplicatedStorage.Shared.NPCs.ManualLabor.HaulJob)
 local TrashPickup = require(ReplicatedStorage.Shared.NPCs.TrashPickup.TrashPickup)
+local ZombieJob = require(ReplicatedStorage.Shared.NPCs.ZombieJob.ZombieJob)
 
 local MissionsClientHandler = {}
 
@@ -15,4 +16,8 @@ MissionsClientHandler["TrashPickup"] = function()
 	TrashPickup.ClientInit(Players.LocalPlayer)
 end
 
+MissionsClientHandler["ZombieJob"] = function()
+	print("Local logic called for ZombieJob")
+	ZombieJob.ClientInit()
+end
 return MissionsClientHandler
