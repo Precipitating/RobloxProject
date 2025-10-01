@@ -308,7 +308,7 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
-		GeneralRemotes.SetCanTalkToNPC:FireServer(true)
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 	end)
 end
 
