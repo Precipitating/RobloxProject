@@ -8,6 +8,7 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local IS_SERVER = RunService:IsServer()
 local IS_CLIENT = RunService:IsClient()
 local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService") or nil
+local TalkModuleHelpers = IS_SERVER and require(ServerScriptService.Server.TalkModuleHelpers) or nil
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler) or nil
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions) or nil
 local MovementConnection = nil
@@ -60,6 +61,7 @@ local function GameFinished(player, model)
 	-- reset camera back to player
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
 	GeneralRemotes.EnableControls:FireClient(player, nil)
+	TalkModuleHelpers.SetCanTalk(true)
 
 	model:Destroy()
 end
@@ -279,6 +281,7 @@ end
 
 function HaulJob.ClientInit()
 	local StarterPlayer = game:GetService("StarterPlayer")
+
 	local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 
 	-- wait for server to spawn models
@@ -308,7 +311,6 @@ function HaulJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
-		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 	end)
 end
 
