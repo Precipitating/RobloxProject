@@ -139,7 +139,7 @@ GeneralRemotes.PickupTrash.TrashData.OnServerInvoke = function(_)
 	return TrashPickup.TrashData()
 end
 
-GeneralRemotes.EnableAllNPCPrompts.OnServerEvent:Connect(function(canTalk)
+GeneralRemotes.EnableAllNPCPrompts.OnServerEvent:Connect(function(_, canTalk)
 	print(`Set can speak client -> server = {canTalk}`)
 	TalkModuleHelpers.SetCanTalk(canTalk)
 end)

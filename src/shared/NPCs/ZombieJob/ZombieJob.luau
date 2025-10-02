@@ -8,15 +8,21 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local IS_SERVER = RunService:IsServer()
 local IS_CLIENT = RunService:IsClient()
 local ServerScriptService = IS_SERVER and game:GetService("ServerScriptService") or nil
+local TalkModuleHelpers = IS_SERVER and require(ServerScriptService.Server.TalkModuleHelpers) or nil
 local CurrencyHandler = IS_SERVER and require(ServerScriptService.Server.CurrencyHandler) or nil
 local ServerHelperFunctions = IS_SERVER and require(ServerScriptService.Server.ServerHelperFunctions) or nil
 local MovementConnection = nil
 local MB1Connection = nil
 local Timelimit = 60
-local SpawnCooldown = 10
+local SpawnCooldown = 7
 local CanShoot = true
-local GunDamage = 30
+local GunDamage = 50
 local ZombiesKilled = 0
+local BarrierHP = 200
+local NextBarrierDeletion = 160
+local ZombieDamage = 10
+local Finished = false
+local ZombieTargetPos = nil
 local ZombieJob = {}
 
 local function GameFinished(player, model)
@@ -36,27 +42,97 @@ local function GameFinished(player, model)
 	MovementConnection:Disconnect()
 	MovementConnection = nil
 
-	-- reset variables
-	ZombiesKilled = 0
-
 	-- reset camera back to player
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, nil)
 	GeneralRemotes.EnableControls:FireClient(player, nil)
+	TalkModuleHelpers.SetCanTalk(true)
 
 	model:Destroy()
 end
 
--- game loop blocks thread
-local function GameLoop(player, clockLabel)
-	-- game loop timer
-	for i = Timelimit, 0, -1 do
-		local randSpawnTime = math.random(3, SpawnCooldown)
-		clockLabel.Text = tostring(i)
+local function ZombieLogic(zombie, sandBags)
+	task.spawn(function()
+		local humanoid = zombie:FindFirstChild("Humanoid")
+		if not humanoid or Finished then
+			return
+		end
 
-		-- spawn zombies
-		task.delay(randSpawnTime, function() end)
+		local animationTrack = humanoid:LoadAnimation(zombie.Animations.Attack)
+
+		-- move to barrier
+		local zombiePos = zombie:GetPivot().Position
+		local target = Vector3.new(zombiePos.X, zombiePos.Y, ZombieTargetPos.Position.Z)
+		humanoid:MoveTo(target)
+
+		humanoid.MoveToFinished:Wait()
+		print("target reached")
+
+		-- attack barrier
+		while BarrierHP > 0 and zombie.Parent and not Finished do
+			animationTrack:Play()
+			BarrierHP = BarrierHP - ZombieDamage
+			task.wait(2)
+			print(BarrierHP)
+			-- destroy sandbags randomly
+
+			if #sandBags > 0 and (BarrierHP <= NextBarrierDeletion) then
+				print("should remopve")
+				NextBarrierDeletion = NextBarrierDeletion - 40
+				local randIdx = math.random(1, #sandBags)
+				sandBags[randIdx]:Destroy()
+				table.remove(sandBags, randIdx)
+			end
+		end
+		if BarrierHP <= 0 then
+			Finished = true
+		end
+	end)
+end
+
+local function GameLoop(player, clockLabel, model, sandBags)
+	local spawns = workspace.ZombieMap.ZombieSpawns:GetChildren()
+	local timeLeft = Timelimit
+	local nextSpawnIn = 0
+
+	local BASE_SPAWN_COOLDOWN = SpawnCooldown
+	local MIN_SPAWN_COOLDOWN = 1
+
+	while timeLeft > 0 do
+		if Finished then
+			break
+		end
+
+		-- update clock
+		clockLabel.Text = tostring(timeLeft)
+
+		-- calculate cooldown based on remaining time (ramp-up)
+		local timeRatio = timeLeft / Timelimit --
+		local currentCooldown = MIN_SPAWN_COOLDOWN + (BASE_SPAWN_COOLDOWN - MIN_SPAWN_COOLDOWN) * timeRatio
+
+		-- spawn zombie if timer elapsed
+		if nextSpawnIn <= 0 then
+			local spawnPoint = spawns[math.random(1, #spawns)]
+			local zomb = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "ZombieJob", "Zombie", nil)
+			zomb.PrimaryPart:SetNetworkOwner(nil)
+			local humanoid = zomb:FindFirstChild("Humanoid")
+			zomb:PivotTo(spawnPoint.CFrame)
+			zomb.Parent = model
+			if humanoid then
+				humanoid.WalkSpeed = math.random(10, 30)
+			end
+			ZombieLogic(zomb, sandBags)
+
+			-- reset spawn timer based on scaled cooldown
+			nextSpawnIn = math.random(MIN_SPAWN_COOLDOWN, currentCooldown)
+		end
+
 		task.wait(1)
+		timeLeft -= 1
+		nextSpawnIn -= 1
 	end
+
+	print("game end")
+	GameFinished(player, model)
 end
 
 local function PlayerMouseMove(playerModel)
@@ -82,7 +158,7 @@ local function Shoot(player, playerModel)
 		local rayOrigin = gunRaycast.Position
 		local rayDir = Vector3.new(0, 0, 100)
 		local raycastParams = RaycastParams.new()
-		raycastParams.FilterDescendantsInstances = { playerModel, gun }
+		raycastParams.FilterDescendantsInstances = { playerModel, gun, gunRaycast }
 		raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 		return workspace:Raycast(rayOrigin, rayDir, raycastParams)
 	end
@@ -97,12 +173,18 @@ local function Shoot(player, playerModel)
 
 		if shotRay then
 			local hitTarget = shotRay.Instance
-			if hitTarget:HasTag("Zombie") then
-				local humanoid = hitTarget:FindFirstChild("Humanoid")
-				local finalHP = humanoid.Health - GunDamage
-				humanoid:TakeDamage(GunDamage)
-				if finalHP <= 0 then
-					ZombiesKilled = ZombiesKilled + 1
+			local zombieModel = hitTarget:FindFirstAncestorWhichIsA("Model")
+
+			if zombieModel and zombieModel:HasTag("Zombie") then
+				local humanoid = zombieModel:FindFirstChild("Humanoid")
+				if humanoid then
+					local finalHP = humanoid.Health - GunDamage
+					humanoid:TakeDamage(GunDamage)
+					print(finalHP)
+
+					if finalHP <= 0 then
+						ZombiesKilled = ZombiesKilled + 1
+					end
 				end
 			end
 		end
@@ -115,21 +197,26 @@ end
 
 function ZombieJob.ServerInit(player)
 	print("Zombie job server init")
+	-- reset variables
+	ZombiesKilled = 0
+	Finished = false
+	BarrierHP = 200
+	CanShoot = true
+	NextBarrierDeletion = 160
+
 	local model = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "ZombieJob", "ZombieMap", nil)
+	ZombieTargetPos = model:FindFirstChild("TargetPos")
 	local playerModel = model:FindFirstChild("Player")
 	local clockLabel =
 		model:FindFirstChild("Clock"):FindFirstChild("BG"):FindFirstChild("SurfaceGui"):FindFirstChild("TimeLabel")
 
 	-- change camera view to game
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, model:FindFirstChild("CameraPos").CFrame)
+	local sandBags = workspace:FindFirstChild("ZombieMap"):FindFirstChild("Sandbags"):GetChildren()
 
 	PlayerMouseMove(playerModel)
 	Shoot(player, playerModel)
-	GameLoop(player, clockLabel)
-
-	-- won't run until GameLoop is finished
-	print("game end")
-	GameFinished(player, model)
+	GameLoop(player, clockLabel, model, sandBags)
 end
 
 -- mouse to world position for moving the player left/right
@@ -182,7 +269,6 @@ function ZombieJob.ClientInit()
 		MB1Clicked:Disconnect()
 		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
-		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 	end)
 end
 
