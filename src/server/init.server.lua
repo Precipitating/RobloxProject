@@ -11,6 +11,7 @@ local ProfileDataModule = require(script.Player.GetPlayerInfo)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoomHandler = require(script.RoomHandler)
 local DrivingTest = require(script.NPCs.DrivingInstructor.DrivingTest)
+local RoadEvents = require(script.RoadEvents.RoadEvents)
 local BulletGuesser = require(script.RoomScripts.Gamba.BulletGuesser)
 local SlotMachine = require(script.RoomScripts.Gamba.SlotMachine)
 local WheelSpinner = require(script.RoomScripts.Gamba.WheelSpinner)
@@ -184,6 +185,10 @@ GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex.OnServerEvent:Connect(functi
 	BulletGuesser.ResetBulletIdx()
 end)
 
+GeneralRemotes.EnableRoadEvents.OnServerEvent:Connect(function(_, enable)
+	RoadEvents.EnableRoadEvents(enable)
+end)
+
 -- set player's achievements
 -- spawn player in their room when spawned
 Players.PlayerAdded:Connect(function(player)
@@ -246,3 +251,6 @@ Players.PlayerAdded:Connect(function(player)
 	player.CharacterAdded:Connect(setupCharacter)
 	player:LoadCharacter()
 end)
+
+-- run the loop in its own thread so it doesn’t block anything else
+task.spawn(RoadEvents.SpawnLoop)

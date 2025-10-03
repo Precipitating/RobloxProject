@@ -9,9 +9,26 @@ local RoadEvents = {}
 local FlingForce = 200
 local ApocDriveDuration = 20
 local DNSLDriveDuration = 30
+local RunRoadEvents = true
 
 function RoadEvents.IsActive()
 	return IsActive
+end
+
+function RoadEvents.EnableRoadEvents(enable)
+	RunRoadEvents = enable
+end
+
+function RoadEvents.SpawnLoop()
+	while RunRoadEvents do
+		-- wait a random amount of time before next attempt
+		task.wait(math.random(10, 240))
+
+		-- only spawn if there isn't already an active event
+		if not RoadEvents.IsActive() then
+			RoadEvents.PlayRandomEvent()
+		end
+	end
 end
 
 function RoadEvents.SpawnLearnerDriver()
