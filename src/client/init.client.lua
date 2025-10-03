@@ -243,6 +243,10 @@ onFocusLostRemoteConnection = GeneralRemotes.PsychoMantis.OnFocusLostConnect.OnC
 end)
 
 GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
+	-- disable bp
+	local StarterGui = game:GetService("StarterGui")
+	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
+	GeneralRemotes.EnableRoadEvents:FireServer(false)
 	CutsceneModule.Play(name)
 end)
 

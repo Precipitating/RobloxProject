@@ -32,7 +32,6 @@ local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHe
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local Cutscene = require(CutsceneModule)
 local Demo = Cutscene.new(Camera, Looping, Speed, FreezeControls)
-local SoundFolder = ReplicatedStorage.Sounds
 
 local Player = Players.LocalPlayer
 local ProtectTheCharacterWhilePlaying = true
@@ -125,44 +124,42 @@ CutsceneClientHandler.KeyframeHandler = {
 	PsychoMantisWin = function(instruction, _, _)
 		if instruction == 1 then
 			task.wait(2)
-			SoundFolder.Laugh:Play()
+			SoundModule.PlaySound("Laugh")
 		elseif instruction == 6 then
 			task.wait(5)
-			SoundFolder.PsychoMantisWinEnd:Play()
+			SoundModule.PlaySound("PsychoMantisWinEnd")
 		end
 	end,
 
 	PsychoMantisFailTruth = function(instruction, _, _)
 		if instruction == 1 then
 			task.wait(5)
-			SoundFolder.PsychoMantisTruthDialogue1:Play()
+			SoundModule.PlaySound("PsychoMantisTruthDialogue1")
 		elseif instruction == 3 then
 			task.wait(3)
-			SoundFolder.PsychoMantisTruthDialogue2:Play()
+			SoundModule.PlaySound("PsychoMantisTruthDialogue2")
 		elseif instruction == 5 then
-			SoundFolder.FBI:Play()
+			SoundModule.PlaySound("FBI")
 		elseif instruction == 6 then
-			SoundFolder.GlassBreak:Play()
+			SoundModule.PlaySound("GlassBreak")
 		end
 	end,
 
 	PsychoMantisFailLie = function(instruction, _, _)
 		if instruction == 1 then
-			SoundFolder.Knock:Play()
+			SoundModule.PlaySound("Knock")
 		elseif instruction == 4 then
 			SpawnModelFromServer:InvokeServer("MissionModels", "PsychoMantis", "HallwayOder", nil)
-			if SoundFolder.Knock.IsPlaying then
-				SoundFolder.Knock:Stop()
-			end
+			SoundModule.StopSound("Knock")
 		end
 	end,
 
 	RoadmanFail = function(instruction, _, _)
 		if instruction > 2 then
 			if instruction == 8 then
-				SoundFolder.Maccies:Play()
+				SoundModule.PlayTheme("Maccies")
 			else
-				SoundFolder.License:Play()
+				SoundModule.PlaySound("License")
 			end
 		end
 	end,
@@ -170,13 +167,13 @@ CutsceneClientHandler.KeyframeHandler = {
 	RoadmanMugged = function(instruction, _, _)
 		if instruction == 3 then
 			task.wait(3)
-			SoundFolder.License:Play()
+			SoundModule.PlaySound("License")
 		end
 	end,
 
 	RoadmanWin = function(instruction, _, _)
 		if instruction == 1 then
-			SoundFolder.BlocklandBan:Play()
+			SoundModule.PlaySound("BlocklandBan")
 		end
 	end,
 
@@ -484,7 +481,7 @@ CutsceneClientHandler.KeyframeHandler = {
 		elseif instruction == 6 then
 			RunCutsceneAction(function()
 				warn("6")
-				SoundModule.PlaySound("ManCry")
+				SoundModule.PlayTheme("ManCry")
 				UIHelperFunctions.AdjustBlackScreen(3, 0)
 				warn("done")
 			end)
@@ -553,10 +550,10 @@ CutsceneClientHandler.KeyframeHandler = {
 				Explode()
 
 				task.wait(2)
-				SoundModule.PlaySound("ManCry")
+				SoundModule.PlayTheme("ManCry")
 				task.wait(5)
 				Speak(ttsHandle, "Mom", "It's ok son.")
-				SoundModule.StopSound("ManCry")
+				SoundModule.StopTheme()
 			end)
 		elseif instruction == 4 then
 			RunCutsceneAction(function()
@@ -577,7 +574,7 @@ CutsceneClientHandler.KeyframeHandler = {
 CutsceneClientHandler.CutsceneFinishedHandler = {
 	PsychoMantisFailLie = function()
 		CameraShake(999, 0.1, 0.5)
-		SoundFolder.Jumpscare:Play()
+		SoundModule.PlaySound("Jumpscare")
 		task.wait(7)
 		print("Rejoining")
 		TeleportService:Teleport(game.PlaceId, Player)
