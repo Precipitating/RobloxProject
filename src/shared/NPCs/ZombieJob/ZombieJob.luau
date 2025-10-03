@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Remotes = ReplicatedStorage.Remotes
 local CollectionService = game:GetService("CollectionService")
+local Debris = game:GetService("Debris")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -23,6 +24,8 @@ local NextBarrierDeletion = 160
 local ZombieDamage = 10
 local Finished = false
 local ZombieTargetPos = nil
+local MuzzleFlashes: { ParticleEmitter | PointLight } = nil
+local SandBagsRef: { Model } = nil
 local ZombieJob = {}
 
 local function GameFinished(player, model)
@@ -50,7 +53,7 @@ local function GameFinished(player, model)
 	model:Destroy()
 end
 
-local function ZombieLogic(zombie, sandBags)
+local function ZombieLogic(zombie)
 	task.spawn(function()
 		local humanoid = zombie:FindFirstChild("Humanoid")
 		if not humanoid or Finished then
@@ -61,35 +64,37 @@ local function ZombieLogic(zombie, sandBags)
 
 		-- move to barrier
 		local zombiePos = zombie:GetPivot().Position
-		local target = Vector3.new(zombiePos.X, zombiePos.Y, ZombieTargetPos.Position.Z)
+		local target = Vector3.new(zombiePos.X, zombiePos.Y, ZombieTargetPos.WorldPosition.Z)
 		humanoid:MoveTo(target)
 
-		humanoid.MoveToFinished:Wait()
+		while (zombie:GetPivot().Position - target).Magnitude > 2 and humanoid.Health > 0 do
+			task.wait(0.1)
+		end
 		print("target reached")
 
 		-- attack barrier
-		while BarrierHP > 0 and zombie.Parent and not Finished do
+		while BarrierHP > 0 and zombie.Parent and humanoid.Health > 0 and not Finished do
 			animationTrack:Play()
-			BarrierHP = BarrierHP - ZombieDamage
+			BarrierHP -= ZombieDamage
 			task.wait(2)
 			print(BarrierHP)
-			-- destroy sandbags randomly
 
-			if #sandBags > 0 and (BarrierHP <= NextBarrierDeletion) then
-				print("should remopve")
-				NextBarrierDeletion = NextBarrierDeletion - 40
-				local randIdx = math.random(1, #sandBags)
-				sandBags[randIdx]:Destroy()
-				table.remove(sandBags, randIdx)
+			if #SandBagsRef > 0 and (BarrierHP <= NextBarrierDeletion) then
+				print("should remove")
+				NextBarrierDeletion -= 40
+				local randIdx = math.random(1, #SandBagsRef)
+				SandBagsRef[randIdx]:Destroy()
+				table.remove(SandBagsRef, randIdx)
 			end
 		end
+
 		if BarrierHP <= 0 then
 			Finished = true
 		end
 	end)
 end
 
-local function GameLoop(player, clockLabel, model, sandBags)
+local function GameLoop(player, clockLabel, model)
 	local spawns = workspace.ZombieMap.ZombieSpawns:GetChildren()
 	local timeLeft = Timelimit
 	local nextSpawnIn = 0
@@ -120,7 +125,7 @@ local function GameLoop(player, clockLabel, model, sandBags)
 			if humanoid then
 				humanoid.WalkSpeed = math.random(10, 30)
 			end
-			ZombieLogic(zomb, sandBags)
+			ZombieLogic(zomb)
 
 			-- reset spawn timer based on scaled cooldown
 			nextSpawnIn = math.random(MIN_SPAWN_COOLDOWN, currentCooldown)
@@ -150,6 +155,30 @@ local function PlayerMouseMove(playerModel)
 	end)
 end
 
+local function EmitMuzzleFlash()
+	if not MuzzleFlashes then
+		return
+	end
+	-- muzzle flash effect
+	for _, obj in MuzzleFlashes do
+		obj.Enabled = true
+	end
+	task.delay(0.1, function()
+		for _, obj in MuzzleFlashes do
+			if obj and obj.Parent then
+				obj.Enabled = false
+			end
+		end
+	end)
+end
+
+local function EmitBloodSplatter(target)
+	local blood = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "ZombieJob", "BloodSplat", nil)
+	local pos = CFrame.lookAt(target.Position, target.Position + target.Normal)
+	blood:PivotTo(pos)
+	blood:FindFirstChild("WeldConstraint").Part0 = target.Instance
+	Debris:AddItem(blood, 0.2)
+end
 local function Shoot(player, playerModel)
 	local gun = playerModel:FindFirstChild("Gun")
 	local gunRaycast = gun:FindFirstChild("ShootRay")
@@ -171,6 +200,8 @@ local function Shoot(player, playerModel)
 		GeneralRemotes.PlaySound:InvokeClient(player, "RevolverShot")
 		local shotRay = Raycast()
 
+		EmitMuzzleFlash()
+
 		if shotRay then
 			local hitTarget = shotRay.Instance
 			local zombieModel = hitTarget:FindFirstAncestorWhichIsA("Model")
@@ -180,8 +211,7 @@ local function Shoot(player, playerModel)
 				if humanoid then
 					local finalHP = humanoid.Health - GunDamage
 					humanoid:TakeDamage(GunDamage)
-					print(finalHP)
-
+					EmitBloodSplatter(shotRay)
 					if finalHP <= 0 then
 						ZombiesKilled = ZombiesKilled + 1
 					end
@@ -204,19 +234,26 @@ function ZombieJob.ServerInit(player)
 	CanShoot = true
 	NextBarrierDeletion = 160
 
+	-- variable inits
 	local model = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "ZombieJob", "ZombieMap", nil)
 	ZombieTargetPos = model:FindFirstChild("TargetPos")
 	local playerModel = model:FindFirstChild("Player")
 	local clockLabel =
 		model:FindFirstChild("Clock"):FindFirstChild("BG"):FindFirstChild("SurfaceGui"):FindFirstChild("TimeLabel")
+	SandBagsRef = model:FindFirstChild("Sandbags"):GetChildren()
+	MuzzleFlashes = model
+		:FindFirstChild("Player")
+		:FindFirstChild("Gun")
+		:FindFirstChild("Muzzle")
+		:FindFirstChild("Attachment")
+		:GetChildren()
 
 	-- change camera view to game
 	GeneralRemotes.ChangeCameraSubject:FireClient(player, model:FindFirstChild("CameraPos").CFrame)
-	local sandBags = workspace:FindFirstChild("ZombieMap"):FindFirstChild("Sandbags"):GetChildren()
 
 	PlayerMouseMove(playerModel)
 	Shoot(player, playerModel)
-	GameLoop(player, clockLabel, model, sandBags)
+	GameLoop(player, clockLabel, model)
 end
 
 -- mouse to world position for moving the player left/right
