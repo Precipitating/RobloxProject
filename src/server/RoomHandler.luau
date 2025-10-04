@@ -1,8 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local StarterPlayer = game:GetService("StarterPlayer")
 local PlayerBadgeDisplayer = require(script.Parent.PlayerBadgeDisplayer)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
-local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local PositionBeforeEntering = nil
 local SpawnedRoom = nil
@@ -15,7 +13,7 @@ end
 
 local function OpenDoor(player, character, spawnLoc)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
-	SoundModule.PlaySound("OpenDoor")
+	GeneralRemotes.PlaySound:InvokeClient(player, "OpenDoor")
 	task.wait(1)
 	character:SetPrimaryPartCFrame(spawnLoc)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)

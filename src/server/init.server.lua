@@ -55,9 +55,14 @@ ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(pla
 	end
 end)
 
-ReplicatedStorage.Remotes.HumanoidMoveTo.OnServerEvent:Connect(function(_, targetHumanoid, targetPosition)
-	targetHumanoid:MoveTo(targetPosition)
-end)
+ReplicatedStorage.Remotes.HumanoidMoveTo.OnServerInvoke = function(_, npcModel, targetPosition, yield)
+	npcModel.Humanoid:MoveTo(targetPosition)
+	if yield then
+		npcModel.Humanoid.MoveToFinished:Wait()
+	end
+
+	return true
+end
 
 -- MODEL
 ReplicatedStorage.Remotes.SpawnServerStorageModel.OnServerInvoke = function(

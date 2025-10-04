@@ -185,10 +185,15 @@ function BosnianRoulette.SetupCutscene(yourTurnAtDetonation)
 			humanoid:MoveTo(playerClone:FindFirstChild("WalkPoint").CFrame.Position)
 			humanoid.MoveToFinished:Wait()
 			task.wait(6)
-			local phrase = GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "RebelsOverLads")
-			task.wait(phrase.TimeLength)
-			humanoid.Health = 0
-			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "BloodSpurt")
+			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "RebelsOverLads")
+			local connection
+			connection = GeneralRemotes.SoundEnded.OnServerEvent:Connect(function(_, finishedName)
+				if finishedName == "RebelsOverLads" then
+					connection:Disconnect()
+					humanoid.Health = 0
+					GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "BloodSpurt")
+				end
+			end)
 		end
 	else
 		print("Win")
