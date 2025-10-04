@@ -203,18 +203,23 @@ function CashierModule.FailedEvent(player)
 	tween.Completed:Wait()
 
 	-- speak
-	local sound = GeneralRemotes.PlaySound:InvokeClient(player, "CashierManager")
-	task.wait(sound.TimeLength - 1)
+	GeneralRemotes.PlaySound:InvokeClient(player, "CashierManager")
+	local connection
+	connection = GeneralRemotes.SoundEnded.OnServerEvent:Connect(function(_, finishedName)
+		if finishedName == "CashierManager" then
+			connection:Disconnect()
 
-	-- tween to camera
-	local cashierPos = workspace.Shop.Cashier.Cashier.PrimaryPart.Position
-	local monsterTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
-	local goal = { Position = cashierPos }
-	local monsterTween = TweenService:Create(hrp, monsterTweenInfo, goal)
-	monsterTween:Play()
-	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
-	BadgeHandler.awardBadge(player, 2719901366655803)
-	GeneralRemotes.Rejoin:FireClient(player, 7)
+			-- tween to camera
+			local cashierPos = workspace.Shop.Cashier.Cashier.PrimaryPart.Position
+			local monsterTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
+			local goal = { Position = cashierPos }
+			local monsterTween = TweenService:Create(hrp, monsterTweenInfo, goal)
+			monsterTween:Play()
+			GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+			BadgeHandler.awardBadge(player, 2719901366655803)
+			GeneralRemotes.Rejoin:FireClient(player, 7)
+		end
+	end)
 end
 
 function CashierModule.Start(player)

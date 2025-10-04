@@ -1,9 +1,9 @@
 local CollectionService = game:GetService("CollectionService")
-local Debris = game:GetService("Debris")
 local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local SoundLocation = SoundService
 local CurrentTheme = ReplicatedStorage.Sounds.CurrentTheme
+local GeneralRemotes = ReplicatedStorage.Remotes
 
 local Themes = {
 	AirSiren = {
@@ -415,7 +415,7 @@ function SoundHandler.StopAllSounds()
 	print("Stopping all sounds...")
 	local sounds = SoundLocation:GetChildren()
 	for _, sound in pairs(sounds) do
-		if sound:IsA("Sound") and sound.IsPlaying and CollectionService:HasTag(sound, "OneShot") then
+		if sound:IsA("Sound") and sound.IsPlaying then
 			if CollectionService:HasTag(sound, "Unstoppable") then
 				continue
 			end
@@ -471,7 +471,16 @@ function SoundHandler.ResumeTheme()
 end
 
 function SoundHandler.PlaySound(soundName)
-	--print(`Playing {soundName}`)
+	print(`Playing {soundName}`)
+
+	-- if the sound currently exists, then the one shot is being rapidly played.
+	-- attempt to reuse the same instance for efficiency by setting it's time position back to 0
+	local exists = SoundService:FindFirstChild(soundName)
+
+	if exists then
+		exists.TimePosition = 0
+	end
+
 	if OneShots[soundName] then
 		local soundData = OneShots[soundName]
 		local sound = Instance.new("Sound")
@@ -502,7 +511,6 @@ function SoundHandler.PlaySound(soundName)
 		end
 
 		-- tag
-		CollectionService:AddTag(sound, "OneShot")
 		if soundData.Tag then
 			CollectionService.AddTag(sound, soundData.Tag)
 		end
@@ -513,6 +521,7 @@ function SoundHandler.PlaySound(soundName)
 		print(`{soundName} should play`)
 
 		sound.Ended:Connect(function()
+			GeneralRemotes.SoundEnded:FireServer(soundName)
 			sound:Destroy()
 		end)
 
