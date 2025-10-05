@@ -57,7 +57,7 @@ local function DetermineDialogue()
 				Portrait = "rbxassetid://12870241261",
 				Dialogue = "Welcome to the VIP area customer.",
 				VoiceId = "7",
-				Pitch = -12,
+				Pitch = -6,
 				Speed = 1,
 				Volume = 3,
 				PlayTheme = "Prestigious",

@@ -300,4 +300,4 @@ end)
 -- play main theme
 SoundModule.PlayTheme("Main")
 
-GeneralRemotes.AddMoney:FireServer(10000)
+--GeneralRemotes.AddMoney:FireServer(10000)

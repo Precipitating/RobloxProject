@@ -5,7 +5,7 @@ local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local mouse = Player:GetMouse()
 
-local originalCircle = ReplicatedStorage.Models.GreenCircle
+local originalCircle = ReplicatedStorage.ClientModels.SafeChatter.GreenCircle
 
 local clonedCircle = nil
 local canMove = false

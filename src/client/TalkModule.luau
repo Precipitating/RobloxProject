@@ -33,7 +33,7 @@ local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local SoundModule = require(script.Parent:WaitForChild("SoundModule"))
 
 -- ui
-local ui = Player.PlayerGui.NPCChatSystem:WaitForChild("ChatUI")
+local ui = Player.PlayerGui:WaitForChild("NPCChatSystem"):WaitForChild("ChatUI")
 local frame = ui:WaitForChild("DialogueFrame")
 local nameLabel = frame:WaitForChild("NameLabel")
 local portrait = frame:WaitForChild("Portrait")

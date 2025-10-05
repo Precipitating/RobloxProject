@@ -213,6 +213,7 @@ local function PickupTrashProximityPrompt(prompt)
 	if result.PickedUp >= result.TotalTrash then
 		GeneralRemotes.PickupTrash.TrashGameFinished:InvokeServer()
 		gui.Parent:Destroy()
+
 		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 		SoundModule.PlaySound("Correct")
 	end

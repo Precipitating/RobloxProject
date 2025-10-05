@@ -5,6 +5,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
+local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = {}
 
@@ -86,7 +87,7 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 			warn("SafechatterSpawnLoc not found")
 		end
 
-		NPC:EnableProximityChat(false)
+		TalkModuleHelpers.SetCanTalk(false)
 		NPC:SetMode("Angel")
 		NPC:SetWalkspeed(10)
 	else
@@ -205,7 +206,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, 
 				-- set new NPC dialogue
 				ServerHelperFunctions.SetNPCDialogueFile({ SafechatterNameTag = "SafechatterEscaped" })
 				NPC:SetMode("Interacting")
-				NPC:EnableProximityChat(true)
+				TalkModuleHelpers.SetCanTalk(true)
 				GeneralRemotes.DisableControls:FireClient(player, "UI")
 
 				GeneralRemotes.BlackFade:FireClient(player, 1, 1)

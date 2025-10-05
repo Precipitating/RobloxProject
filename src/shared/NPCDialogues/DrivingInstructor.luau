@@ -11,7 +11,8 @@ local function CanAffordText()
 			Responses = {
 				{
 					Text = "(Hand over cash even though its extortion)",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "Accepted",
 				},
 				{
 					Text = "WHAT IS THAT PRICE??<br/>IS THIS A ROBBERY?",
@@ -205,7 +206,7 @@ return {
 
 			Responses = {
 				{
-					Text = "One driving lesson.<br/>For a car<br/>How much?",
+					Text = "One driving lesson.<br/>For a car.How much?",
 					Type = "NextMessage",
 					NextId = "Ten",
 				},
