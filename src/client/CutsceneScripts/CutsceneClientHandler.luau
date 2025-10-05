@@ -298,46 +298,54 @@ CutsceneClientHandler.KeyframeHandler = {
 
 	DrivingTestFailed = function(instruction, _, _)
 		if instruction == 1 then
-			UIHelperFunctions.AdjustBlackScreen(1, 1)
-			GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
+			RunCutsceneAction(function()
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
+				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "DrivingInstructor", "Bus", nil)
+			end)
+		elseif instruction == 2 then
+			RunCutsceneAction(function()
+				print("2")
+				local bus = workspace:WaitForChild("Bus")
+				bus:WaitForChild("Base")
+				local tweenInfo = TweenInfo.new(10, Enum.EasingStyle.Linear)
+				local goalCFrame = CFrame.new(130, 3.138, -65.8)
 
-			local tweenInfo = TweenInfo.new(10, Enum.EasingStyle.Linear)
-			local goalCFrame = CFrame.new(130, 3.138, -65.8)
-
-			local tween =
-				TweenService:Create(workspace:WaitForChild("Bus").PrimaryPart, tweenInfo, { CFrame = goalCFrame })
-			tween:Play()
-		elseif instruction == 5 then
-			Demo:Pause()
-			-- dialogue
-			local ttsHandle = TextToSpeech.GetHandle()
-			Speak(ttsHandle, "Player", "One single to Bosnia please. A laptop must be delivered.")
-			Speak(ttsHandle, "Driver", "Six trillion marks please. Fee is adjusted due to it being a war zone.")
-			Speak(ttsHandle, "Player", "ARE YOU KIDDING ME? YOU CAN FEED A COUNTRY WITH THAT MONEY!")
-			Speak(ttsHandle, "Driver", "You can get your own car and drive there yourself then. Oh wait.")
-			Speak(ttsHandle, "Player", "It's free after nine o clock isn't it?")
-			Speak(ttsHandle, "Driver", "Yeah, for the elderly. Clearly you're not.")
-			Speak(
-				ttsHandle,
-				"Player",
-				"Oh my back hurts so much whippersnapper, back in those days, we used to use a tool for vehicles and pressed Y to start it."
-			)
-			Speak(ttsHandle, "Driver", "Fine, we're running late on schedule, hurry up, i'll let it go just once.")
-			Speak(ttsHandle, "Player", "Thank you young man.")
-			Demo:Resume()
+				local tween = TweenService:Create(bus.PrimaryPart, tweenInfo, { CFrame = goalCFrame })
+				tween:Play()
+				print("tween should play")
+				tween.Completed:Wait()
+			end)
+		elseif instruction == 4 then
+			RunCutsceneAction(function()
+				task.wait(3)
+				print("4")
+				-- dialogue
+				local ttsHandle = TextToSpeech.GetHandle()
+				Speak(ttsHandle, "Player", "One single to Bosnia please. A laptop must be delivered.")
+				Speak(ttsHandle, "Driver", "Six trillion marks please. Fee is adjusted due to it being a war zone.")
+				Speak(ttsHandle, "Player", "ARE YOU KIDDING ME? YOU CAN FEED A COUNTRY WITH THAT MONEY!")
+				Speak(ttsHandle, "Driver", "You can get your own car and drive there yourself then. Oh wait.")
+				Speak(ttsHandle, "Player", "It's free after nine o clock isn't it?")
+				Speak(ttsHandle, "Driver", "Yeah, for the elderly. Clearly you're not.")
+				Speak(
+					ttsHandle,
+					"Player",
+					"Oh my back hurts so much whippersnapper, back in those days, we used to use a tool for vehicles and pressed Y to start it."
+				)
+				Speak(ttsHandle, "Driver", "Fine, we're running late on schedule, hurry up, i'll let it go just once.")
+				Speak(ttsHandle, "Player", "Thank you young man.")
+			end)
 		elseif instruction == 7 then
 			local bus = workspace:WaitForChild("Bus")
 			task.wait(2)
-
 			-- after cutscene finish camera should stick to the bus whilst moving
 			local cam = workspace.CurrentCamera
 			repeat
-				wait()
+				task.wait()
 				cam.CameraType = Enum.CameraType.Follow
 			until cam.CameraType == Enum.CameraType.Follow
 			cam.CameraSubject = bus:WaitForChild("CameraPos")
 			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
-
 			-- move bus
 			local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Linear)
 			local goalCFrame = CFrame.new(530, 3.138, -65.8)
@@ -391,7 +399,7 @@ CutsceneClientHandler.KeyframeHandler = {
 			task.wait(1)
 			local townName = SoundModule.PlaySound("Llanfair")
 			townName.Ended:Wait()
-			task.delay(1, function()
+			task.delay(0.5, function()
 				SoundModule.PlaySound("WhatDogDoin")
 			end)
 			UIHelperFunctions.AdjustBlackScreen(3, 0)

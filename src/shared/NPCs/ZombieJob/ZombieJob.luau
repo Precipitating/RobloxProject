@@ -304,7 +304,6 @@ function ZombieJob.ClientInit()
 		MousePositionConn:Disconnect()
 		conn:Disconnect()
 		MB1Clicked:Disconnect()
-		SoundModule.PlaySound("CashRegister")
 		SoundModule.PlayTheme("Main")
 	end)
 end

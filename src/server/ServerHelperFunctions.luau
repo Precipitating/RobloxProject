@@ -70,7 +70,7 @@ function ServerHelperFunctions.SpawnModelAtPosition(storageFolderName, folderNam
 	end
 end
 
--- spawn a list of models (pos already set)
+-- spawn a list of models inside a folder that matches keyWords (pos already set)
 function ServerHelperFunctions.SpawnMissionPositionedModels(storageFolderName, folderName, keyWords)
 	local missionsModels = ServerStorage:FindFirstChild(storageFolderName)
 

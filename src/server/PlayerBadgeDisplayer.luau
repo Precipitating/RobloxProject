@@ -22,6 +22,8 @@ local Badges = {
 	2493042217612033,
 	1698025412209346,
 	2719901366655803,
+	4449692306836938,
+	636617031698169,
 }
 
 function PlayerBadgeDisplayer.GetObtainedBadges(player)

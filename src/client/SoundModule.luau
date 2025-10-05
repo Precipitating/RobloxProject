@@ -512,7 +512,7 @@ function SoundHandler.PlaySound(soundName)
 
 		-- tag
 		if soundData.Tag then
-			CollectionService.AddTag(sound, soundData.Tag)
+			CollectionService:AddTag(sound, soundData.Tag)
 		end
 
 		-- auto destroy after finished playing via DebrisService

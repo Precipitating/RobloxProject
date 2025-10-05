@@ -5,6 +5,7 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
+local CurrencyHandler = require(ServerScriptService.Server.CurrencyHandler)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -389,7 +390,7 @@ local function AddFinishedRoad(player)
 		player.Character.Humanoid.Sit = false
 		player.Character.Humanoid.JumpPower = 50
 		task.wait(1)
-		TalkModuleHelpers.SetCanTalk(false)
+		TalkModuleHelpers.SetCanTalk(true)
 		-- teleport back to room
 		player.Character:PivotTo(PositionBeforeTeleport)
 
@@ -641,6 +642,7 @@ function DrivingTest.Init(player, posBeforeTeleport)
 	end
 	PositionBeforeTeleport = posBeforeTeleport
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
+	CurrencyHandler.ReduceMoney(player, 200)
 
 	-- ensure EndCutscene stops the current main theme before calling this
 	task.wait(1)

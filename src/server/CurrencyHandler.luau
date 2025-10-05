@@ -4,6 +4,9 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local CurrencyHandler = {}
 
 function CurrencyHandler.AddMoney(player, val)
+	if val == 0 then
+		return
+	end
 	Money = Money + val
 	GeneralRemotes.UpdateMoneyGUI:FireClient(player, Money)
 	GeneralRemotes.PlaySound:InvokeClient(player, "CashRegister")

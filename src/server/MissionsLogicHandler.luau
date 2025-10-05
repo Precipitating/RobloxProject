@@ -78,7 +78,7 @@ end
 -- Safechatter
 MissionEventHandlers["GuestMoney"] = function(_)
 	print("GUEST MISSIO NBEGIN")
-	ServerHelperFunctions.SpawnMissionPositionedModels("Safechatter", "Mission")
+	ServerHelperFunctions.SpawnMissionPositionedModels("MissionModels", "Safechatter", "Mission")
 end
 
 MissionEventHandlers["GuestHorrorMode"] = function(player)
@@ -107,7 +107,7 @@ MissionEventHandlers["GuestComplete"] = function(player)
 	local character = player.Character
 	local rootPart = character:FindFirstChild("HumanoidRootPart")
 	local hallway = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "BrainwashHallway", nil)
-	rootPart.CFrame = hallway:FindFirstChild("SpawnLoc").CFrame
+	rootPart.CFrame = hallway:WaitForChild("SpawnLoc").CFrame
 	BadgeHandler.awardBadge(player, 3791811322299538)
 	GeneralRemotes.PlayAnimation:FireClient(player, "135338300387862")
 	GeneralRemotes.PlayCutscene:FireClient(player, "GuestMissionComplete")
