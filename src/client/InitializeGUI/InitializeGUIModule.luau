@@ -4,11 +4,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
 local MovementHandler = require(StarterPlayer.StarterPlayerScripts.Client.MovementHandler)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
+local TalkModule = require(StarterPlayer.StarterPlayerScripts.Client.TalkModule)
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 local GeneralRemotes = ReplicatedStorage.Remotes
 local MissionRemotes = ReplicatedStorage.Missions.Events
+local GUILocation = ReplicatedStorage.GUI
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -24,6 +26,8 @@ function InitializeGUIModule.DisconnectAll(name)
 	end
 
 	table.clear(Connections[name])
+
+	print(`Disconnected {name}!`)
 end
 
 local function trackConnect(name, signal, callback)
@@ -82,7 +86,7 @@ InitializeGUIModule["BosnianRoulette"] = function()
 end
 
 InitializeGUIModule["Terminal"] = function()
-	local GUI = ReplicatedStorage.GUI.Glitcher.TerminalGUI
+	local GUI = GUILocation.Glitcher.TerminalGUI
 	local tool = Player.Backpack:FindFirstChild("Terminal")
 	local playerGUI = Player:WaitForChild("PlayerGui")
 	local existingGUI = playerGUI:FindFirstChild("TerminalGUI")
@@ -203,7 +207,7 @@ end
 
 InitializeGUIModule["BulletGuesser"] = function()
 	print("Client initialize BulletGuesser GUI")
-	local GUI = ReplicatedStorage.GUI.BulletGuesser.RevolverScreen
+	local GUI = GUILocation.BulletGuesser.RevolverScreen
 	local exists = PlayerGui:FindFirstChild("RevolverScreen")
 	if exists then
 		exists:Destroy()
@@ -253,5 +257,71 @@ InitializeGUIModule["BulletGuesser"] = function()
 			end
 		end
 	end
+end
+
+InitializeGUIModule["BakeryCashier"] = function()
+	if PlayerGui:FindFirstChild("BakeryShopGUI") then
+		warn("Bakery shop GUI already open")
+		return
+	end
+	print("Attempting to create new instance of bakery shop GUI")
+	-- clone GUI to player's GUI
+	local GUI = GUILocation:FindFirstChild("BakeryCashier"):FindFirstChild("BakeryShopGUI")
+	if not GUI then
+		error("Missing bakery shop GUI")
+	end
+	local GUIInstance = GUI:Clone()
+	GUIInstance.Parent = PlayerGui
+	local baseFrame = GUIInstance:FindFirstChild("Base")
+
+	-- handle exit button
+	local exitButton = baseFrame:FindFirstChild("Exit")
+	if not exitButton then
+		error("Missing exitButton reference from bakery shop GUI")
+	end
+	trackConnect("BakeryCashier", exitButton.MouseButton1Click, function()
+		GUIInstance:Destroy()
+		MovementHandler.EnableControls(nil)
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+		InitializeGUIModule.DisconnectAll("BakeryCashier")
+	end)
+
+	-- handle buy item buttons
+	local items = baseFrame:FindFirstChild("MenuBase"):FindFirstChild("Items")
+	if items then
+		items = items:GetChildren()
+	else
+		error("Can't get bakery items reference")
+	end
+
+	-- connect all item buy buttons
+	for _, item in ipairs(items) do
+		if not item:IsA("Frame") then
+			continue
+		end
+		if not item:FindFirstChild("BuyButton") then
+			error("Not every item in bakery item has a BuyButton")
+		end
+		local buyButton = item.BuyButton
+		trackConnect("BakeryCashier", buyButton.MouseButton1Click, function()
+			local price = buyButton:FindFirstChild("Price")
+			if not price then
+				error(`{item.Name} has no price value`)
+			end
+			local currentMoney = GeneralRemotes.GetCurrentMoney:InvokeServer()
+
+			-- exit early if can't afford item
+			if currentMoney < price.Value then
+				warn(`Can't afford {item.Name}, which costs {price.Value}`)
+				SoundModule.PlaySound("Error")
+				return
+			end
+
+			-- can afford, give tool and reduce money
+			GeneralRemotes.ReduceMoney:FireServer(price.Value)
+			MissionRemotes.GiveToolEvent:FireServer({ item.Name, false })
+		end)
+	end
+	print("success")
 end
 return InitializeGUIModule

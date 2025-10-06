@@ -2171,6 +2171,7 @@ local Missions: Types.MissionsList = {
 	},
 
 
+
 }
 
 return Missions
@@ -2319,7 +2320,7 @@ return Missions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="RemoteEvent" referent="RBXE621BAB5BE8D4AFF8D9DA1218DFB63D1">
+			<Item class="RemoteFunction" referent="RBXE621BAB5BE8D4AFF8D9DA1218DFB63D1">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>

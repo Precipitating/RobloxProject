@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ClientHelperFunctions = {}
 
 function ClientHelperFunctions.ChangeCameraSubject(targetCFrame)
@@ -12,4 +13,5 @@ function ClientHelperFunctions.ChangeCameraSubject(targetCFrame)
 
 	camera.CFrame = targetCFrame
 end
+
 return ClientHelperFunctions
