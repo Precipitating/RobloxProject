@@ -22,7 +22,7 @@ end
 function RoadEvents.SpawnLoop()
 	while RunRoadEvents do
 		-- wait a random amount of time before next attempt
-		task.wait(math.random(10, 240))
+		task.wait(math.random(30, 300))
 
 		-- only spawn if there isn't already an active event
 		if not RoadEvents.IsActive() then

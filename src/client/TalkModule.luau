@@ -141,6 +141,7 @@ function TalkModule.hideUI(responseData)
 			CurrentPrompt.Enabled = true
 			CurrentPrompt = nil
 		end
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 	end)
 end
 
@@ -153,7 +154,11 @@ local function fireAndLog(event, data, label)
 			SoundModule.PlaySound("Ping")
 		end
 
-		event:FireServer(data)
+		if event:IsA("RemoteEvent") then
+			event:FireServer(data)
+		elseif event:IsA("RemoteFunction") then
+			event:InvokeServer(data)
+		end
 
 		print(`Remote fired! {label}: {data}`)
 	end

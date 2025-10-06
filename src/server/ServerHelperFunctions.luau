@@ -25,17 +25,25 @@ end
 -- remove tools, should a player own it (they should)
 -- goes thru backpack each iteration incase you have a duplicate (somehow)
 -- also checks player model as they may have equipped it already
-
 function ServerHelperFunctions.RemoveTools(player, toolsStringList, tag)
+	local found = false
 	local function removeFromContainer(container)
 		for _, item in pairs(container:GetChildren()) do
 			if item:IsA("Tool") then
 				if tag and CollectionService:HasTag(item, tag) then
 					item:Destroy()
+
+					if not found then
+						found = true
+					end
 				end
 
 				if not tag and toolsStringList and table.find(toolsStringList, item.Name) then
 					item:Destroy()
+
+					if not found then
+						found = true
+					end
 				end
 			end
 		end
@@ -50,6 +58,8 @@ function ServerHelperFunctions.RemoveTools(player, toolsStringList, tag)
 	if player.Character then
 		removeFromContainer(player.Character)
 	end
+
+	return found
 end
 
 -- spawn a model

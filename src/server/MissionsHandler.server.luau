@@ -72,12 +72,14 @@ ReplicatedStorage.Missions.Events.ForceEquipEvent.OnServerEvent:Connect(function
 	end
 end)
 
-ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerEvent:Connect(function(player, toolsStringList)
+ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerInvoke = function(player, toolsStringList)
 	print("Remove tool arrived at server")
 	if typeof(toolsStringList) == "table" then
-		ServerHelperFunctions.RemoveTools(player, toolsStringList)
+		return ServerHelperFunctions.RemoveTools(player, toolsStringList)
 	end
-end)
+	warn("Remove tools argument not a table!")
+	return false
+end
 
 ReplicatedStorage.Missions.Events.RemoveEquippedToolEvent.OnServerEvent:Connect(function(player)
 	print("Remove equipped tools arrived at server")

@@ -1,6 +1,7 @@
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
+local StarterPlayer = game:GetService("StarterPlayer")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local GeneralRemotes = ReplicatedStorage.Remotes
 
@@ -9,6 +10,7 @@ local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
+local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -109,7 +111,11 @@ end
 
 local function TalkProximityPrompt(prompt)
 	if
-		not (CollectionService:HasTag(prompt.Parent, "MoveableNPC") or CollectionService:HasTag(prompt.Parent, "NPC"))
+		not (
+			CollectionService:HasTag(prompt.Parent, "MoveableNPC")
+			or CollectionService:HasTag(prompt.Parent, "NPC")
+			or CollectionService:HasTag(prompt.Parent, "UINPC")
+		)
 	then
 		return
 	end
@@ -121,12 +127,13 @@ local function TalkProximityPrompt(prompt)
 	else
 		print(`Can talk`)
 	end
-
 	if TalkModule.IsTalking() then
+		warn("Already talking")
 		return
 	end
-	TalkModule.SetTalking(true)
-	prompt.Enabled = false
+
+	-- disable all talk prompts
+	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
 
 	-- check if moveable NPC, and if so pause its movement
 	if CollectionService:HasTag(prompt.Parent, "MoveableNPC") then
@@ -140,6 +147,16 @@ local function TalkProximityPrompt(prompt)
 		return
 	end
 
+	-- NPCS that don't talk but opens a UI instead
+	if CollectionService:HasTag(prompt.Parent, "UINPC") then
+		MovementModule.DisableControls("UI")
+		print("UI NPC detected!")
+		InitializeGUIModule[npc.Value]()
+		return
+	end
+
+	-- normal dialogue talking NPCS
+	TalkModule.SetTalking(true)
 	local dataModule = ReplicatedStorage:WaitForChild("NPCDialogues"):FindFirstChild(npc.Value)
 	if not dataModule then
 		print("Failed to get NPC module (UI)")
@@ -151,9 +168,7 @@ local function TalkProximityPrompt(prompt)
 	SoundModule.PauseTheme()
 
 	local npcData = require(dataModule)
-
 	TalkModule.openUI(npcData.Nodes, npc.Value)
-	prompt.Enabled = false
 	TalkModule.SetCurrentPrompt(prompt)
 end
 

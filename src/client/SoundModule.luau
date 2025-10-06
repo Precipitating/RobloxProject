@@ -30,6 +30,10 @@ local Themes = {
 		SoundId = "rbxassetid://180315285",
 		Volume = 0.3,
 	},
+	Vader = {
+		SoundId = "rbxassetid://105233980391021",
+		Volume = 0.3,
+	},
 	Calm = {
 		SoundId = "rbxassetid://1848354536",
 		Volume = 0.1,
@@ -49,6 +53,10 @@ local Themes = {
 	CoolTheme = {
 		SoundId = "rbxassetid://1840684529",
 		Volume = 0.1,
+	},
+	EatingTheme = {
+		SoundId = "rbxassetid://72827859819212",
+		Volume = 0.3,
 	},
 	Gloomy = {
 		SoundId = "rbxassetid://1843617641",
@@ -146,6 +154,10 @@ local Themes = {
 		SoundId = "rbxassetid://129102729060609",
 		Volume = 0.1,
 	},
+	Mysterious = {
+		SoundId = "rbxassetid://1838974004",
+		Volume = 0.1,
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -155,6 +167,10 @@ local OneShots = {
 	Baa = {
 		SoundId = "rbxassetid://855133159",
 		Volume = 0.5,
+	},
+	LongBurp = {
+		SoundId = "rbxassetid://83871962012333",
+		Volume = 10,
 	},
 	BananaSlip = {
 		SoundId = "rbxassetid://129432532096499",
@@ -239,6 +255,10 @@ local OneShots = {
 		Pitch = {
 			Octave = 2,
 		},
+	},
+	LongFart = {
+		SoundId = "rbxassetid://73860369392765",
+		Volume = 10,
 	},
 	FailTrombone = {
 		SoundId = "rbxassetid://190705984",
