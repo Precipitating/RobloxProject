@@ -150,12 +150,12 @@ return {
 				{
 					Text = "*GAG*",
 					Type = "NextMessage",
-					NextId = "Given4",
+					NextId = "Given6",
 				},
 				{
 					Text = "UUUUAAH",
 					Type = "NextMessage",
-					NextId = "Given4",
+					NextId = "Given6",
 				},
 			},
 		},
@@ -163,17 +163,87 @@ return {
 		Given6 = {
 			Name = "Damon",
 			Portrait = "rbxassetid://17342156854",
-			Dialogue = "YEEESH, What a belter!",
+			Dialogue = "YEAAAAAAAAAAAAAAAUUUUUUPPP",
 			Responses = {
 				{
 					Text = "You are FOUL",
 					Type = "NextMessage",
-					NextId = "Given4",
+					NextId = "Given7",
 				},
 				{
 					Text = "JESUS... CHRIST...",
 					Type = "NextMessage",
-					NextId = "Given4",
+					NextId = "Given7",
+				},
+			},
+		},
+
+		Given7 = {
+			Name = "Damon",
+			Portrait = "rbxassetid://23735436",
+			Dialogue = "Thanks for that, peasant!",
+			Responses = {
+				{
+					Text = "So what do I get?",
+					Type = "NextMessage",
+					NextId = "Given8",
+				},
+				{
+					Text = "Reward. NOW!",
+					Type = "NextMessage",
+					NextId = "Given8",
+				},
+			},
+		},
+		Given8 = {
+			Name = "Damon",
+			Portrait = "rbxassetid://131567274935529",
+			Dialogue = "Who said that you were promised a reward?<br/>I'm a famous dev, I naturally command you, peasant.",
+			Responses = {
+				{
+					Text = "You will pay...",
+					Type = "NextMessage",
+					NextId = "Given9",
+				},
+				{
+					Text = "GRRRRRRRRR",
+					Type = "NextMessage",
+					NextId = "Given9",
+				},
+			},
+		},
+		Given9 = {
+			Name = "Damon",
+			Portrait = "rbxassetid://8991722426",
+			Dialogue = "What you gonna do about it?",
+			Responses = {
+				{
+					Text = "Expose you on RoTube.",
+					Type = "NextMessage",
+					NextId = "Given10",
+				},
+				{
+					Text = "Recorded you, it's over.",
+					Type = "NextMessage",
+					NextId = "Given10",
+				},
+			},
+		},
+
+		Given10 = {
+			Name = "Damon",
+			Portrait = "rbxassetid://8991722426",
+			Dialogue = "Not on my watch... :Spawn R2DABoss",
+			Responses = {
+				{
+					Text = "Wha?",
+					Type = "Close",
+					ExecuteScenarioEvent = "R2DPumpkinBoss",
+				},
+				{
+					Text = "?????",
+					Type = "Close",
+					ExecuteScenarioEvent = "R2DPumpkinBoss",
 				},
 			},
 		},

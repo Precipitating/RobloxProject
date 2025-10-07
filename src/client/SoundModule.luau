@@ -158,6 +158,10 @@ local Themes = {
 		SoundId = "rbxassetid://1838974004",
 		Volume = 0.1,
 	},
+	PumpkinBossTheme = {
+		SoundId = "rbxassetid://98069162367799",
+		Volume = 0.4,
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -413,6 +417,10 @@ local OneShots = {
 		SoundId = "rbxassetid://5521959695",
 		Volume = 0.5,
 	},
+	GirlGreeting = {
+		SoundId = "rbxassetid://110461437455800",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 
@@ -535,7 +543,7 @@ function SoundHandler.PlaySound(soundName)
 			CollectionService:AddTag(sound, soundData.Tag)
 		end
 
-		-- auto destroy after finished playing via DebrisService
+		-- auto destroy after finished playing
 		sound.Parent = SoundService
 		sound:Play()
 		print(`{soundName} should play`)

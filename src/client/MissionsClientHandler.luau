@@ -1,5 +1,8 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
+local SoundModule = require(script.Parent.SoundModule)
+local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local HaulJob = require(ReplicatedStorage.Shared.NPCs.ManualLabor.HaulJob)
 local TrashPickup = require(ReplicatedStorage.Shared.NPCs.TrashPickup.TrashPickup)
 local ZombieJob = require(ReplicatedStorage.Shared.NPCs.ZombieJob.ZombieJob)
@@ -19,5 +22,11 @@ end
 MissionsClientHandler["ZombieJob"] = function()
 	print("Local logic called for ZombieJob")
 	ZombieJob.ClientInit()
+end
+
+MissionsClientHandler["R2DPumpkinBoss"] = function()
+	task.wait(1)
+	SoundModule.PlayTheme("PumpkinBossTheme")
+	InitializeGUIModule["R2DPumpkinBoss"]()
 end
 return MissionsClientHandler
