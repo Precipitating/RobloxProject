@@ -9,6 +9,7 @@ local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CashierModule = require(ServerScriptService.Server.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(ServerScriptService.Server.NPCs.Cashier.GroceryBagModule)
 local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.ShopLiftConsequences)
+local PumpkinBossFight = require(ServerScriptService.Server.NPCs.CupcakeLover.PumpkinBossFight)
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
@@ -301,6 +302,10 @@ MissionEventHandlers["BosnianFailEvent"] = function(player)
 end
 MissionEventHandlers["ZombieJob"] = function(player)
 	ZombieJob.ServerInit(player)
+end
+
+MissionEventHandlers["R2DPumpkinBoss"] = function(player)
+	PumpkinBossFight.Initialize(player)
 end
 
 return MissionEventHandlers

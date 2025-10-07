@@ -4,7 +4,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
 local MovementHandler = require(StarterPlayer.StarterPlayerScripts.Client.MovementHandler)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
-local TalkModule = require(StarterPlayer.StarterPlayerScripts.Client.TalkModule)
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
@@ -274,6 +273,9 @@ InitializeGUIModule["BakeryCashier"] = function()
 	GUIInstance.Parent = PlayerGui
 	local baseFrame = GUIInstance:FindFirstChild("Base")
 
+	-- open shop greeting
+	SoundModule.PlaySound("GirlGreeting")
+
 	-- handle exit button
 	local exitButton = baseFrame:FindFirstChild("Exit")
 	if not exitButton then
@@ -322,6 +324,65 @@ InitializeGUIModule["BakeryCashier"] = function()
 			MissionRemotes.GiveToolEvent:FireServer({ item.Name, false })
 		end)
 	end
+	print("success")
+end
+
+InitializeGUIModule["R2DPumpkinBoss"] = function()
+	if PlayerGui:FindFirstChild("R2DBossHealthGUI") and PlayerGui:FindFirstChild("R2DHealthGUI") then
+		warn("R2D Boss GUIs already open")
+		return
+	end
+
+	local playerHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DHealthGUI"):Clone()
+	local playerHPBar = playerHPGUI:WaitForChild("HPBarBot"):WaitForChild("HPBarTop")
+	local playerHPLabel = playerHPBar:WaitForChild("HealthValueLabel")
+	local playerHPVal = playerHPBar:WaitForChild("Health")
+
+	local bossHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DBossHealthGUI"):Clone()
+	local bossHP = workspace:WaitForChild("PumpkinMap"):WaitForChild("PumpkinBoss"):WaitForChild("Health")
+	local bossHPBar = bossHPGUI:WaitForChild("HPBarBot"):WaitForChild("HPBarTop")
+	local bossHPVal = bossHPBar:WaitForChild("HealthValueLabel")
+
+	local minigunGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DMinigunGUI"):Clone()
+	local minigunAmmo = minigunGUI:WaitForChild("Base"):WaitForChild("Ammo")
+	local minigunStacks = minigunGUI:WaitForChild("Base"):WaitForChild("Stacks")
+	local minigunAmmoLabel = minigunGUI:WaitForChild("Base"):WaitForChild("AmmoLabel")
+	local minigunStacksLabel = minigunGUI:WaitForChild("Base"):WaitForChild("StacksLabel")
+
+	playerHPGUI.Parent = PlayerGui
+	bossHPGUI.Parent = PlayerGui
+	minigunGUI.Parent = PlayerGui
+
+	-- boss hp events handler
+	trackConnect("R2DPumpkinBoss", bossHP:GetPropertyChangedSignal("Value"), function()
+		bossHPVal.Text = tostring(bossHP.Value)
+		local ratio = math.clamp(bossHP.Value / 10000, 0, 1)
+		bossHPBar.Size = UDim2.fromScale(ratio, 1)
+	end)
+
+	-- player hp events handler
+	trackConnect("R2DPumpkinBoss", playerHPVal:GetPropertyChangedSignal("Value"), function()
+		playerHPLabel.Text = tostring(playerHPVal.Value)
+		local ratio = math.clamp(playerHPVal.Value / 100, 0, 1)
+		bossHPBar.Size = UDim2.fromScale(ratio, 1)
+	end)
+
+	-- minigun ammo handler
+	trackConnect("R2DPumpkinBoss", minigunAmmo:GetPropertyChangedSignal("Value"), function()
+		if minigunAmmo.Value > 0 then
+			minigunAmmoLabel.Text = tostring(minigunAmmo)
+		elseif minigunStacks > 0 then
+			print("reloading...")
+			task.delay(3, function()
+				minigunStacks = minigunStacks - 1
+			end)
+		end
+	end)
+
+	trackConnect("R2DPumpkinBoss", minigunStacks:GetPropertyChangedSignal("Value"), function()
+		minigunAmmo = 120
+		minigunStacksLabel.Text = tostring(minigunStacks)
+	end)
 	print("success")
 end
 return InitializeGUIModule
