@@ -7,6 +7,10 @@ local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModul
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
+local Animator = Humanoid:FindFirstChildOfClass("Animator")
+local Mouse = Player:GetMouse()
 local GeneralRemotes = ReplicatedStorage.Remotes
 local MissionRemotes = ReplicatedStorage.Missions.Events
 local GUILocation = ReplicatedStorage.GUI
@@ -339,9 +343,11 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	local playerHPVal = playerHPBar:WaitForChild("Health")
 
 	local bossHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DBossHealthGUI"):Clone()
-	local bossHP = workspace:WaitForChild("PumpkinMap"):WaitForChild("PumpkinBoss"):WaitForChild("Health")
+	local bossModel = workspace:WaitForChild("PumpkinMap"):WaitForChild("PumpkinBoss")
+	local bossHP = bossModel:WaitForChild("Health")
 	local bossHPBar = bossHPGUI:WaitForChild("HPBarBot"):WaitForChild("HPBarTop")
-	local bossHPVal = bossHPBar:WaitForChild("HealthValueLabel")
+	local bossHPVal = bossHPGUI:WaitForChild("HPBarBot"):WaitForChild("HealthValueLabel")
+	local maxBossHP = bossHP.Value
 
 	local minigunGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DMinigunGUI"):Clone()
 	local minigunAmmo = minigunGUI:WaitForChild("Base"):WaitForChild("Ammo")
@@ -349,14 +355,31 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	local minigunAmmoLabel = minigunGUI:WaitForChild("Base"):WaitForChild("AmmoLabel")
 	local minigunStacksLabel = minigunGUI:WaitForChild("Base"):WaitForChild("StacksLabel")
 
+	local minigunTool = Player.Backpack:WaitForChild("Minigun")
+	local handle = minigunTool:WaitForChild("Handle")
+	local shootPos = handle:WaitForChild("Main")
+	local revSound = handle:WaitForChild("Rev")
+	local shootSound = handle:WaitForChild("Shoot")
+	local stopSound = handle:WaitForChild("Stop")
+	local reloadSound = handle:WaitForChild("Reload")
+
 	playerHPGUI.Parent = PlayerGui
 	bossHPGUI.Parent = PlayerGui
 	minigunGUI.Parent = PlayerGui
 
+	local idleAnim = Instance.new("Animation")
+	idleAnim.AnimationId = `rbxassetid://{93585226172859}`
+	local idleTrack = nil
+	local equipped = false
+	local holding = false
+	local spinningUp = false
+	local spinCanceled = false
+	local reloading = false
+	local reloadThread -- reference to the current reload coroutine
 	-- boss hp events handler
 	trackConnect("R2DPumpkinBoss", bossHP:GetPropertyChangedSignal("Value"), function()
-		bossHPVal.Text = tostring(bossHP.Value)
-		local ratio = math.clamp(bossHP.Value / 10000, 0, 1)
+		bossHPVal.Text = `{tostring(bossHP.Value)} HP`
+		local ratio = math.clamp(bossHP.Value / maxBossHP, 0, 1)
 		bossHPBar.Size = UDim2.fromScale(ratio, 1)
 	end)
 
@@ -369,20 +392,187 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 
 	-- minigun ammo handler
 	trackConnect("R2DPumpkinBoss", minigunAmmo:GetPropertyChangedSignal("Value"), function()
-		if minigunAmmo.Value > 0 then
-			minigunAmmoLabel.Text = tostring(minigunAmmo)
-		elseif minigunStacks > 0 then
-			print("reloading...")
-			task.delay(3, function()
-				minigunStacks = minigunStacks - 1
-			end)
+		if minigunAmmo.Value >= 0 then
+			minigunAmmoLabel.Text = tostring(minigunAmmo.Value)
 		end
 	end)
 
+	-- ammo stacks
 	trackConnect("R2DPumpkinBoss", minigunStacks:GetPropertyChangedSignal("Value"), function()
-		minigunAmmo = 120
-		minigunStacksLabel.Text = tostring(minigunStacks)
+		minigunAmmo.Value = 120
+		minigunStacksLabel.Text = tostring(minigunStacks.Value)
 	end)
+
+	-- minigun equip
+	trackConnect("R2DPumpkinBoss", minigunTool.Equipped, function()
+		equipped = true
+		idleTrack = Animator:LoadAnimation(idleAnim)
+		idleTrack:Play()
+		minigunGUI.Enabled = true
+		Mouse.Icon = "rbxasset://textures/GunCursor.png"
+		Humanoid.WalkSpeed = 17
+	end)
+
+	trackConnect("R2DPumpkinBoss", minigunTool.Unequipped, function()
+		equipped = false
+		if idleTrack then
+			idleTrack:Stop()
+			idleTrack:Destroy()
+			idleTrack = nil
+
+			minigunGUI.Enabled = false
+			Player:GetMouse().Icon = ""
+			Humanoid.WalkSpeed = 25
+
+			stopSound:Stop()
+			revSound:Stop()
+			shootSound:Stop()
+			reloadSound:Stop()
+			if reloadThread and coroutine.status(reloadThread) ~= "dead" then
+				coroutine.close(reloadThread)
+			end
+			reloading = false
+			spinCanceled = true
+		end
+	end)
+
+	local function startReload()
+		if reloading or not equipped then
+			return
+		end
+		if minigunAmmo.Value > 0 or minigunStacks.Value <= 0 then
+			return
+		end
+
+		reloading = true
+		reloadSound:Play()
+
+		-- cancel any previous reload coroutine if it’s still running
+		if reloadThread and coroutine.status(reloadThread) ~= "dead" then
+			coroutine.close(reloadThread)
+		end
+
+		reloadThread = coroutine.create(function()
+			task.wait(4)
+			if not reloading or not equipped then
+				return
+			end
+
+			if minigunStacks.Value > 0 then
+				minigunStacks.Value = math.max(0, minigunStacks.Value - 1)
+			end
+
+			reloading = false
+		end)
+
+		coroutine.resume(reloadThread)
+	end
+
+	trackConnect("R2DPumpkinBoss", Mouse.Button1Down, function()
+		if not equipped then
+			return
+		end
+		-- reload
+		if minigunAmmo.Value <= 0 then
+			startReload()
+			return
+		end
+		if holding or spinningUp then
+			return
+		end
+
+		holding = true
+		spinningUp = true
+		spinCanceled = false
+
+		stopSound:Stop()
+		revSound:Stop()
+		shootSound:Stop()
+
+		-- start rev-up
+		revSound:Play()
+
+		-- start spin-up timer
+		task.delay(1.5, function()
+			if spinCanceled then
+				return
+			end
+			spinningUp = false
+
+			-- only start firing if still holding
+			if not holding then
+				revSound:Stop()
+				stopSound:Play()
+				return
+			end
+
+			-- Start firing loop
+			while equipped and holding and minigunAmmo.Value > 0 do
+				if not shootSound.IsPlaying then
+					shootSound:Play()
+				end
+
+				minigunAmmo.Value = minigunAmmo.Value - 1
+				local function createBulletTrace(startPos, endPos)
+					local randomOffset = Vector3.new(math.random(-5, 5), math.random(-5, 5), math.random(-5, 5))
+					endPos = endPos + randomOffset
+					local distance = (endPos - startPos).Magnitude
+					local beam = Instance.new("Part")
+					beam.Size = Vector3.new(0.2, 0.2, distance)
+					beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
+					beam.Anchored = true
+					beam.CanCollide = false
+					beam.Material = Enum.Material.SmoothPlastic
+					beam.Color = Color3.fromRGB(255, 200, 50)
+					beam.Parent = workspace
+
+					local rayParams = RaycastParams.new()
+					rayParams.FilterDescendantsInstances = { beam, Character }
+					rayParams.FilterType = Enum.RaycastFilterType.Exclude
+					rayParams.IgnoreWater = true
+
+					local direction = (endPos - startPos).Unit
+					local maxDistance = distance
+
+					local result = workspace:Raycast(startPos, direction * maxDistance, rayParams)
+					if result and result.Instance:IsDescendantOf(workspace:FindFirstChild("PumpkinBoss")) then
+						if bossHP.Value > 0 then
+							bossHP.Value = bossHP.Value - 55
+						end
+					end
+					game:GetService("Debris"):AddItem(beam, 0.1)
+				end
+				createBulletTrace(shootPos.Position, Mouse.Hit.Position)
+
+				task.wait(0.04)
+			end
+
+			if not stopSound.IsPlaying then
+				stopSound:Play()
+			end
+
+			if shootSound.IsPlaying then
+				shootSound:Stop()
+			end
+		end)
+	end)
+
+	trackConnect("R2DPumpkinBoss", Mouse.Button1Up, function()
+		holding = false
+
+		if spinningUp then
+			spinningUp = false
+			spinCanceled = true
+		end
+
+		if revSound.IsPlaying then
+			revSound:Stop()
+		end
+		if shootSound.IsPlaying then
+			shootSound:Stop()
+		end
+	end)
+
 	print("success")
 end
 return InitializeGUIModule
