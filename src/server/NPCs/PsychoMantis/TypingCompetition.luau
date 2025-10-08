@@ -101,6 +101,7 @@ end
 
 function WordType.Begin(player)
 	-- clock timer
+	task.wait(1)
 	PlayThemeRemote:FireClient(player, "Intense")
 	warn("Intense playing?")
 	WordType.StartTimer(clockText, DURATION, true, player)

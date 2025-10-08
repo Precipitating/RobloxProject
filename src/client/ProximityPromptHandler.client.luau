@@ -3,6 +3,12 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+
+local Player = game.Players.LocalPlayer
+local Events = ReplicatedStorage.Missions.Events
+local Character = Player.Character or Player.CharacterAdded:Wait()
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- house
@@ -19,9 +25,6 @@ local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 
 -- cashier basket
 local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
-local Player = game.Players.LocalPlayer
-local Events = ReplicatedStorage.Missions.Events
-local Character = Player.Character or Player.CharacterAdded:Wait()
 
 local RoomExitFunctions = {
 	ShopExit = function()
@@ -259,6 +262,17 @@ local function WheelSpinner(prompt)
 	GeneralRemotes.Gamba.StartWheelSpin:FireServer()
 end
 
+local function R2DBossPrompts(prompt)
+	if not (CollectionService:HasTag(prompt, "AmmoRefill")) then
+		return
+	end
+	local stacks = PlayerGui:WaitForChild("R2DMinigunGUI"):WaitForChild("Base"):WaitForChild("Stacks")
+	if not stacks then
+		error("Stacks reference missing")
+	end
+	stacks.Value = 2
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -266,4 +280,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	PickupTrashProximityPrompt(prompt)
 	SlotMachineProximityPrompts(prompt)
 	WheelSpinner(prompt)
+	R2DBossPrompts(prompt)
 end)

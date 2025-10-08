@@ -16,6 +16,7 @@ function RoadEvents.IsActive()
 end
 
 function RoadEvents.EnableRoadEvents(enable)
+	warn(`Road events enabled = {enable}`)
 	RunRoadEvents = enable
 end
 

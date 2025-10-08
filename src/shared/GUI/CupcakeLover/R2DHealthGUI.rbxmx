@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBX554B0F7E727D4C92A259189AB6A98045">
+	<Item class="ScreenGui" referent="RBXAD15F24A22DA424EB69F15A674183C14">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="AutoLocalize">true</bool>
@@ -15,7 +15,7 @@
 			<bool name="ResetOnSpawn">true</bool>
 			<Ref name="RootLocalizationTable">null</Ref>
 			<token name="SafeAreaCompatibility">1</token>
-			<token name="ScreenInsets">2</token>
+			<token name="ScreenInsets">1</token>
 			<token name="SelectionBehaviorDown">0</token>
 			<token name="SelectionBehaviorLeft">0</token>
 			<token name="SelectionBehaviorRight">0</token>
@@ -25,7 +25,7 @@
 			<BinaryString name="Tags"></BinaryString>
 			<token name="ZIndexBehavior">1</token>
 		</Properties>
-		<Item class="Frame" referent="RBXAF7E39274F294F9E8B2888F97DB9BFF3">
+		<Item class="Frame" referent="RBX3191CB4B099242FCA11A3A2E9998017D">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -88,7 +88,7 @@
 				<bool name="Visible">true</bool>
 				<int name="ZIndex">1</int>
 			</Properties>
-			<Item class="Frame" referent="RBXE70FBAD0CC4B46C293698147627201C9">
+			<Item class="Frame" referent="RBX657B79CF792542C0A3404826C47455E2">
 				<Properties>
 					<bool name="Active">false</bool>
 					<Vector2 name="AnchorPoint">
@@ -151,7 +151,7 @@
 					<bool name="Visible">true</bool>
 					<int name="ZIndex">1</int>
 				</Properties>
-				<Item class="Frame" referent="RBXCBFA9A0E5CE74E5EA39C9DA3121E3BB5">
+				<Item class="Frame" referent="RBX23CC5931360B4296866DE23B3F27F997">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -215,7 +215,7 @@
 						<int name="ZIndex">1</int>
 					</Properties>
 				</Item>
-				<Item class="Frame" referent="RBX4DE26FC47CF34C8AB4313EF001452123">
+				<Item class="Frame" referent="RBX0063F3B750D447D58AC23C0ED1D3EB17">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -279,7 +279,7 @@
 						<int name="ZIndex">1</int>
 					</Properties>
 				</Item>
-				<Item class="TextLabel" referent="RBXE17D78C1080A45B2B06CB7B29294CA47">
+				<Item class="TextLabel" referent="RBX92E36B3E1DB84D51B5EDA3FBD63BDF48">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -372,7 +372,7 @@
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="UIStroke" referent="RBX5F98600034454981ABACD2FB56A7A139">
+					<Item class="UIStroke" referent="RBX665B6DFE1AFC4045B66527523267FD2C">
 						<Properties>
 							<token name="ApplyStrokeMode">0</token>
 							<BinaryString name="AttributesSerialize"></BinaryString>
@@ -400,7 +400,7 @@
 						</Properties>
 					</Item>
 				</Item>
-				<Item class="TextLabel" referent="RBXE3CB916C706D401EAC15DD65C3B65DF6">
+				<Item class="TextLabel" referent="RBX2E8D8ABC640B464ABD7799D7372F4991">
 					<Properties>
 						<bool name="Active">false</bool>
 						<Vector2 name="AnchorPoint">
@@ -493,7 +493,7 @@
 						<bool name="Visible">true</bool>
 						<int name="ZIndex">1</int>
 					</Properties>
-					<Item class="UIStroke" referent="RBX330E681A0A624BF9AFF8160748D643AD">
+					<Item class="UIStroke" referent="RBX82D24C7BAF1548DA8B003D7B68964628">
 						<Properties>
 							<token name="ApplyStrokeMode">0</token>
 							<BinaryString name="AttributesSerialize"></BinaryString>
@@ -520,6 +520,17 @@
 							<int name="ZIndex">1</int>
 						</Properties>
 					</Item>
+				</Item>
+				<Item class="IntValue" referent="RBX9AC5A934C8FC45ACB52B6770C6E8DC8F">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">Health</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+						<int64 name="Value">100</int64>
+					</Properties>
 				</Item>
 			</Item>
 		</Item>
