@@ -339,8 +339,8 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 
 	local playerHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DHealthGUI"):Clone()
 	local playerHPBar = playerHPGUI:WaitForChild("HPBarBot"):WaitForChild("HPBarTop")
-	local playerHPLabel = playerHPBar:WaitForChild("HealthValueLabel")
-	local playerHPVal = playerHPBar:WaitForChild("Health")
+	local playerHPLabel = playerHPGUI:WaitForChild("HPBarBot"):WaitForChild("HealthValueLabel")
+	local playerHPVal = playerHPGUI:WaitForChild("Health")
 
 	local bossHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DBossHealthGUI"):Clone()
 	local bossModel = workspace:WaitForChild("PumpkinMap"):WaitForChild("PumpkinBoss")
@@ -376,18 +376,42 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	local spinCanceled = false
 	local reloading = false
 	local reloadThread -- reference to the current reload coroutine
+
+	local function Finished(bossDead)
+		UIHelperFunctions.AdjustBlackScreen(1, 0)
+		InitializeGUIModule.DisconnectAll("R2DPumpkinBoss")
+		SoundModule.StopTheme()
+		playerHPGUI:Destroy()
+		bossHPGUI:Destroy()
+		minigunGUI:Destroy()
+		minigunTool:Destroy()
+
+		if bossDead then
+			print("boss ded")
+		else
+			print("you ded")
+		end
+	end
 	-- boss hp events handler
 	trackConnect("R2DPumpkinBoss", bossHP:GetPropertyChangedSignal("Value"), function()
 		bossHPVal.Text = `{tostring(bossHP.Value)} HP`
 		local ratio = math.clamp(bossHP.Value / maxBossHP, 0, 1)
 		bossHPBar.Size = UDim2.fromScale(ratio, 1)
+
+		if bossHP.Value <= 0 then
+			Finished(true)
+		end
 	end)
 
 	-- player hp events handler
 	trackConnect("R2DPumpkinBoss", playerHPVal:GetPropertyChangedSignal("Value"), function()
-		playerHPLabel.Text = tostring(playerHPVal.Value)
+		playerHPLabel.Text = `{tostring(playerHPVal.Value)} hp`
 		local ratio = math.clamp(playerHPVal.Value / 100, 0, 1)
-		bossHPBar.Size = UDim2.fromScale(ratio, 1)
+		playerHPBar.Size = UDim2.fromScale(ratio, 1)
+
+		if playerHPVal.Value <= 0 then
+			Finished(false)
+		end
 	end)
 
 	-- minigun ammo handler
@@ -492,6 +516,39 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		-- start rev-up
 		revSound:Play()
 
+		local rayParams = RaycastParams.new()
+		rayParams.FilterDescendantsInstances = { Character }
+		rayParams.FilterType = Enum.RaycastFilterType.Exclude
+		rayParams.IgnoreWater = true
+
+		local function createBulletTrace(startPos, endPos)
+			local randomOffset = Vector3.new(math.random(-1, 1), math.random(-1, 1), 0)
+			endPos = endPos + randomOffset
+			local distance = 500
+			local direction = (endPos - startPos).Unit
+
+			-- shoot collision
+			local result = workspace:Raycast(startPos, direction * distance, rayParams)
+			if result and CollectionService:HasTag(result.Instance, "PumpkinBoss") then
+				print("hit boss")
+				GeneralRemotes.CupcakeLover.EnemyHit:FireServer("Boss")
+			elseif result and CollectionService:HasTag(result.Instance, "SoulFetcher") then
+				print("hit soul")
+				GeneralRemotes.CupcakeLover.EnemyHit:FireServer("SoulFetcher", result.Instance:GetAttribute("Id"))
+			end
+
+			local beam = Instance.new("Part")
+			beam.Size = Vector3.new(0.2, 0.2, distance)
+			beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
+			beam.Anchored = true
+			beam.CanCollide = false
+			beam.Material = Enum.Material.SmoothPlastic
+			beam.Color = Color3.fromRGB(255, 200, 50)
+			beam.Parent = workspace
+
+			game:GetService("Debris"):AddItem(beam, 0.1)
+		end
+
 		-- start spin-up timer
 		task.delay(1.5, function()
 			if spinCanceled then
@@ -513,35 +570,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 				end
 
 				minigunAmmo.Value = minigunAmmo.Value - 1
-				local function createBulletTrace(startPos, endPos)
-					local randomOffset = Vector3.new(math.random(-5, 5), math.random(-5, 5), math.random(-5, 5))
-					endPos = endPos + randomOffset
-					local distance = (endPos - startPos).Magnitude
-					local beam = Instance.new("Part")
-					beam.Size = Vector3.new(0.2, 0.2, distance)
-					beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
-					beam.Anchored = true
-					beam.CanCollide = false
-					beam.Material = Enum.Material.SmoothPlastic
-					beam.Color = Color3.fromRGB(255, 200, 50)
-					beam.Parent = workspace
 
-					local rayParams = RaycastParams.new()
-					rayParams.FilterDescendantsInstances = { beam, Character }
-					rayParams.FilterType = Enum.RaycastFilterType.Exclude
-					rayParams.IgnoreWater = true
-
-					local direction = (endPos - startPos).Unit
-					local maxDistance = distance
-
-					local result = workspace:Raycast(startPos, direction * maxDistance, rayParams)
-					if result and result.Instance:IsDescendantOf(workspace:FindFirstChild("PumpkinBoss")) then
-						if bossHP.Value > 0 then
-							bossHP.Value = bossHP.Value - 55
-						end
-					end
-					game:GetService("Debris"):AddItem(beam, 0.1)
-				end
 				createBulletTrace(shootPos.Position, Mouse.Hit.Position)
 
 				task.wait(0.04)

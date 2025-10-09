@@ -25,8 +25,6 @@ MissionsClientHandler["ZombieJob"] = function()
 end
 
 MissionsClientHandler["R2DPumpkinBoss"] = function()
-	task.wait(1)
-	SoundModule.PlayTheme("PumpkinBossTheme")
 	InitializeGUIModule["R2DPumpkinBoss"]()
 end
 return MissionsClientHandler
