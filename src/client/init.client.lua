@@ -4,6 +4,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local GeneralRemotes = ReplicatedStorage.Remotes
 local player = game.Players.LocalPlayer
 local Character = player.Character or player.CharacterAdded:Wait()
+local PlayerGui = player:WaitForChild("PlayerGui")
 local Humanoid = Character:WaitForChild("Humanoid")
 local Animator = Humanoid:WaitForChild("Animator")
 local MovementHandler = require(script:WaitForChild("MovementHandler"))
@@ -15,6 +16,7 @@ local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
+local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local CameraFollowConnection = nil
 local ClientHelperFunctions = require(script.ClientHelperFunctions)
 -- disable respawn button
@@ -245,6 +247,7 @@ end)
 GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
 	-- disable bp
 	local StarterGui = game:GetService("StarterGui")
+
 	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 	GeneralRemotes.EnableRoadEvents:FireServer(false)
 	CutsceneModule.Play(name)
@@ -286,9 +289,21 @@ GeneralRemotes.Cashier.GetClientBasketItems.OnClientInvoke = function()
 	return ShopBasketModule.GetItemsInBasket()
 end
 
+-- Pumpkin Boss
+GeneralRemotes.CupcakeLover.DamagePlayer.OnClientEvent:Connect(function(dmg)
+	local health = PlayerGui:FindFirstChild("R2DHealthGUI")
+	if not health then
+		return
+	end
+	health = health:WaitForChild("Health")
+	if health then
+		health.Value = health.Value - dmg
+	end
+end)
+
 -- Currency
 ReplicatedStorage.Remotes.UpdateMoneyGUI.OnClientEvent:Connect(function(currentCash)
-	local cashGUI = player:WaitForChild("PlayerGui"):WaitForChild("MoneyScreen")
+	local cashGUI = PlayerGui:WaitForChild("MoneyScreen")
 	if not cashGUI then
 		warn("CashGui not found!")
 		return
@@ -299,5 +314,6 @@ end)
 
 -- play main theme
 SoundModule.PlayTheme("Main")
+SetMonitorPicture.Set()
 
 --GeneralRemotes.AddMoney:FireServer(10000)

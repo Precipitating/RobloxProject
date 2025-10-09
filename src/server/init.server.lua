@@ -4,6 +4,7 @@ local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CurrencyHandler = require(script.CurrencyHandler)
 local CashierModule = require(script.NPCs.Cashier.CashierModule)
 local GroceryBagModule = require(script.NPCs.Cashier.GroceryBagModule)
+local PumpkinBossFight = require(script.NPCs.CupcakeLover.PumpkinBossFight)
 local BosnianRoulette = require(script.NPCs.Glitcher.BosnianRoulette)
 local TShirtChecker = require(script.NPCs.Glitcher.TShirtChecker)
 local NPCModule = require(script.NPCs.NPCModule)
@@ -192,6 +193,10 @@ end)
 
 GeneralRemotes.EnableRoadEvents.OnServerEvent:Connect(function(_, enable)
 	RoadEvents.EnableRoadEvents(enable)
+end)
+
+GeneralRemotes.CupcakeLover.EnemyHit.OnServerEvent:Connect(function(_, type, id)
+	PumpkinBossFight.ReduceHP(type, id)
 end)
 
 -- set player's achievements

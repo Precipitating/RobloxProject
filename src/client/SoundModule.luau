@@ -421,6 +421,10 @@ local OneShots = {
 		SoundId = "rbxassetid://110461437455800",
 		Volume = 1,
 	},
+	PumpkinBossLaugh = {
+		SoundId = "rbxassetid://4810729995",
+		Volume = 0.5,
+	},
 }
 local SoundHandler = {}
 
