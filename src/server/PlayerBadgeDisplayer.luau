@@ -1,4 +1,4 @@
-local CollectionService = game:GetService("CollectionService")
+local ServerStorage = game:GetService("ServerStorage")
 local BadgeHandler = require(script.Parent.BadgeHandler)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local PlayerBadgeDisplayer = {}
@@ -25,6 +25,7 @@ local Badges = {
 	4449692306836938,
 	636617031698169,
 }
+local positions = ServerHelperFunctions.GetTaggedOfDirectory(ServerStorage, "AchievementPos")
 
 function PlayerBadgeDisplayer.GetObtainedBadges(player)
 	for _, id in ipairs(Badges) do
@@ -38,36 +39,37 @@ function PlayerBadgeDisplayer.GetObtainedBadges(player)
 end
 
 function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
-	local positions = CollectionService:GetTagged("AchievementPos")
-
 	if #positions <= 0 then
 		error("Missing position part for achievement displaying")
 		return
 	end
 
+	if #positions < #ObtainedBadgesList then
+		warn("Not enough achievement positions to spawn all achievements!")
+		return
+	end
+
 	-- for each badge the player owns, spawn a display case and set its badge info
 	for idx, info in ipairs(ObtainedBadgesList) do
-		if #positions >= idx then
-			local display = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Home", "Display", nil)
-			display.Parent = workspace:FindFirstChild("Home")
-			local decal = display.Frame.LargePictureFrame.Picture.Decal
-			local textInfo = display.Info.SurfaceGui.TextLabel
+		print(positions[idx].Name)
+		local display = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Home", "Display", nil)
 
-			if not display or not decal or not textInfo then
-				error(`Missing badge display references: display = {display}, decal = {decal}, info = {textInfo}`)
+		local decal = display.Frame.LargePictureFrame.Picture.Decal
+		local textInfo = display.Info.SurfaceGui.TextLabel
+
+		if not display or not decal or not textInfo then
+			error(`Missing badge display references: display = {display}, decal = {decal}, info = {textInfo}`)
+		end
+		display:PivotTo(positions[idx].CFrame)
+		display.Parent = workspace:FindFirstChild("Home"):FindFirstChild("AchievementsRoom")
+
+		if info.IconImageId then
+			decal.Texture = `rbxassetid://{info.IconImageId}`
+
+			if info.Name and info.Description then
+				textInfo.Text = `<sc><font color="#FF0000">{info.Name}</font></sc><br/>{info.Description}`
+				print(`{textInfo.Name} set successfully to display room! {idx}`)
 			end
-			display:PivotTo(positions[idx].CFrame)
-
-			if info.IconImageId then
-				decal.Texture = `rbxassetid://{info.IconImageId}`
-
-				if info.Name and info.Description then
-					textInfo.Text = `<sc><font color="#FF0000">{info.Name}</font></sc><br/>{info.Description}`
-					print(`{textInfo.Name} set successfully to display room!`)
-				end
-			end
-		else
-			warn("No space for badge display to spawn (missing/ran out position part")
 		end
 	end
 end

@@ -199,7 +199,10 @@ GeneralRemotes.CupcakeLover.EnemyHit.OnServerEvent:Connect(function(_, type, id)
 	PumpkinBossFight.ReduceHP(type, id)
 end)
 
--- set player's achievements
+GeneralRemotes.CupcakeLover.Finished.OnServerEvent:Connect(function(player, bossDead)
+	PumpkinBossFight.Finished(player, bossDead)
+end)
+
 -- spawn player in their room when spawned
 Players.PlayerAdded:Connect(function(player)
 	PlayerInitialize.SetupAchievements(player)

@@ -308,4 +308,11 @@ MissionEventHandlers["R2DPumpkinBoss"] = function(player)
 	PumpkinBossFight.Initialize(player)
 end
 
+MissionEventHandlers["PumpkinBossDefeated"] = function(player)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "CupcakeLover", "Crowd", nil)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	task.wait(1)
+	GeneralRemotes.PlayCutscene:FireClient(player, "CupcakeLoverBossDefeated")
+end
+
 return MissionEventHandlers
