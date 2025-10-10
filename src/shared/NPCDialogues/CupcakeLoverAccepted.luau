@@ -232,8 +232,8 @@ return {
 
 		Given10 = {
 			Name = "Damon",
-			Portrait = "rbxassetid://8991722426",
-			Dialogue = "Not on my watch... :Spawn R2DABoss",
+			Portrait = "rbxassetid://116567767903562",
+			Dialogue = "Not on my watch... :Spawn R2DLordPumpkinBoss",
 			Responses = {
 				{
 					Text = "Wha?",

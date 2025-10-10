@@ -1,6 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local CollectionService = game:GetService("CollectionService")
-local Debris = game:GetService("Debris")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
@@ -12,15 +11,16 @@ local BossHP = nil
 local FireballPos = nil
 local BuildingFolder = nil
 local Lava = nil
-local LavaConnection = nil
 local PlayerAttached = false
 local InitiatingAttack = false
 local FireballSpeed = 20
 local SoulFetcherSpeed = 6
+local SoulFetcherCount = 6
 local FireballDamage = 20
 local MinigunDamage = 55
 local SoulFetchers = {}
 local CanDamage = true
+local PrevPos = nil
 
 local BossAttacks = nil
 
@@ -31,6 +31,7 @@ function PumpkinBossFight.Initialize(player)
 	Lava = MapRef:FindFirstChild("Lava")
 	BossRef = MapRef:FindFirstChild("PumpkinBoss")
 	BuildingFolder = MapRef:FindFirstChild("Building")
+	PrevPos = player.Character:GetPivot()
 	player.Character:PivotTo(MapRef:FindFirstChild("SpawnLoc").CFrame)
 	PumpkinBossFight.LavaFunctionality(player)
 	-- give minigun
@@ -41,7 +42,7 @@ function PumpkinBossFight.Initialize(player)
 end
 
 function PumpkinBossFight.LavaFunctionality(player)
-	LavaConnection = Lava.Touched:Connect(function(hit)
+	Lava.Touched:Connect(function(hit)
 		local name = hit.Name
 		if name == "Left Leg" or name == "Right Leg" then
 			PumpkinBossFight.BurnPart(hit)
@@ -97,6 +98,14 @@ function PumpkinBossFight.BurnPart(part)
 		part:Destroy()
 	end)
 end
+function PumpkinBossFight.Finished(player, bossDead)
+	if bossDead then
+		ServerHelperFunctions.SetNPCDialogueFile({ CupcakeLoverNameTag = "CupcakeLoverBossDefeat" })
+		player.Character:PivotTo(PrevPos)
+		MapRef:Destroy()
+		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+	end
+end
 
 function PumpkinBossFight.LavaWave(_)
 	if workspace:FindFirstChild("Wave") then
@@ -135,27 +144,87 @@ function PumpkinBossFight.LavaWave(_)
 
 	InitiatingAttack = false
 end
+
+local function SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
+	-- move
+	task.spawn(function()
+		local directionTimer = 6
+		local changeInterval = 6
+		local randomDirection = Vector3.new(0, 0, 0)
+		local dropDelayActivated = false
+
+		while soulFetcher do
+			if grabbing and grabbing.Value and not dropDelayActivated then
+				dropDelayActivated = true
+				print("drop timer activated")
+				task.delay(math.random(3, 10), function()
+					local attachment = soulFetcher:FindFirstChild("AlignPosition")
+					if attachment then
+						attachment.Attachment0 = nil
+					end
+					if grabbing then
+						grabbing.Value = false
+						task.delay(1, function()
+							PlayerAttached = false
+						end)
+					end
+					dropDelayActivated = false
+				end)
+			else
+				-- countdown until we change direction again
+				directionTimer -= task.wait()
+				if directionTimer <= 0 then
+					-- either a random direction or towards player
+					if math.random() < 0.6 then
+						randomDirection =
+							Vector3.new(math.random() * 2 - 1, math.random() * 2 - 1, math.random() * 2 - 1).Unit
+						soulFetcher.CFrame = CFrame.lookAt(soulFetcher.Position, soulFetcher.Position + randomDirection)
+					else
+						soulFetcher.CFrame = CFrame.lookAt(soulFetcher.Position, player.Character:GetPivot().Position)
+					end
+
+					-- reset timer
+					directionTimer = changeInterval
+				end
+			end
+
+			if flipDir.Value then
+				soulFetcher.CFrame *= CFrame.Angles(0, math.rad(180), 0)
+				flipDir.Value = false
+			end
+
+			soulFetcher.AssemblyLinearVelocity = soulFetcher.CFrame.LookVector * SoulFetcherSpeed
+		end
+	end)
+end
 function PumpkinBossFight.SoulFetcher(player)
 	InitiatingAttack = true
 	BossRef.Transparency = 0.5
-	for _ = 1, 6 do
+
+	-- spawn 6 soul fetchers
+	for _ = 1, SoulFetcherCount do
 		local soulFetcher =
 			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "CupcakeLover", "SoulFetcher", nil)
 		local uniqueId = HttpService:GenerateGUID()
 		soulFetcher:SetAttribute("Id", uniqueId)
 		SoulFetchers[uniqueId] = soulFetcher
+
+		-- spawn offset so not all in one place
 		local offset = Vector3.new(math.random(-7, 7), math.random(-7, 7), math.random(-7, 7))
 		local newPos = BossRef:GetPivot().Position + offset
 		local newCFrame = CFrame.new(newPos)
+
 		local grabbing = soulFetcher:FindFirstChild("Grabbing")
 		local flipDir = soulFetcher:FindFirstChild("FlipDir")
 		soulFetcher:PivotTo(newCFrame)
+		-- set initial fetcher direction to look up
+		soulFetcher.CFrame = CFrame.new(soulFetcher.Position, soulFetcher.Position + Vector3.new(0, 1, 0))
 		soulFetcher.Parent = MapRef
 
 		soulFetcher.Touched:Connect(function(hit)
-			local player = game.Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
+			local hitPlayer = game.Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
 
-			if player and not PlayerAttached and not grabbing.Value then
+			if hitPlayer and not PlayerAttached and not grabbing.Value then
 				-- attach player to soul fetcher
 				local root = player.Character:FindFirstChild("HumanoidRootPart")
 				local attachment = soulFetcher:FindFirstChild("AlignPosition")
@@ -167,7 +236,7 @@ function PumpkinBossFight.SoulFetcher(player)
 					grabbing.Value = true
 				end
 			end
-
+			-- determines if touched wall, and flips opposite dir if so
 			if CollectionService:HasTag(hit, "Boundary") then
 				if flipDir then
 					flipDir.Value = true
@@ -175,55 +244,7 @@ function PumpkinBossFight.SoulFetcher(player)
 			end
 		end)
 
-		-- move
-		task.spawn(function()
-			local directionTimer = 0
-			local changeInterval = 6
-			local randomDirection = Vector3.new(0, 0, 0)
-			local dropDelayActivated = false
-
-			while soulFetcher do
-				if grabbing and grabbing.Value and not dropDelayActivated then
-					dropDelayActivated = true
-					print("drop timer activated")
-					task.delay(math.random(3, 10), function()
-						local attachment = soulFetcher:FindFirstChild("AlignPosition")
-						if attachment then
-							attachment.Attachment0 = nil
-						end
-						if grabbing then
-							grabbing.Value = false
-							PlayerAttached = false
-						end
-						dropDelayActivated = false
-					end)
-				else
-					-- countdown until we change direction again
-					directionTimer -= task.wait()
-					if directionTimer <= 0 then
-						if math.random() < 0.6 then
-							randomDirection =
-								Vector3.new(math.random() * 2 - 1, math.random() * 2 - 1, math.random() * 2 - 1).Unit
-							soulFetcher.CFrame =
-								CFrame.lookAt(soulFetcher.Position, soulFetcher.Position + randomDirection)
-						else
-							soulFetcher.CFrame =
-								CFrame.lookAt(soulFetcher.Position, player.Character:GetPivot().Position)
-						end
-
-						-- reset timer
-						directionTimer = changeInterval
-					end
-				end
-
-				if flipDir.Value then
-					soulFetcher.CFrame *= CFrame.Angles(0, math.rad(180), 0)
-					flipDir.Value = false
-				end
-
-				soulFetcher.AssemblyLinearVelocity = soulFetcher.CFrame.LookVector * SoulFetcherSpeed
-			end
-		end)
+		SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 	end
 	BossRef.Transparency = 0
 	InitiatingAttack = false
@@ -238,6 +259,13 @@ local function FireballExplosionHandler(fireball)
 	explosion.Parent = workspace
 
 	explosion.Hit:Connect(function(explodeHit)
+		if CollectionService:HasTag(explodeHit, "SoulFetcher") then
+			explodeHit.Anchored = true
+			task.delay(0.5, function()
+				explodeHit.Anchored = false
+			end)
+			return
+		end
 		local player = game.Players:GetPlayerFromCharacter(explodeHit:FindFirstAncestorOfClass("Model"))
 		if player and CanDamage then
 			CanDamage = false
@@ -271,10 +299,13 @@ function PumpkinBossFight.Fireball(player)
 		end
 
 		local conn = nil
-		conn = fireball.Touched:Connect(function(_)
+		conn = fireball.Touched:Connect(function(fireballTouch)
+			if CollectionService:HasTag(fireballTouch, "SoulFetcher") then
+				return
+			end
 			conn:Disconnect()
-			FireballExplosionHandler(fireball)
 			fireball:Destroy()
+			FireballExplosionHandler(fireball)
 		end)
 
 		-- fireball move

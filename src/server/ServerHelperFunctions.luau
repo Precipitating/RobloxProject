@@ -196,4 +196,20 @@ function ServerHelperFunctions.SetMeshVisibility(meshTagList)
 	end
 end
 
+-- get only tagged none duplicates from dir
+function ServerHelperFunctions.GetTaggedOfDirectory(dir: Instance, tag: string)
+	local tagged = CollectionService:GetTagged(tag)
+	local valid = {}
+	local seen = {}
+
+	for _, inst in ipairs(tagged) do
+		if inst and inst:IsDescendantOf(dir) and not seen[inst] then
+			seen[inst] = true
+			table.insert(valid, inst)
+		end
+	end
+
+	return valid
+end
+
 return ServerHelperFunctions

@@ -579,6 +579,22 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		end
 	end,
+	CupcakeLoverBossDefeated = function(instruction, _, _)
+		if instruction == 1 then
+			RunCutsceneAction(function()
+				SoundModule.PlaySound("CupcakeLoverGossip")
+			end)
+			UIHelperFunctions.AdjustBlackScreen(1, 1)
+		elseif instruction == 2 then
+			RunCutsceneAction(function()
+				task.wait(36)
+				local ttsHandle = TextToSpeech.GetHandle()
+				Speak(ttsHandle, "Player", "Nam-ahh-stay, Damon, Nam-ahh-stay")
+				SoundModule.PlaySound("EvilLaugh")
+			end)
+			UIHelperFunctions.AdjustBlackScreen(6, 0)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -681,6 +697,10 @@ CutsceneClientHandler.Initialize = {
 
 	BosnianComplete = function()
 		Music.SoundId = "rbxassetid://9120526794"
+		Music.Volume = 0.1
+	end,
+	CupcakeLoverBossDefeated = function()
+		Music.SoundId = "rbxassetid://6362185620"
 		Music.Volume = 0.1
 	end,
 }

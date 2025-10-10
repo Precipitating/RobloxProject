@@ -384,10 +384,14 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		playerHPGUI:Destroy()
 		bossHPGUI:Destroy()
 		minigunGUI:Destroy()
+		Character.Humanoid:UnequipTools()
 		minigunTool:Destroy()
+
+		GeneralRemotes.CupcakeLover.Finished:FireServer(bossDead)
 
 		if bossDead then
 			print("boss ded")
+			SoundModule.PlaySound("Main")
 		else
 			print("you ded")
 		end
