@@ -429,6 +429,14 @@ local OneShots = {
 		SoundId = "rbxassetid://117576879768339",
 		Volume = 0.5,
 	},
+	Oi = {
+		SoundId = "rbxassetid://109660701821480",
+		Volume = 10,
+	},
+	RecordScratch = {
+		SoundId = "rbxassetid://78519387192089",
+		Volume = 10,
+	},
 }
 local SoundHandler = {}
 

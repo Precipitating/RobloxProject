@@ -313,6 +313,7 @@ MissionEventHandlers["PumpkinBossDefeated"] = function(player)
 	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 	task.wait(1)
 	GeneralRemotes.PlayCutscene:FireClient(player, "CupcakeLoverBossDefeated")
+	BadgeHandler.awardBadge(player, 4095855021468711)
 end
 
 return MissionEventHandlers

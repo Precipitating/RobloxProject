@@ -3,6 +3,7 @@ local CollectionService = game:GetService("CollectionService")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local BossRef = nil
@@ -19,7 +20,7 @@ local SoulFetcherCount = 6
 local FireballDamage = 20
 local MinigunDamage = 55
 local SoulFetchers = {}
-local CanDamage = true
+local PlayerDead = false
 local PrevPos = nil
 
 local BossAttacks = nil
@@ -42,7 +43,8 @@ function PumpkinBossFight.Initialize(player)
 end
 
 function PumpkinBossFight.LavaFunctionality(player)
-	Lava.Touched:Connect(function(hit)
+	local lavaConn
+	lavaConn = Lava.Touched:Connect(function(hit)
 		local name = hit.Name
 		if name == "Left Leg" or name == "Right Leg" then
 			PumpkinBossFight.BurnPart(hit)
@@ -51,6 +53,7 @@ function PumpkinBossFight.LavaFunctionality(player)
 
 		if name == "Torso" or name == "Head" then
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
+			lavaConn:Disconnect()
 		end
 	end)
 end
@@ -77,7 +80,7 @@ end
 
 function PumpkinBossFight.BossLoop(player)
 	task.spawn(function()
-		while BossHP.Value > 0 do
+		while BossHP.Value > 0 and not PlayerDead do
 			if not InitiatingAttack then
 				BossAttacks[math.random(1, #BossAttacks)](player)
 			end
@@ -104,6 +107,15 @@ function PumpkinBossFight.Finished(player, bossDead)
 		player.Character:PivotTo(PrevPos)
 		MapRef:Destroy()
 		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+	else
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "CupcakeLover", "BossFailedPlayer", nil)
+		player.Character:PivotTo(workspace:FindFirstChild("BlackRoom"):FindFirstChild("SpawnLoc").CFrame)
+		MapRef:Destroy()
+		PlayerDead = true
+		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+		task.wait(1)
+		GeneralRemotes.PlayCutscene:FireClient(player, "CupcakeLoverBossFailed")
+		BadgeHandler.awardBadge(player, 1699948559468830)
 	end
 end
 
@@ -130,7 +142,7 @@ function PumpkinBossFight.LavaWave(_)
 	conn = wave.Touched:Connect(function(hit)
 		print("wave hit")
 		local player = game.Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
-		if player and CanDamage then
+		if player then
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
 			conn:Disconnect()
 		elseif hit:IsA("BasePart") and hit:IsDescendantOf(BuildingFolder) then
@@ -199,7 +211,8 @@ local function SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 end
 function PumpkinBossFight.SoulFetcher(player)
 	InitiatingAttack = true
-	BossRef.Transparency = 0.5
+	TweenService:Create(BossRef, TweenInfo.new(1), { Transparency = 0.8 }):Play()
+	task.wait(1)
 
 	-- spawn 6 soul fetchers
 	for _ = 1, SoulFetcherCount do
@@ -246,7 +259,7 @@ function PumpkinBossFight.SoulFetcher(player)
 
 		SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 	end
-	BossRef.Transparency = 0
+	TweenService:Create(BossRef, TweenInfo.new(1), { Transparency = 0 }):Play()
 	InitiatingAttack = false
 end
 
@@ -257,8 +270,8 @@ local function FireballExplosionHandler(fireball)
 	explosion.BlastPressure = 250000
 	explosion.DestroyJointRadiusPercent = 0
 	explosion.Parent = workspace
-
-	explosion.Hit:Connect(function(explodeHit)
+	local explodeSignal
+	explodeSignal = explosion.Hit:Connect(function(explodeHit)
 		if CollectionService:HasTag(explodeHit, "SoulFetcher") then
 			explodeHit.Anchored = true
 			task.delay(0.5, function()
@@ -267,12 +280,10 @@ local function FireballExplosionHandler(fireball)
 			return
 		end
 		local player = game.Players:GetPlayerFromCharacter(explodeHit:FindFirstAncestorOfClass("Model"))
-		if player and CanDamage then
-			CanDamage = false
+		if player then
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, FireballDamage)
-			task.delay(0.5, function()
-				CanDamage = true
-			end)
+			print("EXPLOSION HIT PLAYER")
+			explodeSignal:Disconnect()
 		elseif explodeHit:IsA("BasePart") and explodeHit:IsDescendantOf(BuildingFolder) then
 			if explodeHit.Anchored then
 				explodeHit.Anchored = false
@@ -306,6 +317,7 @@ function PumpkinBossFight.Fireball(player)
 			conn:Disconnect()
 			fireball:Destroy()
 			FireballExplosionHandler(fireball)
+			fireball = nil
 		end)
 
 		-- fireball move

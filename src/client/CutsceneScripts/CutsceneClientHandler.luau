@@ -42,6 +42,7 @@ Music.Looped = true
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SpawnModelFromServer = GeneralRemotes.SpawnServerStorageModel
 local SoundModule = require(script.Parent.Parent.SoundModule)
+local TTSHandle = TextToSpeech.GetHandle()
 
 local bin = true -- prevents multiple plays at once
 local currentRenderStepped
@@ -52,10 +53,41 @@ local voices = {
 	Homeless = { VoiceId = "3", Pitch = 1, Speed = 1, Volume = 1 },
 	Cashier = { VoiceId = "5", Pitch = -3, Speed = 1, Volume = 1 },
 	Driver = { VoiceId = "7", Pitch = 6, Speed = 1, Volume = 1 },
-	Player = { VoiceId = "5", Pitch = 1, Speed = 1, Volume = 1 },
+	Player = { VoiceId = "5", Pitch = 1, Speed = 1, Volume = 3 },
 	Sheep = { VoiceId = "1", Pitch = 1, Speed = 1, Volume = 1 },
 	Mom = { VoiceId = "4", Pitch = 1, Speed = 1, Volume = 3 },
+	Damon = { VoiceId = "1", Pitch = 2, Speed = 1, Volume = 3 },
+	CitizenGirl = { VoiceId = "6", Pitch = 1, Speed = 1, Volume = 3 },
 }
+
+local function TweenLookAtCamera(duration, part)
+	local tween = TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local goal = {
+		CFrame = CFrame.lookAt(part.Position, Camera.CFrame.Position),
+	}
+	local tweenPlayer = TweenService:Create(part, tween, goal):Play()
+
+	return tweenPlayer
+end
+
+local function TweenToCamera(duration, part)
+	local tween = TweenInfo.new(duration, Enum.EasingStyle.Linear)
+	local goal = {
+		Position = Camera.CFrame.Position,
+	}
+	local tweenPlayer = TweenService:Create(part, tween, goal):Play()
+
+	return tweenPlayer
+end
+local function ScaleTween(duration, part, size)
+	local tween = TweenInfo.new(duration, Enum.EasingStyle.Linear)
+	local goal = {
+		Size = Vector3.new(size, size, size),
+	}
+	local tweenPlayer = TweenService:Create(part, tween, goal):Play()
+
+	return tweenPlayer
+end
 
 -- Play cutscene safely
 local function PlayCutscene()
@@ -103,10 +135,10 @@ end
 
 local CutsceneClientHandler = {}
 
-local function Speak(ttsHandle, who, text)
+local function Speak(who, text)
 	TextToSpeech.UpdateVoiceConfig(voices[who])
 	if TextToSpeech.Speak(text) then
-		ttsHandle.Ended:Wait()
+		TTSHandle.Ended:Wait()
 	else
 		warn("TTS FAILED")
 	end
@@ -247,45 +279,37 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		elseif instruction == 6 then
 			RunCutsceneAction(function()
-				local ttsHandle = TextToSpeech.GetHandle()
 				-- move to mastermind
 				local pos3 = warehouse:WaitForChild("MovePos3").Position
 				GeneralRemotes.HumanoidMoveTo:InvokeServer(homeless, pos3, true)
 				print("6")
 				task.wait(1)
-				Speak(ttsHandle, "Homeless", "Did you get it?")
+				Speak("Homeless", "Did you get it?")
 				Speak(
-					ttsHandle,
 					"Cashier",
 					"Yeah, got the deets and doubled bro's price as well.What a donkey that robloxian was!"
 				)
 				Speak(
-					ttsHandle,
 					"Homeless",
 					"This homeless man gimmick to get people to buy items is working spendidly, we're getting RICH baby!"
 				)
 				Speak(
-					ttsHandle,
 					"Cashier",
 					"Yeah. Even the fake slow machine tactic is making them willingly disregard obvious issues, meaning bling bling bling. GAH HAH HAH HAH HAAAAAH"
 				)
 				Speak(
-					ttsHandle,
 					"Homeless",
 					"Did you see what I told that donkey to buy? 10 Rebel Colas you know? Got greedy and threw in some random stuff. JEE-HEE-HEE-HEE-HAAAH"
 				)
 				Speak(
-					ttsHandle,
 					"Cashier",
 					"Why do you always request for massive quantities, Dan?, we just needed him to scan his card onto the skimmer. These boxes are full of Rebel Colas bro."
 				)
 				Speak(
-					ttsHandle,
 					"Homeless",
 					"Nothing wrong with some free snacks after we dunk the victim of their cold, hard earned, Great British Pounds. Im I right Shayden?"
 				)
 				Speak(
-					ttsHandle,
 					"Cashier",
 					"You're right bro, lets just say it was a two for one meal deal.GAH HAH HAH HAH HAAAAAH"
 				)
@@ -320,31 +344,28 @@ CutsceneClientHandler.KeyframeHandler = {
 				task.wait(3)
 				print("4")
 				-- dialogue
-				local ttsHandle = TextToSpeech.GetHandle()
-				Speak(ttsHandle, "Player", "One single to Bosnia please. A laptop must be delivered.")
-				Speak(ttsHandle, "Driver", "Six trillion marks please. Fee is adjusted due to it being a war zone.")
-				Speak(ttsHandle, "Player", "ARE YOU KIDDING ME? YOU CAN FEED A COUNTRY WITH THAT MONEY!")
-				Speak(ttsHandle, "Driver", "You can get your own car and drive there yourself then. Oh wait.")
-				Speak(ttsHandle, "Player", "It's free after nine o clock isn't it?")
-				Speak(ttsHandle, "Driver", "Yeah, for the elderly. Clearly you're not.")
+				Speak("Player", "One single to Bosnia please. A laptop must be delivered.")
+				Speak("Driver", "Six trillion marks please. Fee is adjusted due to it being a war zone.")
+				Speak("Player", "ARE YOU KIDDING ME? YOU CAN FEED A COUNTRY WITH THAT MONEY!")
+				Speak("Driver", "You can get your own car and drive there yourself then. Oh wait.")
+				Speak("Player", "It's free after nine o clock isn't it?")
+				Speak("Driver", "Yeah, for the elderly. Clearly you're not.")
 				Speak(
-					ttsHandle,
 					"Player",
 					"Oh my back hurts so much whippersnapper, back in those days, we used to use a tool for vehicles and pressed Y to start it."
 				)
-				Speak(ttsHandle, "Driver", "Fine, we're running late on schedule, hurry up, i'll let it go just once.")
-				Speak(ttsHandle, "Player", "Thank you young man.")
+				Speak("Driver", "Fine, we're running late on schedule, hurry up, i'll let it go just once.")
+				Speak("Player", "Thank you young man.")
 			end)
 		elseif instruction == 7 then
 			local bus = workspace:WaitForChild("Bus")
 			task.wait(2)
 			-- after cutscene finish camera should stick to the bus whilst moving
-			local cam = workspace.CurrentCamera
 			repeat
 				task.wait()
-				cam.CameraType = Enum.CameraType.Follow
-			until cam.CameraType == Enum.CameraType.Follow
-			cam.CameraSubject = bus:WaitForChild("CameraPos")
+				Camera.CameraType = Enum.CameraType.Follow
+			until Camera.CameraType == Enum.CameraType.Follow
+			Camera.CameraSubject = bus:WaitForChild("CameraPos")
 			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
 			-- move bus
 			local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Linear)
@@ -365,12 +386,11 @@ CutsceneClientHandler.KeyframeHandler = {
 				nil
 			)
 
-			local cam = workspace.CurrentCamera
 			repeat
 				wait()
-				cam.CameraType = Enum.CameraType.Follow
-			until cam.CameraType == Enum.CameraType.Follow
-			cam.CameraSubject = car:WaitForChild("CameraPos")
+				Camera.CameraType = Enum.CameraType.Follow
+			until Camera.CameraType == Enum.CameraType.Follow
+			Camera.CameraSubject = car:WaitForChild("CameraPos")
 			Players.LocalPlayer.CameraMode = Enum.CameraMode.LockFirstPerson
 			UIHelperFunctions.AdjustBlackScreen(1, 1)
 
@@ -387,13 +407,11 @@ CutsceneClientHandler.KeyframeHandler = {
 			local car = workspace:WaitForChild("CutsceneCar")
 			local sheep = car:WaitForChild("Car"):WaitForChild("Sheep")
 			sheep.Transparency = 0
-			local ttsHandle = TextToSpeech.GetHandle()
 			Speak(
-				ttsHandle,
 				"Player",
 				"Always wanted to go here after I got my license. Next stop: Clan-vire-pool-gwin-gill-go-ger-uh-kwern-dro-bool-clan-tuh-sill-yo-go-go-goch"
 			)
-			Speak(ttsHandle, "Sheep", "I believe this town is called:")
+			Speak("Sheep", "I believe this town is called:")
 			Demo:Resume()
 		elseif instruction == 3 then
 			task.wait(1)
@@ -406,8 +424,6 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 	BosnianComplete = function(instruction, _, _)
-		local ttsHandle = TextToSpeech.GetHandle()
-
 		local room, dad, laptop
 		if instruction >= 4 then
 			room = workspace:WaitForChild("BosnianRoom"):WaitForChild("BosnianRoom")
@@ -420,7 +436,6 @@ CutsceneClientHandler.KeyframeHandler = {
 				warn("1")
 				GeneralRemotes.SpawnServerStorageModel:InvokeServer("MissionModels", "Bosnian", "BosnianRoom", nil)
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					"Oh my god. Finally I installed Linux Ubuntu Arch Sarajevo Edition Three Point Five Two. I am excited finally utilize this monster of a contraption to play the game I dreamed of, Minesweeper."
 				)
@@ -430,7 +445,6 @@ CutsceneClientHandler.KeyframeHandler = {
 			RunCutsceneAction(function()
 				warn("2")
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					"The days have finally passed of me using this trashtop. Days of agony trying to play Roblox Six Siege at 10fps on a 140 pixel resolution. Sayanora."
 				)
@@ -440,40 +454,36 @@ CutsceneClientHandler.KeyframeHandler = {
 			RunCutsceneAction(function()
 				warn("3")
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					`This future proof £5000 beast will serve me so well. Thank you so much {Player.DisplayName}`
 				)
-				Speak(ttsHandle, "Dad", `Did you say 11268 marks?`)
+				Speak("Dad", `Did you say 11268 marks?`)
 				warn("done")
 			end)
 		elseif instruction == 4 then
 			RunCutsceneAction(function()
 				warn("4")
-				Speak(ttsHandle, "Dad", "I'm your Otac, not 'him', so where did you get that without my permission?")
+				Speak("Dad", "I'm your Otac, not 'him', so where did you get that without my permission?")
 				dad:PivotTo(dad:GetPivot() + Vector3.new(0, 4, 0))
 				if laptop then
 					laptop:WaitForChild("WeldConstraint").Enabled = true
 					laptop.Anchored = false
 				end
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					"It's a donation from the Bosniak Bango charity organisation. You promised me, but you lied, so I took matters in my own hands."
 				)
 				Speak(
-					ttsHandle,
 					"Dad",
 					"I told you before that I will handle it, I'm the man of the house! Give me that laptop, I will deliver on my promises using my own money! We don't rely on handouts! We're the El Bosniaks!"
 				)
-				Speak(ttsHandle, "Bosnian", "No, it's mine now, leave please.")
+				Speak("Bosnian", "No, it's mine now, leave please.")
 				warn("done")
 			end)
 		elseif instruction == 5 then
 			RunCutsceneAction(function()
 				warn("5")
 				Speak(
-					ttsHandle,
 					"Dad",
 					"I need some money for electricity rent. I'll be confiscating this young man. Hope the auction house is open."
 				)
@@ -498,7 +508,6 @@ CutsceneClientHandler.KeyframeHandler = {
 		end
 	end,
 	BosnianFailed = function(instruction, _, _)
-		local ttsHandle = TextToSpeech.GetHandle()
 		if instruction == 1 then
 			RunCutsceneAction(function()
 				GeneralRemotes.SpawnServerStorageModel:InvokeServer(
@@ -508,27 +517,24 @@ CutsceneClientHandler.KeyframeHandler = {
 					nil
 				)
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					`Finally, a new strong laptop donated by the {Player.DisplayName} foundation. That fake wallpaper is funny, but it'll disappear when I power on, surely... surely it will... surely.`
 				)
-				Speak(ttsHandle, "Dad", `Is that the trashtop I sold to some random robloxian?`)
+				Speak("Dad", `Is that the trashtop I sold to some random robloxian?`)
 			end)
 		elseif instruction == 2 then
 			RunCutsceneAction(function()
 				task.wait(1)
-				Speak(ttsHandle, "Dad", `Ha ha ha it is as well, it came full circle huh? `)
+				Speak("Dad", `Ha ha ha it is as well, it came full circle huh? `)
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					"I was supposed to get a new laptop today, but you didn't step up, dad. I had to beg for one and got lucky. You think this is a joke? It's all your fault!"
 				)
 				Speak(
-					ttsHandle,
 					"Dad",
 					"No idea what you said, but look at the drip i've acquired, bought it from the auction thanks to that laptop you have there harr harr dee harr. Antique Clan Point merch goes crazy."
 				)
-				Speak(ttsHandle, "Bosnian", `Make haste as once dad!`)
+				Speak("Bosnian", `Make haste as once dad!`)
 			end)
 		elseif instruction == 3 then
 			local laptop =
@@ -537,7 +543,6 @@ CutsceneClientHandler.KeyframeHandler = {
 			RunCutsceneAction(function()
 				task.wait(1)
 				Speak(
-					ttsHandle,
 					"Bosnian",
 					"Now with the distractions out of the way, time to power on this masterpiece and become the best gamer ever to exist."
 				)
@@ -562,7 +567,7 @@ CutsceneClientHandler.KeyframeHandler = {
 				task.wait(2)
 				SoundModule.PlayTheme("ManCry")
 				task.wait(5)
-				Speak(ttsHandle, "Mom", "It's ok son.")
+				Speak("Mom", "It's ok son.")
 				SoundModule.StopTheme()
 			end)
 		elseif instruction == 4 then
@@ -570,11 +575,10 @@ CutsceneClientHandler.KeyframeHandler = {
 				SoundModule.PlayTheme("AngelTheme")
 				task.wait(1)
 				Speak(
-					ttsHandle,
 					"Mom",
 					"I am the mother who stepped up. I have secretly accumulated money to afford this BeastTop 9000 for you. Happy Bosnia day son."
 				)
-				Speak(ttsHandle, "Bosnian", "Mummy")
+				Speak("Bosnian", "Mummy")
 				UIHelperFunctions.AdjustBlackScreen(5, 0)
 			end)
 		end
@@ -588,11 +592,83 @@ CutsceneClientHandler.KeyframeHandler = {
 		elseif instruction == 2 then
 			RunCutsceneAction(function()
 				task.wait(36)
-				local ttsHandle = TextToSpeech.GetHandle()
-				Speak(ttsHandle, "Player", "Nam-ahh-stay, Damon, Nam-ahh-stay")
+				Speak("Player", "Nam-ahh-stay, Damon, Nam-ahh-stay")
 				SoundModule.PlaySound("EvilLaugh")
 			end)
 			UIHelperFunctions.AdjustBlackScreen(6, 0)
+		end
+	end,
+
+	CupcakeLoverBossFailed = function(instruction, _, _)
+		local cupcakeLoverHead = workspace
+			:WaitForChild("NPCs")
+			:WaitForChild("CupcakeLover")
+			:WaitForChild("CupcakeLover")
+			:WaitForChild("Head")
+		local brainwashedPlayerHead = workspace:WaitForChild("BossFailedPlayer"):WaitForChild("Head")
+
+		if instruction == 2 then
+			RunCutsceneAction(function()
+				task.wait(9)
+				SoundModule.PlaySound("Oi")
+				Music:Stop()
+				task.wait(0.5)
+				SoundModule.PlaySound("RecordScratch").Ended:Wait()
+			end)
+		elseif instruction == 3 then
+			RunCutsceneAction(function()
+				task.wait(1)
+				TweenLookAtCamera(1, cupcakeLoverHead)
+				Speak("Damon", "I know you looked at my famous face. Come here.")
+			end)
+		elseif instruction == 4 then
+			RunCutsceneAction(function()
+				SoundModule.PlayTheme("Mysterious")
+				task.wait(3)
+				TweenLookAtCamera(1, cupcakeLoverHead)
+				task.wait(5)
+				TweenLookAtCamera(1, brainwashedPlayerHead)
+				Speak(
+					"Player",
+					"WELL? AREN'T YOU GOING TO GREET THE MOST FAMOUS DEVELOPER WHO CONTRIBUTED TO OVER 100 TRILLION VISITS YOU PAGAN!"
+				)
+				Speak("CitizenGirl", "What do you want? who are you?")
+				Speak(
+					"Player",
+					"YOU DON'T KNOW? YOU DOING A PATRICK UNDER A ROCK COSPLAY? HES THE MOST FAMOUS DEVELOPER OF FLOPARIA, BROSKI"
+				)
+				Speak("CitizenGirl", "That one game where you had to morse code a flicking light?")
+				Speak("Damon", "Yeah. I was part of that as well, scripted that myself. That was me and only me buddy.")
+				SoundModule.PlaySound("Error")
+				Speak("Player", "Error Error Error he said he was only a card developer")
+				Speak("CitizenGirl", "Is that guy alright? ")
+				Speak("Damon", `Sorry hold on. :fix {Player.DisplayName}`)
+				SoundModule.PlaySound("Correct")
+				Speak(
+					"Player",
+					`EXACTLY, HE IS BASICALLY FLOPARIA HIMSELF. HE IS THE BACKBONE OF FLOPARIA. WAKE UP WOMAN`
+				)
+				Speak("CitizenGirl", "I barely know you sir, I only play dress to unimpress! what game that is!")
+				Speak("Damon", `...Wait, you think that game's more famous and better than mine?`)
+				Speak("CitizenGirl", "Yes! that game is absolutely delightful")
+				SoundModule.PlayTheme("ScaryAmbience")
+				Speak(
+					"Damon",
+					`Sorry I misspoke, let me say it again:You think that game's more famous and better than mine?`
+				)
+				Speak("CitizenGirl", "Yes!")
+				Speak("Player", "DID YOU JUST DISRESPECT THE GREATEST DEVELOPER OF ALL TIME DAMON JAY?")
+				Speak("CitizenGirl", "No sir that is my opinion")
+				Speak("Damon", `One more time.You think that game's more famous and better than mine?`)
+				Speak("CitizenGirl", "Yes!")
+				SoundModule.StopTheme()
+				task.wait(5)
+				SoundModule.PlaySound("Jumpscare")
+				TweenToCamera(1, brainwashedPlayerHead)
+				ScaleTween(0.5, brainwashedPlayerHead, 2)
+				task.wait(0.7)
+				UIHelperFunctions.AdjustBlackScreen(0, 0)
+			end)
 		end
 	end,
 }
@@ -701,6 +777,10 @@ CutsceneClientHandler.Initialize = {
 	end,
 	CupcakeLoverBossDefeated = function()
 		Music.SoundId = "rbxassetid://6362185620"
+		Music.Volume = 0.1
+	end,
+	CupcakeLoverBossFailed = function()
+		Music.SoundId = "rbxassetid://1841476350"
 		Music.Volume = 0.1
 	end,
 }
