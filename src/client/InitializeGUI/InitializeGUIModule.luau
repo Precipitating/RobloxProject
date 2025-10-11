@@ -376,8 +376,13 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	local spinCanceled = false
 	local reloading = false
 	local reloadThread -- reference to the current reload coroutine
+	local finished = false
 
 	local function Finished(bossDead)
+		if finished then
+			return
+		end
+		finished = true
 		UIHelperFunctions.AdjustBlackScreen(1, 0)
 		InitializeGUIModule.DisconnectAll("R2DPumpkinBoss")
 		SoundModule.StopTheme()
@@ -387,12 +392,14 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		Character.Humanoid:UnequipTools()
 		minigunTool:Destroy()
 
+		task.wait(1)
 		GeneralRemotes.CupcakeLover.Finished:FireServer(bossDead)
 
 		if bossDead then
 			print("boss ded")
 			SoundModule.PlaySound("Main")
 		else
+			MovementHandler.DisableControls()
 			print("you ded")
 		end
 	end
@@ -568,7 +575,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 			end
 
 			-- Start firing loop
-			while equipped and holding and minigunAmmo.Value > 0 do
+			while equipped and holding and minigunAmmo.Value > 0 and not spinCanceled do
 				if not shootSound.IsPlaying then
 					shootSound:Play()
 				end

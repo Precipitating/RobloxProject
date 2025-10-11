@@ -18,6 +18,8 @@ local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local CameraFollowConnection = nil
+local R2DPlayerHealth = nil
+local UserInputService = game:GetService("UserInputService")
 local ClientHelperFunctions = require(script.ClientHelperFunctions)
 -- disable respawn button
 local coreCall
@@ -247,13 +249,19 @@ end)
 GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
 	-- disable bp
 	local StarterGui = game:GetService("StarterGui")
-
 	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Backpack, false)
 	GeneralRemotes.EnableRoadEvents:FireServer(false)
+	UserInputService.MouseIconEnabled = false
 	CutsceneModule.Play(name)
 end)
 
 -- GUI
+
+PlayerGui.ChildAdded:Connect(function(child)
+	if child.Name == "R2DHealthGUI" then
+		R2DPlayerHealth = child:WaitForChild("Health")
+	end
+end)
 GeneralRemotes.InitializeGUI.OnClientEvent:Connect(function(name)
 	if InitializeGUIModule[name] then
 		InitializeGUIModule[name]()
@@ -291,13 +299,8 @@ end
 
 -- Pumpkin Boss
 GeneralRemotes.CupcakeLover.DamagePlayer.OnClientEvent:Connect(function(dmg)
-	local health = PlayerGui:FindFirstChild("R2DHealthGUI")
-	if not health then
-		return
-	end
-	health = health:WaitForChild("Health")
-	if health then
-		health.Value = health.Value - dmg
+	if R2DPlayerHealth then
+		R2DPlayerHealth.Value = math.max(0, R2DPlayerHealth.Value - dmg)
 	end
 end)
 
