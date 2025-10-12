@@ -6,6 +6,7 @@ local Events = ReplicatedStorage.Missions.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local NPCEvents = ReplicatedStorage.Events.NPC
 local CurrentPrompt = nil
+local SoundPlaying = false
 local TalkModule = {}
 
 -- remotes
@@ -84,7 +85,7 @@ local function typeText(text)
 	end
 
 	-- prevent TTS playing issues if typewriter is too fast
-	while ttsHandle.IsPlaying and ttsSuccess do
+	while (ttsHandle.IsPlaying and ttsSuccess) or SoundPlaying do
 		task.wait()
 	end
 	btn1.Interactable = true
@@ -129,6 +130,9 @@ function TalkModule.hideUI(responseData)
 		elseif responseData.Type == "CloseCutscene" then
 			SoundModule.StopAllSounds()
 			GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+		elseif responseData.Type == "CloseNoTheme" then
+			SoundModule.StopTheme()
+			MovementModule.EnableControls("UI")
 		elseif responseData.Type == "CloseKeepTheme" then
 			MovementModule.EnableControls("UI")
 		end
@@ -136,6 +140,7 @@ function TalkModule.hideUI(responseData)
 		talking = false
 		frame.Visible = false
 		ui.Enabled = false
+		SoundPlaying = false
 
 		if CurrentPrompt and responseData.Type ~= "CloseCutscene" then
 			CurrentPrompt.Enabled = true
@@ -174,6 +179,7 @@ function TalkModule.handleResponse(data, responseData)
 		responseData.Type == "Close"
 		or responseData.Type == "CloseCutscene"
 		or responseData.Type == "CloseKeepTheme"
+		or responseData.Type == "CloseNoTheme"
 	then
 		TalkModule.hideUI(responseData)
 	elseif responseData.Type == "NextMessage" then
@@ -217,7 +223,13 @@ function TalkModule.updateUI(data, dialogueId)
 	-- client events
 	if selectedDialogue.PlaySound then
 		print(`Client wants to play sound: {selectedDialogue.PlaySound}`)
-		SoundModule.PlaySound(selectedDialogue.PlaySound)
+		local sound = SoundModule.PlaySound(selectedDialogue.PlaySound)
+		SoundPlaying = true
+		-- prevent next dialogue occuring before sound finishes
+		task.spawn(function()
+			sound.Ended:Wait()
+			SoundPlaying = false
+		end)
 	end
 	if selectedDialogue.PlayTheme then
 		print(`Client wants to play theme: {selectedDialogue.PlayTheme}`)

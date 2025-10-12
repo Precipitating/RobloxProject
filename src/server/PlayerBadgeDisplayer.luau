@@ -53,7 +53,7 @@ function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
 
 	-- for each badge the player owns, spawn a display case and set its badge info
 	for idx, info in ipairs(ObtainedBadgesList) do
-		print(positions[idx].Name)
+		--print(positions[idx].Name)
 		local display = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Home", "Display", nil)
 
 		local decal = display.Frame.LargePictureFrame.Picture.Decal
@@ -70,7 +70,7 @@ function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
 
 			if info.Name and info.Description then
 				textInfo.Text = `<sc><font color="#FF0000">{info.Name}</font></sc><br/>{info.Description}`
-				print(`{textInfo.Name} set successfully to display room! {idx}`)
+				--print(`{textInfo.Name} set successfully to display room! {idx}`)
 			end
 		end
 	end

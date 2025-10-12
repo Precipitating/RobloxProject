@@ -101,7 +101,7 @@ ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(fun
 end)
 
 ReplicatedStorage.Missions.Events.ExecuteScenarioEvent.OnServerEvent:Connect(function(player, eventName)
-	print(` {player} calling mission event {eventName}...`)
+	print(` {player} calling server mission event {eventName}...`)
 	local handler = MissionEventHandlers[eventName]
 	if handler then
 		handler(player)

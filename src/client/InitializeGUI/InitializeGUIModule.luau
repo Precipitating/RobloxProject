@@ -385,19 +385,26 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		finished = true
 		UIHelperFunctions.AdjustBlackScreen(1, 0)
 		InitializeGUIModule.DisconnectAll("R2DPumpkinBoss")
+		SoundModule.UnlockTheme()
 		SoundModule.StopTheme()
 		playerHPGUI:Destroy()
 		bossHPGUI:Destroy()
+
+		-- disable minigun
 		minigunGUI:Destroy()
-		Character.Humanoid:UnequipTools()
-		minigunTool:Destroy()
+		idleTrack:Stop()
+		idleTrack:Destroy()
+		idleTrack = nil
+		Player:GetMouse().Icon = ""
+		MissionRemotes.RemoveToolsEvent:InvokeServer({ "Minigun" })
 
 		task.wait(1)
+
 		GeneralRemotes.CupcakeLover.Finished:FireServer(bossDead)
 
 		if bossDead then
 			print("boss ded")
-			SoundModule.PlaySound("Main")
+			SoundModule.PlayTheme("Main")
 		else
 			MovementHandler.DisableControls()
 			print("you ded")
@@ -452,8 +459,6 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		equipped = false
 		if idleTrack then
 			idleTrack:Stop()
-			idleTrack:Destroy()
-			idleTrack = nil
 
 			minigunGUI.Enabled = false
 			Player:GetMouse().Icon = ""

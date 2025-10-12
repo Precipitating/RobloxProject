@@ -237,12 +237,12 @@ return {
 			Responses = {
 				{
 					Text = "Wha?",
-					Type = "Close",
+					Type = "CloseNoTheme",
 					ExecuteScenarioEvent = "R2DPumpkinBoss",
 				},
 				{
 					Text = "?????",
-					Type = "Close",
+					Type = "CloseNoTheme",
 					ExecuteScenarioEvent = "R2DPumpkinBoss",
 				},
 			},
