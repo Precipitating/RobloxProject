@@ -7,7 +7,7 @@ ReplicatedFirst:RemoveDefaultLoadingScreen()
 
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
-local LoadingScreen = script.Parent:WaitForChild("LoadingScreen"):Clone()
+local LoadingScreen = ReplicatedFirst:WaitForChild("LoadingScreen"):Clone()
 LoadingScreen.Parent = PlayerGui
 
 local BG = LoadingScreen:WaitForChild("BG")
