@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBX6D9394C32F0143369A298E3BA0459A01">
+	<Item class="ScreenGui" referent="RBXAA6C532DB530469F973EF041A00418AB">
 		<Properties>
 			<bool name="ClipToDeviceSafeArea">true</bool>
 			<int name="DisplayOrder">1</int>
@@ -25,7 +25,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Frame" referent="RBXAE20BC4A4991472FB583B4C746FE5C4D">
+		<Item class="Frame" referent="RBXD8A628E6A5C3497D9843A7B71CAAF8E0">
 			<Properties>
 				<token name="Style">0</token>
 				<bool name="Active">false</bool>
@@ -88,7 +88,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ViewportFrame" referent="RBX19466BAF7B7548DA81FD7682CA704E6C">
+			<Item class="ViewportFrame" referent="RBXE71B76C8969A444486F64A05C1F86407">
 				<Properties>
 					<Color3 name="Ambient">
 						<R>1</R>
@@ -98,7 +98,7 @@
 					<CoordinateFrame name="CameraCFrame">
 						<X>-362.138</X>
 						<Y>11.5</Y>
-						<Z>491.487</Z>
+						<Z>492.600006</Z>
 						<R00>1</R00>
 						<R01>1.45761632e-11</R01>
 						<R02>0</R02>
@@ -186,7 +186,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="WorldModel" referent="RBX2BFCC1C56CA74501B3450AD85006B558">
+				<Item class="WorldModel" referent="RBXD40E26AF490148F98CF861CF0EA7B943">
 					<Properties>
 						<token name="LevelOfDetail">0</token>
 						<CoordinateFrame name="ModelMeshCFrame">
@@ -221,7 +221,7 @@
 						<int64 name="SourceAssetId">-1</int64>
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
-					<Item class="Model" referent="RBX0BF7973BB97C430B8C522E1512EA8566">
+					<Item class="Model" referent="RBXC3AD6D70399E469EBFA711F0E2EA2800">
 						<Properties>
 							<token name="LevelOfDetail">0</token>
 							<CoordinateFrame name="ModelMeshCFrame">
@@ -246,7 +246,7 @@
 							</Vector3>
 							<token name="ModelStreamingMode">0</token>
 							<bool name="NeedsPivotMigration">false</bool>
-							<Ref name="PrimaryPart">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+							<Ref name="PrimaryPart">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 							<float name="ScaleFactor">1</float>
 							<OptionalCoordinateFrame name="WorldPivotData">
 								<CFrame>
@@ -271,7 +271,7 @@
 							<int64 name="SourceAssetId">-1</int64>
 							<BinaryString name="Tags"></BinaryString>
 						</Properties>
-						<Item class="Part" referent="RBX672B414ACB194136B46807B1EAF207C0">
+						<Item class="Part" referent="RBX5ECED06DD879408B8AF2B8F19D77878E">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -369,7 +369,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="SpecialMesh" referent="RBX9F9D9EBA20684F578FD2465B7017AB26">
+							<Item class="SpecialMesh" referent="RBXCA4A33B78AE14E9798A413F86711C434">
 								<Properties>
 									<token name="MeshType">0</token>
 									<Content name="MeshId"><null></null></Content>
@@ -397,7 +397,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBXAF1544901F934F8EB2CC6810FF515FEB">
+							<Item class="Attachment" referent="RBX520D7E37C173475BB3CF8A1069DADB11">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -422,7 +422,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX5F33E291DBBF4BD8A15433D4941DEBCA">
+							<Item class="Attachment" referent="RBX0629494F1EF743ABBBF79B78458164E3">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -447,7 +447,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX3DE25812155D4761881F99D140044D42">
+							<Item class="Attachment" referent="RBX79EFEB2ED62647629231E5A591BC0E12">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -472,7 +472,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBXB8266504918B46769C7673B759899977">
+							<Item class="Attachment" referent="RBXB108D1921B57416F90041A707D9D4EA8">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -497,7 +497,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Decal" referent="RBX386EAA55E1DB4FB2913C4A9A9983A64B">
+							<Item class="Decal" referent="RBX736CD1C167F74917B3E6BD6CEE52D5C9">
 								<Properties>
 									<Color3 name="Color3">
 										<R>1</R>
@@ -530,7 +530,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBXC257882738EC4F75A5B4AE52A7375831">
+						<Item class="Part" referent="RBX6284C25090004B57BABAC48686EA3D6C">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -628,7 +628,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Decal" referent="RBX93B25B4D86F74DB7B1D4C7CAF0E35B8B">
+							<Item class="Decal" referent="RBXD127A12540E24C81BF32E3652D50C225">
 								<Properties>
 									<Color3 name="Color3">
 										<R>1</R>
@@ -660,7 +660,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX848C1E32677E49B294EC03656BA822C4">
+							<Item class="Attachment" referent="RBX82CC6A34288D4329BB239445A53585DE">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -685,7 +685,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX671BCDD1B7494C61A32A84DCA0E02B09">
+							<Item class="Attachment" referent="RBX7C22C24AD44246CE81BA24228828DD88">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -710,7 +710,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX41FE6CF37FD7448E8992579A410148F4">
+							<Item class="Attachment" referent="RBX5013EBDC5D9445D19B26FD2D7C447B96">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -735,7 +735,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBXAFF28B72638E4CBCBF151DB6C12881B3">
+							<Item class="Attachment" referent="RBXE4CB55F826944CD7B67409D2AEAD2D84">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>-1</X>
@@ -760,7 +760,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBXAB15443B79F4478584F4C25C6E0C7534">
+							<Item class="Attachment" referent="RBX38C8C1C8E9F245158808D35648B23C8F">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>1</X>
@@ -785,7 +785,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX4E4A59F481A9495EA58090B61E2DE181">
+							<Item class="Attachment" referent="RBXEF483639DA4E43C5A194D52F2AA34C38">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -810,7 +810,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX131C982E708249B097F9DEE5D30FD104">
+							<Item class="Attachment" referent="RBXE9DCA991A9944BC3A85D46AB211671BE">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -835,7 +835,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX9183150C837645158ADFABA8F156D34B">
+							<Item class="Attachment" referent="RBX4B0EC9B6F6E0412A993581E19441DF29">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -860,7 +860,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBX9FBCFDC0BE99462C9D6BCBB9441B69A6">
+							<Item class="Motor6D" referent="RBX032A71321D4A4AA5AB3CB304FCD6B3B4">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -893,8 +893,8 @@
 										<R22>-0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
-									<Ref name="Part1">RBX52795050E2A242188FB1B5C1835758A6</Ref>
+									<Ref name="Part0">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
+									<Ref name="Part1">RBX631BC516FCD94921AF61AA39D05F2D0B</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -903,7 +903,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBXF334755E6D5F49BAB2C7C3E40CB36C4E">
+							<Item class="Motor6D" referent="RBX0B592FEE2DAE4721977F470F099F6714">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -936,8 +936,8 @@
 										<R22>0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
-									<Ref name="Part1">RBX7824E8DF48AE4299BC4474AEAC8B9BA6</Ref>
+									<Ref name="Part0">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
+									<Ref name="Part1">RBX269E64BB61F947F3B8A0E7F7E8C3745E</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -946,7 +946,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBXF0E23D181842462A94F610FC79A77193">
+							<Item class="Motor6D" referent="RBXC33872668016426189A2CEAE8DDF3EB0">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -979,8 +979,8 @@
 										<R22>-0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
-									<Ref name="Part1">RBX99E9441D4F5E42118AB8DF12CBE55F2F</Ref>
+									<Ref name="Part0">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
+									<Ref name="Part1">RBX4179823359404A04BBC516B74C621235</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -989,7 +989,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBX02E1EA5EB9A440499BA1FAE3797D6C74">
+							<Item class="Motor6D" referent="RBX3285D5819CC84C79B3CB397CBB4A5A9D">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -1022,8 +1022,8 @@
 										<R22>0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
-									<Ref name="Part1">RBXA98C886B43924C6AABD1000CB5ED6E72</Ref>
+									<Ref name="Part0">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
+									<Ref name="Part1">RBXE2F10105190240AC8E5DDB87D13DE7D6</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -1032,7 +1032,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBXC6557E685D99483BA28AEAA40F0130F8">
+							<Item class="Motor6D" referent="RBXE29529B9471F4FCFAC0E1C53056D2566">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -1065,8 +1065,8 @@
 										<R22>0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
-									<Ref name="Part1">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+									<Ref name="Part0">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
+									<Ref name="Part1">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -1076,7 +1076,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBX7824E8DF48AE4299BC4474AEAC8B9BA6">
+						<Item class="Part" referent="RBX269E64BB61F947F3B8A0E7F7E8C3745E">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -1174,7 +1174,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Attachment" referent="RBXBBFE1DBD26774BAFA6550F43AFCB0688">
+							<Item class="Attachment" referent="RBX7DC56BE7E163465BB90B51ACF8FB6E40">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1199,7 +1199,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBXFD7BDC7D649748DEA0276A696CFB988D">
+							<Item class="Attachment" referent="RBXB33BD37D52CA4D769C98A52D36157EAD">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1225,7 +1225,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBX52795050E2A242188FB1B5C1835758A6">
+						<Item class="Part" referent="RBX631BC516FCD94921AF61AA39D05F2D0B">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -1323,7 +1323,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Attachment" referent="RBXA32D97CDEEBA4F6EAFF3F3896FFB52E3">
+							<Item class="Attachment" referent="RBX24D296EF0AB343A3A61B748CE10D9B4D">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1348,7 +1348,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Attachment" referent="RBX139E9F46F9FB41FF946F3A77E1888B4E">
+							<Item class="Attachment" referent="RBX9C60E5CD1A8E48D6933BC5B461D9F14C">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1374,7 +1374,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBXA98C886B43924C6AABD1000CB5ED6E72">
+						<Item class="Part" referent="RBXE2F10105190240AC8E5DDB87D13DE7D6">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -1472,7 +1472,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Attachment" referent="RBX5F425F21F73E419CA2D3042C7341F2F2">
+							<Item class="Attachment" referent="RBX87538854D1D34748824A4AF9307756B2">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1498,7 +1498,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBX99E9441D4F5E42118AB8DF12CBE55F2F">
+						<Item class="Part" referent="RBX4179823359404A04BBC516B74C621235">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -1596,7 +1596,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Attachment" referent="RBX9BB7A35655C949E99CC7B76A7241F377">
+							<Item class="Attachment" referent="RBXD8853AF5C78B4400ADBC02E4C473786E">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -1622,7 +1622,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Humanoid" referent="RBX0376262698114810AEEC6C25C3BBA257">
+						<Item class="Humanoid" referent="RBXA2D24CDFA13144AD982BE1A681599DE9">
 							<Properties>
 								<bool name="AutoJumpEnabled">true</bool>
 								<bool name="AutoRotate">true</bool>
@@ -1659,7 +1659,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Animator" referent="RBX6B1B6DEF2B864B60A4538E25F086C7FD">
+							<Item class="Animator" referent="RBXABA75BAC19AD4588B169D488E3197BA8">
 								<Properties>
 									<bool name="PreferLodEnabled">true</bool>
 									<BinaryString name="AttributesSerialize"></BinaryString>
@@ -1670,7 +1670,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="HumanoidDescription" referent="RBX85C0FE1CFA914A0B81A9EE66A20F0033">
+							<Item class="HumanoidDescription" referent="RBX6D3FF5D234F14501889C70A427CF3CB9">
 								<Properties>
 									<float name="BodyTypeScale">0</float>
 									<int64 name="ClimbAnimation">0</int64>
@@ -1699,7 +1699,7 @@
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="BodyPartDescription" referent="RBX352D15642C61479FA602B1726E7B6688">
+								<Item class="BodyPartDescription" referent="RBXA8F7032EEDD24AF9A1C9D29BBF6D53F2">
 									<Properties>
 										<int64 name="AssetId">0</int64>
 										<token name="BodyPart">0</token>
@@ -1717,7 +1717,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="BodyPartDescription" referent="RBX1D59C6AC39764284A89DBDB8917CF858">
+								<Item class="BodyPartDescription" referent="RBX76E82E05FDF54B499DF5C2C5C425DA5C">
 									<Properties>
 										<int64 name="AssetId">17061950749</int64>
 										<token name="BodyPart">2</token>
@@ -1735,7 +1735,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="BodyPartDescription" referent="RBXEFB65F591A974AE084C617D8FF288EB7">
+								<Item class="BodyPartDescription" referent="RBXA7A820DB2A974BD1898CA98EBEEB25A7">
 									<Properties>
 										<int64 name="AssetId">17061950752</int64>
 										<token name="BodyPart">3</token>
@@ -1753,7 +1753,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="BodyPartDescription" referent="RBX1F8F4E4071A849A68DCEDAF8DC4F5F13">
+								<Item class="BodyPartDescription" referent="RBX19E7997033F44F459E51C3AA0C869A7C">
 									<Properties>
 										<int64 name="AssetId">17061950321</int64>
 										<token name="BodyPart">1</token>
@@ -1771,7 +1771,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="BodyPartDescription" referent="RBX4FF611F520934090ABAF608D2523814F">
+								<Item class="BodyPartDescription" referent="RBX75352259B48A415994003EA11B7589AC">
 									<Properties>
 										<int64 name="AssetId">17061954240</int64>
 										<token name="BodyPart">4</token>
@@ -1789,7 +1789,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="BodyPartDescription" referent="RBXA6A0DABF5460491993FAE0E3077D0725">
+								<Item class="BodyPartDescription" referent="RBX53065C662C0F42039B187F1BB6929C6C">
 									<Properties>
 										<int64 name="AssetId">17061950868</int64>
 										<token name="BodyPart">5</token>
@@ -1807,7 +1807,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="AccessoryDescription" referent="RBX2C786AEB70BC448991089939BB0D0663">
+								<Item class="AccessoryDescription" referent="RBXF669C39BAE4E4C558E0FD38FF6A7AD1F">
 									<Properties>
 										<token name="AccessoryType">3</token>
 										<int64 name="AssetId">20642008</int64>
@@ -1838,7 +1838,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="AccessoryDescription" referent="RBX878F08329D104860B6ED9FD24727A080">
+								<Item class="AccessoryDescription" referent="RBXEC663A0C481F4A63B750872865147B53">
 									<Properties>
 										<token name="AccessoryType">1</token>
 										<int64 name="AssetId">22588983</int64>
@@ -1869,7 +1869,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="AccessoryDescription" referent="RBX02B52A25E95C452E905C69E5C0FABBD8">
+								<Item class="AccessoryDescription" referent="RBX23B4DCFE0CEA40C28F10FEEF0F0E9322">
 									<Properties>
 										<token name="AccessoryType">7</token>
 										<int64 name="AssetId">215748322</int64>
@@ -1900,7 +1900,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="AccessoryDescription" referent="RBXB6F6F070C16E44189F7B38F1286ABE31">
+								<Item class="AccessoryDescription" referent="RBX976406C973CB41BB8C1009CEB635BE64">
 									<Properties>
 										<token name="AccessoryType">1</token>
 										<int64 name="AssetId">4588575198</int64>
@@ -1931,7 +1931,7 @@
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="AccessoryDescription" referent="RBXC34301996EBB4ADCB970CCB5BD7A3957">
+								<Item class="AccessoryDescription" referent="RBX0563CDD1D3854A709342061118E8FE89">
 									<Properties>
 										<token name="AccessoryType">3</token>
 										<int64 name="AssetId">15280387399</int64>
@@ -1964,7 +1964,7 @@
 								</Item>
 							</Item>
 						</Item>
-						<Item class="Part" referent="RBX6D6085A5E42E442B99A1F1477615AF7E">
+						<Item class="Part" referent="RBX4877326AD0E842A9B5453B22B2A6EF5C">
 							<Properties>
 								<token name="shape">1</token>
 								<token name="formFactorRaw">1</token>
@@ -2062,7 +2062,7 @@
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Attachment" referent="RBX0188AD1E6EC049D18AF7628E16307D91">
+							<Item class="Attachment" referent="RBX1CDAEA77C0884E6A97EB2BDD684E3EF1">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>0</X>
@@ -2087,7 +2087,7 @@
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
-							<Item class="Motor6D" referent="RBX3A4DDA5CE9534550A217E062F28C2571">
+							<Item class="Motor6D" referent="RBXD815F718A344468CBB959DACAA067FB1">
 								<Properties>
 									<float name="DesiredAngle">0</float>
 									<float name="MaxVelocity">0.100000001</float>
@@ -2120,8 +2120,8 @@
 										<R22>0</R22>
 									</CoordinateFrame>
 									<bool name="Enabled">true</bool>
-									<Ref name="Part0">RBX6D6085A5E42E442B99A1F1477615AF7E</Ref>
-									<Ref name="Part1">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
+									<Ref name="Part0">RBX4877326AD0E842A9B5453B22B2A6EF5C</Ref>
+									<Ref name="Part1">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
 									<BinaryString name="AttributesSerialize"></BinaryString>
 									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 									<bool name="DefinesCapabilities">false</bool>
@@ -2131,7 +2131,7 @@
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="LocalScript" referent="RBXB044641D66714728BDE65D4A217AC52B">
+						<Item class="LocalScript" referent="RBX8E1A94ABD7EF433A9578A3671A1A44F2">
 							<Properties>
 								<ProtectedString name="Source"><![CDATA[local animator = script.Parent:WaitForChild("Humanoid"):WaitForChild("Animator")
 local dances = script.Parent:WaitForChild("Dances"):GetChildren()
@@ -2140,7 +2140,7 @@ dance:Play()]]></ProtectedString>
 								<bool name="Disabled">false</bool>
 								<Content name="LinkedSource"><null></null></Content>
 								<token name="RunContext">0</token>
-								<string name="ScriptGuid">{951D5E90-8E9E-4F9D-B3DD-8139088F28B8}</string>
+								<string name="ScriptGuid">{144B602F-27A0-47E4-A5DC-8981C3CC7D77}</string>
 								<BinaryString name="AttributesSerialize"></BinaryString>
 								<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 								<bool name="DefinesCapabilities">false</bool>
@@ -2149,7 +2149,7 @@ dance:Play()]]></ProtectedString>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
 						</Item>
-						<Item class="Accessory" referent="RBX5CECD743BC314A1FA7A6B8C7462E8FE0">
+						<Item class="Accessory" referent="RBXED5ABA64C95D4D0692374044DAB051B3">
 							<Properties>
 								<token name="AccessoryType">3</token>
 								<CoordinateFrame name="AttachmentPoint">
@@ -2173,7 +2173,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Part" referent="RBXA56EA5AD55454719B97AAB0CCDD7BC0F">
+							<Item class="Part" referent="RBX08E7D9C0C3874F358722730BD24ABC17">
 								<Properties>
 									<token name="shape">1</token>
 									<token name="formFactorRaw">1</token>
@@ -2271,7 +2271,90 @@ dance:Play()]]></ProtectedString>
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="Weld" referent="RBX0440CED0B36A41F49FAAE97EA655832A">
+								<Item class="SpecialMesh" referent="RBXDEF4193485034013BB0A0F97D0522C55">
+									<Properties>
+										<token name="MeshType">5</token>
+										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=20637493</url></Content>
+										<Content name="TextureId"><null></null></Content>
+										<Vector3 name="Offset">
+											<X>0</X>
+											<Y>0</Y>
+											<Z>0</Z>
+										</Vector3>
+										<Vector3 name="Scale">
+											<X>1</X>
+											<Y>0.899999976</Y>
+											<Z>1</Z>
+										</Vector3>
+										<Vector3 name="VertexColor">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">Mesh</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Attachment" referent="RBXB305FC61CDFA47568942F6210D69B7BA">
+									<Properties>
+										<CoordinateFrame name="CFrame">
+											<X>3.93629307e-09</X>
+											<Y>0.300000191</Y>
+											<Z>-0.600272298</Z>
+											<R00>1</R00>
+											<R01>7.87137466e-09</R01>
+											<R02>-3.26223014e-24</R02>
+											<R10>-7.87137466e-09</R10>
+											<R11>1</R11>
+											<R12>-4.1444221e-16</R12>
+											<R20>1.97215226e-31</R20>
+											<R21>4.1444221e-16</R21>
+											<R22>1</R22>
+										</CoordinateFrame>
+										<bool name="Visible">false</bool>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">FaceFrontAttachment</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+									<Item class="Vector3Value" referent="RBX1ED16AEE0273423C84C2A17A499FCA84">
+										<Properties>
+											<Vector3 name="Value">
+												<X>3.93629307e-09</X>
+												<Y>0.300000191</Y>
+												<Z>-0.600272298</Z>
+											</Vector3>
+											<BinaryString name="AttributesSerialize"></BinaryString>
+											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+											<bool name="DefinesCapabilities">false</bool>
+											<string name="Name">OriginalPosition</string>
+											<int64 name="SourceAssetId">-1</int64>
+											<BinaryString name="Tags"></BinaryString>
+										</Properties>
+									</Item>
+								</Item>
+								<Item class="Vector3Value" referent="RBX666EE7BFB6BA4774B16A3FE6B258F7A1">
+									<Properties>
+										<Vector3 name="Value">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">OriginalSize</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Weld" referent="RBXEFEBCB85E0AD493EA13D6BB4DB828F0B">
 									<Properties>
 										<CoordinateFrame name="C0">
 											<X>3.93629307e-09</X>
@@ -2302,8 +2385,8 @@ dance:Play()]]></ProtectedString>
 											<R22>1</R22>
 										</CoordinateFrame>
 										<bool name="Enabled">true</bool>
-										<Ref name="Part0">RBXA56EA5AD55454719B97AAB0CCDD7BC0F</Ref>
-										<Ref name="Part1">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+										<Ref name="Part0">RBX08E7D9C0C3874F358722730BD24ABC17</Ref>
+										<Ref name="Part1">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 										<bool name="DefinesCapabilities">false</bool>
@@ -2312,92 +2395,9 @@ dance:Play()]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="SpecialMesh" referent="RBXF75963EC170D4B368B75820DD5F7B3B2">
-									<Properties>
-										<token name="MeshType">5</token>
-										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=20637493</url></Content>
-										<Content name="TextureId"><null></null></Content>
-										<Vector3 name="Offset">
-											<X>0</X>
-											<Y>0</Y>
-											<Z>0</Z>
-										</Vector3>
-										<Vector3 name="Scale">
-											<X>1</X>
-											<Y>0.899999976</Y>
-											<Z>1</Z>
-										</Vector3>
-										<Vector3 name="VertexColor">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">Mesh</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="Attachment" referent="RBX49714B3C8735433EA86E32CBFE7469E5">
-									<Properties>
-										<CoordinateFrame name="CFrame">
-											<X>3.93629307e-09</X>
-											<Y>0.300000191</Y>
-											<Z>-0.600272298</Z>
-											<R00>1</R00>
-											<R01>7.87137466e-09</R01>
-											<R02>-3.26223014e-24</R02>
-											<R10>-7.87137466e-09</R10>
-											<R11>1</R11>
-											<R12>-4.1444221e-16</R12>
-											<R20>1.97215226e-31</R20>
-											<R21>4.1444221e-16</R21>
-											<R22>1</R22>
-										</CoordinateFrame>
-										<bool name="Visible">false</bool>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">FaceFrontAttachment</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-									<Item class="Vector3Value" referent="RBXED886A72CFB040FBB4ED28D67F9F7024">
-										<Properties>
-											<Vector3 name="Value">
-												<X>3.93629307e-09</X>
-												<Y>0.300000191</Y>
-												<Z>-0.600272298</Z>
-											</Vector3>
-											<BinaryString name="AttributesSerialize"></BinaryString>
-											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-											<bool name="DefinesCapabilities">false</bool>
-											<string name="Name">OriginalPosition</string>
-											<int64 name="SourceAssetId">-1</int64>
-											<BinaryString name="Tags"></BinaryString>
-										</Properties>
-									</Item>
-								</Item>
-								<Item class="Vector3Value" referent="RBXC2ABF00C4E794885908871EB411672B6">
-									<Properties>
-										<Vector3 name="Value">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">OriginalSize</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
 							</Item>
 						</Item>
-						<Item class="Accessory" referent="RBX5B9E486E1AE943A98EB429CE78E06EBC">
+						<Item class="Accessory" referent="RBXCF578CC65F0B44FAB909A78B5ABC4CAB">
 							<Properties>
 								<token name="AccessoryType">1</token>
 								<CoordinateFrame name="AttachmentPoint">
@@ -2421,7 +2421,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Part" referent="RBX68FD5C1E18F6462F9664699C9F4A94CC">
+							<Item class="Part" referent="RBX969757F6E0F94E7E885CAD0B7B0A183D">
 								<Properties>
 									<token name="shape">1</token>
 									<token name="formFactorRaw">1</token>
@@ -2519,7 +2519,90 @@ dance:Play()]]></ProtectedString>
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="Weld" referent="RBXCBBBD29AEC964C3F8FCAADFCB6878076">
+								<Item class="SpecialMesh" referent="RBXD4C9DC6816F846FCB50FE10801E0AD33">
+									<Properties>
+										<token name="MeshType">5</token>
+										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=22017671</url></Content>
+										<Content name="TextureId"><null></null></Content>
+										<Vector3 name="Offset">
+											<X>0</X>
+											<Y>0</Y>
+											<Z>0</Z>
+										</Vector3>
+										<Vector3 name="Scale">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<Vector3 name="VertexColor">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">Mesh</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Attachment" referent="RBXF215EB4A51624649A6E37A15878ECF2B">
+									<Properties>
+										<CoordinateFrame name="CFrame">
+											<X>8.65839045e-09</X>
+											<Y>-0.0520142913</Y>
+											<Z>-0.0199747607</Z>
+											<R00>1</R00>
+											<R01>7.87137644e-09</R01>
+											<R02>1.85407245e-14</R02>
+											<R10>-7.7170057e-09</R10>
+											<R11>0.980387807</R11>
+											<R12>0.197077975</R12>
+											<R20>1.5512569e-09</R20>
+											<R21>-0.197077975</R21>
+											<R22>0.980387807</R22>
+										</CoordinateFrame>
+										<bool name="Visible">false</bool>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">HatAttachment</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+									<Item class="Vector3Value" referent="RBX7981440EF86E4D9E8228523C239E2646">
+										<Properties>
+											<Vector3 name="Value">
+												<X>8.65838956e-09</X>
+												<Y>-0.0520143509</Y>
+												<Z>-0.0199747682</Z>
+											</Vector3>
+											<BinaryString name="AttributesSerialize"></BinaryString>
+											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+											<bool name="DefinesCapabilities">false</bool>
+											<string name="Name">OriginalPosition</string>
+											<int64 name="SourceAssetId">-1</int64>
+											<BinaryString name="Tags"></BinaryString>
+										</Properties>
+									</Item>
+								</Item>
+								<Item class="Vector3Value" referent="RBX473C2076635E4E748ABC6BF44DA68D74">
+									<Properties>
+										<Vector3 name="Value">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>2</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">OriginalSize</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Weld" referent="RBXD5166030DB0043C7A2412FFC684414FE">
 									<Properties>
 										<CoordinateFrame name="C0">
 											<X>8.65839045e-09</X>
@@ -2550,8 +2633,8 @@ dance:Play()]]></ProtectedString>
 											<R22>1</R22>
 										</CoordinateFrame>
 										<bool name="Enabled">true</bool>
-										<Ref name="Part0">RBX68FD5C1E18F6462F9664699C9F4A94CC</Ref>
-										<Ref name="Part1">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+										<Ref name="Part0">RBX969757F6E0F94E7E885CAD0B7B0A183D</Ref>
+										<Ref name="Part1">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 										<bool name="DefinesCapabilities">false</bool>
@@ -2560,92 +2643,9 @@ dance:Play()]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="SpecialMesh" referent="RBX1DC126810863439DA8D9B538924747FC">
-									<Properties>
-										<token name="MeshType">5</token>
-										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=22017671</url></Content>
-										<Content name="TextureId"><null></null></Content>
-										<Vector3 name="Offset">
-											<X>0</X>
-											<Y>0</Y>
-											<Z>0</Z>
-										</Vector3>
-										<Vector3 name="Scale">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<Vector3 name="VertexColor">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">Mesh</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="Attachment" referent="RBX118BA079B0324EE1B2EC1F906FB8D82F">
-									<Properties>
-										<CoordinateFrame name="CFrame">
-											<X>8.65839045e-09</X>
-											<Y>-0.0520142913</Y>
-											<Z>-0.0199747607</Z>
-											<R00>1</R00>
-											<R01>7.87137644e-09</R01>
-											<R02>1.85407245e-14</R02>
-											<R10>-7.7170057e-09</R10>
-											<R11>0.980387807</R11>
-											<R12>0.197077975</R12>
-											<R20>1.5512569e-09</R20>
-											<R21>-0.197077975</R21>
-											<R22>0.980387807</R22>
-										</CoordinateFrame>
-										<bool name="Visible">false</bool>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">HatAttachment</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-									<Item class="Vector3Value" referent="RBXB50EB3035CAC4B859FEA235AD0B45D2F">
-										<Properties>
-											<Vector3 name="Value">
-												<X>8.65838956e-09</X>
-												<Y>-0.0520143509</Y>
-												<Z>-0.0199747682</Z>
-											</Vector3>
-											<BinaryString name="AttributesSerialize"></BinaryString>
-											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-											<bool name="DefinesCapabilities">false</bool>
-											<string name="Name">OriginalPosition</string>
-											<int64 name="SourceAssetId">-1</int64>
-											<BinaryString name="Tags"></BinaryString>
-										</Properties>
-									</Item>
-								</Item>
-								<Item class="Vector3Value" referent="RBXB9FA21BD09AC4436A4DDDAA9CE2F5A79">
-									<Properties>
-										<Vector3 name="Value">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>2</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">OriginalSize</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
 							</Item>
 						</Item>
-						<Item class="Accessory" referent="RBXB011A4924B6048D8BFA177A0E2DCE304">
+						<Item class="Accessory" referent="RBX3351B6BC89A442BBB15BF0047CAC09CF">
 							<Properties>
 								<token name="AccessoryType">7</token>
 								<CoordinateFrame name="AttachmentPoint">
@@ -2669,7 +2669,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Part" referent="RBX04744145F6DA4BEF968D49D7D3691808">
+							<Item class="Part" referent="RBX401BF7D5DBC4455CBA06BB45E7AEB278">
 								<Properties>
 									<token name="shape">1</token>
 									<token name="formFactorRaw">1</token>
@@ -2767,7 +2767,90 @@ dance:Play()]]></ProtectedString>
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="Weld" referent="RBX6DB4D13E85244E15A9A3CFCD77763066">
+								<Item class="SpecialMesh" referent="RBX7BCCF2AC625E4A7EBB8D799EAA6ADF6D">
+									<Properties>
+										<token name="MeshType">5</token>
+										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=215735235 </url></Content>
+										<Content name="TextureId"><null></null></Content>
+										<Vector3 name="Offset">
+											<X>0</X>
+											<Y>0</Y>
+											<Z>0</Z>
+										</Vector3>
+										<Vector3 name="Scale">
+											<X>2.5</X>
+											<Y>2</Y>
+											<Z>2</Z>
+										</Vector3>
+										<Vector3 name="VertexColor">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">Mesh</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Attachment" referent="RBX31CC89117C2B472793C8CEC70301C01F">
+									<Properties>
+										<CoordinateFrame name="CFrame">
+											<X>0</X>
+											<Y>-2.38418579e-07</Y>
+											<Z>0.249727637</Z>
+											<R00>1</R00>
+											<R01>-6.83440315e-31</R01>
+											<R02>0</R02>
+											<R10>6.83440315e-31</R10>
+											<R11>1</R11>
+											<R12>-0</R12>
+											<R20>0</R20>
+											<R21>0</R21>
+											<R22>1</R22>
+										</CoordinateFrame>
+										<bool name="Visible">false</bool>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">BodyBackAttachment</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+									<Item class="Vector3Value" referent="RBX8C233A85E50C458A9F0F10BBBFC8916A">
+										<Properties>
+											<Vector3 name="Value">
+												<X>0</X>
+												<Y>-2.38418579e-07</Y>
+												<Z>0.249727637</Z>
+											</Vector3>
+											<BinaryString name="AttributesSerialize"></BinaryString>
+											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+											<bool name="DefinesCapabilities">false</bool>
+											<string name="Name">OriginalPosition</string>
+											<int64 name="SourceAssetId">-1</int64>
+											<BinaryString name="Tags"></BinaryString>
+										</Properties>
+									</Item>
+								</Item>
+								<Item class="Vector3Value" referent="RBX2FE176DA81F34B1E95C33BE22B52BD39">
+									<Properties>
+										<Vector3 name="Value">
+											<X>2.5400002</X>
+											<Y>3.24000025</Y>
+											<Z>1.35999966</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">OriginalSize</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Weld" referent="RBXD81247C31F434D2E878ED3DF42C49184">
 									<Properties>
 										<CoordinateFrame name="C0">
 											<X>0</X>
@@ -2798,8 +2881,8 @@ dance:Play()]]></ProtectedString>
 											<R22>1</R22>
 										</CoordinateFrame>
 										<bool name="Enabled">true</bool>
-										<Ref name="Part0">RBX04744145F6DA4BEF968D49D7D3691808</Ref>
-										<Ref name="Part1">RBXC257882738EC4F75A5B4AE52A7375831</Ref>
+										<Ref name="Part0">RBX401BF7D5DBC4455CBA06BB45E7AEB278</Ref>
+										<Ref name="Part1">RBX6284C25090004B57BABAC48686EA3D6C</Ref>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 										<bool name="DefinesCapabilities">false</bool>
@@ -2808,91 +2891,8 @@ dance:Play()]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="SpecialMesh" referent="RBX605DD0D341E04882B05AAA62DFBA9E31">
-									<Properties>
-										<token name="MeshType">5</token>
-										<Content name="MeshId"><url>http://www.roblox.com/asset/?id=215735235 </url></Content>
-										<Content name="TextureId"><null></null></Content>
-										<Vector3 name="Offset">
-											<X>0</X>
-											<Y>0</Y>
-											<Z>0</Z>
-										</Vector3>
-										<Vector3 name="Scale">
-											<X>2.5</X>
-											<Y>2</Y>
-											<Z>2</Z>
-										</Vector3>
-										<Vector3 name="VertexColor">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">Mesh</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="Attachment" referent="RBX7AB6D73543454820A73952A5D87D174D">
-									<Properties>
-										<CoordinateFrame name="CFrame">
-											<X>0</X>
-											<Y>-2.38418579e-07</Y>
-											<Z>0.249727637</Z>
-											<R00>1</R00>
-											<R01>-6.83440315e-31</R01>
-											<R02>0</R02>
-											<R10>6.83440315e-31</R10>
-											<R11>1</R11>
-											<R12>-0</R12>
-											<R20>0</R20>
-											<R21>0</R21>
-											<R22>1</R22>
-										</CoordinateFrame>
-										<bool name="Visible">false</bool>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">BodyBackAttachment</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-									<Item class="Vector3Value" referent="RBX06F46348BAF84486BE22116186CD2CD3">
-										<Properties>
-											<Vector3 name="Value">
-												<X>0</X>
-												<Y>-2.38418579e-07</Y>
-												<Z>0.249727637</Z>
-											</Vector3>
-											<BinaryString name="AttributesSerialize"></BinaryString>
-											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-											<bool name="DefinesCapabilities">false</bool>
-											<string name="Name">OriginalPosition</string>
-											<int64 name="SourceAssetId">-1</int64>
-											<BinaryString name="Tags"></BinaryString>
-										</Properties>
-									</Item>
-								</Item>
-								<Item class="Vector3Value" referent="RBX87641824C0AC4FC8BD0EB45208C56209">
-									<Properties>
-										<Vector3 name="Value">
-											<X>2.5400002</X>
-											<Y>3.24000025</Y>
-											<Z>1.35999966</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">OriginalSize</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
 							</Item>
-							<Item class="Camera" referent="RBX21ED6F0199834D1D9C743A18037FA27A">
+							<Item class="Camera" referent="RBX4A78E2067ECC4AE4BA9D2FC85F9426C5">
 								<Properties>
 									<CoordinateFrame name="CFrame">
 										<X>-2.95138836</X>
@@ -2938,7 +2938,7 @@ dance:Play()]]></ProtectedString>
 								</Properties>
 							</Item>
 						</Item>
-						<Item class="Accessory" referent="RBX367C8D68D8E8479E9B30998A6625EB67">
+						<Item class="Accessory" referent="RBXB8AE155FB98749A6AD1FB5A520B36513">
 							<Properties>
 								<token name="AccessoryType">1</token>
 								<CoordinateFrame name="AttachmentPoint">
@@ -2962,7 +2962,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Part" referent="RBX1DB465F780314685852F806F4091B921">
+							<Item class="Part" referent="RBX2CFB0C37A44946D090D9A3CC7F34D548">
 								<Properties>
 									<token name="shape">1</token>
 									<token name="formFactorRaw">1</token>
@@ -3060,7 +3060,101 @@ dance:Play()]]></ProtectedString>
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="Weld" referent="RBXCC27EF6703C44701AB63A5CC21A08126">
+								<Item class="SpecialMesh" referent="RBXA4E66131D0DE46729B2E50ADC42AB53F">
+									<Properties>
+										<token name="MeshType">5</token>
+										<Content name="MeshId"><url>rbxassetid://4586601163</url></Content>
+										<Content name="TextureId"><null></null></Content>
+										<Vector3 name="Offset">
+											<X>0</X>
+											<Y>0</Y>
+											<Z>0</Z>
+										</Vector3>
+										<Vector3 name="Scale">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<Vector3 name="VertexColor">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">SpecialMesh</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="StringValue" referent="RBX0154811FD85543E89C0B3E649A8DCACD">
+									<Properties>
+										<string name="Value">Classic</string>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">AvatarPartScaleType</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Attachment" referent="RBX8989B548E950480F98B92DD16B7ACE8E">
+									<Properties>
+										<CoordinateFrame name="CFrame">
+											<X>0.00721549988</X>
+											<Y>0.412583828</Y>
+											<Z>-0.0243415833</Z>
+											<R00>1</R00>
+											<R01>7.87137466e-09</R01>
+											<R02>3.02998127e-15</R02>
+											<R10>-7.87137466e-09</R10>
+											<R11>1</R11>
+											<R12>-4.14442554e-16</R12>
+											<R20>-3.02998127e-15</R20>
+											<R21>4.14442527e-16</R21>
+											<R22>1</R22>
+										</CoordinateFrame>
+										<bool name="Visible">false</bool>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">HatAttachment</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+									<Item class="Vector3Value" referent="RBX2C695EAC7E0E42AE82B075783FB5DF88">
+										<Properties>
+											<Vector3 name="Value">
+												<X>0.00721549988</X>
+												<Y>0.412583828</Y>
+												<Z>-0.0243415833</Z>
+											</Vector3>
+											<BinaryString name="AttributesSerialize"></BinaryString>
+											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+											<bool name="DefinesCapabilities">false</bool>
+											<string name="Name">OriginalPosition</string>
+											<int64 name="SourceAssetId">-1</int64>
+											<BinaryString name="Tags"></BinaryString>
+										</Properties>
+									</Item>
+								</Item>
+								<Item class="Vector3Value" referent="RBX9D45F92735B84E4687C3EEF290F53EB4">
+									<Properties>
+										<Vector3 name="Value">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">OriginalSize</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Weld" referent="RBX4A4B0965EB4347DC80DAB82E101D36A4">
 									<Properties>
 										<CoordinateFrame name="C0">
 											<X>0.00721549988</X>
@@ -3091,8 +3185,8 @@ dance:Play()]]></ProtectedString>
 											<R22>1</R22>
 										</CoordinateFrame>
 										<bool name="Enabled">true</bool>
-										<Ref name="Part0">RBX1DB465F780314685852F806F4091B921</Ref>
-										<Ref name="Part1">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+										<Ref name="Part0">RBX2CFB0C37A44946D090D9A3CC7F34D548</Ref>
+										<Ref name="Part1">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 										<bool name="DefinesCapabilities">false</bool>
@@ -3101,103 +3195,9 @@ dance:Play()]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="SpecialMesh" referent="RBX837FBC9DCC6941018B93432F5242B13C">
-									<Properties>
-										<token name="MeshType">5</token>
-										<Content name="MeshId"><url>rbxassetid://4586601163</url></Content>
-										<Content name="TextureId"><null></null></Content>
-										<Vector3 name="Offset">
-											<X>0</X>
-											<Y>0</Y>
-											<Z>0</Z>
-										</Vector3>
-										<Vector3 name="Scale">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<Vector3 name="VertexColor">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">SpecialMesh</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="StringValue" referent="RBX0367A50456F34287B73F831CA6D6B74C">
-									<Properties>
-										<string name="Value">Classic</string>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">AvatarPartScaleType</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="Attachment" referent="RBX51D672D0E22944578CEADB02B62142FB">
-									<Properties>
-										<CoordinateFrame name="CFrame">
-											<X>0.00721549988</X>
-											<Y>0.412583828</Y>
-											<Z>-0.0243415833</Z>
-											<R00>1</R00>
-											<R01>7.87137466e-09</R01>
-											<R02>3.02998127e-15</R02>
-											<R10>-7.87137466e-09</R10>
-											<R11>1</R11>
-											<R12>-4.14442554e-16</R12>
-											<R20>-3.02998127e-15</R20>
-											<R21>4.14442527e-16</R21>
-											<R22>1</R22>
-										</CoordinateFrame>
-										<bool name="Visible">false</bool>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">HatAttachment</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-									<Item class="Vector3Value" referent="RBX853231F462DA4A35AA99F00C961F2D59">
-										<Properties>
-											<Vector3 name="Value">
-												<X>0.00721549988</X>
-												<Y>0.412583828</Y>
-												<Z>-0.0243415833</Z>
-											</Vector3>
-											<BinaryString name="AttributesSerialize"></BinaryString>
-											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-											<bool name="DefinesCapabilities">false</bool>
-											<string name="Name">OriginalPosition</string>
-											<int64 name="SourceAssetId">-1</int64>
-											<BinaryString name="Tags"></BinaryString>
-										</Properties>
-									</Item>
-								</Item>
-								<Item class="Vector3Value" referent="RBX78746AA082274FE596689AC08EFD6FA4">
-									<Properties>
-										<Vector3 name="Value">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">OriginalSize</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
 							</Item>
 						</Item>
-						<Item class="Accessory" referent="RBX7A883196BC83400CACB0B1D1E505234B">
+						<Item class="Accessory" referent="RBX316F316BCFF44BC1ACEB9592FD17D2DA">
 							<Properties>
 								<token name="AccessoryType">3</token>
 								<CoordinateFrame name="AttachmentPoint">
@@ -3221,7 +3221,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Part" referent="RBX324D0C86D4744EBEAE832247304E9398">
+							<Item class="Part" referent="RBX0C543BB4A6614A0A9B10ED732A296048">
 								<Properties>
 									<token name="shape">1</token>
 									<token name="formFactorRaw">1</token>
@@ -3319,7 +3319,101 @@ dance:Play()]]></ProtectedString>
 									<int64 name="SourceAssetId">-1</int64>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
-								<Item class="Weld" referent="RBXCF4820E82600423F833898E96B889202">
+								<Item class="SpecialMesh" referent="RBX7D2035E8F9C34E768BED45AC25630DFB">
+									<Properties>
+										<token name="MeshType">5</token>
+										<Content name="MeshId"><url>rbxassetid://15102877320</url></Content>
+										<Content name="TextureId"><null></null></Content>
+										<Vector3 name="Offset">
+											<X>0</X>
+											<Y>0</Y>
+											<Z>0</Z>
+										</Vector3>
+										<Vector3 name="Scale">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<Vector3 name="VertexColor">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">SpecialMesh</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="StringValue" referent="RBX7FABB933EC3F491E9C2F888CC2ECCD7A">
+									<Properties>
+										<string name="Value">Classic</string>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">AvatarPartScaleType</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Attachment" referent="RBXCF5EFEC1BDA14A43842D93DF74F5E596">
+									<Properties>
+										<CoordinateFrame name="CFrame">
+											<X>-3.81469727e-05</X>
+											<Y>-0.263648987</Y>
+											<Z>-0.13230896</Z>
+											<R00>-1</R00>
+											<R01>0</R01>
+											<R02>-8.74227766e-08</R02>
+											<R10>0</R10>
+											<R11>1</R11>
+											<R12>0</R12>
+											<R20>8.74227766e-08</R20>
+											<R21>0</R21>
+											<R22>-1</R22>
+										</CoordinateFrame>
+										<bool name="Visible">false</bool>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">FaceCenterAttachment</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+									<Item class="Vector3Value" referent="RBXC198E0A8184C479C966D39646AA7B625">
+										<Properties>
+											<Vector3 name="Value">
+												<X>-3.81469727e-05</X>
+												<Y>-0.263648987</Y>
+												<Z>-0.13230896</Z>
+											</Vector3>
+											<BinaryString name="AttributesSerialize"></BinaryString>
+											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+											<bool name="DefinesCapabilities">false</bool>
+											<string name="Name">OriginalPosition</string>
+											<int64 name="SourceAssetId">-1</int64>
+											<BinaryString name="Tags"></BinaryString>
+										</Properties>
+									</Item>
+								</Item>
+								<Item class="Vector3Value" referent="RBXA5C6DD7A28DC424FB2004D43CE46BF41">
+									<Properties>
+										<Vector3 name="Value">
+											<X>1</X>
+											<Y>1</Y>
+											<Z>1</Z>
+										</Vector3>
+										<BinaryString name="AttributesSerialize"></BinaryString>
+										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+										<bool name="DefinesCapabilities">false</bool>
+										<string name="Name">OriginalSize</string>
+										<int64 name="SourceAssetId">-1</int64>
+										<BinaryString name="Tags"></BinaryString>
+									</Properties>
+								</Item>
+								<Item class="Weld" referent="RBXA8DAF7B88DEB4E4CB053A9D0595507D8">
 									<Properties>
 										<CoordinateFrame name="C0">
 											<X>-3.81469727e-05</X>
@@ -3350,8 +3444,8 @@ dance:Play()]]></ProtectedString>
 											<R22>1</R22>
 										</CoordinateFrame>
 										<bool name="Enabled">true</bool>
-										<Ref name="Part0">RBX324D0C86D4744EBEAE832247304E9398</Ref>
-										<Ref name="Part1">RBX672B414ACB194136B46807B1EAF207C0</Ref>
+										<Ref name="Part0">RBX0C543BB4A6614A0A9B10ED732A296048</Ref>
+										<Ref name="Part1">RBX5ECED06DD879408B8AF2B8F19D77878E</Ref>
 										<BinaryString name="AttributesSerialize"></BinaryString>
 										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 										<bool name="DefinesCapabilities">false</bool>
@@ -3360,103 +3454,9 @@ dance:Play()]]></ProtectedString>
 										<BinaryString name="Tags"></BinaryString>
 									</Properties>
 								</Item>
-								<Item class="SpecialMesh" referent="RBXF822A684DB5D42DD8F4CC669D1BDE0B3">
-									<Properties>
-										<token name="MeshType">5</token>
-										<Content name="MeshId"><url>rbxassetid://15102877320</url></Content>
-										<Content name="TextureId"><null></null></Content>
-										<Vector3 name="Offset">
-											<X>0</X>
-											<Y>0</Y>
-											<Z>0</Z>
-										</Vector3>
-										<Vector3 name="Scale">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<Vector3 name="VertexColor">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">SpecialMesh</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="StringValue" referent="RBXE31A86F83D454F3FB4D36F2E22A3CF6C">
-									<Properties>
-										<string name="Value">Classic</string>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">AvatarPartScaleType</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
-								<Item class="Attachment" referent="RBX96710EB3F0274061A0A3A5F2B6EA3AB0">
-									<Properties>
-										<CoordinateFrame name="CFrame">
-											<X>-3.81469727e-05</X>
-											<Y>-0.263648987</Y>
-											<Z>-0.13230896</Z>
-											<R00>-1</R00>
-											<R01>0</R01>
-											<R02>-8.74227766e-08</R02>
-											<R10>0</R10>
-											<R11>1</R11>
-											<R12>0</R12>
-											<R20>8.74227766e-08</R20>
-											<R21>0</R21>
-											<R22>-1</R22>
-										</CoordinateFrame>
-										<bool name="Visible">false</bool>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">FaceCenterAttachment</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-									<Item class="Vector3Value" referent="RBXB5CC68EB0F4D41C2B344EE64B045862E">
-										<Properties>
-											<Vector3 name="Value">
-												<X>-3.81469727e-05</X>
-												<Y>-0.263648987</Y>
-												<Z>-0.13230896</Z>
-											</Vector3>
-											<BinaryString name="AttributesSerialize"></BinaryString>
-											<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-											<bool name="DefinesCapabilities">false</bool>
-											<string name="Name">OriginalPosition</string>
-											<int64 name="SourceAssetId">-1</int64>
-											<BinaryString name="Tags"></BinaryString>
-										</Properties>
-									</Item>
-								</Item>
-								<Item class="Vector3Value" referent="RBXC36231730D7244238F87CAC4EB11185B">
-									<Properties>
-										<Vector3 name="Value">
-											<X>1</X>
-											<Y>1</Y>
-											<Z>1</Z>
-										</Vector3>
-										<BinaryString name="AttributesSerialize"></BinaryString>
-										<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-										<bool name="DefinesCapabilities">false</bool>
-										<string name="Name">OriginalSize</string>
-										<int64 name="SourceAssetId">-1</int64>
-										<BinaryString name="Tags"></BinaryString>
-									</Properties>
-								</Item>
 							</Item>
 						</Item>
-						<Item class="BodyColors" referent="RBXDF810FE74E93491AAED9D7E4D028A629">
+						<Item class="BodyColors" referent="RBX1096E2D8B6F84B6FB1D27D7B89A1E8C6">
 							<Properties>
 								<Color3 name="HeadColor3">
 									<R>0.972549081</R>
@@ -3496,7 +3496,7 @@ dance:Play()]]></ProtectedString>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
 						</Item>
-						<Item class="Folder" referent="RBXE175952319084C32BFA014659F84E042">
+						<Item class="Folder" referent="RBXA9805356369542A5A12B51F3BAB742FF">
 							<Properties>
 								<BinaryString name="AttributesSerialize"></BinaryString>
 								<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
@@ -3505,62 +3505,7 @@ dance:Play()]]></ProtectedString>
 								<int64 name="SourceAssetId">-1</int64>
 								<BinaryString name="Tags"></BinaryString>
 							</Properties>
-							<Item class="Animation" referent="RBXD2AB76C8466F428CB9EC14051651C105">
-								<Properties>
-									<Content name="AnimationId"><url>rbxassetid://182436842</url></Content>
-									<BinaryString name="AttributesSerialize"></BinaryString>
-									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-									<bool name="DefinesCapabilities">false</bool>
-									<string name="Name">Dance1</string>
-									<int64 name="SourceAssetId">-1</int64>
-									<BinaryString name="Tags"></BinaryString>
-								</Properties>
-							</Item>
-							<Item class="Animation" referent="RBX4C913706D0764F6B9DCBB06191894CEA">
-								<Properties>
-									<Content name="AnimationId"><url>rbxassetid://182436935</url></Content>
-									<BinaryString name="AttributesSerialize"></BinaryString>
-									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-									<bool name="DefinesCapabilities">false</bool>
-									<string name="Name">Dance2</string>
-									<int64 name="SourceAssetId">-1</int64>
-									<BinaryString name="Tags"></BinaryString>
-								</Properties>
-							</Item>
-							<Item class="Animation" referent="RBX5A26AD172E5E44F982D36C7BBCBD83C9">
-								<Properties>
-									<Content name="AnimationId"><url>rbxassetid://95122046492636</url></Content>
-									<BinaryString name="AttributesSerialize"></BinaryString>
-									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-									<bool name="DefinesCapabilities">false</bool>
-									<string name="Name">Dance3</string>
-									<int64 name="SourceAssetId">-1</int64>
-									<BinaryString name="Tags"></BinaryString>
-								</Properties>
-							</Item>
-							<Item class="Animation" referent="RBX5FB102D7A50C4AEE8ED442C14D1CF436">
-								<Properties>
-									<Content name="AnimationId"><url>rbxassetid://110582425949578</url></Content>
-									<BinaryString name="AttributesSerialize"></BinaryString>
-									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-									<bool name="DefinesCapabilities">false</bool>
-									<string name="Name">Dance4</string>
-									<int64 name="SourceAssetId">-1</int64>
-									<BinaryString name="Tags"></BinaryString>
-								</Properties>
-							</Item>
-							<Item class="Animation" referent="RBX6F405FD4B2B04772A77D5C5EDDC6DC58">
-								<Properties>
-									<Content name="AnimationId"><url>rbxassetid://96847547310091</url></Content>
-									<BinaryString name="AttributesSerialize"></BinaryString>
-									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-									<bool name="DefinesCapabilities">false</bool>
-									<string name="Name">Dance5</string>
-									<int64 name="SourceAssetId">-1</int64>
-									<BinaryString name="Tags"></BinaryString>
-								</Properties>
-							</Item>
-							<Item class="Animation" referent="RBXE659C77FBFCA497A9DC6C7405725BFE5">
+							<Item class="Animation" referent="RBXDF50F2BBC968407BB6E7E296BC9AF816">
 								<Properties>
 									<Content name="AnimationId"><url>rbxassetid://182435998</url></Content>
 									<BinaryString name="AttributesSerialize"></BinaryString>
@@ -3571,15 +3516,70 @@ dance:Play()]]></ProtectedString>
 									<BinaryString name="Tags"></BinaryString>
 								</Properties>
 							</Item>
+							<Item class="Animation" referent="RBX203448B9A0944B09A2250344F3580304">
+								<Properties>
+									<Content name="AnimationId"><url>rbxassetid://182436842</url></Content>
+									<BinaryString name="AttributesSerialize"></BinaryString>
+									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+									<bool name="DefinesCapabilities">false</bool>
+									<string name="Name">Dance1</string>
+									<int64 name="SourceAssetId">-1</int64>
+									<BinaryString name="Tags"></BinaryString>
+								</Properties>
+							</Item>
+							<Item class="Animation" referent="RBX6459906935814390BA2D725325E00987">
+								<Properties>
+									<Content name="AnimationId"><url>rbxassetid://182436935</url></Content>
+									<BinaryString name="AttributesSerialize"></BinaryString>
+									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+									<bool name="DefinesCapabilities">false</bool>
+									<string name="Name">Dance2</string>
+									<int64 name="SourceAssetId">-1</int64>
+									<BinaryString name="Tags"></BinaryString>
+								</Properties>
+							</Item>
+							<Item class="Animation" referent="RBXF3950C0F1B414830BDF8AF01A44A9617">
+								<Properties>
+									<Content name="AnimationId"><url>rbxassetid://95122046492636</url></Content>
+									<BinaryString name="AttributesSerialize"></BinaryString>
+									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+									<bool name="DefinesCapabilities">false</bool>
+									<string name="Name">Dance3</string>
+									<int64 name="SourceAssetId">-1</int64>
+									<BinaryString name="Tags"></BinaryString>
+								</Properties>
+							</Item>
+							<Item class="Animation" referent="RBXC6431725E89D4E21947F2A01C37CFC0D">
+								<Properties>
+									<Content name="AnimationId"><url>rbxassetid://110582425949578</url></Content>
+									<BinaryString name="AttributesSerialize"></BinaryString>
+									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+									<bool name="DefinesCapabilities">false</bool>
+									<string name="Name">Dance4</string>
+									<int64 name="SourceAssetId">-1</int64>
+									<BinaryString name="Tags"></BinaryString>
+								</Properties>
+							</Item>
+							<Item class="Animation" referent="RBX1D653F57AF534B23ACC5C75264E64531">
+								<Properties>
+									<Content name="AnimationId"><url>rbxassetid://96847547310091</url></Content>
+									<BinaryString name="AttributesSerialize"></BinaryString>
+									<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+									<bool name="DefinesCapabilities">false</bool>
+									<string name="Name">Dance5</string>
+									<int64 name="SourceAssetId">-1</int64>
+									<BinaryString name="Tags"></BinaryString>
+								</Properties>
+							</Item>
 						</Item>
 					</Item>
 				</Item>
-				<Item class="Camera" referent="RBXD5B7DB6576A742B4B425F04C8F69C033">
+				<Item class="Camera" referent="RBX9AE6C16BCCB24D8C9BFC4F0EC426F6B5">
 					<Properties>
 						<CoordinateFrame name="CFrame">
 							<X>-362.138</X>
 							<Y>11.5</Y>
-							<Z>491.487</Z>
+							<Z>492.600006</Z>
 							<R00>1</R00>
 							<R01>1.45761632e-11</R01>
 							<R02>0</R02>
