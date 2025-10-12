@@ -35,7 +35,8 @@ return {
 				},
 				{
 					Text = "I destroyed it",
-					Type = "Close",
+					Type = "NextMessage",
+					NextId = "Two",
 				},
 			},
 		},

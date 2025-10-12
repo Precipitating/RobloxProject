@@ -3,6 +3,7 @@ local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local SoundLocation = SoundService
 local CurrentTheme = ReplicatedStorage.Sounds.CurrentTheme
+local ThemeLocked = false
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 local Themes = {
@@ -441,7 +442,12 @@ local OneShots = {
 local SoundHandler = {}
 
 function SoundHandler.StopTheme()
-	if CurrentTheme then
+	if ThemeLocked then
+		print(`Cannot stop theme, its locked`)
+		return
+	end
+	if CurrentTheme and CurrentTheme.IsPlaying then
+		print(`Stopped CurrentTheme`)
 		CurrentTheme:Stop()
 	end
 end
@@ -454,9 +460,15 @@ function SoundHandler.StopSound(soundName)
 		warn("No sound to stop, it's nil")
 	end
 end
-
+function SoundHandler.UnlockTheme()
+	if ThemeLocked then
+		print("Theme unlocked!")
+		ThemeLocked = false
+	end
+end
 function SoundHandler.StopAllSounds()
 	print("Stopping all sounds...")
+	SoundHandler.StopTheme()
 	local sounds = SoundLocation:GetChildren()
 	for _, sound in pairs(sounds) do
 		if sound:IsA("Sound") and sound.IsPlaying then
@@ -467,15 +479,18 @@ function SoundHandler.StopAllSounds()
 			sound:Stop()
 		end
 	end
-	SoundHandler.StopTheme()
 end
 
-function SoundHandler.PlayTheme(name)
-	if CurrentTheme then
-		print(`Should stop {name}`)
-		SoundHandler.StopTheme()
-		CurrentTheme.PlaybackSpeed = 1
+function SoundHandler.PlayTheme(name, lockTheme)
+	if ThemeLocked then
+		return
 	end
+	if lockTheme then
+		print(`{name} theme locked`)
+		ThemeLocked = true
+	end
+	SoundHandler.StopTheme()
+	CurrentTheme.PlaybackSpeed = 1
 
 	if Themes[name] then
 		local themeData = Themes[name]
@@ -490,7 +505,7 @@ function SoundHandler.PlayTheme(name)
 			CurrentTheme.PlaybackRegion = themeData.PlaybackRegion
 		end
 		CurrentTheme:Play()
-		print(`Theme set {name}`)
+		print(`Theme set {name}, should play`)
 	else
 		print("Theme not found")
 	end
@@ -517,14 +532,15 @@ end
 function SoundHandler.PlaySound(soundName)
 	print(`Playing {soundName}`)
 
-	-- if the sound currently exists, then the one shot is being rapidly played.
-	-- attempt to reuse the same instance for efficiency by setting it's time position back to 0
+	-- if the sound currently exists, just reuse it instead of a new sound instance.
 	local exists = SoundService:FindFirstChild(soundName)
 
 	if exists then
 		exists.TimePosition = 0
+		return
 	end
 
+	-- new instance of sound in SoundService
 	if OneShots[soundName] then
 		local soundData = OneShots[soundName]
 		local sound = Instance.new("Sound")

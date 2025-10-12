@@ -21,6 +21,8 @@ local FireballDamage = 20
 local MinigunDamage = 55
 local SoulFetchers = {}
 local PlayerDead = false
+local CanHurtPlayer = true
+local DamagePlayerCooldown = 0.1
 local PrevPos = nil
 
 local BossAttacks = nil
@@ -37,7 +39,6 @@ function PumpkinBossFight.Initialize(player)
 	PumpkinBossFight.LavaFunctionality(player)
 	-- give minigun
 	ServerHelperFunctions.GiveTool(player, { "Minigun", true })
-	GeneralRemotes.PlayTheme:FireClient(player, "PumpkinBossTheme")
 	task.wait(3)
 	PumpkinBossFight.BossInitialize(player)
 end
@@ -45,6 +46,9 @@ end
 function PumpkinBossFight.LavaFunctionality(player)
 	local lavaConn
 	lavaConn = Lava.Touched:Connect(function(hit)
+		if not CanHurtPlayer then
+			return
+		end
 		local name = hit.Name
 		if name == "Left Leg" or name == "Right Leg" then
 			PumpkinBossFight.BurnPart(hit)
@@ -52,6 +56,7 @@ function PumpkinBossFight.LavaFunctionality(player)
 		end
 
 		if name == "Torso" or name == "Head" then
+			print("hit lava")
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
 			lavaConn:Disconnect()
 		end
@@ -142,7 +147,7 @@ function PumpkinBossFight.LavaWave(_)
 	conn = wave.Touched:Connect(function(hit)
 		print("wave hit")
 		local player = game.Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
-		if player then
+		if player and CanHurtPlayer then
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
 			conn:Disconnect()
 		elseif hit:IsA("BasePart") and hit:IsDescendantOf(BuildingFolder) then
@@ -274,16 +279,20 @@ local function FireballExplosionHandler(fireball)
 	explodeSignal = explosion.Hit:Connect(function(explodeHit)
 		if CollectionService:HasTag(explodeHit, "SoulFetcher") then
 			explodeHit.Anchored = true
-			task.delay(0.5, function()
+			task.delay(1, function()
 				explodeHit.Anchored = false
 			end)
 			return
 		end
 		local player = game.Players:GetPlayerFromCharacter(explodeHit:FindFirstAncestorOfClass("Model"))
-		if player then
+		if player and CanHurtPlayer then
+			CanHurtPlayer = false
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, FireballDamage)
 			print("EXPLOSION HIT PLAYER")
 			explodeSignal:Disconnect()
+			task.delay(DamagePlayerCooldown, function()
+				CanHurtPlayer = true
+			end)
 		elseif explodeHit:IsA("BasePart") and explodeHit:IsDescendantOf(BuildingFolder) then
 			if explodeHit.Anchored then
 				explodeHit.Anchored = false
