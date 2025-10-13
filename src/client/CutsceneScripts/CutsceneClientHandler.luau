@@ -8,6 +8,7 @@ local TweenService = game:GetService("TweenService")
 
 local CodesOtaku = ReplicatedStorage.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
+local SoundHandles = {}
 
 -- Wait for camera
 if not workspace.CurrentCamera then
@@ -586,12 +587,13 @@ CutsceneClientHandler.KeyframeHandler = {
 	CupcakeLoverBossDefeated = function(instruction, _, _)
 		if instruction == 1 then
 			RunCutsceneAction(function()
-				SoundModule.PlaySound("CupcakeLoverGossip")
+				SoundHandles["CupcakeLoverGossip"] = SoundModule.PlaySound("CupcakeLoverGossip")
 			end)
 			UIHelperFunctions.AdjustBlackScreen(1, 1)
 		elseif instruction == 2 then
 			RunCutsceneAction(function()
-				task.wait(36)
+				SoundHandles["CupcakeLoverGossip"].Ended:Wait()
+				SoundHandles["CupcakeLoverGossip"] = nil
 				Speak("Player", "Nam-ahh-stay, Damon, Nam-ahh-stay")
 				SoundModule.PlaySound("EvilLaugh")
 			end)
