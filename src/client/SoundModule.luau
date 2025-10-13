@@ -438,6 +438,10 @@ local OneShots = {
 		SoundId = "rbxassetid://78519387192089",
 		Volume = 10,
 	},
+	Namaste = {
+		SoundId = "rbxassetid://90892943099699",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 
@@ -529,7 +533,7 @@ function SoundHandler.ResumeTheme()
 	end
 end
 
-function SoundHandler.PlaySound(soundName)
+function SoundHandler.PlaySound(soundName, parent)
 	print(`Playing {soundName}`)
 
 	-- if the sound currently exists, just reuse it instead of a new sound instance.
@@ -576,7 +580,12 @@ function SoundHandler.PlaySound(soundName)
 		end
 
 		-- auto destroy after finished playing
-		sound.Parent = SoundService
+		if parent then
+			sound.Parent = parent
+		else
+			sound.Parent = SoundService
+		end
+
 		sound:Play()
 		print(`{soundName} should play`)
 
