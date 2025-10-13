@@ -14,6 +14,7 @@ local Mouse = Player:GetMouse()
 local GeneralRemotes = ReplicatedStorage.Remotes
 local MissionRemotes = ReplicatedStorage.Missions.Events
 local GUILocation = ReplicatedStorage.GUI
+local Debris = game:GetService("Debris")
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -376,8 +377,15 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	local spinCanceled = false
 	local reloading = false
 	local reloadThread -- reference to the current reload coroutine
+	local startShootingThread
 	local finished = false
 
+	local rayParams = RaycastParams.new()
+	rayParams.FilterDescendantsInstances = { Character }
+	rayParams.FilterType = Enum.RaycastFilterType.Exclude
+	rayParams.IgnoreWater = true
+
+	-- game finished, boss or player dead
 	local function Finished(bossDead)
 		if finished then
 			return
@@ -410,6 +418,41 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 			print("you ded")
 		end
 	end
+
+	local function StopAllMinigunSounds()
+		stopSound:Stop()
+		revSound:Stop()
+		shootSound:Stop()
+	end
+
+	local function createBulletTrace(startPos, endPos)
+		local randomOffset = Vector3.new(math.random(-1, 1), math.random(-1, 1), 0)
+		endPos = endPos + randomOffset
+		local distance = 700
+		local direction = (endPos - startPos).Unit
+
+		-- shoot collision
+		local result = workspace:Raycast(startPos, direction * distance, rayParams)
+		if result and CollectionService:HasTag(result.Instance, "PumpkinBoss") then
+			print("hit boss")
+			GeneralRemotes.CupcakeLover.EnemyHit:FireServer("Boss")
+		elseif result and CollectionService:HasTag(result.Instance, "SoulFetcher") then
+			print("hit soul")
+			GeneralRemotes.CupcakeLover.EnemyHit:FireServer("SoulFetcher", result.Instance:GetAttribute("Id"))
+		end
+
+		local beam = Instance.new("Part")
+		beam.Size = Vector3.new(0.2, 0.2, distance)
+		beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
+		beam.Anchored = true
+		beam.CanCollide = false
+		beam.Material = Enum.Material.SmoothPlastic
+		beam.Color = Color3.fromRGB(255, 200, 50)
+		beam.Parent = workspace
+
+		Debris:AddItem(beam, 0.1)
+	end
+
 	-- boss hp events handler
 	trackConnect("R2DPumpkinBoss", bossHP:GetPropertyChangedSignal("Value"), function()
 		bossHPVal.Text = `{tostring(bossHP.Value)} HP`
@@ -455,6 +498,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		Humanoid.WalkSpeed = 17
 	end)
 
+	-- minigun unequipped
 	trackConnect("R2DPumpkinBoss", minigunTool.Unequipped, function()
 		equipped = false
 		if idleTrack then
@@ -476,6 +520,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		end
 	end)
 
+	-- reload minigun
 	local function startReload()
 		if reloading or not equipped then
 			return
@@ -509,97 +554,53 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	end
 
 	trackConnect("R2DPumpkinBoss", Mouse.Button1Down, function()
-		if not equipped then
+		if not equipped or holding or spinningUp then
 			return
 		end
-		-- reload
+
 		if minigunAmmo.Value <= 0 then
 			startReload()
 			return
 		end
-		if holding or spinningUp then
-			return
-		end
 
-		holding = true
-		spinningUp = true
-		spinCanceled = false
-
-		stopSound:Stop()
-		revSound:Stop()
-		shootSound:Stop()
-
-		-- start rev-up
+		holding, spinningUp, spinCanceled = true, true, false
+		StopAllMinigunSounds()
 		revSound:Play()
 
-		local rayParams = RaycastParams.new()
-		rayParams.FilterDescendantsInstances = { Character }
-		rayParams.FilterType = Enum.RaycastFilterType.Exclude
-		rayParams.IgnoreWater = true
-
-		local function createBulletTrace(startPos, endPos)
-			local randomOffset = Vector3.new(math.random(-1, 1), math.random(-1, 1), 0)
-			endPos = endPos + randomOffset
-			local distance = 500
-			local direction = (endPos - startPos).Unit
-
-			-- shoot collision
-			local result = workspace:Raycast(startPos, direction * distance, rayParams)
-			if result and CollectionService:HasTag(result.Instance, "PumpkinBoss") then
-				print("hit boss")
-				GeneralRemotes.CupcakeLover.EnemyHit:FireServer("Boss")
-			elseif result and CollectionService:HasTag(result.Instance, "SoulFetcher") then
-				print("hit soul")
-				GeneralRemotes.CupcakeLover.EnemyHit:FireServer("SoulFetcher", result.Instance:GetAttribute("Id"))
-			end
-
-			local beam = Instance.new("Part")
-			beam.Size = Vector3.new(0.2, 0.2, distance)
-			beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
-			beam.Anchored = true
-			beam.CanCollide = false
-			beam.Material = Enum.Material.SmoothPlastic
-			beam.Color = Color3.fromRGB(255, 200, 50)
-			beam.Parent = workspace
-
-			game:GetService("Debris"):AddItem(beam, 0.1)
+		-- cancel previous firing thread if still active
+		if startShootingThread and coroutine.status(startShootingThread) ~= "dead" then
+			coroutine.close(startShootingThread)
 		end
 
-		-- start spin-up timer
-		task.delay(1.5, function()
+		-- Spin-up + firing logic
+		startShootingThread = coroutine.create(function()
+			task.wait(1.5) -- spin-up delay
 			if spinCanceled then
 				return
 			end
 			spinningUp = false
 
-			-- only start firing if still holding
 			if not holding then
 				revSound:Stop()
 				stopSound:Play()
 				return
 			end
 
-			-- Start firing loop
+			-- Firing loop
 			while equipped and holding and minigunAmmo.Value > 0 and not spinCanceled do
 				if not shootSound.IsPlaying then
 					shootSound:Play()
 				end
 
-				minigunAmmo.Value = minigunAmmo.Value - 1
-
+				minigunAmmo.Value -= 1
 				createBulletTrace(shootPos.Position, Mouse.Hit.Position)
-
 				task.wait(0.04)
 			end
 
-			if not stopSound.IsPlaying then
-				stopSound:Play()
-			end
-
-			if shootSound.IsPlaying then
-				shootSound:Stop()
-			end
+			stopSound:Play()
+			shootSound:Stop()
 		end)
+		coroutine.resume(startShootingThread)
 	end)
 
 	trackConnect("R2DPumpkinBoss", Mouse.Button1Up, function()

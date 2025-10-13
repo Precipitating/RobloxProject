@@ -171,6 +171,7 @@ local function SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 		local dropDelayActivated = false
 
 		while soulFetcher do
+			-- if grabbing player initiate drop countdown
 			if grabbing and grabbing.Value and not dropDelayActivated then
 				dropDelayActivated = true
 				print("drop timer activated")
@@ -252,6 +253,7 @@ function PumpkinBossFight.SoulFetcher(player)
 					attachment.Attachment1 = soulFetcher:FindFirstChild("Attachment")
 					PlayerAttached = true
 					grabbing.Value = true
+					GeneralRemotes.PlaySound:InvokeClient(player, "Namaste", soulFetcher)
 				end
 			end
 			-- determines if touched wall, and flips opposite dir if so
