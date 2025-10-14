@@ -587,13 +587,11 @@ CutsceneClientHandler.KeyframeHandler = {
 	CupcakeLoverBossDefeated = function(instruction, _, _)
 		if instruction == 1 then
 			RunCutsceneAction(function()
-				SoundHandles["CupcakeLoverGossip"] = SoundModule.PlaySound("CupcakeLoverGossip")
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
 			end)
-			UIHelperFunctions.AdjustBlackScreen(1, 1)
 		elseif instruction == 2 then
 			RunCutsceneAction(function()
-				SoundHandles["CupcakeLoverGossip"].Ended:Wait()
-				SoundHandles["CupcakeLoverGossip"] = nil
+				SoundModule.PlaySound("CupcakeLoverGossip").Ended:Wait()
 				Speak("Player", "Nam-ahh-stay, Damon, Nam-ahh-stay")
 				SoundModule.PlaySound("EvilLaugh")
 			end)

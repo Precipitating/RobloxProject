@@ -3,6 +3,7 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local TweenService = game:GetService("TweenService")
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
@@ -314,6 +315,25 @@ MissionEventHandlers["PumpkinBossDefeated"] = function(player)
 	task.wait(1)
 	GeneralRemotes.PlayCutscene:FireClient(player, "CupcakeLoverBossDefeated")
 	BadgeHandler.awardBadge(player, 4095855021468711)
+end
+
+MissionEventHandlers["MoneyBaited"] = function(player)
+	local prison = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "Prison", nil)
+	local prisonSpawnLoc = prison:FindFirstChild("SpawnLoc")
+	local car = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "PoliceCar", nil)
+	local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Sine)
+	local moneyBait = workspace:FindFirstChild("North"):FindFirstChild("BaitMoney"):FindFirstChild("MoneyBait")
+	local carDest = moneyBait:FindFirstChild("PoliceDestination")
+	local goal = { Position = carDest.WorldPosition }
+	moneyBait:Destroy()
+	local tween = TweenService:Create(car, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	task.wait(1)
+	player.Character:PivotTo(prisonSpawnLoc.WorldCFrame)
+	GeneralRemotes.BlackFade:FireClient(player, 3, 1)
+	GeneralRemotes.EnableControls:FireClient(player)
 end
 
 return MissionEventHandlers

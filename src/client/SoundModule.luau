@@ -433,6 +433,7 @@ local OneShots = {
 	Oi = {
 		SoundId = "rbxassetid://109660701821480",
 		Volume = 10,
+		PlaybackRegion = NumberRange.new(0.25, 1.503),
 	},
 	RecordScratch = {
 		SoundId = "rbxassetid://78519387192089",

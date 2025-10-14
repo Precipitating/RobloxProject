@@ -273,6 +273,18 @@ local function R2DBossPrompts(prompt)
 	stacks.Value = 2
 end
 
+local function MoneyBaitPrompt(prompt)
+	if not (CollectionService:HasTag(prompt.Parent, "MoneyBait")) then
+		return
+	end
+	MovementModule.DisableControls()
+	prompt.Enabled = false
+	SoundModule.PlaySound("Oi").Ended:Wait()
+	Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
+	SoundModule.PlayTheme("PrisonTheme")
+	print("BAITED")
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -281,4 +293,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	SlotMachineProximityPrompts(prompt)
 	WheelSpinner(prompt)
 	R2DBossPrompts(prompt)
+	MoneyBaitPrompt(prompt)
 end)

@@ -12,7 +12,7 @@ ServerRemotes.Initialize()
 -- initialize a NPC class for each NPC tag
 NPCModule:Init()
 
--- spawn player in their room when spawned
+-- handles player spawning
 Players.PlayerAdded:Connect(function(player)
 	PlayerInitialize.SetupAchievements(player)
 	local safePosition = nil
