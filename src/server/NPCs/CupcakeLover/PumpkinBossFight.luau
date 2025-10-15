@@ -59,6 +59,7 @@ function PumpkinBossFight.LavaFunctionality(player)
 			print("hit lava")
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
 			lavaConn:Disconnect()
+			lavaConn = nil
 		end
 	end)
 end
@@ -150,6 +151,7 @@ function PumpkinBossFight.LavaWave(_)
 		if player and CanHurtPlayer then
 			GeneralRemotes.CupcakeLover.DamagePlayer:FireClient(player, 100)
 			conn:Disconnect()
+			conn = nil
 		elseif hit:IsA("BasePart") and hit:IsDescendantOf(BuildingFolder) then
 			print("should destroy brticks")
 			PumpkinBossFight.BurnPart(hit)
@@ -320,12 +322,10 @@ function PumpkinBossFight.Fireball(player)
 			sound:Play()
 		end
 
-		local conn = nil
-		conn = fireball.Touched:Connect(function(fireballTouch)
+		fireball.Touched:Once(function(fireballTouch)
 			if CollectionService:HasTag(fireballTouch, "SoulFetcher") then
 				return
 			end
-			conn:Disconnect()
 			fireball:Destroy()
 			FireballExplosionHandler(fireball)
 			fireball = nil

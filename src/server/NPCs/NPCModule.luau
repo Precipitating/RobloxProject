@@ -1,13 +1,14 @@
 local NPC = {}
 local NPCStorage = {}
-local Collections = game:GetService("CollectionService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
+local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local InitializedRemote = ReplicatedStorage.Events.NPC.InitializedNPC
 local ArrivedRemote = ReplicatedStorage.Events.NPC.ArrivedDestination
 local WeepingAngelModeEvent = ReplicatedStorage.Events.NPC.WeepingAngelMode
 local TweenService = game:GetService("TweenService")
+local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 
 NPC.__index = NPC
 
@@ -16,7 +17,6 @@ function NPC.new(model)
 	self.ModeDebounce = false
 	self.Model = model
 	self.Name = nil
-	self.Health = 100
 	self.AvailablePaths = nil
 	self.LastMode = nil
 	self.Humanoid = model:FindFirstChild("Humanoid")
@@ -30,6 +30,11 @@ end
 
 function NPC:GetModel()
 	return self.Model
+end
+
+function NPC:Erase()
+	self:DisconnectAllConnections()
+	NPCStorage[self.Name] = nil
 end
 
 function NPC:DisconnectAllConnections()
@@ -134,8 +139,35 @@ function NPC:GetNPC(name)
 	end
 end
 
+function NPC:InitSingle(currNPC)
+	if currNPC:IsA("Model") and currNPC:FindFirstChildOfClass("Humanoid") then
+		-- new NPC object to be stored into a table
+		local assignedNPC = NPC.new(currNPC)
+		assignedNPC.Name = currNPC.Name
+
+		-- check for valid destination points and set if so, optional
+		if currNPC.Parent:FindFirstChild("NavLocations") then
+			assignedNPC:SetPathStorage(currNPC.Parent:FindFirstChild("NavLocations"))
+			print(`{currNPC.Name} NPC has path data, storing...`)
+		end
+		NPCStorage[currNPC.Name] = assignedNPC
+
+		-- set all bodyparts network ownership to nil (fix stuttering issue with pathfinding)
+		for _, part in pairs(currNPC:GetChildren()) do
+			if part:IsA("BasePart") then --
+				part:SetNetworkOwner(nil)
+			end
+		end
+
+		task.defer(function()
+			print(`Intialize remote for {currNPC.Name}`)
+			InitializedRemote:Fire(currNPC.Name)
+		end)
+	end
+end
+
 function NPC:Init()
-	local NPCList = Collections:GetTagged("MoveableNPC")
+	local NPCList = ServerHelperFunctions.GetTaggedOfDirectory(workspace, "MoveableNPC")
 	-- get all MoveableNPC tagged objects and initialize it
 	for _, currNPC in pairs(NPCList) do
 		if currNPC:IsA("Model") and currNPC:FindFirstChildOfClass("Humanoid") then
@@ -186,7 +218,7 @@ function NPC:StartPathing(targetPos)
 
 	self.PathCancelled = false
 	local path = PathfindingService:CreatePath({
-		AgentCanJump = true,
+		AgentCanJump = false,
 		AgentRadius = 2,
 		Costs = {
 			Pavement = 1,
@@ -216,7 +248,7 @@ function NPC:StartPathing(targetPos)
 		end
 	end
 
-	ArrivedRemote:Fire(self.Name)
+	ArrivedRemote:Fire(self.Name, targetPos.Name)
 end
 
 return NPC

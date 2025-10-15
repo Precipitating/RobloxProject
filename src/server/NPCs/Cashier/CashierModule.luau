@@ -208,6 +208,7 @@ function CashierModule.FailedEvent(player)
 	connection = GeneralRemotes.SoundEnded.OnServerEvent:Connect(function(_, finishedName)
 		if finishedName == "CashierManager" then
 			connection:Disconnect()
+			connection = nil
 
 			-- tween to camera
 			local cashierPos = workspace.Shop.Cashier.Cashier.PrimaryPart.Position

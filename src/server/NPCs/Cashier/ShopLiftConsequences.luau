@@ -109,9 +109,10 @@ function ShopLiftConsequences.SpawnJacker(player)
 	tween:Play()
 
 	-- destroy after tween finishes
-	tween.Completed:Connect(function()
+	tween.Completed:Once(function()
 		if attackTouchEvent then
 			attackTouchEvent:Disconnect()
+			attackTouchEvent = nil
 		end
 		jacker:Destroy()
 	end)

@@ -1,4 +1,7 @@
+local CollectionService = game:GetService("CollectionService")
+local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
 local CashierModule = require(script.Parent.NPCs.Cashier.CashierModule)
@@ -76,19 +79,44 @@ function ServerRemotes.NPCRemotes()
 		print(`{name} NPC set to Patrol mode!`)
 	end)
 
-	Events.NPC.ArrivedDestination.Event:Connect(function(name)
+	Events.NPC.ArrivedDestination.Event:Connect(function(name, pathName)
 		local npc = NPCModule:GetNPC(name)
 
 		if npc:GetMode() == "Patrol" then
 			local function PatrolMode()
 				local pathData = npc:GetPathStorage():GetChildren()
 				local nextLocation = pathData[math.random(1, #pathData)]
+
+				if name == "Warden" then
+					if pathName and pathName == "PlayerCellArrived" then
+						npc:SetMode("Interacting")
+
+						if not PrisonWardenEvent.CheckSuspicion() then
+							task.wait(math.random(4, 6))
+							npc:SetMode("Patrol")
+						end
+
+						return
+					end
+					task.wait(math.random(5, 10))
+				end
 				npc:StartPathing(nextLocation)
 			end
 
 			PatrolMode()
 			print(`{name} arrived at destination. Go next`)
 		end
+	end)
+
+	CollectionService:GetInstanceAddedSignal("MoveableNPC"):Connect(function(model)
+		NPCModule:InitSingle(model)
+		print(`New NPC instance initialized`)
+	end)
+
+	CollectionService:GetInstanceRemovedSignal("MoveableNPC"):Connect(function(model)
+		local npc = NPCModule:GetNPC(model.Name)
+		npc:Erase()
+		print("MoveableNPC model removed:", model.Name)
 	end)
 end
 

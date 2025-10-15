@@ -304,10 +304,8 @@ function HaulJob.ClientInit()
 	end)
 
 	-- game finished disconnect connections client
-	local conn
-	conn = Remotes.HaulJob.GameFinished.OnClientEvent:Connect(function()
+	Remotes.HaulJob.GameFinished.OnClientEvent:Once(function()
 		MousePositionConn:Disconnect()
-		conn:Disconnect()
 		MB1Clicked:Disconnect()
 		SoundModule.PlayTheme("Main")
 	end)
