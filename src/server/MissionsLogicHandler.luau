@@ -13,6 +13,7 @@ local ShopLiftConsequences = require(ServerScriptService.Server.NPCs.Cashier.Sho
 local PumpkinBossFight = require(ServerScriptService.Server.NPCs.CupcakeLover.PumpkinBossFight)
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
+local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -334,6 +335,7 @@ MissionEventHandlers["MoneyBaited"] = function(player)
 	player.Character:PivotTo(prisonSpawnLoc.WorldCFrame)
 	GeneralRemotes.BlackFade:FireClient(player, 3, 1)
 	GeneralRemotes.EnableControls:FireClient(player)
+	PrisonWardenEvent.SetPlayerRef(player)
 end
 
 return MissionEventHandlers

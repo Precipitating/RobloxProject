@@ -94,14 +94,10 @@ local function SpawnSheep(player, currentRoad)
 		sheep.Parent = currentRoad
 
 		-- Touched connection
-		local conn
-		conn = sheep.Touched:Connect(function(hit)
+		sheep.Touched:Once(function(hit)
 			if CollectionService:HasTag(hit, "DrivingTestCar") then
 				GeneralRemotes.PlaySound:InvokeClient(player, "Baa")
 				SheepsHit += 1
-				if conn then
-					conn:Disconnect()
-				end
 				if sheep and sheep.Parent then
 					sheep:Destroy()
 				end
@@ -115,10 +111,7 @@ local function SpawnSheep(player, currentRoad)
 			local goalCFrame = endPosPart:GetPivot()
 			local tween = TweenService:Create(sheep, tweenInfo, { CFrame = goalCFrame })
 			tween:Play()
-			tween.Completed:Connect(function()
-				if conn then
-					conn:Disconnect()
-				end
+			tween.Completed:Once(function()
 				if sheep and sheep.Parent then
 					sheep:Destroy()
 				end
@@ -383,6 +376,7 @@ local function AddFinishedRoad(player)
 			return
 		end
 		conn:Disconnect()
+		conn = nil
 		-- transition
 		GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 		GeneralRemotes.DisableControls:FireClient(player, nil)

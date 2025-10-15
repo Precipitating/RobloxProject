@@ -300,7 +300,7 @@ function ZombieJob.ClientInit()
 
 	-- game finished disconnect connections client
 	local conn
-	conn = Remotes.ZombieJob.GameFinished.OnClientEvent:Connect(function()
+	conn = Remotes.ZombieJob.GameFinished.OnClientEvent:Once(function()
 		MousePositionConn:Disconnect()
 		conn:Disconnect()
 		MB1Clicked:Disconnect()
