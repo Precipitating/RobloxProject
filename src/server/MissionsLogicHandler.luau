@@ -318,6 +318,7 @@ MissionEventHandlers["PumpkinBossDefeated"] = function(player)
 	BadgeHandler.awardBadge(player, 4095855021468711)
 end
 
+-- Money Baited
 MissionEventHandlers["MoneyBaited"] = function(player)
 	local prison = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "Prison", nil)
 	local prisonSpawnLoc = prison:FindFirstChild("SpawnLoc")
@@ -336,6 +337,17 @@ MissionEventHandlers["MoneyBaited"] = function(player)
 	GeneralRemotes.BlackFade:FireClient(player, 3, 1)
 	GeneralRemotes.EnableControls:FireClient(player)
 	PrisonWardenEvent.SetPlayerRef(player)
+end
+
+MissionEventHandlers["ApplyBlanketToCell"] = function(player)
+	if PrisonWardenEvent.IsCellCovered() then
+		warn("Already covered cell!")
+		return
+	end
+	if ServerHelperFunctions.IsEquippingToolCalled(player, "Blanket") then
+		ServerHelperFunctions.RemoveEquippedTool(player)
+		PrisonWardenEvent.SetCellCovered(player, true)
+	end
 end
 
 return MissionEventHandlers

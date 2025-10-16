@@ -19,6 +19,7 @@ function NPC.new(model)
 	self.Name = nil
 	self.AvailablePaths = nil
 	self.LastMode = nil
+	self.LastPathArrived = nil
 	self.Humanoid = model:FindFirstChild("Humanoid")
 	self.HumanoidRootPart = model:FindFirstChild("HumanoidRootPart")
 	self.Mode = "Idle"
@@ -35,6 +36,14 @@ end
 function NPC:Erase()
 	self:DisconnectAllConnections()
 	NPCStorage[self.Name] = nil
+end
+
+function NPC:SetLastPathArrived(lastPathName)
+	self.LastPathArrived = lastPathName
+end
+
+function NPC:GetLastPathArrived()
+	return self.LastPathArrived
 end
 
 function NPC:DisconnectAllConnections()
