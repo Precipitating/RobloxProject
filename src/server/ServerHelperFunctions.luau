@@ -127,6 +127,17 @@ function ServerHelperFunctions.RemoveEquippedTool(player)
 		end
 	end
 end
+function ServerHelperFunctions.IsEquippingToolCalled(player, name)
+	if player.Character then
+		for _, item in pairs(player.Character:GetChildren()) do
+			if item:IsA("Tool") and item.Name == name then
+				return true
+			end
+		end
+	end
+
+	return false
+end
 
 -- switch dialogue file for an NPC (NPC must have string component called "NPCName" with a tag )
 function ServerHelperFunctions.SetNPCDialogueFile(fromToTable)
@@ -171,7 +182,12 @@ function ServerHelperFunctions.DestroyObject(objectTagList)
 		end
 	end
 end
-
+function ServerHelperFunctions.DestroyObjectByName(name)
+	local obj = workspace:FindFirstChild(name)
+	if obj then
+		obj:Destroy()
+	end
+end
 -- set a tagged mesh visible/invisible with collision/no collison
 -- mesh must be tagged
 function ServerHelperFunctions.SetMeshVisibility(meshTagList)

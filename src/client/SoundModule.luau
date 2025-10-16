@@ -443,6 +443,14 @@ local OneShots = {
 		SoundId = "rbxassetid://90892943099699",
 		Volume = 1,
 	},
+	BlanketPull = {
+		SoundId = "rbxassetid://9117373365",
+		Volume = 0.5,
+	},
+	Confused = {
+		SoundId = "rbxassetid://154157416",
+		Volume = 0.5,
+	},
 }
 local SoundHandler = {}
 

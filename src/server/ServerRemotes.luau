@@ -81,29 +81,36 @@ function ServerRemotes.NPCRemotes()
 
 	Events.NPC.ArrivedDestination.Event:Connect(function(name, pathName)
 		local npc = NPCModule:GetNPC(name)
-
+		if pathName then
+			npc:SetLastPathArrived(pathName)
+		end
 		if npc:GetMode() == "Patrol" then
-			local function PatrolMode()
-				local pathData = npc:GetPathStorage():GetChildren()
-				local nextLocation = pathData[math.random(1, #pathData)]
+			local pathData = npc:GetPathStorage():GetChildren()
+			local nextLocation = pathData[math.random(1, #pathData)]
 
-				if name == "Warden" then
-					if pathName and pathName == "PlayerCellArrived" then
-						npc:SetMode("Interacting")
+			if name == "Warden" then
+				if pathName and pathName == "PlayerCellArrived" then
+					npc:SetMode("Interacting")
 
-						if not PrisonWardenEvent.CheckSuspicion() then
-							task.wait(math.random(4, 6))
-							npc:SetMode("Patrol")
-						end
-
-						return
+					if not PrisonWardenEvent.CheckSuspicion() then
+						npc:SetMode("Patrol")
+					else
+						print("Oi")
 					end
-					task.wait(math.random(5, 10))
+				elseif pathName and pathName == "McDonaldsCellArrived" then
+					task.spawn(PrisonWardenEvent.SpawnSpoon)
+					task.wait(math.random(5, 7))
+					npc:StartPathing(nextLocation)
+				else
+					if npc:GetLastPathArrived() ~= "PlayerCellArrived" then
+						task.wait(math.random(5, 7))
+					end
+					npc:StartPathing(nextLocation)
 				end
-				npc:StartPathing(nextLocation)
+				return
 			end
 
-			PatrolMode()
+			npc:StartPathing(nextLocation)
 			print(`{name} arrived at destination. Go next`)
 		end
 	end)
@@ -270,6 +277,10 @@ function ServerRemotes.UtilityRemotes()
 	GeneralRemotes.CanTalk.OnServerInvoke = function()
 		return TalkModuleHelpers.GetCanTalk()
 	end
+
+	GeneralRemotes.DestroyObjectByName.OnServerEvent:Connect(function(player, name)
+		ServerHelperFunctions.DestroyObjectByName(name)
+	end)
 end
 
 function ServerRemotes.Initialize()

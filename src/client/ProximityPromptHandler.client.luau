@@ -274,15 +274,21 @@ local function R2DBossPrompts(prompt)
 end
 
 local function MoneyBaitPrompt(prompt)
-	if not (CollectionService:HasTag(prompt.Parent, "MoneyBait")) then
-		return
+	if CollectionService:HasTag(prompt.Parent, "MoneyBait") then
+		MovementModule.DisableControls()
+		prompt.Enabled = false
+		SoundModule.PlaySound("Oi").Ended:Wait()
+		Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
+		SoundModule.PlayTheme("PrisonTheme")
+		print("BAITED")
+	elseif CollectionService:HasTag(prompt.Parent, "Blanket") then
+		Events.GiveToolEvent:FireServer({ "Blanket", true })
+	elseif CollectionService:HasTag(prompt.Parent, "CoverCell") then
+		Events.ExecuteScenarioEvent:FireServer("ApplyBlanketToCell")
+	elseif CollectionService:HasTag(prompt.Parent, "PrisonSpoon") then
+		Events.GiveToolEvent:FireServer({ "PrisonSpoon", false })
+		GeneralRemotes.DestroyObjectByName:FireServer(prompt.Parent.Name)
 	end
-	MovementModule.DisableControls()
-	prompt.Enabled = false
-	SoundModule.PlaySound("Oi").Ended:Wait()
-	Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
-	SoundModule.PlayTheme("PrisonTheme")
-	print("BAITED")
 end
 
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
