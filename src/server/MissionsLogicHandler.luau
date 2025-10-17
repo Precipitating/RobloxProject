@@ -350,4 +350,56 @@ MissionEventHandlers["ApplyBlanketToCell"] = function(player)
 	end
 end
 
+MissionEventHandlers["UnscrewToilet"] = function(player)
+	local holdingSpoon = player.Character:FindFirstChild("PrisonSpoon")
+	if not holdingSpoon then
+		warn("Not holding spoon, can't unscrew toilet.")
+		return
+	end
+	local toilet = workspace:FindFirstChild("Prison"):FindFirstChild("EscapeToilet")
+	if not toilet then
+		error("Toilet ref missing")
+	end
+
+	holdingSpoon:Destroy()
+
+	-- handle open/close toilet prompts
+	local function HandleToiletMovement()
+		local unscrewPrompt = toilet:FindFirstChild("UnscrewPrompt")
+		local openPrompt = toilet:FindFirstChild("OpenPrompt")
+		local closePrompt = toilet:FindFirstChild("ClosePrompt")
+		local isToiletOpened = toilet:FindFirstChild("Opened")
+		if not unscrewPrompt or not closePrompt or not openPrompt then
+			error("Missing toilet prompt references")
+		end
+		unscrewPrompt.Enabled = false
+
+		local toiletMoveTween = TweenInfo.new(2, Enum.EasingStyle.Sine)
+		local openGoal = { Position = toilet.Position + Vector3.new(5, 0, 0) }
+		local closeGoal = { Position = toilet.Position }
+		local openTween = TweenService:Create(toilet, toiletMoveTween, openGoal)
+		local closeTween = TweenService:Create(toilet, toiletMoveTween, closeGoal)
+		openPrompt.Enabled = true
+
+		-- handle open/close toilet
+		isToiletOpened:GetPropertyChangedSignal("Value"):Connect(function()
+			print("BoolValue changed to:", isToiletOpened.Value)
+			if isToiletOpened.Value then
+				openPrompt.Enabled = false
+				openTween:Play()
+				openTween.Completed:Wait()
+				closePrompt.Enabled = true
+				PrisonWardenEvent.SetDoingSusActivity(true)
+			else
+				closePrompt.Enabled = false
+				closeTween:Play()
+				closeTween.Completed:Wait()
+				openPrompt.Enabled = true
+				PrisonWardenEvent.SetDoingSusActivity(false)
+			end
+		end)
+	end
+
+	HandleToiletMovement()
+end
 return MissionEventHandlers

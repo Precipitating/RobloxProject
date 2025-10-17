@@ -671,6 +671,24 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		end
 	end,
+
+	MoneyBaitCaught = function(instruction, _, _)
+		local hand = workspace:WaitForChild("ElectricChairRoom"):WaitForChild("Hand")
+		if instruction == 1 then
+			RunCutsceneAction(function()
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
+				task.wait(math.random(10, 20))
+				Music:Stop()
+				local handMoveTween = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
+				local pullHandleGoal = { Position = hand.Position - Vector3.new(0, 2, 0) }
+				local executeTween = TweenService:Create(hand, handMoveTween, pullHandleGoal)
+				executeTween:Play()
+				executeTween.Completed:Wait()
+				SoundModule.PlaySound("Electrocution")
+				UIHelperFunctions.AdjustBlackScreen(0, 0)
+			end)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -782,6 +800,10 @@ CutsceneClientHandler.Initialize = {
 	CupcakeLoverBossFailed = function()
 		Music.SoundId = "rbxassetid://1841476350"
 		Music.Volume = 0.1
+	end,
+	MoneyBaitCaught = function()
+		Music.SoundId = "rbxassetid://1841797920"
+		Music.Volume = 0.3
 	end,
 }
 

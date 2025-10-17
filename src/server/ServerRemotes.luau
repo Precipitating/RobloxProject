@@ -81,12 +81,16 @@ function ServerRemotes.NPCRemotes()
 
 	Events.NPC.ArrivedDestination.Event:Connect(function(name, pathName)
 		local npc = NPCModule:GetNPC(name)
-		if pathName then
-			npc:SetLastPathArrived(pathName)
-		end
+
 		if npc:GetMode() == "Patrol" then
+			if pathName then
+				npc:SetLastPathArrived(pathName)
+			end
 			local pathData = npc:GetPathStorage():GetChildren()
-			local nextLocation = pathData[math.random(1, #pathData)]
+			local nextLocation = nil
+			repeat
+				nextLocation = pathData[math.random(1, #pathData)]
+			until npc:GetLastPathArrived() ~= nextLocation.Name
 
 			if name == "Warden" then
 				if pathName and pathName == "PlayerCellArrived" then
@@ -94,8 +98,6 @@ function ServerRemotes.NPCRemotes()
 
 					if not PrisonWardenEvent.CheckSuspicion() then
 						npc:SetMode("Patrol")
-					else
-						print("Oi")
 					end
 				elseif pathName and pathName == "McDonaldsCellArrived" then
 					task.spawn(PrisonWardenEvent.SpawnSpoon)
@@ -283,6 +285,16 @@ function ServerRemotes.UtilityRemotes()
 	end)
 end
 
+function ServerRemotes.MoneyBaitRemotes()
+	GeneralRemotes.MoneyBait.ShiftToilet.OnServerEvent:Connect(function(_, val)
+		local toilet = workspace:FindFirstChild("Prison"):FindFirstChild("EscapeToilet")
+		if not toilet then
+			error("Missing toilet ref")
+		end
+		toilet:FindFirstChild("Opened").Value = val
+	end)
+end
+
 function ServerRemotes.Initialize()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -297,6 +309,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.JobRemotes()
 	ServerRemotes.RoadEventsRemotes()
 	ServerRemotes.UtilityRemotes()
+	ServerRemotes.MoneyBaitRemotes()
 end
 
 return ServerRemotes

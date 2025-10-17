@@ -451,6 +451,19 @@ local OneShots = {
 		SoundId = "rbxassetid://154157416",
 		Volume = 0.5,
 	},
+	MetalSnap = {
+		SoundId = "rbxassetid://9113764330",
+		Volume = 0.5,
+		PlaybackRegion = NumberRange.new(0, 0.7),
+	},
+	Dig = {
+		SoundId = "rbxassetid://180163752",
+		Volume = 0.5,
+	},
+	Electrocution = {
+		SoundId = "rbxassetid://139635783652659",
+		Volume = 10,
+	},
 }
 local SoundHandler = {}
 
