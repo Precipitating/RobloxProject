@@ -17,6 +17,7 @@ local HouseDoorDebounce = false
 
 -- talk
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
+local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -286,8 +287,15 @@ local function MoneyBaitPrompt(prompt)
 	elseif CollectionService:HasTag(prompt.Parent, "CoverCell") then
 		Events.ExecuteScenarioEvent:FireServer("ApplyBlanketToCell")
 	elseif CollectionService:HasTag(prompt.Parent, "PrisonSpoon") then
-		Events.GiveToolEvent:FireServer({ "PrisonSpoon", false })
+		Events.GiveToolEvent:FireServer({ "PrisonSpoon", true })
 		GeneralRemotes.DestroyObjectByName:FireServer(prompt.Parent.Name)
+		InitializeToolModule["PrisonSpoon"](Player.Backpack:WaitForChild("PrisonSpoon"))
+	elseif CollectionService:HasTag(prompt, "UnscrewToilet") then
+		Events.ExecuteScenarioEvent:FireServer("UnscrewToilet")
+	elseif CollectionService:HasTag(prompt, "OpenToilet") then
+		GeneralRemotes.MoneyBait.ShiftToilet:FireServer(true)
+	elseif CollectionService:HasTag(prompt, "CloseToilet") then
+		GeneralRemotes.MoneyBait.ShiftToilet:FireServer(false)
 	end
 end
 

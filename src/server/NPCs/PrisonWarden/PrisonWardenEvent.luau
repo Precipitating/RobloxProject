@@ -1,6 +1,7 @@
 local Debris = game:GetService("Debris")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local PrisonWardenEvent = {}
@@ -79,6 +80,13 @@ function PrisonWardenEvent.CheckSuspicion()
 	repeat
 		if PlayerDoingSuspiciousActivity then
 			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Oi", WardenRef)
+			GeneralRemotes.DisableControls:FireClient(PlayerRef)
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom")
+			GeneralRemotes.BlackFade:FireClient(PlayerRef, 3, 0)
+			task.wait(5)
+			BadgeHandler.awardBadge(PlayerRef, 157269881825360)
+			GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "MoneyBaitCaught")
+
 			caught = true
 		end
 		task.wait(1)
