@@ -464,6 +464,10 @@ local OneShots = {
 		SoundId = "rbxassetid://139635783652659",
 		Volume = 10,
 	},
+	PaperScrunch = {
+		SoundId = "rbxassetid://9117204119",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 

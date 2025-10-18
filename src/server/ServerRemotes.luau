@@ -100,7 +100,11 @@ function ServerRemotes.NPCRemotes()
 						npc:SetMode("Patrol")
 					end
 				elseif pathName and pathName == "McDonaldsCellArrived" then
-					task.spawn(PrisonWardenEvent.SpawnSpoon)
+					task.spawn(PrisonWardenEvent.SpawnThrowable, "PrisonSpoon")
+					task.wait(math.random(5, 7))
+					npc:StartPathing(nextLocation)
+				elseif pathName and pathName == "Prisoner1CellArrived" then
+					task.spawn(PrisonWardenEvent.SpawnThrowable, "Paper")
 					task.wait(math.random(5, 7))
 					npc:StartPathing(nextLocation)
 				else
@@ -280,8 +284,16 @@ function ServerRemotes.UtilityRemotes()
 		return TalkModuleHelpers.GetCanTalk()
 	end
 
-	GeneralRemotes.DestroyObjectByName.OnServerEvent:Connect(function(player, name)
+	GeneralRemotes.DestroyObjectByName.OnServerEvent:Connect(function(_, name)
 		ServerHelperFunctions.DestroyObjectByName(name)
+	end)
+
+	GeneralRemotes.ConsumeTool.OnServerInvoke = function(player, name, amount)
+		return ServerHelperFunctions.ConsumeTool(player, name, amount)
+	end
+
+	GeneralRemotes.RemoveEquippedTool.OnServerEvent:Connect(function(player)
+		ServerHelperFunctions.RemoveEquippedTool(player)
 	end)
 end
 
