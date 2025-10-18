@@ -3,23 +3,43 @@ local ServerStorage = game:GetService("ServerStorage")
 local ServerTools = ServerStorage.Tools
 local ServerHelperFunctions = {}
 
+function ServerHelperFunctions.AlreadyOwnsTool(player, name)
+	local toolLocs = { player.Backpack, player.Character }
+
+	for _, container in pairs(toolLocs) do
+		if container then
+			for _, tool in ipairs(container:GetChildren()) do
+				if tool:IsA("Tool") and tool.Name == name then
+					print("Found tool:", tool.Name)
+					return true
+				end
+			end
+		end
+	end
+
+	return false
+end
+
 -- clone a tool from ServerStorage to player backpack
 -- data[1] = toolName
 -- data[2] = only one allowed
 function ServerHelperFunctions.GiveTool(player, data)
-	if data[2] ~= nil and data[2] == true then
-		ServerHelperFunctions.RemoveTools(player, { data[1] }, nil)
-		print("ONLY ONE TOOL OF THIS TYPE ALLOWED IN BP")
+	if data[2] then
+		if ServerHelperFunctions.AlreadyOwnsTool(player, data[1]) then
+			print(`You already own {data[1]}!`)
+			return false
+		end
 	end
 	local tool = ServerTools:FindFirstChild(data[1])
 	if not tool then
 		error("Tool not found:", data[1])
-		return
+		return false
 	end
 	local clone = tool:Clone()
 	clone.Parent = player.Backpack
 
 	print(data[1] .. " should be in your backpack")
+	return true
 end
 
 -- remove tools, should a player own it (they should)
@@ -60,6 +80,43 @@ function ServerHelperFunctions.RemoveTools(player, toolsStringList, tag)
 	end
 
 	return found
+end
+
+function ServerHelperFunctions.ConsumeTool(player, toolName, amount)
+	if ServerHelperFunctions.OwnsXAmountOf(player, toolName, amount) then
+		return ServerHelperFunctions.DeleteXAmountOf(player, toolName, amount)
+	end
+	return false
+end
+function ServerHelperFunctions.OwnsXAmountOf(player, toolName, targetAmount)
+	ServerHelperFunctions.ForceUnEquip(player)
+	task.wait()
+	local amount = 0
+	for _, tool in ipairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == toolName then
+			amount += 1
+			if amount >= targetAmount then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+function ServerHelperFunctions.DeleteXAmountOf(player, toolName, amount)
+	ServerHelperFunctions.ForceUnEquip(player)
+	task.wait()
+	for _, tool in ipairs(player.Backpack:GetChildren()) do
+		if tool:IsA("Tool") and tool.Name == toolName then
+			tool:Destroy()
+			amount -= 1
+			if amount <= 0 then
+				return true
+			end
+		end
+	end
+
+	return false
 end
 
 -- spawn a model
@@ -116,6 +173,10 @@ function ServerHelperFunctions.ForceEquip(player, name)
 	else
 		warn(`{name} not in backpack, probably equipped it already`)
 	end
+end
+
+function ServerHelperFunctions.ForceUnEquip(player)
+	player.Character.Humanoid:UnequipTools()
 end
 
 function ServerHelperFunctions.RemoveEquippedTool(player)

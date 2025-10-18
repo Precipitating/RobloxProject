@@ -42,7 +42,7 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 	local cooldown = 1
 	local dist = 5
 	local canAttack = true
-	local hitsBeforeBreak = 5
+	local hitsBeforeBreak = 2
 	local rayParams = RaycastParams.new()
 	rayParams.FilterDescendantsInstances = { Character }
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
@@ -68,7 +68,7 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 				if hitsBeforeBreak <= 0 then
 					SoundModule.PlaySound("MetalSnap")
 					InitializeToolModule.DisconnectAll("PrisonSpoon")
-					tool:Destroy()
+					GeneralRemotes.RemoveEquippedTool:FireServer()
 				end
 			end
 

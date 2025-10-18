@@ -16,6 +16,7 @@ local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
+local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
 local SoundModule = require(script.Parent.SoundModule)
@@ -208,7 +209,7 @@ local function ShopBasketProximityPrompt(prompt)
 		local itemName = prompt:FindFirstChild("ItemName")
 
 		if itemName then
-			Events.GiveToolEvent:FireServer({ itemName.Value, false })
+			Events.GiveToolEvent:InvokeServer({ itemName.Value, false })
 			print(`Item given: {itemName}`)
 		end
 	end
@@ -275,27 +276,81 @@ local function R2DBossPrompts(prompt)
 end
 
 local function MoneyBaitPrompt(prompt)
-	if CollectionService:HasTag(prompt.Parent, "MoneyBait") then
-		MovementModule.DisableControls()
-		prompt.Enabled = false
-		SoundModule.PlaySound("Oi").Ended:Wait()
-		Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
-		SoundModule.PlayTheme("PrisonTheme")
-		print("BAITED")
-	elseif CollectionService:HasTag(prompt.Parent, "Blanket") then
-		Events.GiveToolEvent:FireServer({ "Blanket", true })
-	elseif CollectionService:HasTag(prompt.Parent, "CoverCell") then
-		Events.ExecuteScenarioEvent:FireServer("ApplyBlanketToCell")
-	elseif CollectionService:HasTag(prompt.Parent, "PrisonSpoon") then
-		Events.GiveToolEvent:FireServer({ "PrisonSpoon", true })
-		GeneralRemotes.DestroyObjectByName:FireServer(prompt.Parent.Name)
-		InitializeToolModule["PrisonSpoon"](Player.Backpack:WaitForChild("PrisonSpoon"))
-	elseif CollectionService:HasTag(prompt, "UnscrewToilet") then
-		Events.ExecuteScenarioEvent:FireServer("UnscrewToilet")
-	elseif CollectionService:HasTag(prompt, "OpenToilet") then
-		GeneralRemotes.MoneyBait.ShiftToilet:FireServer(true)
-	elseif CollectionService:HasTag(prompt, "CloseToilet") then
-		GeneralRemotes.MoneyBait.ShiftToilet:FireServer(false)
+	local parent = prompt.Parent
+
+	local function GiveTool(name, onlyOneAllowed)
+		return Events.GiveToolEvent:InvokeServer({ name, onlyOneAllowed })
+	end
+
+	local function DestroyObject()
+		GeneralRemotes.DestroyObjectByName:FireServer(parent.Name)
+	end
+
+	-- tag-action map
+	local tagActions = {
+		MoneyBait = function()
+			MovementModule.DisableControls()
+			prompt.Enabled = false
+			SoundModule.PlaySound("Oi").Ended:Wait()
+			Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
+			SoundModule.PlayTheme("PrisonTheme")
+			print("BAITED")
+		end,
+
+		Blanket = function()
+			GiveTool("Blanket", true)
+		end,
+		PaperClone = function()
+			Events.ExecuteScenarioEvent:FireServer("ApplyPaperClone")
+		end,
+
+		Sink = function()
+			local amountToCreateClone = 3
+			local done = GeneralRemotes.ConsumeTool:InvokeServer("Paper", amountToCreateClone)
+
+			if done then
+				GiveTool("PaperClone", true)
+			else
+				warn("Not enough paper to create clone")
+			end
+		end,
+
+		CoverCell = function()
+			Events.ExecuteScenarioEvent:FireServer("ApplyBlanketToCell")
+		end,
+
+		PrisonSpoon = function()
+			local givenTool = GiveTool("PrisonSpoon", true)
+			if givenTool then
+				InitializeToolModule["PrisonSpoon"](Player.Backpack:WaitForChild("PrisonSpoon"))
+				DestroyObject()
+			end
+		end,
+
+		Paper = function()
+			GiveTool("Paper", false)
+			DestroyObject()
+		end,
+
+		UnscrewToilet = function()
+			Events.ExecuteScenarioEvent:FireServer("UnscrewToilet")
+		end,
+
+		OpenToilet = function()
+			GeneralRemotes.MoneyBait.ShiftToilet:FireServer(true)
+		end,
+
+		CloseToilet = function()
+			GeneralRemotes.MoneyBait.ShiftToilet:FireServer(false)
+		end,
+	}
+
+	-- execute action for the first matching tag
+	for tag, action in pairs(tagActions) do
+		if CollectionService:HasTag(parent, tag) or CollectionService:HasTag(prompt, tag) then
+			action()
+			break
+		end
 	end
 end
 

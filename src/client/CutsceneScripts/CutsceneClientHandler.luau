@@ -2,6 +2,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
+local SoundService = game:GetService("SoundService")
 local StarterPlayer = game:GetService("StarterPlayer")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
@@ -825,6 +826,7 @@ function CutsceneClientHandler.Play(name)
 	-- Reset state
 	bin = true
 	SoundModule.StopAllSounds()
+	SoundService:SetListener(Enum.ListenerType.Camera)
 	-- Disconnect previous RenderStepped if exists
 	if currentRenderStepped then
 		currentRenderStepped:Disconnect()

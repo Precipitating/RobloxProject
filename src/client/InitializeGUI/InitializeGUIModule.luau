@@ -326,7 +326,7 @@ InitializeGUIModule["BakeryCashier"] = function()
 
 			-- can afford, give tool and reduce money
 			GeneralRemotes.ReduceMoney:FireServer(price.Value)
-			MissionRemotes.GiveToolEvent:FireServer({ item.Name, false })
+			MissionRemotes.GiveToolEvent:InvokeServer({ item.Name, false })
 		end)
 	end
 	print("success")
@@ -621,4 +621,5 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 
 	print("success")
 end
+
 return InitializeGUIModule

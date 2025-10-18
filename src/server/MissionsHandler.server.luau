@@ -55,15 +55,18 @@ ReplicatedStorage.Missions.Events.ProgressMissionEvent.OnServerEvent:Connect(fun
 	end
 end)
 
-ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerEvent:Connect(function(player, data)
+ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerInvoke = function(player, data)
 	print(`Server received GiveToolEvent, attempting to give you the tool {data[1]} `)
+	local result = false
 	if typeof(data) == "table" then
-		ServerHelperFunctions.GiveTool(player, data)
-
-		-- if tool uses GUI
-		GeneralRemotes.InitializeGUI:FireClient(player, data[1])
+		result = ServerHelperFunctions.GiveTool(player, data)
+		if result then
+			-- if tool uses GUI
+			GeneralRemotes.InitializeGUI:FireClient(player, data[1])
+		end
 	end
-end)
+	return result
+end
 
 ReplicatedStorage.Missions.Events.ForceEquipEvent.OnServerEvent:Connect(function(player, toolName)
 	print("Force equip tool arrived at server")

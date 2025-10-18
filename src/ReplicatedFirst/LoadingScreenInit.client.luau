@@ -42,9 +42,15 @@ local function CleanCharacter()
 		end
 	end
 
+	-- every mesh's texture should be white
 	for _, mesh in ipairs(PlayerModel:GetDescendants()) do
 		if mesh:IsA("CharacterMesh") then
 			mesh.OverlayTextureId = ""
+		elseif mesh:IsA("MeshPart") then
+			mesh.TextureID = ""
+			mesh.Color = Color3.new(1, 1, 1)
+		elseif mesh:IsA("SpecialMesh") then
+			mesh.TextureId = ""
 		end
 	end
 
