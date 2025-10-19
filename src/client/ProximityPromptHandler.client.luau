@@ -16,7 +16,6 @@ local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
-local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
 local SoundModule = require(script.Parent.SoundModule)
@@ -43,6 +42,13 @@ local RoomEnterFunctions = {
 		-- ensure its loaded first
 		workspace:WaitForChild(modelName)
 		GeneralRemotes.Gamba.InitializeSlotMachines:FireServer()
+	end,
+	InfirmaryEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		GeneralRemotes.MoneyBait.EscapedRoomSet:FireServer(true)
+		GeneralRemotes.DestroyObjectByName:FireServer("Prison")
+		SoundModule.PlayTheme("TimeTheme")
+		Events.ExecuteScenarioEvent:FireServer("InfirmaryRoomEntered")
 	end,
 }
 
@@ -342,6 +348,37 @@ local function MoneyBaitPrompt(prompt)
 
 		CloseToilet = function()
 			GeneralRemotes.MoneyBait.ShiftToilet:FireServer(false)
+		end,
+
+		RopeCurtain = function()
+			GiveTool("CurtainTool", false)
+			DestroyObject()
+		end,
+		RopeCraftTable = function()
+			local amountToCreateRope = 2
+			local done = GeneralRemotes.ConsumeTool:InvokeServer("CurtainTool", amountToCreateRope)
+
+			if done then
+				GiveTool("Rope", true)
+			else
+				warn("Not enough curtains to create rope")
+			end
+		end,
+		RopeHookPoint = function()
+			local hooked = GeneralRemotes.MoneyBait.HookRope:InvokeServer(prompt.Parent.Name)
+			if hooked then
+				prompt.Enabled = false
+			end
+		end,
+
+		CloseElevator = function()
+			prompt.Enabled = false
+			GeneralRemotes.MoneyBait.ActivateElevator:FireServer()
+		end,
+
+		ClimbRope = function()
+			prompt.Enabled = false
+			GeneralRemotes.MoneyBait.PlayerAttachRope:FireServer()
 		end,
 	}
 

@@ -143,7 +143,7 @@ function NPC:GetNPC(name)
 	if NPCStorage[name] then
 		return NPCStorage[name]
 	else
-		error(`{name} isnt stored in NPCList`)
+		warn(`{name} isnt stored in NPCList`)
 		return nil
 	end
 end
@@ -163,7 +163,7 @@ function NPC:InitSingle(currNPC)
 
 		-- set all bodyparts network ownership to nil (fix stuttering issue with pathfinding)
 		for _, part in pairs(currNPC:GetChildren()) do
-			if part:IsA("BasePart") then --
+			if part:IsA("BasePart") then
 				part:SetNetworkOwner(nil)
 			end
 		end

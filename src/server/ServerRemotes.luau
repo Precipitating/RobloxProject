@@ -92,7 +92,7 @@ function ServerRemotes.NPCRemotes()
 				nextLocation = pathData[math.random(1, #pathData)]
 			until npc:GetLastPathArrived() ~= nextLocation.Name
 
-			if name == "Warden" then
+			if name == "Warden" and not PrisonWardenEvent.HasEscaped() then
 				if pathName and pathName == "PlayerCellArrived" then
 					npc:SetMode("Interacting")
 
@@ -304,6 +304,29 @@ function ServerRemotes.MoneyBaitRemotes()
 			error("Missing toilet ref")
 		end
 		toilet:FindFirstChild("Opened").Value = val
+	end)
+
+	GeneralRemotes.MoneyBait.EscapedRoomSet.OnServerEvent:Connect(function(_, val)
+		PrisonWardenEvent.SetEscapedRoom(val)
+	end)
+
+	GeneralRemotes.MoneyBait.HookRope.OnServerInvoke = function(player, modelName)
+		local isEquippingRope = ServerHelperFunctions.IsEquippingToolCalled(player, "Rope")
+
+		if isEquippingRope then
+			return PrisonWardenEvent.HookRope(player, modelName)
+		else
+			warn("Equip the rope first")
+			return false
+		end
+	end
+
+	GeneralRemotes.MoneyBait.ActivateElevator.OnServerEvent:Connect(function(player)
+		PrisonWardenEvent.CloseElevatorAndPullRope(player)
+	end)
+
+	GeneralRemotes.MoneyBait.PlayerAttachRope.OnServerEvent:Connect(function(player)
+		PrisonWardenEvent.PlayerAttachRope(player)
 	end)
 end
 
