@@ -368,4 +368,8 @@ MissionEventHandlers["ApplyPaperClone"] = function(player)
 	end
 end
 
+MissionEventHandlers["InfirmaryRoomEntered"] = function(player)
+	PrisonWardenEvent.InfirmaryDoorInit(player)
+end
+
 return MissionEventHandlers

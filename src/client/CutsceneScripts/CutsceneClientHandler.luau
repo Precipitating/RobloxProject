@@ -9,7 +9,6 @@ local TweenService = game:GetService("TweenService")
 
 local CodesOtaku = ReplicatedStorage.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
-local SoundHandles = {}
 
 -- Wait for camera
 if not workspace.CurrentCamera then

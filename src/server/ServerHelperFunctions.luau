@@ -1,6 +1,8 @@
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerStorage = game:GetService("ServerStorage")
 local ServerTools = ServerStorage.Tools
+local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerHelperFunctions = {}
 
 function ServerHelperFunctions.AlreadyOwnsTool(player, name)
@@ -37,7 +39,7 @@ function ServerHelperFunctions.GiveTool(player, data)
 	end
 	local clone = tool:Clone()
 	clone.Parent = player.Backpack
-
+	GeneralRemotes.PlaySound:InvokeClient(player, "Rustle")
 	print(data[1] .. " should be in your backpack")
 	return true
 end
@@ -244,7 +246,7 @@ function ServerHelperFunctions.DestroyObject(objectTagList)
 	end
 end
 function ServerHelperFunctions.DestroyObjectByName(name)
-	local obj = workspace:FindFirstChild(name)
+	local obj = workspace:FindFirstChild(name, true)
 	if obj then
 		obj:Destroy()
 	end

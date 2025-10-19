@@ -1,3 +1,4 @@
+local CollectionService = game:GetService("CollectionService")
 local Debris = game:GetService("Debris")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -23,8 +24,26 @@ local PlayerRef = nil
 local PaperCloneActivated = false
 local PaperCloneRef = nil
 
+local EscapedRoom = false
+
+local EscapedPrison = false
+
 function PrisonWardenEvent.SetPlayerRef(player)
 	PlayerRef = player
+end
+
+function PrisonWardenEvent.SetEscapedRoom(val)
+	EscapedRoom = val
+
+	if EscapedRoom then
+		WardenRef = nil
+		BlanketCoverRef = nil
+		PaperCloneRef = nil
+	end
+end
+
+function PrisonWardenEvent.HasEscaped()
+	return EscapedRoom
 end
 function PrisonWardenEvent.IsCellCovered()
 	return PlayerCellCovered
@@ -62,7 +81,7 @@ function PrisonWardenEvent.SetupCellRegion(prisonModel)
 	params.FilterDescendantsInstances = { PlayerRef.Character }
 
 	task.spawn(function()
-		while task.wait(1) do
+		while task.wait(1) and not EscapedRoom do
 			local partsInRegion = workspace:GetPartBoundsInBox(regionPart.CFrame, regionPart.Size, params)
 			local isPlayerInCell = false
 
@@ -177,6 +196,11 @@ function PrisonWardenEvent.CheckSuspicion()
 	if not WardenRef then
 		WardenRef = workspace:FindFirstChild("Prison"):FindFirstChild("PrisonWarden"):FindFirstChild("Warden")
 	end
+
+	if EscapedRoom then
+		warn("Player escaped already, not checking suspicion")
+		return
+	end
 	local caught = false
 
 	local secondsWatched = 0
@@ -216,4 +240,188 @@ function PrisonWardenEvent.CheckSuspicion()
 	return caught
 end
 
+function PrisonWardenEvent.InfirmaryDoorInit(player)
+	local doorRef = workspace:FindFirstChild("Infirmary"):FindFirstChild("DoorBang")
+	if not doorRef then
+		error("Missing door ref for infirmary")
+	end
+
+	local tweenInfo = TweenInfo.new(
+		0.1,
+		Enum.EasingStyle.Bounce, -- EasingStyle
+		Enum.EasingDirection.Out, -- EasingDirection
+		-1, -- RepeatCount (when less than zero the tween will loop indefinitely)
+		true, -- Reverses (tween will reverse once reaching it's goal)
+		0.65 -- DelayTime
+	)
+	local goal = { CFrame = doorRef.CFrame * CFrame.new(-0.3, 0, 0) }
+	local tween = TweenService:Create(doorRef, tweenInfo, goal)
+
+	tween:Play()
+
+	local sound = doorRef:FindFirstChild("AudioPlayer")
+
+	if sound then
+		sound:Play()
+	end
+
+	-- start timer before door breaks open
+	task.spawn(function()
+		local timeBeforeDoorOpens = 120
+		while timeBeforeDoorOpens > 0 do
+			task.wait(1)
+			timeBeforeDoorOpens -= 1
+		end
+
+		if EscapedPrison then
+			return
+		end
+
+		-- reach here = failed
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom", nil)
+		tween:Cancel()
+		doorRef.Anchored = false
+		doorRef:SetNetworkOwner(nil)
+		sound:Stop()
+		doorRef:ApplyImpulse(Vector3.new(0, 0, 60) * doorRef.AssemblyMass)
+
+		local mcDonaldMan = workspace:FindFirstChild("Infirmary"):FindFirstChild("McDonaldMan")
+		if not mcDonaldMan then
+			error("McDonald man missing")
+		end
+		tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
+		goal = { CFrame = mcDonaldMan.PrimaryPart.CFrame * CFrame.new(5, 0, 0) }
+		tween = TweenService:Create(mcDonaldMan.PrimaryPart, tweenInfo, goal)
+		tween:Play()
+		tween.Completed:Wait()
+
+		GeneralRemotes.PlaySound:InvokeClient(player, "Oi")
+		GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+
+		task.wait(3)
+		GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitCaught")
+		print("Failed to escape")
+	end)
+end
+
+function PrisonWardenEvent.HookRope(player, modelName)
+	local hooked = false
+	local hookObjectsFolder = workspace:FindFirstChild("Infirmary"):FindFirstChild("HookObjects")
+	local targetHook = hookObjectsFolder:FindFirstChild(modelName)
+	local ropeConstraint = hookObjectsFolder:FindFirstChild("RopeConstraint")
+
+	if not targetHook then
+		error(`Failed to get hook model reference {modelName}`)
+	end
+
+	if not ropeConstraint then
+		error("Failed to get rope constraint reference")
+	end
+
+	local ropeConstraint0 = ropeConstraint.Attachment0
+	local ropeConstraint1 = ropeConstraint.Attachment1
+	if not ropeConstraint0 then
+		ropeConstraint.Attachment0 = targetHook:FindFirstChild("Attachment")
+		hooked = true
+	else
+		if not ropeConstraint1 then
+			ropeConstraint.Attachment1 = targetHook:FindFirstChild("Attachment")
+			hooked = true
+		end
+	end
+
+	if ropeConstraint and ropeConstraint.Attachment0 and ropeConstraint.Attachment1 then
+		ServerHelperFunctions.RemoveEquippedTool(player)
+		local elevatorButton = hookObjectsFolder:FindFirstChild("CloseElevatorButton")
+		if not elevatorButton then
+			error("Failed to get elevator button ref")
+		end
+		elevatorButton:FindFirstChild("ProximityPrompt").Enabled = true
+		print("Rope connected, should be removed from inventory")
+	end
+
+	return hooked
+end
+
+function PrisonWardenEvent.CloseElevatorAndPullRope(player)
+	local hookObjectsFolder = workspace:FindFirstChild("Infirmary"):FindFirstChild("HookObjects")
+	local door = hookObjectsFolder:FindFirstChild("Door")
+	if not door then
+		error("Missing elevator door ref")
+	end
+
+	-- close door
+	GeneralRemotes.PlaySound:InvokeClient(player, "CloseElevator", door)
+	local tweenInfo = TweenInfo.new(2, Enum.EasingStyle.Linear)
+	local goal = { CFrame = door.CFrame * CFrame.new(0, 0, -4.409) }
+	local tween = TweenService:Create(door, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+
+	-- start pulling rope
+	local ropeRail = hookObjectsFolder:FindFirstChild("RopeRail")
+	if not ropeRail then
+		error("Failed to get rope rail ref")
+	end
+	tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Linear)
+	GeneralRemotes.PlaySound:InvokeClient(player, "MoveElevator", door)
+	goal = { Position = ropeRail.Position - Vector3.new(8, 0, 0) }
+	tween = TweenService:Create(ropeRail, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+
+	-- rip bars off window
+	local bar = hookObjectsFolder:FindFirstChild("Bars")
+	bar.Anchored = false
+	bar:SetNetworkOwner(nil)
+	task.wait(0.03)
+	GeneralRemotes.PlaySound:InvokeClient(player, "GateRip", bar)
+	bar:ApplyImpulse(Vector3.new(-60, 0, 0) * bar.AssemblyMass)
+
+	-- enable climb prompt
+	local climbPrompt = hookObjectsFolder:FindFirstChild("ClimbRopePart"):FindFirstChild("ProximityPrompt")
+	if not climbPrompt then
+		error("Failed to get climb prompt ref")
+	end
+	climbPrompt.Enabled = true
+end
+
+function PrisonWardenEvent.PlayerAttachRope(player)
+	local infirmary = workspace:FindFirstChild("Infirmary")
+	local character = player.Character
+	local hook = infirmary:FindFirstChild("Hook")
+
+	if not hook then
+		error("Failed to get hook reference")
+	end
+	local characterAttachment = character.Torso.BodyFrontAttachment
+	local hookAttachment = hook:FindFirstChild("HookOnAttachment")
+
+	-- hook player onto rope
+	local alignOrientation = hookAttachment:FindFirstChildOfClass("AlignOrientation")
+	local alignPos = hookAttachment:FindFirstChildOfClass("AlignPosition")
+	alignOrientation.Attachment1 = characterAttachment
+	alignPos.Attachment1 = characterAttachment
+	character.Humanoid.PlatformStand = true
+
+	-- set player anim
+	local animation = Instance.new("Animation")
+	animation.AnimationId = "rbxassetid://85149388449475"
+	local animTrack = character.Humanoid:LoadAnimation(animation)
+	animTrack:Play()
+
+	-- slowly move hook
+	local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Sine)
+	local goal = { Position = hookAttachment.Position + Vector3.new(0, 61, 0) }
+	local tween = TweenService:Create(hookAttachment, tweenInfo, goal)
+	tween:Play()
+
+	-- if completed, then stop hooking player
+	tween.Completed:Wait()
+	character.Humanoid.PlatformStand = false
+	animTrack:Stop()
+	alignOrientation.Attachment1 = nil
+	alignPos.Attachment1 = nil
+	EscapedPrison = true
+end
 return PrisonWardenEvent

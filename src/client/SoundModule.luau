@@ -163,6 +163,10 @@ local Themes = {
 		SoundId = "rbxassetid://98069162367799",
 		Volume = 0.4,
 	},
+	TimeTheme = {
+		SoundId = "rbxassetid://1835350683",
+		Volume = 0.5,
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -467,6 +471,18 @@ local OneShots = {
 	PaperScrunch = {
 		SoundId = "rbxassetid://9117204119",
 		Volume = 1,
+	},
+	CloseElevator = {
+		SoundId = "rbxassetid://2506816593",
+		Volume = 0.5,
+	},
+	MoveElevator = {
+		SoundId = "rbxassetid://2560232460",
+		Volume = 0.5,
+	},
+	GateRip = {
+		SoundId = "rbxassetid://9116630729",
+		Volume = 5,
 	},
 }
 local SoundHandler = {}
