@@ -82,6 +82,11 @@ function ServerRemotes.NPCRemotes()
 	Events.NPC.ArrivedDestination.Event:Connect(function(name, pathName)
 		local npc = NPCModule:GetNPC(name)
 
+		if not npc then
+			warn("NPC doesn't exist in the table")
+			return
+		end
+
 		if npc:GetMode() == "Patrol" then
 			if pathName then
 				npc:SetLastPathArrived(pathName)
@@ -327,6 +332,10 @@ function ServerRemotes.MoneyBaitRemotes()
 
 	GeneralRemotes.MoneyBait.PlayerAttachRope.OnServerEvent:Connect(function(player)
 		PrisonWardenEvent.PlayerAttachRope(player)
+	end)
+
+	GeneralRemotes.MoneyBait.FailedRope.OnServerEvent:Connect(function(player)
+		PrisonWardenEvent.CancelRopeTween()
 	end)
 end
 

@@ -15,6 +15,7 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local MissionRemotes = ReplicatedStorage.Missions.Events
 local GUILocation = ReplicatedStorage.GUI
 local Debris = game:GetService("Debris")
+local TweenService = game:GetService("TweenService")
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -620,6 +621,71 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	end)
 
 	print("success")
+end
+
+InitializeGUIModule["ClimbRopeQuickTime"] = function()
+	if PlayerGui:FindFirstChild("QuickTimeGUI") then
+		warn("QuickTime GUI already open")
+		return
+	end
+
+	local guiLoc = GUILocation:WaitForChild("MoneyBait")
+	if not guiLoc then
+		error("Missing MoneyBait GUI Folder ref")
+	end
+	local gui = guiLoc:WaitForChild("QuickTimeGUI")
+
+	local guiButton = guiLoc:WaitForChild("ClickOrFallButton")
+
+	-- setup initial GUI
+	local guiClone = gui:Clone()
+	guiClone.Parent = PlayerGui
+	local frame = guiClone:WaitForChild("Frame")
+
+	-- spawn buttons randomly
+	local running = true
+
+	guiClone.AncestryChanged:Once(function()
+		running = false
+		guiClone:Destroy()
+		print("Client detected QuickTimeGUI destroyed!")
+	end)
+
+	task.spawn(function()
+		while running do
+			-- decimal between 1 to 3.0
+			task.wait((math.random() * 2.5) + 0.5)
+			local cloneButton: TextButton = guiButton:Clone()
+			-- setup random colours & scale
+			cloneButton.BackgroundColor3 = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+			local uiScale = cloneButton:WaitForChild("UIScale")
+			if uiScale then
+				uiScale.Scale = (math.random() * 2.5) + 0.5
+			end
+			cloneButton.Position = UDim2.fromScale((math.random()), math.random())
+			cloneButton.Parent = frame
+
+			cloneButton.Activated:Once(function()
+				cloneButton:Destroy()
+				SoundModule.PlaySound("OldSplat")
+			end)
+
+			-- tween to 0 scale
+			local tweenInfo = TweenInfo.new(math.random(3, 6), Enum.EasingStyle.Linear)
+
+			local goal = { Scale = 0 }
+			local tween = TweenService:Create(uiScale, tweenInfo, goal)
+			tween:Play()
+
+			tween.Completed:Once(function(state)
+				if state == Enum.PlaybackState.Completed then
+					running = false
+					GeneralRemotes.MoneyBait.FailedRope:FireServer()
+					guiClone:Destroy()
+				end
+			end)
+		end
+	end)
 end
 
 return InitializeGUIModule
