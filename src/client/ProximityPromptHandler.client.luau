@@ -379,6 +379,7 @@ local function MoneyBaitPrompt(prompt)
 		ClimbRope = function()
 			prompt.Enabled = false
 			GeneralRemotes.MoneyBait.PlayerAttachRope:FireServer()
+			InitializeGUIModule["ClimbRopeQuickTime"]()
 		end,
 	}
 

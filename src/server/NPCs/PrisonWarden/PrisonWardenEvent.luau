@@ -1,4 +1,3 @@
-local CollectionService = game:GetService("CollectionService")
 local Debris = game:GetService("Debris")
 local HttpService = game:GetService("HttpService")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -26,10 +25,24 @@ local PaperCloneRef = nil
 
 local EscapedRoom = false
 
-local EscapedPrison = false
+local GameFinished = false
+
+local RopeClimbTime = 30
+
+local RopeTweenHandle = nil
 
 function PrisonWardenEvent.SetPlayerRef(player)
 	PlayerRef = player
+end
+
+function PrisonWardenEvent.CancelRopeTween()
+	if not RopeTweenHandle then
+		warn("No rope tween handle exists! Possibly cancelled already")
+		return
+	end
+	RopeTweenHandle:Cancel()
+	RopeTweenHandle = nil
+	print("Rope tween cancelled!")
 end
 
 function PrisonWardenEvent.SetEscapedRoom(val)
@@ -66,6 +79,22 @@ function PrisonWardenEvent.SetPaperClone(val)
 	end
 end
 
+function PrisonWardenEvent.SetGameFinished(val)
+	if val then
+		GameFinished = true
+		PlayerRef.Character:PivotTo(workspace.BlackRoom.SpawnLoc:GetPivot())
+		GeneralRemotes.DisableControls:FireClient(PlayerRef)
+		local infirmary = workspace:FindFirstChild("Infirmary")
+		local prison = workspace:FindFirstChild("Prison")
+
+		if infirmary then
+			infirmary:Destroy()
+		end
+		if prison then
+			prison:Destroy()
+		end
+	end
+end
 function PrisonWardenEvent.UpdateSuspicion()
 	PlayerDoingSuspiciousActivity = ToiletOpened or (not PlayerInCell and not PaperCloneActivated)
 end
@@ -222,6 +251,7 @@ function PrisonWardenEvent.CheckSuspicion()
 			GeneralRemotes.DisableControls:FireClient(PlayerRef)
 			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom")
 			GeneralRemotes.BlackFade:FireClient(PlayerRef, 3, 0)
+			PrisonWardenEvent.SetGameFinished(true)
 			task.wait(5)
 			BadgeHandler.awardBadge(PlayerRef, 157269881825360)
 			GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "MoneyBaitCaught")
@@ -248,8 +278,8 @@ function PrisonWardenEvent.InfirmaryDoorInit(player)
 
 	local tweenInfo = TweenInfo.new(
 		0.1,
-		Enum.EasingStyle.Bounce, -- EasingStyle
-		Enum.EasingDirection.Out, -- EasingDirection
+		Enum.EasingStyle.Bounce,
+		Enum.EasingDirection.Out,
 		-1, -- RepeatCount (when less than zero the tween will loop indefinitely)
 		true, -- Reverses (tween will reverse once reaching it's goal)
 		0.65 -- DelayTime
@@ -273,7 +303,7 @@ function PrisonWardenEvent.InfirmaryDoorInit(player)
 			timeBeforeDoorOpens -= 1
 		end
 
-		if EscapedPrison then
+		if GameFinished then
 			return
 		end
 
@@ -411,17 +441,33 @@ function PrisonWardenEvent.PlayerAttachRope(player)
 	animTrack:Play()
 
 	-- slowly move hook
-	local tweenInfo = TweenInfo.new(20, Enum.EasingStyle.Sine)
+	local tweenInfo = TweenInfo.new(RopeClimbTime, Enum.EasingStyle.Linear)
 	local goal = { Position = hookAttachment.Position + Vector3.new(0, 61, 0) }
-	local tween = TweenService:Create(hookAttachment, tweenInfo, goal)
-	tween:Play()
+	RopeTweenHandle = TweenService:Create(hookAttachment, tweenInfo, goal)
+	RopeTweenHandle:Play()
 
 	-- if completed, then stop hooking player
-	tween.Completed:Wait()
-	character.Humanoid.PlatformStand = false
-	animTrack:Stop()
-	alignOrientation.Attachment1 = nil
-	alignPos.Attachment1 = nil
-	EscapedPrison = true
+	RopeTweenHandle.Completed:Once(function(state)
+		character.Humanoid.PlatformStand = false
+		animTrack:Stop()
+		alignOrientation.Attachment1 = nil
+		alignPos.Attachment1 = nil
+
+		if state == Enum.PlaybackState.Completed then
+			GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+			task.wait(1)
+			print("escaped!")
+			-- play win cutscene
+			-- TBD
+		elseif state == Enum.PlaybackState.Cancelled then
+			-- failed
+			GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+			task.wait(1)
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom")
+			GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitCaught")
+		end
+
+		PrisonWardenEvent.SetGameFinished(true)
+	end)
 end
 return PrisonWardenEvent
