@@ -165,7 +165,7 @@ local Themes = {
 	},
 	TimeTheme = {
 		SoundId = "rbxassetid://1835350683",
-		Volume = 0.5,
+		Volume = 1,
 	},
 }
 local OneShots = {
@@ -483,6 +483,11 @@ local OneShots = {
 	GateRip = {
 		SoundId = "rbxassetid://9116630729",
 		Volume = 5,
+	},
+	Spotted = {
+		SoundId = "rbxassetid://2386822675",
+		Volume = 0.5,
+		PlaybackRegion = NumberRange.new(0, 0.7),
 	},
 }
 local SoundHandler = {}

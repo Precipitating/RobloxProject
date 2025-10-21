@@ -20,14 +20,12 @@ local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local CameraFollowConnection = nil
 local R2DPlayerHealth = nil
 local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
 local ClientHelperFunctions = require(script.ClientHelperFunctions)
 -- disable respawn button
 local coreCall
 do
 	local MAX_RETRIES = 8
-
-	local StarterGui = game:GetService("StarterGui")
-
 	function coreCall(method, ...)
 		local result = {}
 		for _ = 1, MAX_RETRIES do
@@ -321,6 +319,15 @@ ReplicatedStorage.Remotes.UpdateMoneyGUI.OnClientEvent:Connect(function(currentC
 	end
 	local cashLabel = cashGUI:WaitForChild("MoneyLabel")
 	cashLabel.Text = `£{tostring(currentCash)}`
+end)
+
+-- MoneyBait
+GeneralRemotes.MoneyBait.DeleteQuickTimeGUI.OnClientEvent:Connect(function()
+	local exists = PlayerGui:FindFirstChild("QuickTimeGUI")
+
+	if exists then
+		exists:Destroy()
+	end
 end)
 
 -- play main theme
