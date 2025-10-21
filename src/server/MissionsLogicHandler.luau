@@ -342,6 +342,8 @@ MissionEventHandlers["MoneyBaited"] = function(player)
 	GeneralRemotes.EnableControls:FireClient(player)
 	PrisonWardenEvent.SetPlayerRef(player)
 	PrisonWardenEvent.SetupCellRegion(prison)
+	car:Destroy()
+	tween = nil
 end
 
 MissionEventHandlers["ApplyBlanketToCell"] = function(player)

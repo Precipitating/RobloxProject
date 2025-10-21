@@ -649,6 +649,7 @@ InitializeGUIModule["ClimbRopeQuickTime"] = function()
 		running = false
 		guiClone:Destroy()
 		print("Client detected QuickTimeGUI destroyed!")
+		SoundModule.StopTheme()
 	end)
 
 	task.spawn(function()

@@ -84,12 +84,8 @@ function PrisonWardenEvent.SetGameFinished(val)
 		GameFinished = true
 		PlayerRef.Character:PivotTo(workspace.BlackRoom.SpawnLoc:GetPivot())
 		GeneralRemotes.DisableControls:FireClient(PlayerRef)
-		local infirmary = workspace:FindFirstChild("Infirmary")
 		local prison = workspace:FindFirstChild("Prison")
 
-		if infirmary then
-			infirmary:Destroy()
-		end
 		if prison then
 			prison:Destroy()
 		end
@@ -454,11 +450,12 @@ function PrisonWardenEvent.PlayerAttachRope(player)
 		alignPos.Attachment1 = nil
 
 		if state == Enum.PlaybackState.Completed then
+			GeneralRemotes.MoneyBait.DeleteQuickTimeGUI:FireClient(player)
 			GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 			task.wait(1)
-			print("escaped!")
-			-- play win cutscene
-			-- TBD
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "Alleyway")
+			GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitEscaped")
+			BadgeHandler.awardBadge(player, 3628178665725253)
 		elseif state == Enum.PlaybackState.Cancelled then
 			-- failed
 			GeneralRemotes.BlackFade:FireClient(player, 1, 0)

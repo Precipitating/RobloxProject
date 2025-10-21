@@ -59,6 +59,7 @@ local voices = {
 	Mom = { VoiceId = "4", Pitch = 1, Speed = 1, Volume = 3 },
 	Damon = { VoiceId = "1", Pitch = 2, Speed = 1, Volume = 3 },
 	CitizenGirl = { VoiceId = "6", Pitch = 1, Speed = 1, Volume = 3 },
+	Director = { VoiceId = "3", Pitch = -6, Speed = 1, Volume = 3 },
 }
 
 local function TweenLookAtCamera(duration, part)
@@ -689,6 +690,67 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		end
 	end,
+
+	MoneyBaitEscaped = function(instruction, _, _)
+		if instruction == 1 then
+			UIHelperFunctions.AdjustBlackScreen(1, 1)
+		elseif instruction == 2 then
+			RunCutsceneAction(function()
+				task.wait(13)
+				print("2 end")
+			end)
+		elseif instruction == 5 then
+			RunCutsceneAction(function()
+				task.wait(1)
+				SoundModule.PlaySound("Spotted")
+				SoundModule.PlaySound("Oi")
+				Music:Stop()
+				SoundModule.PlayTheme("Scary")
+				task.wait(1)
+				print("3 end")
+			end)
+		elseif instruction == 9 then
+			RunCutsceneAction(function()
+				task.wait(2)
+				local alley = workspace:WaitForChild("Alleyway")
+				if not alley then
+					error("Missing alley ref")
+				end
+				local director = alley:WaitForChild("Director")
+				local endPos = alley:WaitForChild("DirectorEndPos")
+				director:PivotTo(endPos.CFrame)
+			end)
+		elseif instruction == 10 then
+			RunCutsceneAction(function()
+				SoundModule.PlaySound("Spotted")
+				Speak(
+					"Director",
+					`You really thought you could escape without my permission, huh, {Player.DisplayName} `
+				)
+				Speak(
+					"Director",
+					`You actually stole my method of escaping blox river, the toilet, the elevator, everything.`
+				)
+				Speak(
+					"Director",
+					`You will pay the price for this as I, Michael Rofield will not stand for copy merchants on my show`
+				)
+				Speak(
+					"Director",
+					`You will be reconstructed into Venom Michael and become me. You will be forced to escape every prison in the world and be milked dry by the show directors`
+				)
+				Speak(
+					"Director",
+					`You saw the fall off during season 5, now you'll enjoy 1000 more seasons, as me. As me.`
+				)
+				Speak("Director", `Get some shut eye, you'll need it`)
+				SoundModule.PlaySound("BoneSnap")
+				UIHelperFunctions.AdjustBlackScreen(0, 0)
+				task.wait(2)
+				SoundModule.PlaySound("EvilLaugh")
+			end)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -804,6 +866,11 @@ CutsceneClientHandler.Initialize = {
 	MoneyBaitCaught = function()
 		Music.SoundId = "rbxassetid://1841797920"
 		Music.Volume = 0.3
+	end,
+
+	MoneyBaitEscaped = function()
+		Music.SoundId = "rbxassetid://128736659673417"
+		Music.Volume = 0.1
 	end,
 }
 
