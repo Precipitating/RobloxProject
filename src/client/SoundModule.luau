@@ -6,10 +6,12 @@ local CurrentTheme = ReplicatedStorage.Sounds.CurrentTheme
 local ThemeLocked = false
 local GeneralRemotes = ReplicatedStorage.Remotes
 local MainSounds = {
-	"rbxassetid://79250663775359",
+	"rbxassetid://101468716959778",
 	"rbxassetid://98394237109741",
 	"rbxassetid://86335096116258",
 	"rbxassetid://94378181487716",
+	"rbxassetid://1841647093",
+	"rbxassetid://1842000022",
 }
 
 local Themes = {

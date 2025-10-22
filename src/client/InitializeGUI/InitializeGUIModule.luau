@@ -46,6 +46,26 @@ local function trackConnect(name, signal, callback)
 	return conn
 end
 
+local function BounceOpenFrame(targetSize: UDim2, frameRef: Frame)
+	frameRef.Visible = false
+	frameRef.Size = UDim2.new(0, 0, 0, 0)
+	local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
+	local goal = { Size = targetSize }
+	local tween = TweenService:Create(frameRef, tweenInfo, goal)
+	frameRef.Visible = true
+	tween:Play()
+	tween.Completed:Wait()
+end
+
+local function BounceCloseFrame(frameRef: Frame)
+	local tweenInfo = TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+	local goal = { Size = UDim2.new(0, 0, 0, 0), BackgroundTransparency = 1 }
+	local tween = TweenService:Create(frameRef, tweenInfo, goal)
+	tween:Play()
+	tween.Completed:Wait()
+	frameRef.Visible = false
+end
+
 InitializeGUIModule["BosnianRoulette"] = function()
 	local GUI = PlayerGui:WaitForChild("BosnianRouletteGUI")
 	local decrementButton = GUI:WaitForChild("DecrementInput"):WaitForChild("TextButton")
@@ -220,11 +240,13 @@ InitializeGUIModule["BulletGuesser"] = function()
 	if GUI then
 		local clonedGUI = GUI:Clone()
 		clonedGUI.Parent = PlayerGui
+		BounceOpenFrame(GUI.RevolverImage.Size, clonedGUI.RevolverImage)
 		local buttons = clonedGUI:WaitForChild("Buttons"):GetChildren()
 		if #buttons > 0 then
 			for i, button in ipairs(buttons) do
 				trackConnect("BulletGuesser", button.Activated, function()
 					print("Clicked button" .. i)
+					BounceCloseFrame(clonedGUI.RevolverImage)
 					clonedGUI:Destroy()
 					UIHelperFunctions.AdjustBlackScreen(1, 0)
 					SoundModule.StopAllSounds()
@@ -278,9 +300,10 @@ InitializeGUIModule["BakeryCashier"] = function()
 	local GUIInstance = GUI:Clone()
 	GUIInstance.Parent = PlayerGui
 	local baseFrame = GUIInstance:FindFirstChild("Base")
-
 	-- open shop greeting
 	SoundModule.PlaySound("GirlGreeting")
+
+	BounceOpenFrame(GUI.Base.Size, baseFrame)
 
 	-- handle exit button
 	local exitButton = baseFrame:FindFirstChild("Exit")
@@ -288,6 +311,7 @@ InitializeGUIModule["BakeryCashier"] = function()
 		error("Missing exitButton reference from bakery shop GUI")
 	end
 	trackConnect("BakeryCashier", exitButton.MouseButton1Click, function()
+		BounceCloseFrame(baseFrame)
 		GUIInstance:Destroy()
 		MovementHandler.EnableControls(nil)
 		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
