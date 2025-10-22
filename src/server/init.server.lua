@@ -5,6 +5,8 @@ local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoadEvents = require(script.RoadEvents.RoadEvents)
 local ServerRemotes = require(script.ServerRemotes)
 local TrafficLightModule = require(script.TrafficLightModule)
+local WeatherHandler = require(script.WeatherHandler)
+local MaxDistBeforeTP = -400
 
 -- all remote connections
 ServerRemotes.Initialize()
@@ -19,9 +21,12 @@ Players.PlayerAdded:Connect(function(player)
 
 	local function setupCharacter(character)
 		local spawnPos = PlayerInitialize.SpawnHome()
+
 		PlayerInitialize.TeleportHome(character, spawnPos)
+
 		local humanoid = character:WaitForChild("Humanoid")
 		local hrp = character:WaitForChild("HumanoidRootPart")
+
 		PlayerInitialize.SetCollisionGroup(character)
 		PlayerInitialize.GiveSpeedCoil(player)
 
@@ -32,7 +37,7 @@ Players.PlayerAdded:Connect(function(player)
 			end
 
 			local rayOrigin = root.Position
-			local rayDirection = Vector3.new(0, -3, 0)
+			local rayDirection = vector.create(0, -3, 0)
 
 			local raycastParams = RaycastParams.new()
 			raycastParams.FilterDescendantsInstances = { character }
@@ -52,11 +57,11 @@ Players.PlayerAdded:Connect(function(player)
 			end
 		end)
 
-		-- teleport if fallen below -450 Y
+		-- teleport if fallen below -400 Y
 		task.spawn(function()
 			while character.Parent do
 				task.wait(0.1)
-				if hrp.Position.Y <= -400 and safePosition then
+				if hrp.Position.Y <= MaxDistBeforeTP and safePosition then
 					character:MoveTo(safePosition)
 				end
 			end
@@ -72,12 +77,15 @@ Players.PlayerAdded:Connect(function(player)
 	-- First spawn
 	player.CharacterAdded:Connect(setupCharacter)
 	player:LoadCharacter()
+
+	-- weather
+	WeatherHandler.Start()
+
+	-- road events
+	task.spawn(RoadEvents.SpawnLoop)
+
+	-- traffic lights initialization
+	for _, model in ipairs(CollectionService:GetTagged("TrafficLight")) do
+		TrafficLightModule.StartTrafficLight(model)
+	end
 end)
-
--- road events
-task.spawn(RoadEvents.SpawnLoop)
-
--- traffic lights
-for _, model in ipairs(CollectionService:GetTagged("TrafficLight")) do
-	TrafficLightModule.StartTrafficLight(model)
-end

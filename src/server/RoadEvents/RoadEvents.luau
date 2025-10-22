@@ -57,10 +57,10 @@ function RoadEvents.SpawnLearnerDriver()
 					if hrp then
 						print("hit")
 						humanoid.PlatformStand = true
-						local flingDirection = (collide.Position - hrp.Position).Unit
+						local flingDirection = vector.normalize(collide.Position - hrp.Position)
 						local velocity = Instance.new("BodyVelocity")
 						velocity.Velocity = flingDirection * FlingForce
-						velocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+						velocity.MaxForce = vector.create(math.huge, math.huge, math.huge)
 						velocity.Parent = hrp
 						game:GetService("Debris"):AddItem(velocity, 0.5)
 

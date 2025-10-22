@@ -53,8 +53,7 @@ function ShopLiftConsequences.SpawnJacker(player)
 
 	-- face the player
 	local lookAt = hrp.Position - spawnPos
-	lookAt = Vector3.new(lookAt.X, 0, lookAt.Z).Unit
-
+	lookAt = vector.normalize(vector.create(lookAt.X, 0, lookAt.Z))
 	jacker:SetPrimaryPartCFrame(CFrame.lookAt(spawnPos, spawnPos + lookAt))
 
 	-- tween forwards
@@ -130,7 +129,7 @@ function ShopLiftConsequences.SpawnTrap(player, modelName, soundName, forwardDis
 	end
 
 	-- spawn position: forward + upward offset
-	local spawnPos = hrp.Position + hrp.CFrame.LookVector * forwardDist + Vector3.new(0, topOffset or 0, 0)
+	local spawnPos = hrp.Position + hrp.CFrame.LookVector * forwardDist + vector.create(0, topOffset or 0, 0)
 
 	local trap = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", modelName, spawnPos)
 
@@ -254,7 +253,7 @@ function ShopLiftConsequences.SpawnMeteorite(player)
 	GeneralRemotes.PlayTheme:FireClient(player, "AirSiren")
 	local character = player.Character
 	local hrp = character:FindFirstChild("HumanoidRootPart")
-	local targetPos = CFrame.new(hrp.Position + Vector3.new(0, 1000, 0))
+	local targetPos = CFrame.new(hrp.Position + vector.create(0, 1000, 0))
 
 	local meteorite = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cashier", "Meteorite", nil)
 

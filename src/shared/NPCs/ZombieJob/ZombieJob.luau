@@ -64,7 +64,7 @@ local function ZombieLogic(zombie)
 
 		-- move to barrier
 		local zombiePos = zombie:GetPivot().Position
-		local target = Vector3.new(zombiePos.X, zombiePos.Y, ZombieTargetPos.WorldPosition.Z)
+		local target = vector.create(zombiePos.X, zombiePos.Y, ZombieTargetPos.WorldPosition.Z)
 		humanoid:MoveTo(target)
 
 		while (zombie:GetPivot().Position - target).Magnitude > 2 and humanoid.Health > 0 do
@@ -185,7 +185,7 @@ local function Shoot(player, playerModel)
 
 	local Raycast = function()
 		local rayOrigin = gunRaycast.Position
-		local rayDir = Vector3.new(0, 0, 100)
+		local rayDir = vector.create(0, 0, 100)
 		local raycastParams = RaycastParams.new()
 		raycastParams.FilterDescendantsInstances = { playerModel, gun, gunRaycast }
 		raycastParams.FilterType = Enum.RaycastFilterType.Exclude

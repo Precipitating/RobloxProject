@@ -14,6 +14,7 @@ local BG = LoadingScreen:WaitForChild("BG")
 local ViewportFrame = BG:WaitForChild("ViewportFrame")
 local PlayerModel = ViewportFrame:WaitForChild("WorldModel"):WaitForChild("LoadingScreenDancer")
 local Description = Players:GetHumanoidDescriptionFromUserId(Player.UserId)
+local LoadProgress = 0
 PlayerModel:WaitForChild("Humanoid"):ApplyDescription(Description)
 
 local function CleanCharacter()
@@ -80,10 +81,11 @@ end
 CleanCharacter()
 local assets = game:GetChildren()
 
+-- workspace models
 for idx, asset in ipairs(assets) do
 	ContentProvider:PreloadAsync({ asset })
-	local progress = idx / #assets
-	local goalTransparency = 1 - progress
+	LoadProgress = idx / #assets
+	local goalTransparency = 1 - LoadProgress
 
 	TweenService:Create(
 		ViewportFrame,

@@ -23,6 +23,7 @@ local SoulFetchers = {}
 local PlayerDead = false
 local CanHurtPlayer = true
 local DamagePlayerCooldown = 0.1
+local GameFinished = false
 local PrevPos = nil
 
 local BossAttacks = nil
@@ -68,7 +69,7 @@ function PumpkinBossFight.BossInitialize(player)
 	BossRef = MapRef:FindFirstChild("PumpkinBoss")
 	-- tween pumpkin boss up to start
 	local tweenInfo = TweenInfo.new(3, Enum.EasingStyle.Linear)
-	local goal = { Position = BossRef.Position + Vector3.new(0, 33, 0) }
+	local goal = { Position = BossRef.Position + vector.create(0, 33, 0) }
 	local tween = TweenService:Create(BossRef, tweenInfo, goal)
 	tween:Play()
 	GeneralRemotes.PlaySound:InvokeClient(player, "PumpkinBossLaugh")
@@ -123,6 +124,7 @@ function PumpkinBossFight.Finished(player, bossDead)
 		GeneralRemotes.PlayCutscene:FireClient(player, "CupcakeLoverBossFailed")
 		BadgeHandler.awardBadge(player, 1699948559468830)
 	end
+	GameFinished = true
 end
 
 function PumpkinBossFight.LavaWave(_)
@@ -133,12 +135,12 @@ function PumpkinBossFight.LavaWave(_)
 
 	-- boss jump
 	local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
-	local goal = { Position = BossRef.Position + Vector3.new(0, 30, 0) }
+	local goal = { Position = BossRef.Position + vector.create(0, 30, 0) }
 	local tween = TweenService:Create(BossRef, tweenInfo, goal)
 	tween:Play()
 	tween.Completed:Wait()
 	tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear)
-	goal = { Position = BossRef.Position + Vector3.new(0, -30, 0) }
+	goal = { Position = BossRef.Position + vector.create(0, -30, 0) }
 	tween = TweenService:Create(BossRef, tweenInfo, goal)
 	tween:Play()
 	tween.Completed:Wait()
@@ -169,10 +171,10 @@ local function SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 	task.spawn(function()
 		local directionTimer = 6
 		local changeInterval = 6
-		local randomDirection = Vector3.new(0, 0, 0)
+		local randomDirection = vector.create(0, 0, 0)
 		local dropDelayActivated = false
 
-		while soulFetcher do
+		while soulFetcher and not GameFinished do
 			-- if grabbing player initiate drop countdown
 			if grabbing and grabbing.Value and not dropDelayActivated then
 				dropDelayActivated = true
@@ -196,8 +198,9 @@ local function SoulFetcherMove(player, soulFetcher, grabbing, flipDir)
 				if directionTimer <= 0 then
 					-- either a random direction or towards player
 					if math.random() < 0.6 then
-						randomDirection =
-							Vector3.new(math.random() * 2 - 1, math.random() * 2 - 1, math.random() * 2 - 1).Unit
+						randomDirection = vector.normalize(
+							vector.create(math.random() * 2 - 1, math.random() * 2 - 1, math.random() * 2 - 1)
+						)
 						soulFetcher.CFrame = CFrame.lookAt(soulFetcher.Position, soulFetcher.Position + randomDirection)
 					else
 						soulFetcher.CFrame = CFrame.lookAt(soulFetcher.Position, player.Character:GetPivot().Position)
@@ -231,7 +234,7 @@ function PumpkinBossFight.SoulFetcher(player)
 		SoulFetchers[uniqueId] = soulFetcher
 
 		-- spawn offset so not all in one place
-		local offset = Vector3.new(math.random(-7, 7), math.random(-7, 7), math.random(-7, 7))
+		local offset = vector.create(math.random(-7, 7), math.random(-7, 7), math.random(-7, 7))
 		local newPos = BossRef:GetPivot().Position + offset
 		local newCFrame = CFrame.new(newPos)
 
@@ -239,7 +242,7 @@ function PumpkinBossFight.SoulFetcher(player)
 		local flipDir = soulFetcher:FindFirstChild("FlipDir")
 		soulFetcher:PivotTo(newCFrame)
 		-- set initial fetcher direction to look up
-		soulFetcher.CFrame = CFrame.new(soulFetcher.Position, soulFetcher.Position + Vector3.new(0, 1, 0))
+		soulFetcher.CFrame = CFrame.new(soulFetcher.Position, soulFetcher.Position + vector.create(0, 1, 0))
 		soulFetcher.Parent = MapRef
 
 		soulFetcher.Touched:Connect(function(hit)

@@ -53,7 +53,7 @@ function TrafficLightModule.StartTrafficLight(lightModel)
 
 	-- Helpers reused from your code
 	local function timeOffsetFromFacing(forward)
-		local dot = forward:Dot(Vector3.new(0, 0, 1))
+		local dot = forward:Dot(vector.create(0, 0, 1))
 		if math.abs(dot) < 0.25 then
 			return interval * 0.5
 		end

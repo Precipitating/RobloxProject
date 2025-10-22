@@ -39,7 +39,7 @@ function PlayerInitialize.TeleportHome(character, spawnLoc)
 		task.wait(0.1)
 
 		-- Teleport player above SpawnLocation
-		hrp.CFrame = spawnLoc.CFrame + Vector3.new(0, 5, 0)
+		hrp.CFrame = spawnLoc.CFrame + vector.create(0, 5, 0)
 	else
 		warn("⚠️ No SpawnLocation found in spawn model!")
 	end
