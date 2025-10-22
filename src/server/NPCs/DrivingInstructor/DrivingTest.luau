@@ -536,7 +536,7 @@ function DrivingTest.HandleGeneratingAndDeletingRoads(player)
 			fallBarrier = Instance.new("Part")
 			fallBarrier.Anchored = true
 			fallBarrier.Name = "FallBarrier"
-			fallBarrier.Size = Vector3.new(80, 40, 1)
+			fallBarrier.Size = vector.create(80, 40, 1)
 			fallBarrier.Transparency = 1
 			fallBarrier.Parent = workspace
 		end

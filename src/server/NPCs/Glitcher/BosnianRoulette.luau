@@ -31,7 +31,7 @@ local function RevealLandMine()
 
 	task.spawn(function()
 		local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-		local goal = { Scale = Vector3.new(1.583, 0.866, 1.592) }
+		local goal = { Scale = vector.create(1.583, 0.866, 1.592) }
 		local tween = TweenService:Create(LandMine.Mesh, tweenInfo, goal)
 		tween:Play()
 	end)

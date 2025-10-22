@@ -154,7 +154,7 @@ local function HandleToiletMovement(toilet)
 	unscrewPrompt.Enabled = false
 
 	local toiletMoveTween = TweenInfo.new(2, Enum.EasingStyle.Sine)
-	local openGoal = { Position = toilet.Position + Vector3.new(5, 0, 0) }
+	local openGoal = { Position = toilet.Position + vector.create(5, 0, 0) }
 	local closeGoal = { Position = toilet.Position }
 	local openTween = TweenService:Create(toilet, toiletMoveTween, openGoal)
 	local closeTween = TweenService:Create(toilet, toiletMoveTween, closeGoal)
@@ -200,15 +200,15 @@ end
 function PrisonWardenEvent.SpawnThrowable(name)
 	local throwable = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", name, nil)
 	throwable.Name = `{name}_{HttpService:GenerateGUID(false)}`
-	local lift = Vector3.new(0, 0.4, 0)
-	local dir = (throwable.CFrame.LookVector + lift).Unit
+	local lift = vector.create(0, 0.4, 0)
+	local dir = vector.normalize(throwable.CFrame.LookVector + lift)
 	local strength = 105
 	throwable:ApplyImpulse(dir * strength * throwable.AssemblyMass)
 	throwable:SetNetworkOwner(nil)
 
 	throwable.Touched:Once(function(_)
-		throwable.AssemblyLinearVelocity = Vector3.zero
-		throwable.AssemblyAngularVelocity = Vector3.zero
+		throwable.AssemblyLinearVelocity = vector.zero
+		throwable.AssemblyAngularVelocity = vector.zero
 	end)
 
 	Debris:AddItem(throwable, 30)
@@ -309,7 +309,7 @@ function PrisonWardenEvent.InfirmaryDoorInit(player)
 		doorRef.Anchored = false
 		doorRef:SetNetworkOwner(nil)
 		sound:Stop()
-		doorRef:ApplyImpulse(Vector3.new(0, 0, 60) * doorRef.AssemblyMass)
+		doorRef:ApplyImpulse(vector.create(0, 0, 60) * doorRef.AssemblyMass)
 
 		local mcDonaldMan = workspace:FindFirstChild("Infirmary"):FindFirstChild("McDonaldMan")
 		if not mcDonaldMan then
@@ -391,7 +391,7 @@ function PrisonWardenEvent.CloseElevatorAndPullRope(player)
 	end
 	tweenInfo = TweenInfo.new(5, Enum.EasingStyle.Linear)
 	GeneralRemotes.PlaySound:InvokeClient(player, "MoveElevator", door)
-	goal = { Position = ropeRail.Position - Vector3.new(8, 0, 0) }
+	goal = { Position = ropeRail.Position - vector.create(8, 0, 0) }
 	tween = TweenService:Create(ropeRail, tweenInfo, goal)
 	tween:Play()
 	tween.Completed:Wait()
@@ -402,7 +402,7 @@ function PrisonWardenEvent.CloseElevatorAndPullRope(player)
 	bar:SetNetworkOwner(nil)
 	task.wait(0.03)
 	GeneralRemotes.PlaySound:InvokeClient(player, "GateRip", bar)
-	bar:ApplyImpulse(Vector3.new(-60, 0, 0) * bar.AssemblyMass)
+	bar:ApplyImpulse(vector.create(-60, 0, 0) * bar.AssemblyMass)
 
 	-- enable climb prompt
 	local climbPrompt = hookObjectsFolder:FindFirstChild("ClimbRopePart"):FindFirstChild("ProximityPrompt")
@@ -438,7 +438,7 @@ function PrisonWardenEvent.PlayerAttachRope(player)
 
 	-- slowly move hook
 	local tweenInfo = TweenInfo.new(RopeClimbTime, Enum.EasingStyle.Linear)
-	local goal = { Position = hookAttachment.Position + Vector3.new(0, 61, 0) }
+	local goal = { Position = hookAttachment.Position + vector.create(0, 61, 0) }
 	RopeTweenHandle = TweenService:Create(hookAttachment, tweenInfo, goal)
 	RopeTweenHandle:Play()
 

@@ -15,7 +15,7 @@ local MovementConnection = nil
 local MB1Connection = nil
 local LaunchPosition = nil
 local ItemHolderConn = nil
-local StackPlacePos = Vector3.new(-247.9, 249.836, 65.5)
+local StackPlacePos = vector.create(-247.9, 249.836, 65.5)
 local HoldPosIncrement = 0
 local Timelimit = 60
 local SpawnCooldown = 5
@@ -52,7 +52,7 @@ local function GameFinished(player, model)
 
 	-- reset variables
 	Score = 0
-	StackPlacePos = Vector3.new(-247.9, 249.836, 65.5)
+	StackPlacePos = vector.create(-247.9, 249.836, 65.5)
 	HoldPosIncrement = 0
 	LaunchPosition = nil
 	Stunned = false
@@ -99,7 +99,7 @@ local function GameLoop(player, clockLabel)
 			item:SetNetworkOwner(player)
 			if item and LaunchPosition then
 				item.Position = LaunchPosition.Position
-				item.Velocity = Vector3.new(0, math.random(30, 100), math.random(15, 30))
+				item.Velocity = vector.create(0, math.random(30, 100), math.random(15, 30))
 			end
 		end)
 		task.wait(1)
@@ -118,7 +118,7 @@ local function DropAllItems(playerModel)
 	if not receiveCollider then
 		return
 	end
-	receiveCollider.Position = receiveCollider.Position - Vector3.new(0, HoldPosIncrement, 0)
+	receiveCollider.Position = receiveCollider.Position - vector.create(0, HoldPosIncrement, 0)
 	HoldPosIncrement = 0
 	table.clear(ItemsHolding)
 end
@@ -171,8 +171,8 @@ local function CatchItem(player, playerModel, receiveItemCollider)
 
 		local holdPos = playerModel:FindFirstChild("HoldPos")
 		print("Item should be held.")
-		hit.Position = holdPos.Position + Vector3.new(0, HoldPosIncrement, 0)
-		receiveItemCollider.Position = receiveItemCollider.Position + Vector3.new(0, 1, 0)
+		hit.Position = holdPos.Position + vector.create(0, HoldPosIncrement, 0)
+		receiveItemCollider.Position = receiveItemCollider.Position + vector.create(0, 1, 0)
 		local weldConstraint = hit:FindFirstChild("WeldConstraint")
 		if weldConstraint then
 			weldConstraint.Part0 = playerModel.HoldPos
@@ -215,8 +215,8 @@ local function PlaceOnPallet(player, playerModel, pallet, receiveItemCollider)
 			GeneralRemotes.PlaySound:InvokeClient(player, "Ping")
 		end
 
-		StackPlacePos = StackPlacePos + Vector3.new(0, 1, 0)
-		receiveItemCollider.Position = receiveItemCollider.Position - Vector3.new(0, 1, 0)
+		StackPlacePos = StackPlacePos + vector.create(0, 1, 0)
+		receiveItemCollider.Position = receiveItemCollider.Position - vector.create(0, 1, 0)
 	end)
 end
 

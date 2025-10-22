@@ -5,6 +5,12 @@ local SoundLocation = SoundService
 local CurrentTheme = ReplicatedStorage.Sounds.CurrentTheme
 local ThemeLocked = false
 local GeneralRemotes = ReplicatedStorage.Remotes
+local MainSounds = {
+	"rbxassetid://79250663775359",
+	"rbxassetid://98394237109741",
+	"rbxassetid://86335096116258",
+	"rbxassetid://94378181487716",
+}
 
 local Themes = {
 	AirSiren = {
@@ -84,7 +90,7 @@ local Themes = {
 		Volume = 0.5,
 	},
 	Main = {
-		SoundId = "rbxassetid://1840684377",
+		SoundId = MainSounds[math.random(1, #MainSounds)],
 		Volume = 0.1,
 	},
 	ManCry = {
@@ -165,6 +171,10 @@ local Themes = {
 	},
 	TimeTheme = {
 		SoundId = "rbxassetid://1835350683",
+		Volume = 1,
+	},
+	Running = {
+		SoundId = "rbxassetid://79250663775359",
 		Volume = 1,
 	},
 }

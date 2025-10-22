@@ -86,7 +86,7 @@ function NPC:SetMode(mode)
 		local character = player.Character or player.CharacterAdded:Wait()
 		local playerPos = character:GetPivot().Position
 		local modelPos = self.Model:GetPivot().Position
-		local targetPos = Vector3.new(playerPos.X, modelPos.Y, playerPos.Z)
+		local targetPos = vector.create(playerPos.X, modelPos.Y, playerPos.Z)
 
 		-- rotate towards player without blocking
 		task.spawn(function()
@@ -217,47 +217,57 @@ function NPC:SetWalkspeed(val)
 		self.Humanoid.WalkSpeed = val
 	end
 end
-
 function NPC:StartPathing(targetPos)
-	print(`{self.Name} should start moving to waypoints!`)
-	if not self.Humanoid then
-		error("NPC Humanoid not found to pathfind!")
+	if not self.Humanoid or not self.HumanoidRootPart then
+		warn("NPC missing Humanoid or RootPart!")
 		return
 	end
 
 	self.PathCancelled = false
+
 	local path = PathfindingService:CreatePath({
 		AgentCanJump = false,
 		AgentRadius = 2,
+		AgentHeight = self.Humanoid.HipHeight + self.HumanoidRootPart.Size.Y,
 		Costs = {
 			Pavement = 1,
 			ZebraCrossing = 2,
 			Road = 100,
 			Grass = 50,
-			Conrete = 50,
-			Glass = 100,
-			Snow = 100,
-			Plastic = 50,
+			Concrete = 50,
 		},
 	})
 
 	path:ComputeAsync(self.HumanoidRootPart.Position, targetPos.Position)
 
-	for _, waypoint in path:GetWaypoints() do
-		if self.PathCancelled then
-			print("Pathfinding cancelled.")
-			return
-		end
-		self.Humanoid:MoveTo(waypoint.Position)
-		local reached = self.Humanoid.MoveToFinished:Wait()
-		if not reached or self.PathCancelled then
-			warn("Movement interrupted or waypoint not reached")
-			ArrivedRemote:Fire(self.Name)
-			return
-		end
+	if path.Status ~= Enum.PathStatus.Success then
+		warn(self.Name .. " failed to compute path.")
+		ArrivedRemote:Fire(self.Name, "PathFailed")
+		return
 	end
 
-	ArrivedRemote:Fire(self.Name, targetPos.Name)
+	local waypoints = path:GetWaypoints()
+
+	task.spawn(function()
+		for _, waypoint in ipairs(waypoints) do
+			if self.PathCancelled then
+				print(self.Name .. " path cancelled during waypoint traversal.")
+				break
+			end
+
+			self.Humanoid:MoveTo(waypoint.Position)
+			local reached = self.Humanoid.MoveToFinished:Wait()
+
+			if not reached or self.PathCancelled then
+				warn(self.Name .. " movement interrupted or cancelled.")
+				break
+			end
+		end
+
+		-- always fire when done, no matter what caused it
+		local reason = self.PathCancelled and "Cancelled" or targetPos.Name
+		ArrivedRemote:Fire(self.Name, reason)
+	end)
 end
 
 return NPC

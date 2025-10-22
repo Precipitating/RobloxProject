@@ -22,6 +22,7 @@ local R2DPlayerHealth = nil
 local UserInputService = game:GetService("UserInputService")
 local StarterGui = game:GetService("StarterGui")
 local ClientHelperFunctions = require(script.ClientHelperFunctions)
+local WeatherVisualizer = require(script.Weather.WeatherVisualizer)
 -- disable respawn button
 local coreCall
 do
@@ -68,7 +69,7 @@ GeneralRemotes.Trip.OnClientEvent:Connect(function()
 	print("Tripped!")
 	local rootPart = Character.PrimaryPart
 	Humanoid:ChangeState(Enum.HumanoidStateType.FallingDown)
-	rootPart.AssemblyLinearVelocity += rootPart.CFrame.LookVector * 50 + Vector3.new(0, 25, 0)
+	rootPart.AssemblyLinearVelocity += rootPart.CFrame.LookVector * 50 + vector.create(0, 25, 0)
 end)
 
 GeneralRemotes.Blur.OnClientEvent:Connect(function(time, blurTarget)
@@ -247,6 +248,7 @@ end)
 GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
 	-- disable bp
 	local StarterGui = game:GetService("StarterGui")
+
 	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
 	-- disable custom GUI
 	for _, gui in ipairs(PlayerGui:GetChildren()) do
@@ -328,6 +330,11 @@ GeneralRemotes.MoneyBait.DeleteQuickTimeGUI.OnClientEvent:Connect(function()
 	if exists then
 		exists:Destroy()
 	end
+end)
+
+-- Weather
+GeneralRemotes.UpdateWeather.OnClientEvent:Connect(function(nextWeather)
+	WeatherVisualizer.Process(nextWeather)
 end)
 
 -- play main theme

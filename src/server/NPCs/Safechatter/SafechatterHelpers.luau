@@ -17,10 +17,10 @@ function SafechatterHelpers.ResetGuestHorrorEnvironment(player)
 end
 
 function SafechatterHelpers.ResetPlayerState(hrp, humanoid)
-	hrp.Velocity = Vector3.zero
-	hrp.RotVelocity = Vector3.zero
-	hrp.AssemblyLinearVelocity = Vector3.zero
-	hrp.AssemblyAngularVelocity = Vector3.zero
+	hrp.Velocity = vector.zero
+	hrp.RotVelocity = vector.zero
+	hrp.AssemblyLinearVelocity = vector.zero
+	hrp.AssemblyAngularVelocity = vector.zero
 
 	if humanoid then
 		for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do

@@ -84,7 +84,7 @@ end
 local function ScaleTween(duration, part, size)
 	local tween = TweenInfo.new(duration, Enum.EasingStyle.Linear)
 	local goal = {
-		Size = Vector3.new(size, size, size),
+		Size = vector.create(size, size, size),
 	}
 	local tweenPlayer = TweenService:Create(part, tween, goal):Play()
 
@@ -466,7 +466,7 @@ CutsceneClientHandler.KeyframeHandler = {
 			RunCutsceneAction(function()
 				warn("4")
 				Speak("Dad", "I'm your Otac, not 'him', so where did you get that without my permission?")
-				dad:PivotTo(dad:GetPivot() + Vector3.new(0, 4, 0))
+				dad:PivotTo(dad:GetPivot() + vector.create(0, 4, 0))
 				if laptop then
 					laptop:WaitForChild("WeldConstraint").Enabled = true
 					laptop.Anchored = false
@@ -681,7 +681,7 @@ CutsceneClientHandler.KeyframeHandler = {
 				task.wait(math.random(10, 20))
 				Music:Stop()
 				local handMoveTween = TweenInfo.new(0.2, Enum.EasingStyle.Linear)
-				local pullHandleGoal = { Position = hand.Position - Vector3.new(0, 2, 0) }
+				local pullHandleGoal = { Position = hand.Position - vector.create(0, 2, 0) }
 				local executeTween = TweenService:Create(hand, handMoveTween, pullHandleGoal)
 				executeTween:Play()
 				executeTween.Completed:Wait()
@@ -705,10 +705,11 @@ CutsceneClientHandler.KeyframeHandler = {
 				SoundModule.PlaySound("Spotted")
 				SoundModule.PlaySound("Oi")
 				Music:Stop()
-				SoundModule.PlayTheme("Scary")
 				task.wait(1)
 				print("3 end")
 			end)
+		elseif instruction == 6 then
+			SoundModule.PlayTheme("Running")
 		elseif instruction == 9 then
 			RunCutsceneAction(function()
 				task.wait(2)
@@ -719,6 +720,7 @@ CutsceneClientHandler.KeyframeHandler = {
 				local director = alley:WaitForChild("Director")
 				local endPos = alley:WaitForChild("DirectorEndPos")
 				director:PivotTo(endPos.CFrame)
+				SoundModule.PlayTheme("Scary")
 			end)
 		elseif instruction == 10 then
 			RunCutsceneAction(function()

@@ -427,10 +427,10 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	end
 
 	local function createBulletTrace(startPos, endPos)
-		local randomOffset = Vector3.new(math.random(-1, 1), math.random(-1, 1), 0)
+		local randomOffset = vector.create(math.random(-1, 1), math.random(-1, 1), 0)
 		endPos = endPos + randomOffset
 		local distance = 700
-		local direction = (endPos - startPos).Unit
+		local direction = vector.normalize(endPos - startPos)
 
 		-- shoot collision
 		local result = workspace:Raycast(startPos, direction * distance, rayParams)
@@ -443,7 +443,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		end
 
 		local beam = Instance.new("Part")
-		beam.Size = Vector3.new(0.2, 0.2, distance)
+		beam.Size = vector.create(0.2, 0.2, distance)
 		beam.CFrame = CFrame.new(startPos, endPos) * CFrame.new(0, 0, -distance / 2)
 		beam.Anchored = true
 		beam.CanCollide = false
