@@ -113,7 +113,7 @@ function PumpkinBossFight.Finished(player, bossDead)
 		ServerHelperFunctions.SetNPCDialogueFile({ CupcakeLoverNameTag = "CupcakeLoverBossDefeat" })
 		player.Character:PivotTo(PrevPos)
 		MapRef:Destroy()
-		GeneralRemotes.BlackFade:FireClient(player, 1, 1)
+		GeneralRemotes.BlackFade:FireClient(player, 0, 1)
 	else
 		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "CupcakeLover", "BossFailedPlayer", nil)
 		player.Character:PivotTo(workspace:FindFirstChild("BlackRoom"):FindFirstChild("SpawnLoc").CFrame)
