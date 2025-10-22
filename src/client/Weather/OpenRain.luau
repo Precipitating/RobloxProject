@@ -115,6 +115,7 @@ function OpenRain:Stop()
 	print("rain end")
 	local rain = self.RainEffect
 	local floor = self.FloorEffect
+	self.RainEffect:WaitForChild("AudioPlayer"):Stop()
 
 	if not floor then
 		warn("floor ref missing")
@@ -142,6 +143,7 @@ function OpenRain:Start()
 	self.Active = true
 	local _rain = self.RainEffect or ReplicatedStorage.ClientModels.Weather.Rain:Clone()
 	local _floor = self.FloorEffect or ReplicatedStorage.ClientModels.Weather["Floor effect"]:Clone()
+	_rain:WaitForChild("AudioPlayer"):Play()
 	local defaultFloorSize = _floor.Size
 
 	self.RainEffect = _rain
