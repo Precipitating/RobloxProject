@@ -31,6 +31,20 @@ local RopeClimbTime = 30
 
 local RopeTweenHandle = nil
 
+local function FailCutscene()
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom", nil)
+	task.wait(1)
+	GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "MoneyBaitCaught")
+	BadgeHandler.awardBadge(PlayerRef, 157269881825360)
+end
+
+local function WinCutscene()
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "Alleyway", nil)
+	task.wait(1)
+	GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "MoneyBaitEscaped")
+	BadgeHandler.awardBadge(PlayerRef, 3628178665725253)
+end
+
 function PrisonWardenEvent.SetPlayerRef(player)
 	PlayerRef = player
 end
@@ -245,12 +259,11 @@ function PrisonWardenEvent.CheckSuspicion()
 		if PlayerDoingSuspiciousActivity then
 			GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Oi", WardenRef)
 			GeneralRemotes.DisableControls:FireClient(PlayerRef)
-			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom")
 			GeneralRemotes.BlackFade:FireClient(PlayerRef, 3, 0)
 			PrisonWardenEvent.SetGameFinished(true)
 			task.wait(5)
-			BadgeHandler.awardBadge(PlayerRef, 157269881825360)
-			GeneralRemotes.PlayCutscene:FireClient(PlayerRef, "MoneyBaitCaught")
+
+			FailCutscene()
 
 			caught = true
 		end
@@ -304,7 +317,6 @@ function PrisonWardenEvent.InfirmaryDoorInit(player)
 		end
 
 		-- reach here = failed
-		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom", nil)
 		tween:Cancel()
 		doorRef.Anchored = false
 		doorRef:SetNetworkOwner(nil)
@@ -325,7 +337,7 @@ function PrisonWardenEvent.InfirmaryDoorInit(player)
 		GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 
 		task.wait(3)
-		GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitCaught")
+		FailCutscene()
 		print("Failed to escape")
 	end)
 end
@@ -453,15 +465,12 @@ function PrisonWardenEvent.PlayerAttachRope(player)
 			GeneralRemotes.MoneyBait.DeleteQuickTimeGUI:FireClient(player)
 			GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 			task.wait(1)
-			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "Alleyway")
-			GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitEscaped")
-			BadgeHandler.awardBadge(player, 3628178665725253)
+			WinCutscene()
 		elseif state == Enum.PlaybackState.Cancelled then
 			-- failed
 			GeneralRemotes.BlackFade:FireClient(player, 1, 0)
 			task.wait(1)
-			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "MoneyBait", "ElectricChairRoom")
-			GeneralRemotes.PlayCutscene:FireClient(player, "MoneyBaitCaught")
+			FailCutscene()
 		end
 
 		PrisonWardenEvent.SetGameFinished(true)

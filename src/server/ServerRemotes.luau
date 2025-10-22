@@ -1,4 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
+local MarketplaceService = game:GetService("MarketplaceService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
@@ -21,6 +22,8 @@ local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
+local ServerStorage = game:GetService("ServerStorage")
+local ServerTools = ServerStorage.Tools
 
 local ServerRemotes = {}
 function ServerRemotes.PsychoMantisRemotes()
@@ -339,6 +342,20 @@ function ServerRemotes.MoneyBaitRemotes()
 	end)
 end
 
+function ServerRemotes.GamepassRemotes()
+	local speedCoilId = 1492720359
+	MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, id, successful)
+		if successful and id == speedCoilId then
+			ServerHelperFunctions.GiveTool(player, { "SpeedCoil", true })
+
+			if not player.StarterGear:FindFirstChild("SpeedCoil") then
+				local speedCoil = ServerTools.SpeedCoil:Clone()
+				speedCoil.Parent = player.StarterGear
+			end
+		end
+	end)
+end
+
 function ServerRemotes.Initialize()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -354,6 +371,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.RoadEventsRemotes()
 	ServerRemotes.UtilityRemotes()
 	ServerRemotes.MoneyBaitRemotes()
+	ServerRemotes.GamepassRemotes()
 end
 
 return ServerRemotes
