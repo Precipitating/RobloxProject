@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Part" referent="RBXB45B817290A84FD8ACF7BEB789C67593">
+	<Item class="Part" referent="RBXA9A89085AC1F45B7AC6DFC7E8B2C10E7">
 		<Properties>
 			<token name="shape">1</token>
 			<token name="formFactorRaw">1</token>
@@ -100,7 +100,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="ParticleEmitter" referent="RBX06B7FC8BBAEB49148BCBC1C3EB05B7D9">
+		<Item class="ParticleEmitter" referent="RBX6E5C57ED6305445E83E4FEE132703961">
 			<Properties>
 				<Vector3 name="Acceleration">
 					<X>0</X>
@@ -148,6 +148,55 @@
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 				<bool name="DefinesCapabilities">false</bool>
 				<string name="Name">ParticleEmitter</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="AudioEmitter" referent="RBXABF43A5061A6473B86DB9BBE436FDCEA">
+			<Properties>
+				<bool name="AcousticSimulationEnabled">true</bool>
+				<BinaryString name="AngleAttenuation">AA==</BinaryString>
+				<string name="AudioInteractionGroup"></string>
+				<BinaryString name="DistanceAttenuation">AAAAAAAAAIA/AACgQTMzcz8AAEhCmplZPwAAyEKamRk/AAAWQzMzsz4AAEhDAAAAAA==</BinaryString>
+				<Ref name="PositionOverride">null</Ref>
+				<token name="SimulationFidelity">1</token>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">AudioEmitter</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="AudioPlayer" referent="RBX76BDDF5DD26345F0B16264A0159CBAD9">
+			<Properties>
+				<Content name="Asset"><url>rbxassetid://9064263922</url></Content>
+				<bool name="AutoLoad">true</bool>
+				<bool name="IsMutedForCapture">false</bool>
+				<NumberRange name="LoopRegion">0 60000 </NumberRange>
+				<bool name="Looping">true</bool>
+				<NumberRange name="PlaybackRegion">0 99999 </NumberRange>
+				<double name="PlaybackSpeed">1</double>
+				<double name="TimePosition">2.8087922770428122021</double>
+				<float name="Volume">0.5</float>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">AudioPlayer</string>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Wire" referent="RBX5B321F10D1504DB6AD07CCA68DB2A6E3">
+			<Properties>
+				<Ref name="SourceInstance">RBX76BDDF5DD26345F0B16264A0159CBAD9</Ref>
+				<string name="SourceName">Output</string>
+				<Ref name="TargetInstance">RBXABF43A5061A6473B86DB9BBE436FDCEA</Ref>
+				<string name="TargetName">Input</string>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+				<bool name="DefinesCapabilities">false</bool>
+				<string name="Name">Wire</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>

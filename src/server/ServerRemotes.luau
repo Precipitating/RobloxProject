@@ -1,5 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
 local MarketplaceService = game:GetService("MarketplaceService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
@@ -23,6 +24,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerStorage = game:GetService("ServerStorage")
+local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ServerTools = ServerStorage.Tools
 
 local ServerRemotes = {}
@@ -356,6 +358,43 @@ function ServerRemotes.GamepassRemotes()
 	end)
 end
 
+function ServerRemotes.StreetLightRemotes()
+	local streetLights = TimeOfDay.GetStreetLights()
+	if #streetLights <= 0 then
+		warn("No street lights to modify")
+		return
+	end
+	GeneralRemotes.TimeOfDay.ModifyStreetLights.OnServerEvent:Connect(function(_, on)
+		-- don't continue if requested change type is already at that state
+		if (on and TimeOfDay.GetLightState()) or (not on and not TimeOfDay.GetLightState()) then
+			return
+		end
+
+		if not on then
+			-- turn off street lights
+			if TimeOfDay.GetLightState() then
+				TimeOfDay.SetLightState(false)
+				for _, light in ipairs(streetLights) do
+					light.PointLight.Enabled = false
+					light.BrickColor = BrickColor.new("Pearl")
+					light.Material = Enum.Material.SmoothPlastic
+				end
+				print("Street lights off!")
+			end
+		elseif on then
+			if not TimeOfDay.GetLightState() then
+				TimeOfDay.SetLightState(true)
+				for _, light in ipairs(streetLights) do
+					light.PointLight.Enabled = true
+					light.BrickColor = BrickColor.new("Pastel blue-green")
+					light.Material = Enum.Material.Neon
+				end
+				print("Street lights ON!")
+			end
+		end
+	end)
+end
+
 function ServerRemotes.Initialize()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -372,6 +411,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.UtilityRemotes()
 	ServerRemotes.MoneyBaitRemotes()
 	ServerRemotes.GamepassRemotes()
+	ServerRemotes.StreetLightRemotes()
 end
 
 return ServerRemotes
