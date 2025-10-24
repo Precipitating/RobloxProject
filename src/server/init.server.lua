@@ -1,5 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TimeOfDay = require(ReplicatedStorage.Shared.TimeOfDay.TimeOfDay)
 local NPCModule = require(script.NPCs.NPCModule)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoadEvents = require(script.RoadEvents.RoadEvents)

@@ -1,9 +1,9 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
-local GeneralRemotes = ReplicatedStorage.Remotes
 local SoundModule = require(script:WaitForChild("SoundModule"))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local StarterGui = game:GetService("StarterGui")
+local TimeOfDay = require(ReplicatedStorage.Shared.TimeOfDay.TimeOfDay)
 local ClientRemotes = require(script.ClientRemotes)
 
 local function RespawnDisabler()
@@ -26,10 +26,13 @@ local function RespawnDisabler()
 
 	coreCall("SetCore", "ResetButtonCallback", false)
 end
+
 local function Startup()
 	-- play main theme
 	SoundModule.PlayTheme("Main")
 	SetMonitorPicture.Set()
+	TimeOfDay.StartSyncing()
+
 	--GeneralRemotes.AddMoney:FireServer(10000)
 end
 
