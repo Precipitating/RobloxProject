@@ -5,6 +5,7 @@ local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local StarterGui = game:GetService("StarterGui")
 local TimeOfDay = require(ReplicatedStorage.Shared.TimeOfDay.TimeOfDay)
 local ClientRemotes = require(script.ClientRemotes)
+local Thief = require(script.NPCs.Thief.Thief)
 
 local function RespawnDisabler()
 	-- disable respawn button
@@ -31,6 +32,7 @@ local function Startup()
 	-- play main theme
 	SoundModule.PlayTheme("Main")
 	SetMonitorPicture.Set()
+	Thief.Initialize()
 	TimeOfDay.StartSyncing()
 
 	--GeneralRemotes.AddMoney:FireServer(10000)

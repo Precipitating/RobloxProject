@@ -374,4 +374,5 @@ MissionEventHandlers["InfirmaryRoomEntered"] = function(player)
 	PrisonWardenEvent.InfirmaryDoorInit(player)
 end
 
+MissionEventHandlers["ThiefAccepted"] = function(player) end
 return MissionEventHandlers

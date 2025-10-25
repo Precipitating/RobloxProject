@@ -2165,6 +2165,28 @@ local Missions: Types.MissionsList = {
 		manualOnly = true,	
 	},
 
+	StealTV = {
+		categoryId = "Thief",
+		tasks = {
+			StealTV = {
+				taskType = Types.TaskType.Count,
+				goalCount = 1,
+			},
+		},
+		metadata = {
+			displayName = "Steal a 100 inch OLED TV (last house down the road)",
+			visibleAfterComplete = true,
+			visibleBeforeUnlocked = false,
+			rewards = {
+				{
+					icon = 14640315429,
+					displayName = "Massive TV",
+				},
+			},
+		},
+		manualOnly = true,	
+	},
+
 
 
 }

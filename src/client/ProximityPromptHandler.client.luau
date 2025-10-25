@@ -168,7 +168,7 @@ local function TalkProximityPrompt(prompt)
 
 	-- normal dialogue talking NPCS
 	TalkModule.SetTalking(true)
-	local dataModule = ReplicatedStorage:WaitForChild("NPCDialogues"):FindFirstChild(npc.Value)
+	local dataModule = ReplicatedStorage:WaitForChild("NPCDialogues"):FindFirstChild(npc.Value, true)
 	if not dataModule then
 		print("Failed to get NPC module (UI)")
 		return
