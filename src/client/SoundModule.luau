@@ -179,6 +179,10 @@ local Themes = {
 		SoundId = "rbxassetid://79250663775359",
 		Volume = 1,
 	},
+	Aerobics = {
+		SoundId = "rbxassetid://108835432226455",
+		Volume = 0.1,
+	},
 }
 local OneShots = {
 	Anvil = {

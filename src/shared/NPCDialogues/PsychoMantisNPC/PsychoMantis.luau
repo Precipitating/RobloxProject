@@ -5,7 +5,8 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local PlayerData = GeneralRemotes.GetBasicPlayerData:InvokeServer()
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
-local CustomDialogue = require(ReplicatedStorage.NPCDialogues.PsychoMantisHelpers.CustomPsychoMantisDialogue)
+local CustomDialogue =
+	require(ReplicatedStorage.NPCDialogues.PsychoMantisNPC.PsychoMantisHelpers.CustomPsychoMantisDialogue)
 local function Introduction()
 	local text
 	if not Player.DisplayName then
