@@ -32,8 +32,13 @@ local RoomExitFunctions = {
 		GeneralRemotes.RemoveAllToolsOfTag:FireServer("ShopItem")
 	end,
 
-	GambaEnter = function()
+	GambaExit = function()
 		GeneralRemotes.Gamba.RemoveAllSlotMachines:FireServer()
+	end,
+
+	TVHomeExit = function()
+		Events.ExecuteScenarioEvent:FireServer("StealTVModeExit")
+		PlayerGui:WaitForChild("SleepMeter"):Destroy()
 	end,
 }
 
@@ -49,6 +54,11 @@ local RoomEnterFunctions = {
 		GeneralRemotes.DestroyObjectByName:FireServer("Prison")
 		SoundModule.PlayTheme("TimeTheme")
 		Events.ExecuteScenarioEvent:FireServer("InfirmaryRoomEntered")
+	end,
+	TVHomeEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		Events.ExecuteScenarioEvent:FireServer("StealTVMode")
+		InitializeGUIModule["TVHomeGUI"]()
 	end,
 }
 

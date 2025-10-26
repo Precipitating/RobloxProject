@@ -1,4 +1,5 @@
 local BadgeHandler = require(script.Parent.BadgeHandler)
+local CollectionService = game:GetService("CollectionService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -14,6 +15,7 @@ local PumpkinBossFight = require(ServerScriptService.Server.NPCs.CupcakeLover.Pu
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
+local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -374,5 +376,19 @@ MissionEventHandlers["InfirmaryRoomEntered"] = function(player)
 	PrisonWardenEvent.InfirmaryDoorInit(player)
 end
 
-MissionEventHandlers["ThiefAccepted"] = function(player) end
+MissionEventHandlers["ThiefAccepted"] = function(player)
+	local prompt = CollectionService:GetTagged("TVRoomEnterPrompt")
+	if #prompt <= 0 then
+		error("TVHouseDoor prompt missing ref!")
+	end
+
+	prompt[1].Enabled = true
+end
+
+MissionEventHandlers["StealTVMode"] = function(player)
+	TVRoomInitialize.Initialize(player)
+end
+MissionEventHandlers["StealTVModeExit"] = function(player)
+	TVRoomInitialize.Exit(player)
+end
 return MissionEventHandlers
