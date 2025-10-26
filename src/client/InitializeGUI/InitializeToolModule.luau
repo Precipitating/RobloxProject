@@ -4,10 +4,7 @@ local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModul
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
 local GeneralRemotes = ReplicatedStorage.Remotes
-local MissionRemotes = ReplicatedStorage.Missions.Events
-
 local InitializeToolModule = {}
 local Connections = {}
 

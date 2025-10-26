@@ -70,8 +70,8 @@ function ShopLiftConsequences.SpawnJacker(player)
 	local attackTouchEvent
 	local hasAttacked = false
 	attackTouchEvent = collisionBox.Touched:Connect(function(hit)
-		local character = hit.Parent
-		local humanoid = character and character:FindFirstChild("Humanoid")
+		local hitCharacter = hit.Parent
+		local humanoid = hitCharacter and hitCharacter:FindFirstChild("Humanoid")
 		if humanoid then
 			if hasAttacked then
 				return
@@ -83,7 +83,7 @@ function ShopLiftConsequences.SpawnJacker(player)
 			ShopLiftConsequences.FadeOut(player)
 			local accessoryFound = false
 			-- destroy accessories first
-			for _, child in ipairs(character:GetChildren()) do
+			for _, child in ipairs(hitCharacter:GetChildren()) do
 				if child:IsA("Accessory") then
 					child:Destroy()
 					accessoryFound = true
@@ -92,7 +92,7 @@ function ShopLiftConsequences.SpawnJacker(player)
 			end
 
 			if not accessoryFound then
-				for _, child in ipairs(character:GetChildren()) do
+				for _, child in ipairs(hitCharacter:GetChildren()) do
 					if child:IsA("BasePart") then
 						local name = child.Name
 						if name:lower():find("arm") or name:lower():find("leg") then

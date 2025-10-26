@@ -713,4 +713,24 @@ InitializeGUIModule["ClimbRopeQuickTime"] = function()
 	end)
 end
 
+InitializeGUIModule["TVHomeGUI"] = function()
+	if PlayerGui:FindFirstChild("SleepMeter") then
+		warn("SleepMeter GUI already open")
+		return
+	end
+
+	local guiLoc = GUILocation:WaitForChild("TVHome")
+	if not guiLoc then
+		error("Missing TVHome GUI Folder ref")
+	end
+	local gui = guiLoc:WaitForChild("SleepMeter")
+
+	if not gui then
+		error("Missing SleepMeter GUI")
+	end
+
+	local guiClone = gui:Clone()
+	guiClone.Parent = PlayerGui
+end
+
 return InitializeGUIModule
