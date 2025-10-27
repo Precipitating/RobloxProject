@@ -1,4 +1,5 @@
 local Thief = {}
+local CanDance = true
 
 local function PlayDefaultAnimation()
 	local animation = Instance.new("Animation")
@@ -11,7 +12,7 @@ local function PlayDefaultAnimation()
 	animTrack.Looped = false
 
 	local function PlayLoop()
-		while Character do
+		while Character and CanDance do
 			-- forward
 			animTrack:Play()
 			animTrack.TimePosition = 0
@@ -27,6 +28,10 @@ local function PlayDefaultAnimation()
 	end
 
 	task.spawn(PlayLoop)
+end
+
+function Thief.SetDanceState(val)
+	CanDance = val
 end
 
 function Thief.Initialize()

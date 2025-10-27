@@ -37,6 +37,17 @@ local RoomExitFunctions = {
 	end,
 
 	TVHomeExit = function()
+		task.spawn(function()
+			local holdingTV = GeneralRemotes.TVHome.HoldingRealTV:InvokeServer()
+			if holdingTV then
+				Events.ProgressMissionEvent:FireServer({
+					MissionName = "StealTV",
+					ProgressVal = 1,
+					TaskId = "Steal",
+				})
+			end
+		end)
+
 		Events.ExecuteScenarioEvent:FireServer("StealTVModeExit")
 		PlayerGui:WaitForChild("SleepMeter"):Destroy()
 	end,
@@ -291,7 +302,7 @@ local function R2DBossPrompts(prompt)
 	stacks.Value = 2
 end
 
-local function MoneyBaitPrompt(prompt)
+local function MoneyBaitPrompts(prompt)
 	local parent = prompt.Parent
 
 	local function GiveTool(name, onlyOneAllowed)
@@ -402,6 +413,25 @@ local function MoneyBaitPrompt(prompt)
 	end
 end
 
+local function TVHomePrompts(prompt)
+	if CollectionService:HasTag(prompt.Parent, "FakeTV") then
+		prompt.Enabled = false
+		local tv = prompt.Parent
+		tv.Anchored = false
+		tv.AssemblyLinearVelocity = Vector3.zero -- resets motion
+		tv:ApplyImpulse(Vector3.new(0, -1, 1) * 100 * tv.AssemblyMass)
+
+		SoundModule.PlaySound("CarCrash")
+		-- if this proximity is activated, sleepemeter MUST exist already.
+		local sleepVal = PlayerGui.SleepMeter.BG.Meter.CurrentSleepVal
+		sleepVal.Value -= 0.3
+	elseif CollectionService:HasTag(prompt.Parent, "RealTV") then
+		prompt.Enabled = false
+
+		GeneralRemotes.TVHome.RealTVGrab:FireServer()
+	end
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -410,5 +440,6 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	SlotMachineProximityPrompts(prompt)
 	WheelSpinner(prompt)
 	R2DBossPrompts(prompt)
-	MoneyBaitPrompt(prompt)
+	MoneyBaitPrompts(prompt)
+	TVHomePrompts(prompt)
 end)

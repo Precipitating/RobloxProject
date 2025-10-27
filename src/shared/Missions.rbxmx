@@ -2168,7 +2168,7 @@ local Missions: Types.MissionsList = {
 	StealTV = {
 		categoryId = "Thief",
 		tasks = {
-			StealTV = {
+			Steal = {
 				taskType = Types.TaskType.Count,
 				goalCount = 1,
 			},

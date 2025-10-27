@@ -386,6 +386,7 @@ MissionEventHandlers["ThiefAccepted"] = function(player)
 end
 
 MissionEventHandlers["StealTVMode"] = function(player)
+	ServerHelperFunctions.ForceUnEquip(player)
 	TVRoomInitialize.Initialize(player)
 end
 MissionEventHandlers["StealTVModeExit"] = function(player)
