@@ -183,6 +183,10 @@ local Themes = {
 		SoundId = "rbxassetid://108835432226455",
 		Volume = 0.1,
 	},
+	VietnamSong = {
+		SoundId = "rbxassetid://107478221402452",
+		Volume = 0.1,
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -504,6 +508,18 @@ local OneShots = {
 		SoundId = "rbxassetid://2386822675",
 		Volume = 0.5,
 		PlaybackRegion = NumberRange.new(0, 0.7),
+	},
+	CarCrash = {
+		SoundId = "rbxassetid://7340406550",
+		Volume = 1,
+	},
+	GoodMorningVietnam = {
+		SoundId = "rbxassetid://8295016126",
+		Volume = 10,
+	},
+	VietcongVoiceline = {
+		SoundId = "rbxassetid://9120429951",
+		Volume = 1,
 	},
 }
 local SoundHandler = {}

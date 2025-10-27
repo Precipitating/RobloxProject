@@ -16,6 +16,7 @@ local MissionRemotes = ReplicatedStorage.Missions.Events
 local GUILocation = ReplicatedStorage.GUI
 local Debris = game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
+local ClientHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -724,13 +725,46 @@ InitializeGUIModule["TVHomeGUI"] = function()
 		error("Missing TVHome GUI Folder ref")
 	end
 	local gui = guiLoc:WaitForChild("SleepMeter")
-
 	if not gui then
 		error("Missing SleepMeter GUI")
 	end
 
 	local guiClone = gui:Clone()
 	guiClone.Parent = PlayerGui
+	local bg = guiClone:WaitForChild("BG")
+
+	BounceOpenFrame(bg.Size, bg)
+
+	local meter = bg:WaitForChild("Meter")
+	local sleepVal = meter:WaitForChild("CurrentSleepVal")
+
+	if not sleepVal or not meter then
+		error("Missing TVHome sleepVal/meter references")
+	end
+
+	local currentTween = nil
+
+	trackConnect("TVHomeGUI", sleepVal:GetPropertyChangedSignal("Value"), function()
+		if currentTween then
+			currentTween:Cancel()
+		end
+
+		print(sleepVal.Value)
+		local goal = { Size = UDim2.fromScale(math.clamp(sleepVal.Value, 0, 1), 1) }
+		currentTween =
+			TweenService:Create(meter, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), goal)
+
+		currentTween:Play()
+
+		-- failed
+		-- 1e-6 due to floating precision errors occuring, so its close to 0 basically.
+		if sleepVal.Value <= 1e-6 then
+			UIHelperFunctions.AdjustBlackScreen(1, 0)
+			InitializeGUIModule.DisconnectAll("TVHomeGUI")
+			guiClone:Destroy()
+			MovementHandler.DisableControls()
+		end
+	end)
 end
 
 return InitializeGUIModule

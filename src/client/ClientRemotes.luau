@@ -32,6 +32,10 @@ local textBox
 local isCleaningUp = false
 local currentWord
 
+-- TVHome
+local SleepMeterGUI = nil
+local CurrentSleepVal = nil
+
 local ClientRemotes = {}
 
 function ClientRemotes.GeneralRemotes()
@@ -281,10 +285,13 @@ end
 
 function ClientRemotes.GUIRemotes()
 	-- GUI
-	-- R2D health gui for CupcakeLover NPC event
+	-- Get GUI references when added
 	PlayerGui.ChildAdded:Connect(function(child)
 		if child.Name == "R2DHealthGUI" then
 			R2DPlayerHealth = child:WaitForChild("Health")
+		elseif child.Name == "SleepMeter" then
+			SleepMeterGUI = child
+			CurrentSleepVal = SleepMeterGUI:WaitForChild("BG"):WaitForChild("Meter"):WaitForChild("CurrentSleepVal")
 		end
 	end)
 
@@ -370,6 +377,18 @@ function ClientRemotes.WeatherRemotes()
 	end)
 end
 
+function ClientRemotes.TVHomeRemotes()
+	GeneralRemotes.TVHome.HitCan.OnClientEvent:Connect(function(decreaseVal)
+		if not SleepMeterGUI then
+			error("Missing Sleep Meter GUI")
+		end
+		if not CurrentSleepVal then
+			error("CurrentSleepVal missing ref on client")
+		end
+		CurrentSleepVal.Value = math.max(0, CurrentSleepVal.Value - decreaseVal)
+	end)
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.GeneralRemotes()
 	ClientRemotes.PsychoMantisRemotes()
@@ -379,6 +398,7 @@ function ClientRemotes.Initialize()
 	ClientRemotes.CurrencyRemotes()
 	ClientRemotes.MoneyBaitRemotes()
 	ClientRemotes.WeatherRemotes()
+	ClientRemotes.TVHomeRemotes()
 end
 
 return ClientRemotes

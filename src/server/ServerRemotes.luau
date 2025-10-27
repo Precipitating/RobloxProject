@@ -24,6 +24,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerStorage = game:GetService("ServerStorage")
+local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ServerTools = ServerStorage.Tools
 
@@ -395,6 +396,16 @@ function ServerRemotes.StreetLightRemotes()
 	end)
 end
 
+function ServerRemotes.TVHomeRemotes()
+	GeneralRemotes.TVHome.RealTVGrab.OnServerEvent:Connect(function(player)
+		TVRoomInitialize.GrabRealTV(player)
+	end)
+
+	GeneralRemotes.TVHome.HoldingRealTV.OnServerInvoke = function()
+		return TVRoomInitialize.IsHoldingRealTV()
+	end
+end
+
 function ServerRemotes.Initialize()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -412,6 +423,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.MoneyBaitRemotes()
 	ServerRemotes.GamepassRemotes()
 	ServerRemotes.StreetLightRemotes()
+	ServerRemotes.TVHomeRemotes()
 end
 
 return ServerRemotes

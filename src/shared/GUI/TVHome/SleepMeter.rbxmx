@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBXC9A3F1A25EA24A658DC0ADC15D739A88">
+	<Item class="ScreenGui" referent="RBX4F9A98C6137F49E0B0F55A8489D77221">
 		<Properties>
 			<bool name="ClipToDeviceSafeArea">true</bool>
 			<int name="DisplayOrder">0</int>
@@ -25,7 +25,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Frame" referent="RBX1BC158A87B934A2F845691E84992F081">
+		<Item class="Frame" referent="RBXBBF69739FA89442BBC88362D5E52563C">
 			<Properties>
 				<token name="Style">0</token>
 				<bool name="Active">false</bool>
@@ -88,7 +88,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Frame" referent="RBX75038CB2AA854C3BAD1AAD51C4EA7FF9">
+			<Item class="Frame" referent="RBX67AE8DF0CA914709B05EDBA913FCD79F">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -151,7 +151,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
-				<Item class="UICorner" referent="RBX03F0E616BA3846D8A4350273F6594B13">
+				<Item class="UICorner" referent="RBX7A07E10BECDA4431833BD1213C2EA8BF">
 					<Properties>
 						<UDim name="CornerRadius">
 							<S>0</S>
@@ -165,8 +165,19 @@
 						<BinaryString name="Tags"></BinaryString>
 					</Properties>
 				</Item>
+				<Item class="NumberValue" referent="RBX6F0ED81F941E4ED892627B895BFFA33A">
+					<Properties>
+						<double name="Value">1</double>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
+						<bool name="DefinesCapabilities">false</bool>
+						<string name="Name">CurrentSleepVal</string>
+						<int64 name="SourceAssetId">-1</int64>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
 			</Item>
-			<Item class="UICorner" referent="RBX29DD4FC869974DFE8510B05086255F02">
+			<Item class="UICorner" referent="RBX87999511C36E4662AF03DEE30E1493EF">
 				<Properties>
 					<UDim name="CornerRadius">
 						<S>0</S>
@@ -180,7 +191,7 @@
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="TextLabel" referent="RBXD5411E34BBCB41A6A2A1F05EC09A0F6C">
+			<Item class="TextLabel" referent="RBXA0113C0275F046DC88758474DA3E637B">
 				<Properties>
 					<Font name="FontFace">
 						<Family><url>rbxasset://fonts/families/HighwayGothic.json</url></Family>

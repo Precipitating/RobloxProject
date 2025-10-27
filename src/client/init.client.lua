@@ -1,11 +1,11 @@
 local SoundModule = require(script:WaitForChild("SoundModule"))
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local SetMonitorPicture = require(script.NPCs.PsychoMantis.SetMonitorPicture)
 local StarterGui = game:GetService("StarterGui")
-local TimeOfDay = require(ReplicatedStorage.Shared.TimeOfDay.TimeOfDay)
+local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ClientRemotes = require(script.ClientRemotes)
-local Thief = require(script.NPCs.Thief.Thief)
+local Thief = require(ReplicatedStorage.NPCs.Thief.Thief)
 
 local function RespawnDisabler()
 	-- disable respawn button
