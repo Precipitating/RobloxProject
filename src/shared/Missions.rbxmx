@@ -2180,7 +2180,7 @@ local Missions: Types.MissionsList = {
 			rewards = {
 				{
 					icon = 14640315429,
-					displayName = "Massive TV",
+					displayName = "Dialogue Progress",
 				},
 			},
 		},

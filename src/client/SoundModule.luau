@@ -345,7 +345,7 @@ local OneShots = {
 	},
 	NewMission = {
 		SoundId = "rbxassetid://76029655852111",
-		Volume = 0.5,
+		Volume = 1,
 		Tag = "Unstoppable",
 	},
 	Nuke = {
@@ -515,10 +515,14 @@ local OneShots = {
 	},
 	GoodMorningVietnam = {
 		SoundId = "rbxassetid://8295016126",
-		Volume = 10,
+		Volume = 5,
 	},
 	VietcongVoiceline = {
 		SoundId = "rbxassetid://9120429951",
+		Volume = 10,
+	},
+	Censor = {
+		SoundId = "rbxassetid://3106518815",
 		Volume = 1,
 	},
 }

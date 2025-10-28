@@ -152,13 +152,6 @@ end
 
 local function fireAndLog(event, data, label)
 	if data then
-		if label == "UnlockMission" then
-			SoundModule.PlaySound("NewMission")
-		end
-		if label == "ProgressMission" then
-			SoundModule.PlaySound("Ping")
-		end
-
 		if event:IsA("RemoteEvent") then
 			event:FireServer(data)
 		elseif event:IsA("RemoteFunction") then

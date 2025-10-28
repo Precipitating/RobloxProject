@@ -7,15 +7,25 @@ local MissionCompleteHandlers = require(script.Parent:FindFirstChild("MissionsCo
 local MissionFailedHandlers = require(script.Parent:FindFirstChild("MissionsFailedHandler"))
 local GeneralRemotes = ReplicatedStorage.Remotes
 
+local config = {
+	VoiceId = "10",
+	Pitch = 1,
+	Speed = 1,
+	Volume = 3,
+}
+
 -- mission handlers
 local function unlockHandler(player: Player, missionId: Types.MissionId)
 	print(` {player} calling mission event {missionId}...`)
+	-- calls paired function in MissionsLogicHandler if exists (should be same name as missionId)
 	local handler = MissionEventHandlers[missionId]
+
+	GeneralRemotes.PlaySound:InvokeClient(player, "NewMission")
 
 	if handler then
 		handler(player)
 	else
-		print("Mission handler not found. Check spelling")
+		print("Mission logic handler not found. Check spelling")
 	end
 end
 
@@ -23,6 +33,10 @@ local function completeHandler(player: Player, missionId: Types.MissionId)
 	print(`{player} completed mission {missionId}`)
 	local handler = MissionCompleteHandlers[missionId]
 	if handler then
+		task.spawn(function()
+			GeneralRemotes.PlayTTS:InvokeClient(player, `{missionId} complete, well done {player.DisplayName}`, config)
+		end)
+
 		handler(player)
 	else
 		print("Failed to claim rewards")
@@ -32,6 +46,13 @@ end
 local function failHandler(player: Player, missionId: Types.MissionId)
 	local handler = MissionFailedHandlers[missionId]
 	if handler then
+		task.spawn(function()
+			GeneralRemotes.PlayTTS:InvokeClient(
+				player,
+				`{missionId} failed {player.DisplayName}, what are you doing.`,
+				config
+			)
+		end)
 		handler(player)
 	else
 		print("Failed to call fail handler")
@@ -50,6 +71,7 @@ end)
 
 ReplicatedStorage.Missions.Events.ProgressMissionEvent.OnServerEvent:Connect(function(player, progressDict)
 	if typeof(progressDict) == "table" then
+		GeneralRemotes.PlaySound:InvokeClient(player, "Ping")
 		Missions.addProgressToTask(player, progressDict.MissionName, progressDict.TaskId, progressDict.ProgressVal)
 		print("Progress added to " .. progressDict.MissionName)
 	end

@@ -139,7 +139,6 @@ return {
 					Type = "Close",
 					UnlockMission = "StealTV",
 					SetDialogueFile = { ThiefNameTag = "ThiefAccepted" },
-					ExecuteScenarioEvent = "ThiefAccepted",
 				},
 				{
 					Text = "Yeeaaaaaaaah no.",

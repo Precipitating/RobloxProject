@@ -24,4 +24,9 @@ MissionCompleteHandlers["Laptop"] = function(_)
 	print("Dialogue set to PsychoMantisWin")
 end
 
+MissionCompleteHandlers["StealTV"] = function(_)
+	ServerHelperFunctions.SetNPCDialogueFile({ ThiefNameTag = "ThiefCompleted" })
+	print("Dialogue set to ThiefCompleted")
+end
+
 return MissionCompleteHandlers
