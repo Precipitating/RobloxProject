@@ -157,6 +157,15 @@ function TVRoomInitialize.Exit(player)
 	character.Humanoid.WalkSpeed = 25
 	character["Left Arm"].CanCollide = false
 	character["Right Arm"].CanCollide = false
+
+	if HoldingRealTV then
+		local prompt = CollectionService:GetTagged("TVRoomEnterPrompt")
+		if #prompt <= 0 then
+			error("TVHouseDoor prompt missing ref!")
+		end
+
+		prompt[1].Enabled = false
+	end
 end
 
 return TVRoomInitialize

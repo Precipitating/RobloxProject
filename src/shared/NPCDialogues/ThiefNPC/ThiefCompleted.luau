@@ -35,10 +35,12 @@ local function Run()
 			{
 				Text = "SON OF TELAMON!",
 				Type = "Close",
+				ExecuteScenarioEvent = "ThiefSuccess",
 			},
 			{
 				Text = ".....Bruh.",
 				Type = "Close",
+				ExecuteScenarioEvent = "ThiefSuccess",
 			},
 		},
 	}

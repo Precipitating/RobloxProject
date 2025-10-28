@@ -16,7 +16,8 @@ local MissionRemotes = ReplicatedStorage.Missions.Events
 local GUILocation = ReplicatedStorage.GUI
 local Debris = game:GetService("Debris")
 local TweenService = game:GetService("TweenService")
-local ClientHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
+local Events = ReplicatedStorage.Missions.Events
+local CutsceneClientHandler = require(StarterPlayer.StarterPlayerScripts.Client.CutsceneScripts.CutsceneClientHandler)
 local InitializeGUIModule = {}
 local Connections = {}
 
@@ -743,6 +744,7 @@ InitializeGUIModule["TVHomeGUI"] = function()
 	end
 
 	local currentTween = nil
+	local failed = false
 
 	trackConnect("TVHomeGUI", sleepVal:GetPropertyChangedSignal("Value"), function()
 		if currentTween then
@@ -756,13 +758,17 @@ InitializeGUIModule["TVHomeGUI"] = function()
 
 		currentTween:Play()
 
-		-- failed
+		-- failed minigame
 		-- 1e-6 due to floating precision errors occuring, so its close to 0 basically.
-		if sleepVal.Value <= 1e-6 then
+		if sleepVal.Value <= 1e-6 and not failed then
+			failed = true
+			SoundModule.PlaySound("Oi")
 			UIHelperFunctions.AdjustBlackScreen(1, 0)
 			InitializeGUIModule.DisconnectAll("TVHomeGUI")
 			guiClone:Destroy()
 			MovementHandler.DisableControls()
+			Events.ExecuteScenarioEvent:FireServer("StealTVModeFailed")
+			CutsceneClientHandler.Play("ThiefFailed")
 		end
 	end)
 end

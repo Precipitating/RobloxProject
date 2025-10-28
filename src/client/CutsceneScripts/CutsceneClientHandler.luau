@@ -3,9 +3,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
+local StarterGui = game:GetService("StarterGui")
 local StarterPlayer = game:GetService("StarterPlayer")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
 
 local CodesOtaku = ReplicatedStorage.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
@@ -49,13 +53,14 @@ local bin = true -- prevents multiple plays at once
 local currentRenderStepped
 
 local voices = {
-	Bosnian = { VoiceId = "1", Pitch = 5, Speed = 1, Volume = 1 },
+	Bosnian = { VoiceId = "1", Pitch = 5, Speed = 1, Volume = 3 },
 	Dad = { VoiceId = "1", Pitch = -5, Speed = 1, Volume = 3 },
-	Homeless = { VoiceId = "3", Pitch = 1, Speed = 1, Volume = 1 },
-	Cashier = { VoiceId = "5", Pitch = -3, Speed = 1, Volume = 1 },
-	Driver = { VoiceId = "7", Pitch = 6, Speed = 1, Volume = 1 },
+	Homeless = { VoiceId = "3", Pitch = 1, Speed = 1, Volume = 3 },
+	Cashier = { VoiceId = "5", Pitch = -3, Speed = 1, Volume = 3 },
+	Driver = { VoiceId = "7", Pitch = 6, Speed = 1, Volume = 3 },
 	Player = { VoiceId = "5", Pitch = 1, Speed = 1, Volume = 3 },
-	Sheep = { VoiceId = "1", Pitch = 1, Speed = 1, Volume = 1 },
+	Thief = { VoiceId = "5", Pitch = -1, Speed = 1, Volume = 3 },
+	Sheep = { VoiceId = "1", Pitch = 1, Speed = 1, Volume = 3 },
 	Mom = { VoiceId = "4", Pitch = 1, Speed = 1, Volume = 3 },
 	Damon = { VoiceId = "1", Pitch = 2, Speed = 1, Volume = 3 },
 	CitizenGirl = { VoiceId = "6", Pitch = 1, Speed = 1, Volume = 3 },
@@ -753,6 +758,68 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		end
 	end,
+
+	ThiefFailed = function(instruction, _, _)
+		local tweenInfo = TweenInfo.new(25, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+		local goal = { PlaybackSpeed = 0.03 }
+		local tween = TweenService:Create(Music, tweenInfo, goal)
+		tween:Play()
+		UIHelperFunctions.AdjustBlackScreen(1, 1)
+	end,
+
+	ThiefSuccess = function(instruction, _, _)
+		if instruction == 1 then
+			RunCutsceneAction(function()
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
+				task.wait(1)
+				Speak("Thief", "Hello sir, I have this 100 inch OLED TV to pawn off, how much")
+				Speak(
+					"Driver",
+					"Is it new? whats MSRP for this thing? do I need to get my 100 inch tv guy to take a look at this?"
+				)
+				Speak(
+					"Thief",
+					"No need, i'm here to make a quick sale for quick cash. It's new and MSRP is twenty thousand robux, I reckon 10 kay is reasonable?"
+				)
+				Speak(
+					"Driver",
+					"Firstly, I see cola stains on the TV. Secondly, I see wood chips stuck in there. 5000 robux at best."
+				)
+				Speak("Thief", "These can easily be cleaned off sir, 8000 robux is my lowest offer")
+				Speak(
+					"Driver",
+					"I just noticed it's the lad brand, thats going to be hard to sell, I can do 2500 robux at best, you won't get any better elsewhere."
+				)
+				Speak(
+					"Thief",
+					"What do you mean? lads over rebels man... Fine.. 5000 robux. You're going to get so much profit, leave some for me please man"
+				)
+				Speak(
+					"Driver",
+					"Looks like it only has one channel, and it's the display case only one. 500 robux and i'll keep this quiet."
+				)
+				Speak("Thief", "Stop lying, it has many channels, let me prove it.")
+				SoundModule.PlaySound("Electrocution").Ended:Wait()
+				local vid = workspace
+					:WaitForChild("ThiefSuccessShop")
+					:WaitForChild("RealTV")
+					:WaitForChild("SurfaceGui")
+					:WaitForChild("Video")
+				vid.Video = "rbxassetid://5608411652"
+				task.wait(1)
+				Speak("Driver", "50 robux")
+				Speak("Thief", "100")
+				Speak("Driver", "30")
+				Speak("Thief", "50")
+				Speak("Driver", "50")
+				Speak("Thief", "5")
+				Speak("Driver", "Ok we agree, 5 robux it is!")
+				SoundModule.PlaySound("Censor").Ended:Wait()
+			end)
+		elseif instruction == 2 then
+			UIHelperFunctions.AdjustBlackScreen(7, 0)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -874,6 +941,17 @@ CutsceneClientHandler.Initialize = {
 		Music.SoundId = "rbxassetid://128736659673417"
 		Music.Volume = 0.1
 	end,
+
+	ThiefFailed = function()
+		Music.SoundId = "rbxassetid://138685528021514"
+		Music.Volume = 1
+		Music.PlaybackSpeed = 0.01
+	end,
+
+	ThiefSuccess = function()
+		Music.SoundId = "rbxassetid://106495808773197"
+		Music.Volume = 0.1
+	end,
 }
 
 -- Load a cutscene by name
@@ -891,6 +969,17 @@ end
 
 -- Play a cutscene with optional per-keyframe function
 function CutsceneClientHandler.Play(name)
+	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+	-- disable custom GUI
+	for _, gui in ipairs(PlayerGui:GetChildren()) do
+		if gui:IsA("ScreenGui") and gui.Name ~= "BlackScreen" then
+			gui.Enabled = false
+		end
+	end
+	GeneralRemotes.EnableRoadEvents:FireServer(false)
+	UserInputService.MouseIconEnabled = false
+	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+
 	-- Reset state
 	bin = true
 	SoundModule.StopAllSounds()

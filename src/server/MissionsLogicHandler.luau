@@ -376,7 +376,9 @@ MissionEventHandlers["InfirmaryRoomEntered"] = function(player)
 	PrisonWardenEvent.InfirmaryDoorInit(player)
 end
 
-MissionEventHandlers["ThiefAccepted"] = function(player)
+-- Thief
+-- when mission unlocks, this should call as well
+MissionEventHandlers["StealTV"] = function(player)
 	local prompt = CollectionService:GetTagged("TVRoomEnterPrompt")
 	if #prompt <= 0 then
 		error("TVHouseDoor prompt missing ref!")
@@ -391,5 +393,23 @@ MissionEventHandlers["StealTVMode"] = function(player)
 end
 MissionEventHandlers["StealTVModeExit"] = function(player)
 	TVRoomInitialize.Exit(player)
+end
+
+MissionEventHandlers["StealTVModeFailed"] = function(player)
+	TVRoomInitialize.Exit(player)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Thief", "ThiefFailedCharacter", nil)
+	player.Character:PivotTo(workspace:FindFirstChild("BlackRoom"):FindFirstChild("SpawnLoc").CFrame)
+	workspace:FindFirstChild("TVHome"):Destroy()
+	BadgeHandler.awardBadge(player, 970208823763244)
+end
+
+MissionEventHandlers["ThiefSuccess"] = function(player)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Thief", "ThiefSuccessShop", nil)
+	GeneralRemotes.BlackFade:FireClient(player, 1, 0)
+	task.wait(1)
+	GeneralRemotes.DisableControls:FireClient(player)
+	player.Character:PivotTo(workspace:FindFirstChild("BlackRoom"):FindFirstChild("SpawnLoc").CFrame)
+	BadgeHandler.awardBadge(player, 2503897671068625)
+	GeneralRemotes.PlayCutscene:FireClient(player, "ThiefSuccess")
 end
 return MissionEventHandlers
