@@ -24,7 +24,7 @@ function TerminalUnlocked.SpawnVan(player)
 
 	local targetCFrame = CFrame.new(arrivePos, arrivePos + primaryPart.CFrame.LookVector)
 
-	local spawnPos: Vector3 = primaryPart.Position
+	local spawnPos: vector = primaryPart.Position
 		+ (primaryPart.CFrame.RightVector * 10)
 		+ (primaryPart.CFrame.UpVector * -5)
 		+ (primaryPart.CFrame.LookVector * -150)
@@ -40,7 +40,7 @@ function TerminalUnlocked.SpawnVan(player)
 		handWeld.Enabled = true
 	end
 
-	van:SetPrimaryPartCFrame(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
+	van:PivotTo(CFrame.lookAt(van.PrimaryPart.Position, primaryPart.Position))
 
 	return van, hand, targetCFrame
 end

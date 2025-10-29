@@ -13,7 +13,7 @@ local WeatherTypes = {
 
 function WeatherHandler.Start()
 	WeatherThread = coroutine.wrap(function()
-		while true and not cancelled do
+		while not cancelled do
 			local nextWeather = WeatherTypes[math.random(1, #WeatherTypes)]
 			GeneralRemotes.UpdateWeather:FireAllClients(nextWeather)
 			task.wait(math.random(60, 120))

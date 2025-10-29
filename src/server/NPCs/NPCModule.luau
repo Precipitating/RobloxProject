@@ -265,7 +265,7 @@ function NPC:StartPathing(targetPos)
 		end
 
 		-- always fire when done, no matter what caused it
-		local reason = self.PathCancelled and "Cancelled" or targetPos.Name
+		local reason = self.PathCancelled and "Cancelled" or "You"
 		ArrivedRemote:Fire(self.Name, reason)
 	end)
 end
