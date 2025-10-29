@@ -418,8 +418,8 @@ local function TVHomePrompts(prompt)
 		prompt.Enabled = false
 		local tv = prompt.Parent
 		tv.Anchored = false
-		tv.AssemblyLinearVelocity = Vector3.zero -- resets motion
-		tv:ApplyImpulse(Vector3.new(0, -1, 1) * 100 * tv.AssemblyMass)
+		tv.AssemblyLinearVelocity = vector.zero -- resets motion
+		tv:ApplyImpulse(vector.create(0, -1, 1) * 100 * tv.AssemblyMass)
 
 		SoundModule.PlaySound("CarCrash")
 		-- if this proximity is activated, sleepemeter MUST exist already.

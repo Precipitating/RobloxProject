@@ -1,8 +1,6 @@
-local StarterPlayer = game:GetService("StarterPlayer")
 local TweenService = game:GetService("TweenService")
-local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local OpenRain = require(script.Parent.OpenRain)
-local currentWeather = nil
+local CurrentWeather = nil
 
 local RainRef = OpenRain.new({
 	StartDelay = 5,
@@ -14,22 +12,26 @@ local RainRef = OpenRain.new({
 })
 local WeatherVisualizer = {}
 
+function WeatherVisualizer.GetWeather()
+	return CurrentWeather
+end
+
 local WeatherFunctions = {
 	Rain = function()
-		if currentWeather == "Rain" then
+		if CurrentWeather == "Rain" then
 			return
 		end
-		currentWeather = "Rain"
+		CurrentWeather = "Rain"
 
 		-- wait a second for the root part to load (on spawn) to prevent renderstep errors
 		task.wait(1)
 		RainRef:init()
 	end,
 	Sun = function()
-		if currentWeather == "Sun" then
+		if CurrentWeather == "Sun" then
 			return
 		end
-		currentWeather = "Sun"
+		CurrentWeather = "Sun"
 		RainRef:Stop()
 
 		TweenService:Create(workspace.Terrain.Clouds, TweenInfo.new(5), { Cover = 0.3 }):Play()

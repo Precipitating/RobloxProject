@@ -17,8 +17,6 @@ local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local CameraFollowConnection = nil
-local UserInputService = game:GetService("UserInputService")
-local StarterGui = game:GetService("StarterGui")
 local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local WeatherVisualizer = require(script.Parent.Weather.WeatherVisualizer)
 
@@ -35,6 +33,9 @@ local currentWord
 -- TVHome
 local SleepMeterGUI = nil
 local CurrentSleepVal = nil
+
+-- Cutscene
+local CutsceneRan = false
 
 local ClientRemotes = {}
 
@@ -197,7 +198,14 @@ function ClientRemotes.GeneralRemotes()
 	-- > disable NPCS proximity prompts
 	-- > disable mouse icon
 	GeneralRemotes.PlayCutscene.OnClientEvent:Connect(function(name)
+		if CutsceneRan then
+			return
+		end
+		if WeatherVisualizer.GetWeather() == "Rain" then
+			RunService:UnbindFromRenderStep("rain")
+		end
 		CutsceneModule.Play(name)
+		CutsceneRan = true
 	end)
 end
 

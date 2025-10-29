@@ -43,9 +43,15 @@ local function disconnectAll()
 		clicktowalkcircle:Destroy()
 		clicktowalkcircle = nil
 	end
+	if enabled then
+		enabled = false
+	end
 end
 -- movement logic
 local function startClickToMove()
+	if not enabled then
+		return
+	end
 	clicktowalkcircle = originalCircle:Clone()
 	clicktowalkcircle.Parent = workspace
 	loop = RunService.RenderStepped:Connect(function()

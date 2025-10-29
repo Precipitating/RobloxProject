@@ -275,7 +275,7 @@ function TalkModule.updateUI(data, dialogueId)
 		end
 		debounce = true
 		TalkModule.handleResponse(data, selectedDialogue.Responses[1])
-		task.delay(0.1, function()
+		task.delay(0.2, function()
 			debounce = false
 		end)
 	end)

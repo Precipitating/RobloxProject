@@ -23,7 +23,6 @@ Players.PlayerAdded:Connect(function(player)
 
 	local function setupCharacter(character)
 		local spawnPos = PlayerInitialize.SpawnHome()
-
 		PlayerInitialize.TeleportHome(character, spawnPos)
 
 		local humanoid = character:WaitForChild("Humanoid")
@@ -69,7 +68,6 @@ Players.PlayerAdded:Connect(function(player)
 			end
 		end)
 
-		-- disconnect heartbeat when character dies
 		humanoid.Died:Connect(function()
 			task.wait(3)
 			player:LoadCharacter()

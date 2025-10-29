@@ -164,16 +164,16 @@ function OpenRain:Start()
 		if not character or not character.PrimaryPart then
 			return
 		end
-		_rain.Size = Vector3.new(self.RenderArea, _rain.Size.Y, self.RenderArea)
-		_floor.Size = Vector3.new(self.RenderArea, _floor.Size.Y, self.RenderArea)
+		_rain.Size = vector.create(self.RenderArea, _rain.Size.Y, self.RenderArea)
+		_floor.Size = vector.create(self.RenderArea, _floor.Size.Y, self.RenderArea)
 
 		local params = RaycastParams.new()
 		params.FilterDescendantsInstances = { Client.Character, _rain, _floor }
 		params.FilterType = Enum.RaycastFilterType.Exclude
 
 		local origin = Client.Character.PrimaryPart.Position
-		local roofHit = workspace:Raycast(origin, Vector3.new(0, 100, 0), params)
-		local groundHit = workspace:Raycast(origin, Vector3.new(0, -100, 0), params)
+		local roofHit = workspace:Raycast(origin, vector.create(0, 100, 0), params)
+		local groundHit = workspace:Raycast(origin, vector.create(0, -100, 0), params)
 
 		if roofHit then
 			_rain.Parent = nil
@@ -181,7 +181,7 @@ function OpenRain:Start()
 		else
 			_floor.Parent = workspace
 			_rain.Parent = workspace
-			_rain.Position = Client.Character.PrimaryPart.Position + Vector3.new(0, 50, 0)
+			_rain.Position = Client.Character.PrimaryPart.Position + vector.create(0, 50, 0)
 			_floor.Position = groundHit.Position
 		end
 	end)

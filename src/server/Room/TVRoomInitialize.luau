@@ -48,30 +48,6 @@ local function SetupSoundEmitters(can)
 	return audioPlayer
 end
 
-local function SetupResidentListener()
-	-- setup listener
-	local listenPart = workspace:FindFirstChild("TVHome"):FindFirstChild("Listener")
-	local listener = Instance.new("AudioListener")
-	listener.Parent = listenPart
-	local deviceOutput = Instance.new("AudioDeviceOutput")
-	deviceOutput.Parent = listenPart
-	ConnectDevices(listener, deviceOutput)
-
-	-- analyzer
-	local analyzer = Instance.new("AudioAnalyzer")
-	analyzer.Parent = listenPart
-	ConnectDevices(listener, analyzer)
-
-	task.spawn(function()
-		while true do
-			if analyzer.RmsLevel > 0.1 then
-				print("Lil bro heard something")
-			end
-			task.wait()
-		end
-	end)
-end
-
 function TVRoomInitialize.IsHoldingRealTV()
 	return HoldingRealTV
 end
@@ -99,7 +75,6 @@ local function ConnectCanTraps(player)
 	if #cans <= 0 then
 		error("No can traps detected")
 	end
-	SetupResidentListener()
 
 	for _, can: Part in ipairs(cans) do
 		can:SetNetworkOwner(player)
@@ -116,7 +91,6 @@ local function ConnectCanTraps(player)
 				end
 			end
 
-			print(hit.Name)
 			SodaCanDebounces[can] = true
 			local canVel = can.AssemblyLinearVelocity
 			if canVel.Magnitude > 0 then

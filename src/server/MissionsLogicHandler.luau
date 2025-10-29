@@ -33,7 +33,7 @@ MissionEventHandlers["StealPhone"] = function(_)
 	local victim = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Roadman", "PhoneVictim", nil)
 	local spawnPosList = ServerStorage.MissionModels.Roadman:FindFirstChild("PhoneVictimSpawns"):GetChildren()
 	local spawnPos = spawnPosList[math.random(1, #spawnPosList)]
-	victim:SetPrimaryPartCFrame(spawnPos.CFrame)
+	victim:PivotTo(spawnPos.CFrame)
 end
 
 MissionEventHandlers["RoadmanCaught"] = function(player)
@@ -90,19 +90,20 @@ MissionEventHandlers["GuestHorrorMode"] = function(player)
 	local light, pathModel, prevPlayerPos, prevEnemyPos = SafechatterHelpers.InitializeGuestHorrorMode(player)
 
 	-- handle fail obby
-	local failed = SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
+	SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 
 	-- handle touching the portal
-	SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, failed, prevPlayerPos, prevEnemyPos)
+	SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlayerPos, prevEnemyPos)
 end
 
 MissionEventHandlers["GuestPwn"] = function(player)
 	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 	local character = player.Character
-	local alley = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway")
-	character:SetPrimaryPartCFrame(alley:FindFirstChild("SpawnLoc").CFrame)
+	local alley = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Safechatter", "Alleyway", nil)
+	workspace:FindFirstChild("InvisiblePaths"):Destroy()
 	GeneralRemotes.PlayAnimation:FireClient(player, "73806503045226")
 	BadgeHandler.awardBadge(player, 550797482323175)
+	character:PivotTo(alley:FindFirstChild("SpawnLoc").CFrame)
 	GeneralRemotes.PlayCutscene:FireClient(player, "GuestPwn")
 	task.wait(1)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
@@ -133,7 +134,7 @@ MissionEventHandlers["TypingCompetition"] = function(player)
 	end
 	local init = competition.Init(player)
 
-	player.Character:SetPrimaryPartCFrame(workspace.StreetProps.Dumpster.Poop:GetPrimaryPartCFrame())
+	player.Character:PivotTo(workspace.StreetProps.Dumpster.Poop:GetPrimaryPartCFrame())
 	if not init then
 		error("Initialize word competition failed")
 	end
