@@ -44,6 +44,25 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 	rayParams.FilterDescendantsInstances = { Character }
 	rayParams.FilterType = Enum.RaycastFilterType.Exclude
 
+	local function BallTerrainDestroy(result)
+		-- initiate a ball shaped terrain destruction if raycast hits terrain
+		if result and result.Instance == workspace.Terrain then
+			SoundModule.PlaySound("Dig")
+			local pos = Character:GetPivot().Position + Character:GetPivot().LookVector * dist
+			workspace.Terrain:FillBall(pos, 5, Enum.Material.Air)
+			hitsBeforeBreak -= 1
+
+			if hitsBeforeBreak <= 0 then
+				SoundModule.PlaySound("MetalSnap")
+				InitializeToolModule.DisconnectAll("PrisonSpoon")
+				GeneralRemotes.RemoveEquippedTool:FireServer()
+			end
+		end
+		task.delay(cooldown, function()
+			canAttack = true
+		end)
+	end
+
 	trackConnect("PrisonSpoon", tool.Activated, function()
 		if canAttack then
 			-- old style r6 animation activation of slash animation
@@ -51,27 +70,10 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 			Anim.Name = "toolanim"
 			Anim.Value = "Slash"
 			Anim.Parent = tool
-
 			local result =
 				workspace:Raycast(Character:GetPivot().Position, Character:GetPivot().LookVector * dist, rayParams)
 
-			-- initiate a ball shaped terrain destruction if raycast hits terrain
-			if result and result.Instance == workspace.Terrain then
-				SoundModule.PlaySound("Dig")
-				local pos = Character:GetPivot().Position + Character:GetPivot().LookVector * dist
-				workspace.Terrain:FillBall(pos, 5, Enum.Material.Air)
-				hitsBeforeBreak -= 1
-
-				if hitsBeforeBreak <= 0 then
-					SoundModule.PlaySound("MetalSnap")
-					InitializeToolModule.DisconnectAll("PrisonSpoon")
-					GeneralRemotes.RemoveEquippedTool:FireServer()
-				end
-			end
-
-			task.delay(cooldown, function()
-				canAttack = true
-			end)
+			BallTerrainDestroy(result)
 		end
 	end)
 end

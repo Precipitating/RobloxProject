@@ -85,38 +85,83 @@ function ServerRemotes.NPCRemotes()
 		print(`{name} NPC set to Patrol mode!`)
 	end)
 
-	Events.NPC.ArrivedDestination.Event:Connect(function(name, pathName)
-		local npc = NPCModule:GetNPC(name)
+	local function GetUniqueNextDestination(npc)
+		local nextDecidedLocation = nil
+		if not npc:GetLastPathArrived() then
+			nextDecidedLocation = npc:GetRandomPath()
+		else
+			repeat
+				nextDecidedLocation = npc:GetRandomPath()
+			until npc:GetLastPathArrived() ~= nextDecidedLocation.Name
+		end
 
+		return nextDecidedLocation
+	end
+
+	local YapLines = {
+		"Prison has enough budget for metal spoons, huh warden? thank you tax payer money!",
+		"Got any paper, Warden? Would like to create some sculptures with paper mache",
+		"Got any curtains warden? I would like some privacy man",
+		"Warden, please stop the other prisoners from hurling stuff at me, its annoying!",
+		"What you looking at you one eyed freak?",
+		"You gonna watch me on the toilet? bruh.",
+		"Between me and you warden, that new prisoner is a noob!",
+	}
+
+	local function SnitchArrivedHandler(npc, arrivedPart)
+		local playerCell = npc:GetPathInstanceNamed("PlayerCellArrived")
+		local tts: AudioTextToSpeech = arrivedPart:FindFirstChildOfClass("AudioTextToSpeech")
+
+		if tts then
+			if PrisonWardenEvent.IsCellCovered() then
+				tts.Text = `Warden! That new prisoner has his cell covered! hes doing something fishy!`
+			else
+				tts.Text = `Warden! I don't like how the new prisoner is looking at me! check him!`
+			end
+			tts:Play()
+			tts.Ended:Wait()
+		end
+
+		npc:StartPathing(playerCell)
+	end
+
+	Events.NPC.ArrivedDestination.Event:Connect(function(name, arrivedPart)
+		local npc = NPCModule:GetNPC(name)
 		if not npc then
 			warn("NPC doesn't exist in the table")
 			return
 		end
 
 		if npc:GetMode() == "Patrol" then
-			if pathName then
-				npc:SetLastPathArrived(pathName)
+			if arrivedPart then
+				npc:SetLastPathArrived(arrivedPart.Name)
 			end
-			local pathData = npc:GetPathStorage():GetChildren()
-			local nextLocation = nil
-			repeat
-				nextLocation = pathData[math.random(1, #pathData)]
-			until npc:GetLastPathArrived() ~= nextLocation.Name
+			local nextLocation = GetUniqueNextDestination(npc)
 
 			if name == "Warden" and not PrisonWardenEvent.HasEscaped() then
-				if pathName and pathName == "PlayerCellArrived" then
+				if arrivedPart and arrivedPart.Name == "PlayerCellArrived" then
 					npc:SetMode("Interacting")
 
 					if not PrisonWardenEvent.CheckSuspicion() then
 						npc:SetMode("Patrol")
 					end
-				elseif pathName and pathName == "McDonaldsCellArrived" then
+				elseif arrivedPart and arrivedPart.Name == "McDonaldsCellArrived" then
 					task.spawn(PrisonWardenEvent.SpawnThrowable, "PrisonSpoon")
 					task.wait(math.random(5, 7))
 					npc:StartPathing(nextLocation)
-				elseif pathName and pathName == "Prisoner1CellArrived" then
+				elseif arrivedPart and arrivedPart.Name == "Prisoner1CellArrived" then
 					task.spawn(PrisonWardenEvent.SpawnThrowable, "Paper")
 					task.wait(math.random(5, 7))
+					npc:StartPathing(nextLocation)
+				elseif arrivedPart and arrivedPart.Name == "SnitchCellArrived" then
+					SnitchArrivedHandler(npc, arrivedPart)
+				elseif arrivedPart and arrivedPart.Name == "YapCellArrived" then
+					local tts = arrivedPart:FindFirstChildOfClass("AudioTextToSpeech")
+					if tts then
+						tts.Text = YapLines[math.random(1, #YapLines)]
+						tts:Play()
+						tts.Ended:Wait()
+					end
 					npc:StartPathing(nextLocation)
 				else
 					if npc:GetLastPathArrived() ~= "PlayerCellArrived" then

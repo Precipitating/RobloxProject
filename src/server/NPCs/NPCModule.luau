@@ -148,6 +148,30 @@ function NPC:GetNPC(name)
 	end
 end
 
+function NPC:GetRandomPath()
+	if not self.AvailablePaths then
+		warn(`No stored nav paths for {self.Name}`)
+		return
+	end
+
+	local pathList = self.AvailablePaths:GetChildren()
+	return pathList[math.random(1, #pathList)]
+end
+
+function NPC:GetPathInstanceNamed(name)
+	if not self.AvailablePaths then
+		warn(`No stored nav paths for {self.Name}`)
+		return
+	end
+
+	for _, path in ipairs(self.AvailablePaths:GetChildren()) do
+		if path.Name == name then
+			return path
+		end
+	end
+	return nil
+end
+
 function NPC:InitSingle(currNPC)
 	if currNPC:IsA("Model") and currNPC:FindFirstChildOfClass("Humanoid") then
 		-- new NPC object to be stored into a table
@@ -265,7 +289,7 @@ function NPC:StartPathing(targetPos)
 		end
 
 		-- always fire when done, no matter what caused it
-		local reason = self.PathCancelled and "Cancelled" or "You"
+		local reason = self.PathCancelled and "Cancelled" or targetPos
 		ArrivedRemote:Fire(self.Name, reason)
 	end)
 end
