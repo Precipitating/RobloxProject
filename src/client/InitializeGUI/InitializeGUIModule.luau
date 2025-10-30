@@ -120,6 +120,15 @@ InitializeGUIModule["Terminal"] = function()
 	local password = "toxicsalt"
 	local inputPassword = ""
 
+	local function SuccessfullyUnlocked()
+		print("Correct!")
+		SoundModule.PlaySound("Keypad")
+		InitializeGUIModule.DisconnectAll("Terminal")
+		existingGUI:Destroy()
+		tool:Destroy()
+		MissionRemotes.ExecuteScenarioEvent:FireServer("GlitcherTerminalUnlocked")
+	end
+
 	if GUI and tool then
 		-- show GUI on equip
 		trackConnect("Terminal", tool.Equipped, function()
@@ -131,12 +140,7 @@ InitializeGUIModule["Terminal"] = function()
 					inputPassword = string.lower(existingGUI.MainFrame.PasswordInput.Text)
 
 					if inputPassword == password then
-						print("Correct!")
-						SoundModule.PlaySound("Keypad")
-						InitializeGUIModule.DisconnectAll("Terminal")
-						existingGUI:Destroy()
-						tool:Destroy()
-						MissionRemotes.ExecuteScenarioEvent:FireServer("GlitcherTerminalUnlocked")
+						SuccessfullyUnlocked()
 					else
 						SoundModule.PlaySound("Error")
 						print("Wrong password")
@@ -239,51 +243,53 @@ InitializeGUIModule["BulletGuesser"] = function()
 	if exists then
 		exists:Destroy()
 	end
-	if GUI then
-		local clonedGUI = GUI:Clone()
-		clonedGUI.Parent = PlayerGui
-		BounceOpenFrame(GUI.RevolverImage.Size, clonedGUI.RevolverImage)
-		local buttons = clonedGUI:WaitForChild("Buttons"):GetChildren()
-		if #buttons > 0 then
-			for i, button in ipairs(buttons) do
-				trackConnect("BulletGuesser", button.Activated, function()
-					print("Clicked button" .. i)
-					BounceCloseFrame(clonedGUI.RevolverImage)
-					clonedGUI:Destroy()
-					UIHelperFunctions.AdjustBlackScreen(1, 0)
-					SoundModule.StopAllSounds()
-					task.wait(1)
-					local function GoodChoice()
-						SoundModule.PlaySound("RevolverShot")
-						task.wait(1)
-						SoundModule.PlaySound("Correct2")
-						GeneralRemotes.AddMoney:FireServer(1337)
-						UIHelperFunctions.AdjustBlackScreen(1, 1)
-						MovementHandler.EnableControls(nil)
-					end
+	if not GUI then
+		error("BulletGuesser GUI missing ref")
+	end
 
-					local BadChoice = function()
-						local currMoney = GeneralRemotes.GetCurrentMoney:InvokeServer()
-						SoundModule.PlaySound("RevolverEmpty")
-						task.wait(1)
-						SoundModule.PlaySound("FailTrombone")
-						GeneralRemotes.ReduceMoney:FireServer(currMoney)
-						UIHelperFunctions.AdjustBlackScreen(1, 1)
-						MovementHandler.EnableControls(nil)
-					end
-					local bulletHoleIndex = GeneralRemotes.Gamba.BulletGuesser.GetBulletIndex:InvokeServer()
-					-- picks hole with bullet
-					if tonumber(button.Name) == bulletHoleIndex then
-						GoodChoice()
-					else
-						warn(`Chosen {button.Name} when it should be {bulletHoleIndex}`)
-						BadChoice()
-					end
-					InitializeGUIModule.DisconnectAll("BulletGuesser")
-					GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
-					GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex:FireServer()
-				end)
-			end
+	local clonedGUI = GUI:Clone()
+	clonedGUI.Parent = PlayerGui
+	BounceOpenFrame(GUI.RevolverImage.Size, clonedGUI.RevolverImage)
+	local buttons = clonedGUI:WaitForChild("Buttons"):GetChildren()
+	if #buttons > 0 then
+		for i, button in ipairs(buttons) do
+			trackConnect("BulletGuesser", button.Activated, function()
+				print("Clicked button" .. i)
+				BounceCloseFrame(clonedGUI.RevolverImage)
+				clonedGUI:Destroy()
+				UIHelperFunctions.AdjustBlackScreen(1, 0)
+				SoundModule.StopAllSounds()
+				task.wait(1)
+				local function GoodChoice()
+					SoundModule.PlaySound("RevolverShot")
+					task.wait(1)
+					SoundModule.PlaySound("Correct2")
+					GeneralRemotes.AddMoney:FireServer(1337)
+					UIHelperFunctions.AdjustBlackScreen(1, 1)
+					MovementHandler.EnableControls(nil)
+				end
+
+				local BadChoice = function()
+					local currMoney = GeneralRemotes.GetCurrentMoney:InvokeServer()
+					SoundModule.PlaySound("RevolverEmpty")
+					task.wait(1)
+					SoundModule.PlaySound("FailTrombone")
+					GeneralRemotes.ReduceMoney:FireServer(currMoney)
+					UIHelperFunctions.AdjustBlackScreen(1, 1)
+					MovementHandler.EnableControls(nil)
+				end
+				local bulletHoleIndex = GeneralRemotes.Gamba.BulletGuesser.GetBulletIndex:InvokeServer()
+				-- picks hole with bullet
+				if tonumber(button.Name) == bulletHoleIndex then
+					GoodChoice()
+				else
+					warn(`Chosen {button.Name} when it should be {bulletHoleIndex}`)
+					BadChoice()
+				end
+				InitializeGUIModule.DisconnectAll("BulletGuesser")
+				GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+				GeneralRemotes.Gamba.BulletGuesser.ResetBulletIndex:FireServer()
+			end)
 		end
 	end
 end
@@ -365,6 +371,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 		return
 	end
 
+	-- get references
 	local playerHPGUI = GUILocation:FindFirstChild("CupcakeLover"):FindFirstChild("R2DHealthGUI"):Clone()
 	local playerHPBar = playerHPGUI:WaitForChild("HPBarBot"):WaitForChild("HPBarTop")
 	local playerHPLabel = playerHPGUI:WaitForChild("HPBarBot"):WaitForChild("HealthValueLabel")
@@ -395,6 +402,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 	bossHPGUI.Parent = PlayerGui
 	minigunGUI.Parent = PlayerGui
 
+	-- variables
 	local idleAnim = Instance.new("Animation")
 	idleAnim.AnimationId = `rbxassetid://{93585226172859}`
 	local idleTrack = nil
@@ -627,6 +635,7 @@ InitializeGUIModule["R2DPumpkinBoss"] = function()
 			stopSound:Play()
 			shootSound:Stop()
 		end)
+
 		coroutine.resume(startShootingThread)
 	end)
 
@@ -678,39 +687,48 @@ InitializeGUIModule["ClimbRopeQuickTime"] = function()
 		SoundModule.StopTheme()
 	end)
 
+	local function RandomizeButton(cloneButton, uiScale)
+		cloneButton.BackgroundColor3 = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+
+		if uiScale then
+			uiScale.Scale = (math.random() * 2.5) + 0.5
+		end
+		cloneButton.Position = UDim2.fromScale((math.random()), math.random())
+		cloneButton.Parent = frame
+
+		cloneButton.Activated:Once(function()
+			cloneButton:Destroy()
+			SoundModule.PlaySound("OldSplat")
+		end)
+	end
+
+	local function CollapseButtonTween(uiScale)
+		local tweenInfo = TweenInfo.new(math.random(3, 6), Enum.EasingStyle.Linear)
+		local goal = { Scale = 0 }
+		local tween = TweenService:Create(uiScale, tweenInfo, goal)
+		tween:Play()
+
+		tween.Completed:Once(function(state)
+			if state == Enum.PlaybackState.Completed then
+				running = false
+				GeneralRemotes.MoneyBait.FailedRope:FireServer()
+				guiClone:Destroy()
+			end
+		end)
+	end
+
 	task.spawn(function()
 		while running do
 			-- decimal between 1 to 3.0
 			task.wait((math.random() * 2.5) + 0.5)
 			local cloneButton: TextButton = guiButton:Clone()
-			-- setup random colours & scale
-			cloneButton.BackgroundColor3 = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
 			local uiScale = cloneButton:WaitForChild("UIScale")
-			if uiScale then
-				uiScale.Scale = (math.random() * 2.5) + 0.5
-			end
-			cloneButton.Position = UDim2.fromScale((math.random()), math.random())
-			cloneButton.Parent = frame
 
-			cloneButton.Activated:Once(function()
-				cloneButton:Destroy()
-				SoundModule.PlaySound("OldSplat")
-			end)
+			-- setup random colours & scale
+			RandomizeButton(cloneButton, uiScale)
 
-			-- tween to 0 scale
-			local tweenInfo = TweenInfo.new(math.random(3, 6), Enum.EasingStyle.Linear)
-
-			local goal = { Scale = 0 }
-			local tween = TweenService:Create(uiScale, tweenInfo, goal)
-			tween:Play()
-
-			tween.Completed:Once(function(state)
-				if state == Enum.PlaybackState.Completed then
-					running = false
-					GeneralRemotes.MoneyBait.FailedRope:FireServer()
-					guiClone:Destroy()
-				end
-			end)
+			-- size collapse until 0 scale then destroy
+			CollapseButtonTween(uiScale)
 		end
 	end)
 end

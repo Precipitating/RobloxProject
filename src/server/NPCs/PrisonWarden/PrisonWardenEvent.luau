@@ -105,6 +105,7 @@ function PrisonWardenEvent.SetGameFinished(val)
 		end
 	end
 end
+
 function PrisonWardenEvent.UpdateSuspicion()
 	PlayerDoingSuspiciousActivity = ToiletOpened or (not PlayerInCell and not PaperCloneActivated)
 end
@@ -228,22 +229,7 @@ function PrisonWardenEvent.SpawnThrowable(name)
 	Debris:AddItem(throwable, 30)
 end
 
-function PrisonWardenEvent.CheckSuspicion()
-	if not PlayerRef then
-		error("Player reference not set!")
-	end
-	if not WardenRef then
-		WardenRef = workspace:FindFirstChild("Prison"):FindFirstChild("PrisonWarden"):FindFirstChild("Warden")
-	end
-
-	if EscapedRoom then
-		warn("Player escaped already, not checking suspicion")
-		return
-	end
-	local caught = false
-
-	local secondsWatched = 0
-
+local function WardenPullCover()
 	if PlayerCellCovered then
 		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Confused", WardenRef)
 		task.wait(2)
@@ -254,6 +240,24 @@ function PrisonWardenEvent.CheckSuspicion()
 			Debris:AddItem(blanket, 2)
 		end
 		PrisonWardenEvent.SetCellCovered(false)
+	end
+end
+function PrisonWardenEvent.CheckSuspicion()
+	if not PlayerRef then
+		error("Player reference not set!")
+	end
+	if not WardenRef then
+		WardenRef = workspace:FindFirstChild("Prison"):FindFirstChild("PrisonWarden"):FindFirstChild("Warden")
+	end
+	if EscapedRoom then
+		warn("Player escaped already, not checking suspicion")
+		return
+	end
+
+	local caught = false
+	local secondsWatched = 0
+	if PlayerCellCovered then
+		WardenPullCover()
 	end
 	repeat
 		if PlayerDoingSuspiciousActivity then
