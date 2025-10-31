@@ -27,6 +27,9 @@ local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 -- cashier basket
 local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
 
+-- frankenstein
+local BodyComplete = false
+local BodypartsPickedUp = {}
 local RoomExitFunctions = {
 	ShopExit = function()
 		GeneralRemotes.RemoveAllToolsOfTag:FireServer("ShopItem")
@@ -70,6 +73,26 @@ local RoomEnterFunctions = {
 		workspace:WaitForChild(modelName)
 		Events.ExecuteScenarioEvent:FireServer("StealTVMode")
 		InitializeGUIModule["TVHomeGUI"]()
+	end,
+	FrankensteinRoomEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		local body = workspace:WaitForChild(modelName):WaitForChild("FrankensteinBody")
+		if BodyComplete then
+			body:Destroy()
+			GeneralRemotes.SpawnServerStorageModel:InvokeServer(
+				"MissionModels",
+				"Frankenstein",
+				"FrankensteinCompleteBody",
+				nil
+			)
+			table.clear(BodypartsPickedUp)
+		end
+		-- delete bodyparts already picked up
+		if #BodypartsPickedUp > 0 then
+			for _, partName in ipairs(BodypartsPickedUp) do
+				body:WaitForChild(partName):Destroy()
+			end
+		end
 	end,
 }
 
@@ -432,6 +455,57 @@ local function TVHomePrompts(prompt)
 	end
 end
 
+local function FrankensteinPrompts(prompt)
+	if not string.find(prompt.Name, "Frankenstein") then
+		return
+	end
+
+	-- assemble bodyparts if we have them all
+	if string.find(prompt.Name, "Assemble") then
+		local count = 0
+
+		local function CollectedAllParts()
+			for _, bodyPart in ipairs(Player.Backpack:GetChildren()) do
+				if CollectionService:HasTag(bodyPart, "FrankensteinBodyPart") then
+					count += 1
+				end
+			end
+			print(count)
+			if count ~= 4 then
+				return false
+			end
+
+			return true
+		end
+
+		if not CollectedAllParts() then
+			return
+		end
+
+		-- remove from tools if got all parts
+		for _, bodyPart in ipairs(Player.Backpack:GetChildren()) do
+			if CollectionService:HasTag(bodyPart, "FrankensteinBodyPart") then
+				bodyPart:Destroy()
+			end
+		end
+
+		-- spawn full body
+		BodyComplete = true
+		prompt.Parent:Destroy()
+		GeneralRemotes.SpawnServerStorageModel:InvokeServer(
+			"MissionModels",
+			"Frankenstein",
+			"FrankensteinCompleteBody",
+			nil
+		)
+		return
+	end
+
+	-- else we're picking a body part up
+	GeneralRemotes.Frankenstein.GiveBodyPartTool:FireServer(prompt.Parent.Name)
+	table.insert(BodypartsPickedUp, prompt.Parent.Name)
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -442,4 +516,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	R2DBossPrompts(prompt)
 	MoneyBaitPrompts(prompt)
 	TVHomePrompts(prompt)
+	FrankensteinPrompts(prompt)
 end)
