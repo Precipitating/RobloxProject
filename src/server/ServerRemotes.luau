@@ -451,6 +451,36 @@ function ServerRemotes.TVHomeRemotes()
 	end
 end
 
+function ServerRemotes.FrankensteinRemotes()
+	GeneralRemotes.Frankenstein.GiveBodyPartTool.OnServerEvent:Connect(function(player, bodyPartName)
+		local body = workspace:FindFirstChild("FrankensteinRoom"):FindFirstChild("FrankensteinBody")
+		if not body then
+			error("Missing Frankenstein body reference on server")
+		end
+		local bodyPart = body:FindFirstChild(bodyPartName)
+		if not bodyPart then
+			error("Missing body part on Frankenstein body")
+		end
+		bodyPart:FindFirstChildOfClass("ProximityPrompt"):Destroy()
+		local function BodyPartToTool()
+			local tool = Instance.new("Tool")
+			tool.CanBeDropped = false
+			tool.Name = bodyPartName
+			tool.Parent = player.Backpack
+
+			local clonedPart = bodyPart:Clone()
+			clonedPart.Name = "Handle"
+			clonedPart.Anchored = false
+			clonedPart.Massless = true
+			CollectionService:AddTag(tool, "FrankensteinBodyPart")
+			clonedPart.Parent = tool
+			bodyPart:Destroy()
+		end
+
+		BodyPartToTool()
+	end)
+end
+
 function ServerRemotes.Initialize()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -469,6 +499,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.GamepassRemotes()
 	ServerRemotes.StreetLightRemotes()
 	ServerRemotes.TVHomeRemotes()
+	ServerRemotes.FrankensteinRemotes()
 end
 
 return ServerRemotes
