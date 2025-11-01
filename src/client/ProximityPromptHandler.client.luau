@@ -17,7 +17,8 @@ local HouseDoorDebounce = false
 
 -- talk
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
-local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
+local FrankensteinPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Frankenstein.FrankensteinPrompts)
+local MoneyBaitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.MoneyBait.MoneyBaitPrompts)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -27,9 +28,6 @@ local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
 -- cashier basket
 local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
 
--- frankenstein
-local BodyComplete = false
-local BodypartsPickedUp = {}
 local RoomExitFunctions = {
 	ShopExit = function()
 		GeneralRemotes.RemoveAllToolsOfTag:FireServer("ShopItem")
@@ -64,10 +62,7 @@ local RoomEnterFunctions = {
 	end,
 	InfirmaryEnter = function(modelName)
 		workspace:WaitForChild(modelName)
-		GeneralRemotes.MoneyBait.EscapedRoomSet:FireServer(true)
-		GeneralRemotes.DestroyObjectByName:FireServer("Prison")
-		SoundModule.PlayTheme("TimeTheme")
-		Events.ExecuteScenarioEvent:FireServer("InfirmaryRoomEntered")
+		MoneyBaitPrompts.InfirmaryEnter()
 	end,
 	TVHomeEnter = function(modelName)
 		workspace:WaitForChild(modelName)
@@ -75,23 +70,19 @@ local RoomEnterFunctions = {
 		InitializeGUIModule["TVHomeGUI"]()
 	end,
 	FrankensteinRoomEnter = function(modelName)
-		workspace:WaitForChild(modelName)
-		local body = workspace:WaitForChild(modelName):WaitForChild("FrankensteinBody")
-		if BodyComplete then
-			body:Destroy()
+		local room = workspace:WaitForChild(modelName)
+		FrankensteinPrompts.RoomEntered(room)
+	end,
+	HomeEnter = function(modelName)
+		local home = workspace:WaitForChild(modelName)
+		if FrankensteinPrompts.FrankensteinRevived() then
 			GeneralRemotes.SpawnServerStorageModel:InvokeServer(
 				"MissionModels",
 				"Frankenstein",
-				"FrankensteinCompleteBody",
+				"FrankensteinAtHome",
 				nil
 			)
-			table.clear(BodypartsPickedUp)
-		end
-		-- delete bodyparts already picked up
-		if #BodypartsPickedUp > 0 then
-			for _, partName in ipairs(BodypartsPickedUp) do
-				body:WaitForChild(partName):Destroy()
-			end
+			workspace:WaitForChild("FrankensteinAtHome").Parent = home
 		end
 	end,
 }
@@ -325,117 +316,6 @@ local function R2DBossPrompts(prompt)
 	stacks.Value = 2
 end
 
-local function MoneyBaitPrompts(prompt)
-	local parent = prompt.Parent
-
-	local function GiveTool(name, onlyOneAllowed)
-		return Events.GiveToolEvent:InvokeServer({ name, onlyOneAllowed })
-	end
-
-	local function DestroyObject()
-		GeneralRemotes.DestroyObjectByName:FireServer(parent.Name)
-	end
-
-	-- tag-action map
-	local tagActions = {
-		MoneyBait = function()
-			MovementModule.DisableControls()
-			prompt.Enabled = false
-			SoundModule.PlaySound("Oi").Ended:Wait()
-			Events.ExecuteScenarioEvent:FireServer("MoneyBaited")
-			SoundModule.PlayTheme("PrisonTheme")
-			print("BAITED")
-		end,
-
-		Blanket = function()
-			GiveTool("Blanket", true)
-		end,
-		PaperClone = function()
-			Events.ExecuteScenarioEvent:FireServer("ApplyPaperClone")
-		end,
-
-		Sink = function()
-			local amountToCreateClone = 3
-			local done = GeneralRemotes.ConsumeTool:InvokeServer("Paper", amountToCreateClone)
-
-			if done then
-				GiveTool("PaperClone", true)
-			else
-				warn("Not enough paper to create clone")
-			end
-		end,
-
-		CoverCell = function()
-			Events.ExecuteScenarioEvent:FireServer("ApplyBlanketToCell")
-		end,
-
-		PrisonSpoon = function()
-			local givenTool = GiveTool("PrisonSpoon", true)
-			if givenTool then
-				InitializeToolModule["PrisonSpoon"](Player.Backpack:WaitForChild("PrisonSpoon"))
-				DestroyObject()
-			end
-		end,
-
-		Paper = function()
-			GiveTool("Paper", false)
-			DestroyObject()
-		end,
-
-		UnscrewToilet = function()
-			Events.ExecuteScenarioEvent:FireServer("UnscrewToilet")
-		end,
-
-		OpenToilet = function()
-			GeneralRemotes.MoneyBait.ShiftToilet:FireServer(true)
-		end,
-
-		CloseToilet = function()
-			GeneralRemotes.MoneyBait.ShiftToilet:FireServer(false)
-		end,
-
-		RopeCurtain = function()
-			GiveTool("CurtainTool", false)
-			DestroyObject()
-		end,
-		RopeCraftTable = function()
-			local amountToCreateRope = 2
-			local done = GeneralRemotes.ConsumeTool:InvokeServer("CurtainTool", amountToCreateRope)
-
-			if done then
-				GiveTool("Rope", true)
-			else
-				warn("Not enough curtains to create rope")
-			end
-		end,
-		RopeHookPoint = function()
-			local hooked = GeneralRemotes.MoneyBait.HookRope:InvokeServer(prompt.Parent.Name)
-			if hooked then
-				prompt.Enabled = false
-			end
-		end,
-
-		CloseElevator = function()
-			prompt.Enabled = false
-			GeneralRemotes.MoneyBait.ActivateElevator:FireServer()
-		end,
-
-		ClimbRope = function()
-			prompt.Enabled = false
-			GeneralRemotes.MoneyBait.PlayerAttachRope:FireServer()
-			InitializeGUIModule["ClimbRopeQuickTime"]()
-		end,
-	}
-
-	-- execute action for the first matching tag
-	for tag, action in pairs(tagActions) do
-		if CollectionService:HasTag(parent, tag) or CollectionService:HasTag(prompt, tag) then
-			action()
-			break
-		end
-	end
-end
-
 local function TVHomePrompts(prompt)
 	if CollectionService:HasTag(prompt.Parent, "FakeTV") then
 		prompt.Enabled = false
@@ -455,57 +335,6 @@ local function TVHomePrompts(prompt)
 	end
 end
 
-local function FrankensteinPrompts(prompt)
-	if not string.find(prompt.Name, "Frankenstein") then
-		return
-	end
-
-	-- assemble bodyparts if we have them all
-	if string.find(prompt.Name, "Assemble") then
-		local count = 0
-
-		local function CollectedAllParts()
-			for _, bodyPart in ipairs(Player.Backpack:GetChildren()) do
-				if CollectionService:HasTag(bodyPart, "FrankensteinBodyPart") then
-					count += 1
-				end
-			end
-			print(count)
-			if count ~= 4 then
-				return false
-			end
-
-			return true
-		end
-
-		if not CollectedAllParts() then
-			return
-		end
-
-		-- remove from tools if got all parts
-		for _, bodyPart in ipairs(Player.Backpack:GetChildren()) do
-			if CollectionService:HasTag(bodyPart, "FrankensteinBodyPart") then
-				bodyPart:Destroy()
-			end
-		end
-
-		-- spawn full body
-		BodyComplete = true
-		prompt.Parent:Destroy()
-		GeneralRemotes.SpawnServerStorageModel:InvokeServer(
-			"MissionModels",
-			"Frankenstein",
-			"FrankensteinCompleteBody",
-			nil
-		)
-		return
-	end
-
-	-- else we're picking a body part up
-	GeneralRemotes.Frankenstein.GiveBodyPartTool:FireServer(prompt.Parent.Name)
-	table.insert(BodypartsPickedUp, prompt.Parent.Name)
-end
-
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -514,7 +343,7 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	SlotMachineProximityPrompts(prompt)
 	WheelSpinner(prompt)
 	R2DBossPrompts(prompt)
-	MoneyBaitPrompts(prompt)
+	MoneyBaitPrompts.HandlePrompts(prompt)
 	TVHomePrompts(prompt)
-	FrankensteinPrompts(prompt)
+	FrankensteinPrompts.HandlePrompts(prompt)
 end)
