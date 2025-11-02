@@ -4,6 +4,7 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
+local StarterPlayer = game:GetService("StarterPlayer")
 local TweenService = game:GetService("TweenService")
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
@@ -17,6 +18,7 @@ local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.Termin
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
+local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
@@ -412,5 +414,16 @@ MissionEventHandlers["ThiefSuccess"] = function(player)
 	player.Character:PivotTo(workspace:FindFirstChild("BlackRoom"):FindFirstChild("SpawnLoc").CFrame)
 	BadgeHandler.awardBadge(player, 2503897671068625)
 	GeneralRemotes.PlayCutscene:FireClient(player, "ThiefSuccess")
+end
+
+MissionEventHandlers["FrankensteinFindSpine"] = function(_)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Frankenstein", "SpinePieces", nil)
+end
+MissionEventHandlers["FrankensteinComplete"] = function(player)
+	task.wait(1)
+	GeneralRemotes.PlaySound:InvokeClient(player, "Punch")
+	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
+	BadgeHandler.awardBadge(player, 1297814770331368)
+	GeneralRemotes.Rejoin:FireClient(player, 5)
 end
 return MissionEventHandlers

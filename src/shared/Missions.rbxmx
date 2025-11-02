@@ -2187,6 +2187,28 @@ local Missions: Types.MissionsList = {
 		manualOnly = true,	
 	},
 
+	FindSpine = {
+		categoryId = "Frankenstein",
+		tasks = {
+			FindSpinePieces = {
+				taskType = Types.TaskType.Count,
+				goalCount = 5,
+			},
+		},
+		metadata = {
+			displayName = "Find 5 spine pieces",
+			visibleAfterComplete = true,
+			visibleBeforeUnlocked = false,
+			rewards = {
+				{
+					icon = 11959323764,
+					displayName = "Assembled Spine",
+				},
+			},
+		},
+		manualOnly = true,	
+	},
+
 
 
 }

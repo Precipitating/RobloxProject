@@ -791,4 +791,86 @@ InitializeGUIModule["TVHomeGUI"] = function()
 	end)
 end
 
+InitializeGUIModule["FrankensteinPuzzle"] = function()
+	--MissionsUI.closeMissionsUI()
+	if PlayerGui:FindFirstChild("FrankensteinPuzzle") then
+		warn("FrankensteinPuzzle GUI already open")
+		return
+	end
+
+	local guiLoc = GUILocation:WaitForChild("Frankenstein")
+	if not guiLoc then
+		error("Missing MoneyBait GUI Folder ref")
+	end
+
+	local gui = guiLoc:WaitForChild("FrankensteinPuzzle")
+	local guiClone = gui:Clone()
+	local frame = guiClone:WaitForChild("Frame")
+	guiClone.Parent = PlayerGui
+	local correctHits = 0
+	local pieceAmount = 5
+
+	-- image dragabbles functionality (spine)
+	for _, spineImage in ipairs(guiClone:GetChildren()) do
+		if spineImage:IsA("ImageLabel") then
+			local drag = spineImage:FindFirstChildWhichIsA("UIDragDetector")
+			if not drag then
+				error("Missing drag detector in spine image!")
+			end
+			local startPos = nil
+			local slotMouseIsIn = nil
+
+			-- store original pos when dragging to reset back if drag let go
+			trackConnect("FrankensteinPuzzle", drag.DragStart, function()
+				startPos = spineImage.Position
+			end)
+
+			trackConnect("FrankensteinPuzzle", drag.DragEnd, function()
+				if slotMouseIsIn then
+					print(`Mouse in slot {slotMouseIsIn}`)
+
+					-- if spine not correct slot, move image back to original position
+					-- else image and slot tag should be the same
+					if
+						not (CollectionService:GetTags(spineImage)[1] == CollectionService:GetTags(slotMouseIsIn)[1])
+					then
+						spineImage.Position = startPos
+						SoundModule.PlaySound("Error")
+						return
+					end
+
+					-- correct slot if reached here
+					slotMouseIsIn:WaitForChild("Spine").Visible = true
+					SoundModule.PlaySound("Correct")
+					spineImage:Destroy()
+					correctHits += 1
+
+					--check if finished
+					if correctHits >= pieceAmount then
+						InitializeGUIModule.DisconnectAll("FrankensteinPuzzle")
+						guiClone:Destroy()
+						Events.GiveToolEvent:InvokeServer({ "Spine" }, true)
+						correctHits = 0
+					end
+				end
+			end)
+
+			-- detect if mouse is on a slot
+			for _, slot in ipairs(frame:GetChildren()) do
+				if slot:IsA("Frame") then
+					trackConnect("FrankensteinPuzzle", slot.MouseEnter, function()
+						if slot ~= spineImage then
+							slotMouseIsIn = slot
+						end
+					end)
+
+					trackConnect("FrankensteinPuzzle", slot.MouseLeave, function()
+						slotMouseIsIn = nil
+					end)
+				end
+			end
+		end
+	end
+end
+
 return InitializeGUIModule

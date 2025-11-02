@@ -7,7 +7,7 @@ local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModul
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Player = Players.LocalPlayer
-
+local Events = ReplicatedStorage.Missions.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 local BodyComplete = false
@@ -127,11 +127,18 @@ function FrankensteinPrompts.HandlePrompts(prompt)
 		ActivateLever(prompt)
 		LightningBolt()
 		return
+	elseif string.find(prompt.Name, "Spine") then
+		prompt.Parent:Destroy()
+		Events.ProgressMissionEvent:FireServer({
+			MissionName = "FindSpine",
+			ProgressVal = 1,
+			TaskId = "FindSpinePieces",
+		})
+	else
+		-- else we're picking a body part up
+		GeneralRemotes.Frankenstein.GiveBodyPartTool:FireServer(prompt.Parent.Name, "FrankensteinBodyPart")
+		table.insert(BodypartsPickedUp, prompt.Parent.Name)
 	end
-
-	-- else we're picking a body part up
-	GeneralRemotes.Frankenstein.GiveBodyPartTool:FireServer(prompt.Parent.Name)
-	table.insert(BodypartsPickedUp, prompt.Parent.Name)
 end
 
 return FrankensteinPrompts

@@ -24,6 +24,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerStorage = game:GetService("ServerStorage")
+local PlayerInitialize = require(ServerScriptService.Server.Player.PlayerInitialize)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ServerTools = ServerStorage.Tools
@@ -452,7 +453,7 @@ function ServerRemotes.TVHomeRemotes()
 end
 
 function ServerRemotes.FrankensteinRemotes()
-	GeneralRemotes.Frankenstein.GiveBodyPartTool.OnServerEvent:Connect(function(player, bodyPartName)
+	GeneralRemotes.Frankenstein.GiveBodyPartTool.OnServerEvent:Connect(function(player, bodyPartName, tag)
 		local body = workspace:FindFirstChild("FrankensteinRoom"):FindFirstChild("FrankensteinBody")
 		if not body then
 			error("Missing Frankenstein body reference on server")
@@ -472,13 +473,29 @@ function ServerRemotes.FrankensteinRemotes()
 			clonedPart.Name = "Handle"
 			clonedPart.Anchored = false
 			clonedPart.Massless = true
-			CollectionService:AddTag(tool, "FrankensteinBodyPart")
+			CollectionService:AddTag(tool, tag)
 			clonedPart.Parent = tool
 			bodyPart:Destroy()
 		end
 
 		BodyPartToTool()
 	end)
+
+	GeneralRemotes.Frankenstein.FrankensteinHomeSpawn.OnServerEvent:Connect(function(player)
+		local home = workspace:WaitForChild("Home")
+		local frankensteinRoom =
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Frankenstein", "FrankensteinAtHome", nil)
+		local frankensteinNPC =
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Frankenstein", "FrankensteinHome", nil)
+
+		frankensteinRoom.Parent = home
+		frankensteinNPC.Parent = home
+	end)
+
+	GeneralRemotes.Frankenstein.SquatterCheckAndSpawn.OnServerInvoke = function(player)
+		local home = workspace:WaitForChild("Home")
+		return PlayerInitialize.SquatterActivate(player, home)
+	end
 end
 
 function ServerRemotes.Initialize()

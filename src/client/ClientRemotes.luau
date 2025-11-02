@@ -386,6 +386,12 @@ function ClientRemotes.TVHomeRemotes()
 	end)
 end
 
+function ClientRemotes.FrankensteinRemotes()
+	GeneralRemotes.Frankenstein.FrankensteinPuzzle.OnClientEvent:Connect(function()
+		InitializeGUIModule["FrankensteinPuzzle"]()
+	end)
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.GeneralRemotes()
 	ClientRemotes.PsychoMantisRemotes()
@@ -396,6 +402,7 @@ function ClientRemotes.Initialize()
 	ClientRemotes.MoneyBaitRemotes()
 	ClientRemotes.WeatherRemotes()
 	ClientRemotes.TVHomeRemotes()
+	ClientRemotes.FrankensteinRemotes()
 end
 
 return ClientRemotes

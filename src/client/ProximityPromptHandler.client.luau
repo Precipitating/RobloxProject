@@ -74,15 +74,14 @@ local RoomEnterFunctions = {
 		FrankensteinPrompts.RoomEntered(room)
 	end,
 	HomeEnter = function(modelName)
-		local home = workspace:WaitForChild(modelName)
-		if FrankensteinPrompts.FrankensteinRevived() then
-			GeneralRemotes.SpawnServerStorageModel:InvokeServer(
-				"MissionModels",
-				"Frankenstein",
-				"FrankensteinAtHome",
-				nil
-			)
-			workspace:WaitForChild("FrankensteinAtHome").Parent = home
+		workspace:WaitForChild(modelName)
+
+		local squatterExists = GeneralRemotes.Frankenstein.SquatterCheckAndSpawn:InvokeServer()
+
+		if not squatterExists then
+			if FrankensteinPrompts.FrankensteinRevived() then
+				GeneralRemotes.Frankenstein.FrankensteinHomeSpawn:FireServer()
+			end
 		end
 	end,
 }

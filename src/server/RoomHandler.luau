@@ -16,7 +16,7 @@ local function OpenDoor(player, character, spawnLoc)
 	GeneralRemotes.PlaySound:InvokeClient(player, "OpenDoor")
 	character.HumanoidRootPart.Anchored = true
 	task.wait(1)
-	character:SetPrimaryPartCFrame(spawnLoc)
+	character:PivotTo(spawnLoc)
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 	character.HumanoidRootPart.Anchored = false
 end
@@ -43,6 +43,7 @@ function RoomHandler.SpawnRoomAndEnter(player, name, enter)
 			warn("CHARACTER NOT FOUND (ROOM HANDLER SPAWN ROOM)")
 		end
 	end
+	return SpawnedRoom
 end
 
 function RoomHandler.LeaveRoom(player)

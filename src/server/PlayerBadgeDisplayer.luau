@@ -30,6 +30,7 @@ local Badges = {
 	3628178665725253,
 	970208823763244,
 	2503897671068625,
+	1297814770331368,
 }
 local positions = ServerHelperFunctions.GetTaggedOfDirectory(ServerStorage, "AchievementPos")
 

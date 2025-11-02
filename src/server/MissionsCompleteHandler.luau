@@ -1,5 +1,7 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local MissionCompleteHandlers = {}
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
+local GeneralRemotes = ReplicatedStorage.Remotes
 -- handle all rewards
 MissionCompleteHandlers["StealPhone"] = function(player)
 	ServerHelperFunctions.GiveTool(player, { "Nokia", true })
@@ -27,6 +29,10 @@ end
 MissionCompleteHandlers["StealTV"] = function(_)
 	ServerHelperFunctions.SetNPCDialogueFile({ ThiefNameTag = "ThiefCompleted" })
 	print("Dialogue set to ThiefCompleted")
+end
+
+MissionCompleteHandlers["FindSpine"] = function(player)
+	GeneralRemotes.Frankenstein.FrankensteinPuzzle:FireClient(player)
 end
 
 return MissionCompleteHandlers

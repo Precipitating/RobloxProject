@@ -1,5 +1,8 @@
+local CollectionService = game:GetService("CollectionService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local PlayerBadgeDisplayer = require(ServerScriptService.Server.PlayerBadgeDisplayer)
 local RoomHandler = require(ServerScriptService.Server.RoomHandler)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
@@ -15,6 +18,31 @@ function PlayerInitialize.GiveSpeedCoil(player)
 	end
 end
 
+function PlayerInitialize.SquatterActivate(player, home)
+	local canSquat = BadgeHandler.HasBadge(player, 1297814770331368)
+
+	if canSquat then
+		-- disable frankenstein's room, already completed
+		local roomDoor = CollectionService:GetTagged("FrankensteinDoor")[1]
+		if roomDoor.Enabled then
+			roomDoor.Enabled = false
+		end
+		-- spawn frankenstein room in your house and himself
+		local squatRoom =
+			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Frankenstein", "FrankensteinAtHome", nil)
+		squatRoom.Parent = home
+
+		local randomSquatterActivity = ServerStorage.MissionModels.Frankenstein.FrankensteinSquatModels:GetChildren()
+		local randomPose = randomSquatterActivity[math.random(1, #randomSquatterActivity)]
+		randomPose:Clone()
+		randomPose.Parent = home
+
+		return true
+	end
+
+	return false
+end
+
 -- returns spawn location
 function PlayerInitialize.SpawnHome()
 	local room = workspace:FindFirstChild("Home")
@@ -28,6 +56,7 @@ function PlayerInitialize.SpawnHome()
 	local spawnLocation = workspace:FindFirstChild("Home"):WaitForChild("SpawnLocation", 5)
 
 	PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
+
 	return spawnLocation
 end
 
@@ -41,7 +70,7 @@ function PlayerInitialize.TeleportHome(character, spawnLoc)
 		-- Teleport player above SpawnLocation
 		hrp.CFrame = spawnLoc.CFrame + vector.create(0, 5, 0)
 	else
-		warn("⚠️ No SpawnLocation found in spawn model!")
+		warn("No SpawnLocation found in spawn model!")
 	end
 end
 

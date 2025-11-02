@@ -187,6 +187,16 @@ local Themes = {
 		SoundId = "rbxassetid://107478221402452",
 		Volume = 0.1,
 	},
+	Creepy = {
+		SoundId = "rbxassetid://1843700415",
+		Volume = 0.1,
+	},
+	SpineSong = {
+		SoundId = "rbxassetid://106675975785347",
+		Volume = 0.1,
+		PlaybackRegionsEnabled = true,
+		PlaybackRegion = NumberRange.new(60, 60000),
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -524,6 +534,14 @@ local OneShots = {
 	Censor = {
 		SoundId = "rbxassetid://3106518815",
 		Volume = 1,
+	},
+	NeckSnap = {
+		SoundId = "rbxassetid://198606040",
+		Volume = 10,
+	},
+	Punch = {
+		SoundId = "rbxassetid://8595980577",
+		Volume = 5,
 	},
 }
 local SoundHandler = {}
