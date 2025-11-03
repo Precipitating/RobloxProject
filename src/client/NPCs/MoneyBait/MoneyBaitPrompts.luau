@@ -131,7 +131,7 @@ end
 function MoneyBaitPrompts.InfirmaryEnter()
 	GeneralRemotes.MoneyBait.EscapedRoomSet:FireServer(true)
 	GeneralRemotes.DestroyObjectByName:FireServer("Prison")
-	SoundModule.PlayTheme("TimeTheme")
+
 	Events.ExecuteScenarioEvent:FireServer("InfirmaryRoomEntered")
 end
 

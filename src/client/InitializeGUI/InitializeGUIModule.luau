@@ -807,6 +807,7 @@ InitializeGUIModule["FrankensteinPuzzle"] = function()
 	local guiClone = gui:Clone()
 	local frame = guiClone:WaitForChild("Frame")
 	guiClone.Parent = PlayerGui
+	BounceOpenFrame(frame.Size, frame)
 	local correctHits = 0
 	local pieceAmount = 5
 

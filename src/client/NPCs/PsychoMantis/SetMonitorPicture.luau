@@ -4,7 +4,7 @@ local Player = Players.LocalPlayer
 
 local SetMonitorPicture = {}
 
-function SetMonitorPicture.Set()
+function SetMonitorPicture.Set(singleDecal)
 	-- fetch the thumbnail, retry until it's ready
 	local userId = Player.UserId
 	local thumbType = Enum.ThumbnailType.HeadShot
@@ -19,9 +19,15 @@ function SetMonitorPicture.Set()
 	until isReady
 
 	-- apply to tagged decal
-	local laptopDecal = CollectionService:GetTagged("PsychoMantisLaptopDecal")
-	if #laptopDecal > 0 then
-		laptopDecal[1].Texture = content
+	if not singleDecal then
+		local laptopDecal = CollectionService:GetTagged("PsychoMantisLaptopDecal")
+		if #laptopDecal > 0 then
+			for _, decal in ipairs(laptopDecal) do
+				decal.Texture = content
+			end
+		end
+	else
+		singleDecal.Texture = content
 	end
 end
 

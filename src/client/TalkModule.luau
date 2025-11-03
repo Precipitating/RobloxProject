@@ -124,7 +124,7 @@ function TalkModule.hideUI(responseData)
 		end
 
 		if responseData.Type == "Close" then
-			SoundModule.PlayTheme("Main")
+			SoundModule.PlayPreviousTheme()
 			-- re-enable movement (if not last disabled by cutscene)
 			MovementModule.EnableControls("UI")
 		elseif responseData.Type == "CloseCutscene" then
@@ -224,6 +224,7 @@ function TalkModule.updateUI(data, dialogueId)
 			SoundPlaying = false
 		end)
 	end
+
 	if selectedDialogue.PlayTheme then
 		print(`Client wants to play theme: {selectedDialogue.PlayTheme}`)
 		SoundModule.PlayTheme(selectedDialogue.PlayTheme)

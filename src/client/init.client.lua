@@ -30,7 +30,7 @@ end
 
 local function Startup()
 	-- play main theme
-	SoundModule.PlayTheme("Main")
+	SoundModule.PlayTheme("HomeTheme")
 	SetMonitorPicture.Set()
 	Thief.Initialize()
 	TimeOfDay.StartSyncing()

@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBX0D9680F9FB6741CC94BEC007AA87A737">
+	<Item class="ScreenGui" referent="RBX200ACA9322014C448044731AE240FD06">
 		<Properties>
 			<bool name="ClipToDeviceSafeArea">true</bool>
 			<int name="DisplayOrder">0</int>
@@ -25,7 +25,7 @@
 			<int64 name="SourceAssetId">-1</int64>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Frame" referent="RBX511E995A32294BB6B0D29A1E08906668">
+		<Item class="Frame" referent="RBX9A4FCFFB941346859CC1829622307A88">
 			<Properties>
 				<token name="Style">0</token>
 				<bool name="Active">false</bool>
@@ -88,7 +88,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="Frame" referent="RBX249FF7DCAF5247AF9EB9F8EB025CABF1">
+			<Item class="Frame" referent="RBX72B5144B58214CA18C1B82E15F098FD7">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -151,7 +151,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags">U3BpbmUx</BinaryString>
 				</Properties>
-				<Item class="ImageLabel" referent="RBX18049F1F3F124464BDCB6658978CD0F1">
+				<Item class="ImageLabel" referent="RBX017EA0989A094656982C38C576DEA380">
 					<Properties>
 						<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 						<Color3 name="ImageColor3">
@@ -249,7 +249,7 @@
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Frame" referent="RBX5A63957155464B08BF8812E9915A6ADD">
+			<Item class="Frame" referent="RBX8738378E17CA4E7F921064785BABDBC8">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -312,7 +312,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags">U3BpbmUy</BinaryString>
 				</Properties>
-				<Item class="ImageLabel" referent="RBXCF7C2770FB4C4EC29CE325557B2CA6DC">
+				<Item class="ImageLabel" referent="RBX27EDD2AF2B784ADD9008F3ADE361325C">
 					<Properties>
 						<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 						<Color3 name="ImageColor3">
@@ -410,7 +410,7 @@
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Frame" referent="RBX55F8A6E466D848ADA454693B8E88122F">
+			<Item class="Frame" referent="RBX781B3E70D178478CA436B0293334F36D">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -441,9 +441,9 @@
 					<Ref name="NextSelectionRight">null</Ref>
 					<Ref name="NextSelectionUp">null</Ref>
 					<UDim2 name="Position">
-						<XS>2.67998132e-07</XS>
+						<XS>2.6834195e-07</XS>
 						<XO>0</XO>
-						<YS>0.399520397</YS>
+						<YS>0.400227517</YS>
 						<YO>0</YO>
 					</UDim2>
 					<float name="Rotation">0</float>
@@ -453,7 +453,7 @@
 					<UDim2 name="Size">
 						<XS>0.999999881</XS>
 						<XO>0</XO>
-						<YS>0.200227648</YS>
+						<YS>0.199520439</YS>
 						<YO>0</YO>
 					</UDim2>
 					<token name="SizeConstraint">0</token>
@@ -473,7 +473,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags">U3BpbmUz</BinaryString>
 				</Properties>
-				<Item class="ImageLabel" referent="RBX85370D9259CF406388934B3F29429184">
+				<Item class="ImageLabel" referent="RBX47F58C618F654030A5113D980CA09A09">
 					<Properties>
 						<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 						<Color3 name="ImageColor3">
@@ -571,7 +571,7 @@
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Frame" referent="RBX6B0A72C2033E4BE39029CBB423B4ED95">
+			<Item class="Frame" referent="RBXCF42874FF47646DF8C9D537FAFA35AFE">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -634,7 +634,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags">U3BpbmU0</BinaryString>
 				</Properties>
-				<Item class="ImageLabel" referent="RBX79DBF355E79041689C3E9CB91FE98187">
+				<Item class="ImageLabel" referent="RBXEB9157D2CE0E461A8ACAB378B2A7DF3D">
 					<Properties>
 						<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 						<Color3 name="ImageColor3">
@@ -732,7 +732,7 @@
 					</Properties>
 				</Item>
 			</Item>
-			<Item class="Frame" referent="RBXD9197EBBE58B4891A27EDC48CCA34AD8">
+			<Item class="Frame" referent="RBXFAA401F9D30745DA9C9524FEFCE72CE7">
 				<Properties>
 					<token name="Style">0</token>
 					<bool name="Active">false</bool>
@@ -763,9 +763,9 @@
 					<Ref name="NextSelectionRight">null</Ref>
 					<Ref name="NextSelectionUp">null</Ref>
 					<UDim2 name="Position">
-						<XS>2.67998132e-07</XS>
+						<XS>2.6834195e-07</XS>
 						<XO>0</XO>
-						<YS>0.799520493</YS>
+						<YS>0.800227702</YS>
 						<YO>0</YO>
 					</UDim2>
 					<float name="Rotation">0</float>
@@ -775,7 +775,7 @@
 					<UDim2 name="Size">
 						<XS>0.999999881</XS>
 						<XO>0</XO>
-						<YS>0.200227648</YS>
+						<YS>0.19952029</YS>
 						<YO>0</YO>
 					</UDim2>
 					<token name="SizeConstraint">0</token>
@@ -795,7 +795,7 @@
 					<int64 name="SourceAssetId">-1</int64>
 					<BinaryString name="Tags">U3BpbmU1</BinaryString>
 				</Properties>
-				<Item class="ImageLabel" referent="RBX84C61FC4E21F4B5DA9355AA2E714E92E">
+				<Item class="ImageLabel" referent="RBXE06E2F2FCD994A0D8BC243053DB6DC9E">
 					<Properties>
 						<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 						<Color3 name="ImageColor3">
@@ -894,7 +894,7 @@
 				</Item>
 			</Item>
 		</Item>
-		<Item class="ImageLabel" referent="RBX60D0DF32660A45CE8F81AD24E377257F">
+		<Item class="ImageLabel" referent="RBXAFAD0BE9D1CF4197BFB6316175F1B416">
 			<Properties>
 				<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 				<Color3 name="ImageColor3">
@@ -990,7 +990,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags">U3BpbmUx</BinaryString>
 			</Properties>
-			<Item class="UIDragDetector" referent="RBX35C0806273D24A019628C6BF86F668A0">
+			<Item class="UIDragDetector" referent="RBXB3968D2C78614F64BF14C63ABF490570">
 				<Properties>
 					<Content name="ActivatedCursorIcon"><null></null></Content>
 					<token name="BoundingBehavior">0</token>
@@ -1044,7 +1044,7 @@
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="ImageLabel" referent="RBX4333045CFF344DE2857949E8458798AF">
+		<Item class="ImageLabel" referent="RBX7669E43158CF476CA395431A507F9A66">
 			<Properties>
 				<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 				<Color3 name="ImageColor3">
@@ -1140,7 +1140,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags">U3BpbmUy</BinaryString>
 			</Properties>
-			<Item class="UIDragDetector" referent="RBX10CE830840E8499AB3AA909D5BC9E2F0">
+			<Item class="UIDragDetector" referent="RBX99DEED91A839411DA0252B1090AE8392">
 				<Properties>
 					<Content name="ActivatedCursorIcon"><null></null></Content>
 					<token name="BoundingBehavior">0</token>
@@ -1194,7 +1194,7 @@
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="ImageLabel" referent="RBX194061FFC3BF4F8DB86D45E5FF0F400F">
+		<Item class="ImageLabel" referent="RBX3EEBFB80357E4662B7816894B316BE73">
 			<Properties>
 				<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 				<Color3 name="ImageColor3">
@@ -1290,7 +1290,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags">U3BpbmUz</BinaryString>
 			</Properties>
-			<Item class="UIDragDetector" referent="RBX11316A8FF0B34851B1F1455F0C76F86F">
+			<Item class="UIDragDetector" referent="RBXA92123408AB7473B8473F2885DEF6EAC">
 				<Properties>
 					<Content name="ActivatedCursorIcon"><null></null></Content>
 					<token name="BoundingBehavior">0</token>
@@ -1344,7 +1344,7 @@
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="ImageLabel" referent="RBX095A0A5F1C614EEC879E8F5C0C0125D8">
+		<Item class="ImageLabel" referent="RBXF20B17D113884C21ABBEB5729343B2C3">
 			<Properties>
 				<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 				<Color3 name="ImageColor3">
@@ -1440,7 +1440,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags">U3BpbmU0</BinaryString>
 			</Properties>
-			<Item class="UIDragDetector" referent="RBX9BF9A751685F4C18999D316C7A7FF8E1">
+			<Item class="UIDragDetector" referent="RBXED8B463D0FAC465A925AE51CAA8DCD48">
 				<Properties>
 					<Content name="ActivatedCursorIcon"><null></null></Content>
 					<token name="BoundingBehavior">0</token>
@@ -1494,7 +1494,7 @@
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="ImageLabel" referent="RBX0B91B4ADFCDD42AE97F7FA19853075AC">
+		<Item class="ImageLabel" referent="RBX19D4D83123A04D78AFECBA652617EC2B">
 			<Properties>
 				<Content name="Image"><url>rbxassetid://16145852105</url></Content>
 				<Color3 name="ImageColor3">
@@ -1590,7 +1590,7 @@
 				<int64 name="SourceAssetId">-1</int64>
 				<BinaryString name="Tags">U3BpbmU1</BinaryString>
 			</Properties>
-			<Item class="UIDragDetector" referent="RBXE433D4547A93450A9A6320C99D997A76">
+			<Item class="UIDragDetector" referent="RBXE1DD4C1B556B42368549A90A8D522133">
 				<Properties>
 					<Content name="ActivatedCursorIcon"><null></null></Content>
 					<token name="BoundingBehavior">0</token>

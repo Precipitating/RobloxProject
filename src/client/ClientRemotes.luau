@@ -16,6 +16,8 @@ local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
+local StarterPlayer = game:GetService("StarterPlayer")
+local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
 local CameraFollowConnection = nil
 local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local WeatherVisualizer = require(script.Parent.Weather.WeatherVisualizer)
@@ -278,6 +280,11 @@ function ClientRemotes.PsychoMantisRemotes()
 			end)
 		end
 	)
+
+	CollectionService:GetInstanceAddedSignal("PsychoMantisLaptopDecal"):Connect(function(decal)
+		print("Psychomantis monitor decal tag detected!")
+		SetMonitorPicture.Set(decal)
+	end)
 end
 
 function ClientRemotes.GUIRemotes()

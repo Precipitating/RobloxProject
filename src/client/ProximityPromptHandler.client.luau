@@ -24,7 +24,6 @@ local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
 local PauseNPCMovement = NPCEvents.PauseNPCMovement
 local MovementModule = require(script.Parent:WaitForChild("MovementHandler"))
-
 -- cashier basket
 local ShopBasketModule = require(ReplicatedStorage.NPCs.Cashier.ShopBasketModule)
 
@@ -55,6 +54,15 @@ local RoomExitFunctions = {
 }
 
 local RoomEnterFunctions = {
+	ShopEnter = function(_)
+		SoundModule.PlayTheme("SupermarketTheme")
+	end,
+	DrivingSchoolEnter = function(modelName)
+		local room = workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("WindAmbience")
+		local radio = room:WaitForChild("Radio"):WaitForChild("AudioPlayer")
+		radio:Play()
+	end,
 	GambaEnter = function(modelName)
 		-- ensure its loaded first
 		workspace:WaitForChild(modelName)
@@ -62,20 +70,23 @@ local RoomEnterFunctions = {
 	end,
 	InfirmaryEnter = function(modelName)
 		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("TimeTheme")
 		MoneyBaitPrompts.InfirmaryEnter()
 	end,
 	TVHomeEnter = function(modelName)
 		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("SneakyTheme")
 		Events.ExecuteScenarioEvent:FireServer("StealTVMode")
 		InitializeGUIModule["TVHomeGUI"]()
 	end,
 	FrankensteinRoomEnter = function(modelName)
 		local room = workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("CreepyNightTheme")
 		FrankensteinPrompts.RoomEntered(room)
 	end,
 	HomeEnter = function(modelName)
 		workspace:WaitForChild(modelName)
-
+		SoundModule.PlayTheme("HomeTheme")
 		local squatterExists = GeneralRemotes.Frankenstein.SquatterCheckAndSpawn:InvokeServer()
 
 		if not squatterExists then
@@ -83,6 +94,22 @@ local RoomEnterFunctions = {
 				GeneralRemotes.Frankenstein.FrankensteinHomeSpawn:FireServer()
 			end
 		end
+	end,
+	AmysBakeryEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("KawaiiTheme")
+	end,
+	WorkRoomEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("WorkRoomTheme")
+	end,
+	PsychoMantisEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("CyberNoir")
+	end,
+	SafechatterEnter = function(modelName)
+		workspace:WaitForChild(modelName)
+		SoundModule.PlayTheme("GuestRoomTheme")
 	end,
 }
 
@@ -146,6 +173,7 @@ local function HouseDoorProximityPrompt(prompt)
 		modelName = string.sub(houseName, 1, isExit - 1)
 		print(`Leaving room {modelName}`)
 		HouseRemote:FireServer("Exit", modelName)
+		SoundModule.PlayTheme("Main")
 		if RoomExitFunctions[houseName] then
 			RoomExitFunctions[houseName]()
 		end

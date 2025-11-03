@@ -13,6 +13,8 @@ local MainSounds = {
 	"rbxassetid://1841647093",
 	"rbxassetid://1842000022",
 }
+local PreviousThemeName = "HomeTheme"
+local CurrentThemeName = "HomeTheme"
 
 local Themes = {
 	AirSiren = {
@@ -196,6 +198,42 @@ local Themes = {
 		Volume = 0.1,
 		PlaybackRegionsEnabled = true,
 		PlaybackRegion = NumberRange.new(60, 60000),
+	},
+	SupermarketTheme = {
+		SoundId = "rbxassetid://1841212678",
+		Volume = 0.3,
+	},
+	SneakyTheme = {
+		SoundId = "rbxassetid://9045117303",
+		Volume = 0.1,
+	},
+	CreepyNightTheme = {
+		SoundId = "rbxassetid://1846999567",
+		Volume = 0.5,
+	},
+	WindAmbience = {
+		SoundId = "rbxassetid://5799870105",
+		Volume = 0.5,
+	},
+	HomeTheme = {
+		SoundId = "rbxassetid://105416600746220",
+		Volume = 0.5,
+	},
+	KawaiiTheme = {
+		SoundId = "rbxassetid://130431219868919",
+		Volume = 0.2,
+	},
+	WorkRoomTheme = {
+		SoundId = "rbxassetid://9043114637",
+		Volume = 0.1,
+	},
+	CyberNoir = {
+		SoundId = "rbxassetid://19005873599",
+		Volume = 0.2,
+	},
+	GuestRoomTheme = {
+		SoundId = "rbxassetid://1837768333",
+		Volume = 0.2,
 	},
 }
 local OneShots = {
@@ -553,6 +591,7 @@ function SoundHandler.StopTheme()
 	end
 	if CurrentTheme and CurrentTheme.IsPlaying then
 		print(`Stopped CurrentTheme`)
+
 		CurrentTheme:Stop()
 	end
 end
@@ -594,6 +633,11 @@ function SoundHandler.PlayTheme(name, lockTheme)
 		print(`{name} theme locked`)
 		ThemeLocked = true
 	end
+	-- save playback position to emulate pausing
+	-- we have only 1 sound instance hence why normal pausing wont work when we switch sounds thru this
+	Themes[CurrentThemeName].LastPlaybackPosition = CurrentTheme.TimePosition
+
+	PreviousThemeName = CurrentThemeName
 	SoundHandler.StopTheme()
 	CurrentTheme.PlaybackSpeed = 1
 
@@ -604,16 +648,33 @@ function SoundHandler.PlayTheme(name, lockTheme)
 		CurrentTheme.SoundId = themeData.SoundId
 		CurrentTheme.Volume = themeData.Volume
 
+		-- recover sound time position if we have one (resume)
+		if themeData.LastPlaybackPosition then
+			CurrentTheme.TimePosition = themeData.LastPlaybackPosition
+		end
+
 		-- playback region
 		if themeData.PlaybackRegionsEnabled and themeData.PlaybackRegion then
 			CurrentTheme.PlaybackRegionsEnabled = themeData.PlaybackRegionsEnabled
 			CurrentTheme.PlaybackRegion = themeData.PlaybackRegion
 		end
 		CurrentTheme:Play()
+		CurrentThemeName = name
+
 		print(`Theme set {name}, should play`)
 	else
 		print("Theme not found")
 	end
+end
+
+function SoundHandler.PlayPreviousTheme()
+	if ThemeLocked then
+		return
+	end
+	SoundHandler.StopTheme()
+	CurrentTheme.PlaybackSpeed = 1
+
+	SoundHandler.PlayTheme(PreviousThemeName)
 end
 
 function SoundHandler.PauseTheme()
