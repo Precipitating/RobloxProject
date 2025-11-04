@@ -16,6 +16,7 @@ local PumpkinBossFight = require(ServerScriptService.Server.NPCs.CupcakeLover.Pu
 local DrivingTest = require(ServerScriptService.Server.NPCs.DrivingInstructor.DrivingTest)
 local TerminalUnlocked = require(ServerScriptService.Server.NPCs.Glitcher.TerminalUnlocked)
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
+local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
@@ -425,5 +426,9 @@ MissionEventHandlers["FrankensteinComplete"] = function(player)
 	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 	BadgeHandler.awardBadge(player, 1297814770331368)
 	GeneralRemotes.Rejoin:FireClient(player, 5)
+end
+
+MissionEventHandlers["WhodunnitStart"] = function(player)
+	WhodunnitMode.Start(player)
 end
 return MissionEventHandlers

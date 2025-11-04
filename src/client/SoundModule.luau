@@ -235,6 +235,14 @@ local Themes = {
 		SoundId = "rbxassetid://1837768333",
 		Volume = 0.2,
 	},
+	OldTimerTheme = {
+		SoundId = "rbxassetid://9043033868",
+		Volume = 0.2,
+	},
+	HappyTheme = {
+		SoundId = "rbxassetid://1845756489",
+		Volume = 0.1,
+	},
 }
 local OneShots = {
 	Anvil = {

@@ -307,7 +307,7 @@ function HaulJob.ClientInit()
 	Remotes.HaulJob.GameFinished.OnClientEvent:Once(function()
 		MousePositionConn:Disconnect()
 		MB1Clicked:Disconnect()
-		SoundModule.PlayTheme("Main")
+		SoundModule.PlayTheme("WorkRoomTheme")
 	end)
 end
 

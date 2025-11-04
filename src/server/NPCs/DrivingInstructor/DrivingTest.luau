@@ -392,7 +392,7 @@ local function AddFinishedRoad(player)
 		-- revert music, enable controls and change instructor dialogue.
 		GeneralRemotes.BlackFade:FireClient(player, 0.5, 1)
 		GeneralRemotes.EnableControls:FireClient(player, nil)
-		GeneralRemotes.PlayTheme:FireClient(player, "Main")
+		GeneralRemotes.PlayTheme:FireClient(player, "WindAmbience")
 		ServerHelperFunctions.SetNPCDialogueFile({ DrivingInstructorNameTag = "DrivingInstructorResults" })
 	end)
 end
