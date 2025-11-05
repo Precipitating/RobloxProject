@@ -8,9 +8,6 @@ local TrafficLightModule = require(script.TrafficLightModule)
 local WeatherHandler = require(script.WeatherHandler)
 local MaxDistBeforeTP = -400
 
--- all remote connections
-ServerRemotes.Initialize()
-
 -- initialize a NPC class for each NPC tag
 NPCModule:Init()
 
@@ -76,6 +73,9 @@ Players.PlayerAdded:Connect(function(player)
 	-- First spawn
 	player.CharacterAdded:Connect(setupCharacter)
 	player:LoadCharacter()
+
+	-- all remote connections
+	ServerRemotes.Initialize(player)
 
 	-- weather
 	WeatherHandler.Start()

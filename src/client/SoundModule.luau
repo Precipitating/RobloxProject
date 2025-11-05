@@ -241,7 +241,7 @@ local Themes = {
 	},
 	HappyTheme = {
 		SoundId = "rbxassetid://1845756489",
-		Volume = 0.1,
+		Volume = 0.05,
 	},
 }
 local OneShots = {
@@ -567,7 +567,7 @@ local OneShots = {
 	},
 	CarCrash = {
 		SoundId = "rbxassetid://7340406550",
-		Volume = 1,
+		Volume = 5,
 	},
 	GoodMorningVietnam = {
 		SoundId = "rbxassetid://8295016126",
@@ -666,6 +666,7 @@ function SoundHandler.PlayTheme(name, lockTheme)
 			CurrentTheme.PlaybackRegionsEnabled = themeData.PlaybackRegionsEnabled
 			CurrentTheme.PlaybackRegion = themeData.PlaybackRegion
 		end
+
 		CurrentTheme:Play()
 		CurrentThemeName = name
 

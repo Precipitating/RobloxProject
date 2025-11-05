@@ -1,6 +1,6 @@
 local CollectionService = game:GetService("CollectionService")
 local MarketplaceService = game:GetService("MarketplaceService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
@@ -24,6 +24,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerStorage = game:GetService("ServerStorage")
+local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local PlayerInitialize = require(ServerScriptService.Server.Player.PlayerInitialize)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
@@ -498,7 +499,50 @@ function ServerRemotes.FrankensteinRemotes()
 	end
 end
 
-function ServerRemotes.Initialize()
+function ServerRemotes.WhodunnitRemotes(player)
+	local humanoid = player.Character.Humanoid
+	local seatConn = nil
+	seatConn = humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function()
+		local seat = humanoid.SeatPart
+		if CollectionService:HasTag(seat, "WhodunnitSeat") and not WhodunnitMode.SleepAreaUnlocked() then
+			GeneralRemotes.DisableControls:FireClient(player)
+			WhodunnitMode.AssemblyHall()
+		elseif CollectionService:HasTag(seat, "WhodunnitBed") then
+			seatConn:Disconnect()
+			GeneralRemotes.DisableControls:FireClient(player)
+			WhodunnitMode.Sleeping()
+		end
+	end)
+
+	-- sleep room wall
+	local sleepRoomWallConn = nil
+	local debounce = false
+	sleepRoomWallConn = workspace.DescendantAdded:Connect(function(descendant)
+		local touchConn = nil
+		if descendant.Name == "SleepRoomBlockage" then
+			touchConn = descendant.Touched:Connect(function(hit)
+				if debounce then
+					return
+				end
+				if
+					Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
+					and WhodunnitMode.SleepAreaUnlocked()
+				then
+					touchConn:Disconnect()
+					sleepRoomWallConn:Disconnect()
+					descendant:Destroy()
+					WhodunnitMode.SleepArea()
+				end
+
+				task.delay(1, function()
+					debounce = false
+				end)
+			end)
+		end
+	end)
+end
+
+function ServerRemotes.Initialize(player)
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
 	ServerRemotes.ModelRemotes()
@@ -517,6 +561,7 @@ function ServerRemotes.Initialize()
 	ServerRemotes.StreetLightRemotes()
 	ServerRemotes.TVHomeRemotes()
 	ServerRemotes.FrankensteinRemotes()
+	ServerRemotes.WhodunnitRemotes(player)
 end
 
 return ServerRemotes

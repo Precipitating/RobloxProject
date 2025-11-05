@@ -18,6 +18,7 @@ local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local StarterPlayer = game:GetService("StarterPlayer")
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
+local WhodunnitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Whodunnit.WhodunnitPrompts)
 local CameraFollowConnection = nil
 local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local WeatherVisualizer = require(script.Parent.Weather.WeatherVisualizer)
@@ -399,6 +400,12 @@ function ClientRemotes.FrankensteinRemotes()
 	end)
 end
 
+function ClientRemotes.WhodunnitRemotes()
+	GeneralRemotes.Whodunnit.HostTalk.OnClientInvoke = function(text)
+		return WhodunnitPrompts.HostTalk(text)
+	end
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.GeneralRemotes()
 	ClientRemotes.PsychoMantisRemotes()
@@ -410,6 +417,7 @@ function ClientRemotes.Initialize()
 	ClientRemotes.WeatherRemotes()
 	ClientRemotes.TVHomeRemotes()
 	ClientRemotes.FrankensteinRemotes()
+	ClientRemotes.WhodunnitRemotes()
 end
 
 return ClientRemotes
