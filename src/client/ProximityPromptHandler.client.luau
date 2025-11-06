@@ -362,6 +362,14 @@ local function TVHomePrompts(prompt)
 	end
 end
 
+local function WhodunnitPrompts(prompt)
+	if not CollectionService:HasTag(prompt, "WhodunnitVictim") then
+		return
+	end
+
+	GeneralRemotes.Whodunnit.KillVictim:FireServer(prompt.Parent.Name)
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
@@ -373,4 +381,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	MoneyBaitPrompts.HandlePrompts(prompt)
 	TVHomePrompts(prompt)
 	FrankensteinPrompts.HandlePrompts(prompt)
+	WhodunnitPrompts(prompt)
 end)

@@ -502,6 +502,7 @@ end
 function ServerRemotes.WhodunnitRemotes(player)
 	local humanoid = player.Character.Humanoid
 	local seatConn = nil
+	-- seat handler
 	seatConn = humanoid:GetPropertyChangedSignal("SeatPart"):Connect(function()
 		local seat = humanoid.SeatPart
 		if CollectionService:HasTag(seat, "WhodunnitSeat") and not WhodunnitMode.SleepAreaUnlocked() then
@@ -514,31 +515,48 @@ function ServerRemotes.WhodunnitRemotes(player)
 		end
 	end)
 
-	-- sleep room wall
-	local sleepRoomWallConn = nil
+	-- wall touched handlers
+	local descendantConn = nil
 	local debounce = false
-	sleepRoomWallConn = workspace.DescendantAdded:Connect(function(descendant)
-		local touchConn = nil
-		if descendant.Name == "SleepRoomBlockage" then
-			touchConn = descendant.Touched:Connect(function(hit)
-				if debounce then
-					return
-				end
-				if
-					Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model"))
-					and WhodunnitMode.SleepAreaUnlocked()
-				then
+	local touchConn = nil
+
+	local function PlayerHitWall(descendant, customFunc)
+		touchConn = descendant.Touched:Connect(function(hit)
+			if debounce then
+				return
+			end
+			if not Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model")) then
+				return
+			end
+
+			customFunc()
+
+			task.delay(1, function()
+				debounce = false
+			end)
+		end)
+	end
+
+	descendantConn = workspace.DescendantAdded:Connect(function(descendant)
+		if CollectionService:HasTag(descendant, "SleepRoomBlockage") then
+			PlayerHitWall(descendant, function()
+				if WhodunnitMode.SleepAreaUnlocked() then
 					touchConn:Disconnect()
-					sleepRoomWallConn:Disconnect()
 					descendant:Destroy()
 					WhodunnitMode.SleepArea()
 				end
-
-				task.delay(1, function()
-					debounce = false
-				end)
+			end)
+		elseif CollectionService:HasTag(descendant, "ArrivedAtMurder") then
+			PlayerHitWall(descendant, function()
+				touchConn:Disconnect()
+				descendant:Destroy()
+				WhodunnitMode.ArrivedAtMurder()
 			end)
 		end
+	end)
+
+	GeneralRemotes.Whodunnit.KillVictim.OnServerEvent:Connect(function(_, modelName)
+		WhodunnitMode.KillVictim(modelName)
 	end)
 end
 

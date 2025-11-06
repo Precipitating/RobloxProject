@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local WhodunnitGuest = require(script.Parent.WhodunnitGuest)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
 local HostLocationIdx = 1
@@ -9,6 +10,9 @@ local MapRef = nil
 local HostLocations = nil
 local UFORef = nil
 local HostTTSIdx = 0
+local HostDistortion = nil
+local PlayerRef = nil
+local SleepAreaUnlocked = false
 local HostTTSDialogue = {
 	"Welcome guests to my mansion! Lets get settled in quickly. But first, an little chat in the assembly hall to the right. Let's go in and sit down shall we?",
 	"As I said, welcome to my mansion, This is a prestigious mansion with top of the quality service.",
@@ -16,12 +20,18 @@ local HostTTSDialogue = {
 	"We hope you enjoy your stay at the Wilson mansion, but first can you guys turn off your base stations, I can hear something.",
 	"How did you get btools you hacking liar. ban pre!",
 	"Ignore what transpired fellow guests, you should go to sleep and prepare for the next day. Rooms are up the stairs. Pick any room and bed. See you tommorow.",
-	"Pick a room and get some shut eye.",
+	"Go to the left room and get some shut eye.",
 	"Blind all",
+	"Congratulations. I have chosen you to be the killer. Pick a victim and i'll do the rest.",
+	"By the way, everyone's blind, so they can't see this.",
+	"OH MY GOD EVERYONE COME TO THE MAIN AREA",
+	"GUEST NUMBER 67 HAS BEEN MURDERED! WHO COULD DO SUCH A THING!",
+	"IT SEEMS THAT ONE OF YOU IS THE KILLER, WHO COULD IT POSSIBLY BE?",
+	"What is that on the floor?",
+	"An accessory, the murderer was caught lacking. I wonder who could possibly wear this. I wonder.",
+	"How can you leave obvious evidence out like that. What a donkey you are!",
 }
-local HostDistortion = nil
-local PlayerRef = nil
-local SleepAreaUnlocked = false
+
 local WhodunnitMode = {}
 
 local function MoveHostNextLocation()
@@ -124,9 +134,111 @@ function WhodunnitMode.Sleeping()
 	PlayNextHostTTS()
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
 	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
-	HostDistortion.Level = 0
+
 	MoveHostNextLocation()
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "CreepyNightTheme")
+	local guests = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "WhodunnitGuests", nil)
+
+	-- npc bubble chat spam
+	WhodunnitGuest.SetPanicking(true)
+	for _, guest in ipairs(guests:GetChildren()) do
+		WhodunnitGuest.StartPanicking(guest.Head)
+	end
+
+	WhodunnitMode.PickKiller()
+end
+
+function WhodunnitMode.PickKiller()
+	task.wait(5)
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Unblind {PlayerRef.DisplayName}`)
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 1)
+	HostDistortion.Level = 0.5
+	PlayNextHostTTS()
+	PlayNextHostTTS()
+	GeneralRemotes.EnableControls:FireClient(PlayerRef)
+end
+
+local function PositionGuestsToMurderSpot(modelName)
+	local victim = workspace:FindFirstChild("WhodunnitGuests"):FindFirstChild(modelName)
+
+	-- spawn dead body
+	local deadBody = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "DeadBody", nil)
+	deadBody
+		:FindFirstChild("DeadVictim")
+		:FindFirstChildOfClass("Humanoid")
+		:ApplyDescription(victim.Humanoid:GetAppliedDescription())
+	WhodunnitGuest.RemoveHeadFromTable(victim.Name)
+	victim:Destroy()
+
+	-- move guests
+	local positions = MapRef:FindFirstChild("GuestMurderPos")
+	local positionList = positions:GetChildren()
+	local guests = workspace:FindFirstChild("WhodunnitGuests"):GetChildren()
+	for idx, guest in guests do
+		guest.ProximityPrompt.Enabled = false
+		guest:PivotTo(positionList[idx].CFrame)
+	end
+
+	-- put a player accessory as murder evidence
+
+	local accessory = PlayerRef.Character:FindFirstChildWhichIsA("Accessory")
+	if not accessory then
+		return false
+	end
+	local clone = accessory:Clone()
+	local handle = clone:FindFirstChild("Handle") or clone:FindFirstChildWhichIsA("BasePart")
+
+	if handle then
+		handle.Parent = workspace
+		handle:BreakJoints()
+		handle.Anchored = true
+		handle.CanCollide = false
+		handle:PivotTo(positions.AccessoryPos.CFrame)
+		handle.Parent = deadBody
+	end
+
+	return true
+end
+
+function WhodunnitMode.KillVictim(modelName)
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
+	GeneralRemotes.DisableControls:FireClient(PlayerRef)
+	WhodunnitGuest.SetPanicking(false)
+
+	local hasAccessory = PositionGuestsToMurderSpot(modelName)
+	MoveHostNextLocation()
+	task.wait(5)
+	if hasAccessory then
+		WhodunnitMode.MorningMurderEvidence()
+	end
+end
+
+function WhodunnitMode.MorningMurderEvidence()
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 1, 1)
+	task.wait(1)
+	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Mysterious")
+	HostDistortion.Level = 1
+	PlayNextHostTTS()
+	GeneralRemotes.EnableControls:FireClient(PlayerRef)
+end
+
+function WhodunnitMode.ArrivedAtMurder()
+	HostDistortion.Level = 0.3
+	GeneralRemotes.DisableControls:FireClient(PlayerRef)
+	PlayNextHostTTS()
+	PlayNextHostTTS()
+	PlayNextHostTTS()
+	PlayNextHostTTS()
+
+	-- victims head turn to you
+	WhodunnitGuest.TurnGuestHeadsToPlayer(PlayerRef.Character.Head)
+
+	task.wait(1)
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(
+		PlayerRef,
+		`Seems like a decision has been made huh, {PlayerRef.DisplayName} You really are bad killer aren't you?`
+	)
+	PlayNextHostTTS()
 end
 
 function WhodunnitMode.AssemblyHall()
