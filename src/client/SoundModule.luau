@@ -589,6 +589,18 @@ local OneShots = {
 		SoundId = "rbxassetid://8595980577",
 		Volume = 5,
 	},
+	Scream = {
+		SoundId = "rbxassetid://9043346124",
+		Volume = 5,
+	},
+	Oof = {
+		SoundId = "rbxassetid://79348298352567",
+		Volume = 0.5,
+	},
+	Yay = {
+		SoundId = "rbxassetid://8304443672",
+		Volume = 0.5,
+	},
 }
 local SoundHandler = {}
 

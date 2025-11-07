@@ -11,6 +11,7 @@ local Dialogue = {
 	"can i play",
 	"why u blind me",
 }
+
 local IsPanicking = false
 local GuestHeads = {}
 local WhodunnitGuest = {}
@@ -21,6 +22,25 @@ end
 function WhodunnitGuest.RemoveHeadFromTable(key)
 	GuestHeads[key] = nil
 end
+
+function WhodunnitGuest.AnnouncePlayerIsMurderer(playerName)
+	local CaughtDialogue = {
+		`{playerName}, just put the knife in the bag bro`,
+		`I pick {playerName}. Do I even need to explain?`,
+		`{playerName}, thanks for the easy win. You are the weakest link. Goodbye.`,
+		`{playerName}, atleast go bald next time`,
+	}
+	for _, head in pairs(GuestHeads) do
+		local tts = head.Parent:FindFirstChildWhichIsA("AudioTextToSpeech")
+		tts.Text = CaughtDialogue[math.random(1, #CaughtDialogue)]
+		local status = tts:LoadAsync()
+		if status == Enum.AssetFetchStatus.Success then
+			tts:Play()
+			tts.Ended:Wait()
+		end
+	end
+end
+
 function WhodunnitGuest.TurnGuestHeadsToPlayer(target)
 	local tween = TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 

@@ -124,7 +124,7 @@ return {
 		Five = {
 			Name = "Adam",
 			Portrait = "rbxassetid://401846955",
-			Dialogue = "The Idea stolen from ps1player, the first issue was presented. I can't script.<br/>No problem, i'll host manually and use some admin commands to help me out.<br/>Secondly, I need some help building the map.",
+			Dialogue = "The idea stolen from ps1player, the first issue was presented. I can't script.<br/>No problem, i'll host manually and use some admin commands to help me out.<br/>Secondly, I need some help building the map.",
 			Responses = {
 				{
 					Text = "I guess you hired some...?",
@@ -173,23 +173,6 @@ return {
 			},
 		},
 		Eight = {
-			Name = "Adam",
-			Portrait = "rbxassetid://129411508",
-			Dialogue = "With the help of RecruitDragon5, Ligtard123, AlexTheDisarmer12 and DiabeticGamer as builder and helper, I accumulated enough players to start my first host.",
-			Responses = {
-				{
-					Text = "It's been 4 months, hurry up.",
-					Type = "NextMessage",
-					NextId = "Nine",
-				},
-				{
-					Text = "Ok...",
-					Type = "NextMessage",
-					NextId = "Nine",
-				},
-			},
-		},
-		Nine = {
 			Name = "Adam",
 			Portrait = "rbxassetid://189694289",
 			Dialogue = "You will now be in the POV of an average player, and experience what happens in a round of Whodunnit by iZzap",

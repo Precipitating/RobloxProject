@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local CurrencyHandler = require(ServerScriptService.Server.CurrencyHandler)
 local WhodunnitGuest = require(script.Parent.WhodunnitGuest)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -13,6 +14,7 @@ local HostTTSIdx = 0
 local HostDistortion = nil
 local PlayerRef = nil
 local SleepAreaUnlocked = false
+local BoothPos = nil
 local HostTTSDialogue = {
 	"Welcome guests to my mansion! Lets get settled in quickly. But first, an little chat in the assembly hall to the right. Let's go in and sit down shall we?",
 	"As I said, welcome to my mansion, This is a prestigious mansion with top of the quality service.",
@@ -29,7 +31,7 @@ local HostTTSDialogue = {
 	"IT SEEMS THAT ONE OF YOU IS THE KILLER, WHO COULD IT POSSIBLY BE?",
 	"What is that on the floor?",
 	"An accessory, the murderer was caught lacking. I wonder who could possibly wear this. I wonder.",
-	"How can you leave obvious evidence out like that. What a donkey you are!",
+	"Well well well, looks like you've been selected. Lets find out if he's the killer.",
 }
 
 local WhodunnitMode = {}
@@ -55,6 +57,13 @@ function WhodunnitMode.Cleanup()
 	HostDistortion = nil
 	PlayerRef = nil
 	UFORef = nil
+	BoothPos = nil
+	HostLocationIdx = 1
+	SleepAreaUnlocked = false
+
+	workspace:FindFirstChild("ZapsMansion"):Destroy()
+	workspace:FindFirstChild("WhodunnitGuests"):Destroy()
+	workspace:FindFirstChild("DeadBody"):Destroy()
 end
 
 local function PlayNextHostTTS()
@@ -72,16 +81,19 @@ local function SetHostReferences()
 	HostDistortion = Host:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("AudioDistortion")
 end
 function WhodunnitMode.Start(player)
-	MapRef = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "ZapsMansion", nil)
+	CurrencyHandler.ReduceMoney(player, 100)
 	PlayerRef = player
+	BoothPos = player.Character:GetPivot()
+	--
+	MapRef = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "ZapsMansion", nil)
 	task.wait(1)
-
 	player.Character:PivotTo(MapRef:FindFirstChild("SpawnLoc").CFrame)
+	--
 	GeneralRemotes.PlayTheme:FireClient(player, "HappyTheme")
-
 	SetHostReferences()
 	HostDistortion.Level = 0.1
 	PlayNextHostTTS()
+	--
 	task.wait(1)
 	MoveHostNextLocation()
 	GeneralRemotes.EnableControls:FireClient(player)
@@ -95,9 +107,11 @@ local function StartUFOTween()
 	local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear)
 	local goal = { CFrame = UFORef.PrimaryPart.CFrame * CFrame.new(72, 0, 0) }
 	local tween = TweenService:Create(UFORef.PrimaryPart, tweenInfo, goal)
+	--
 	tween:Play()
 	ufoScream:Play()
 	destroyWall:Destroy()
+	--
 	tween.Completed:Wait()
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
 	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "CarCrash")
@@ -111,7 +125,9 @@ local function UFOConfrontEvent()
 	local tts = me:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("AudioTextToSpeech")
 	tts:Play()
 	tts.Ended:Wait()
+	--
 	PlayNextHostTTS()
+	--
 	me:Destroy()
 	UFORef:Destroy()
 end
@@ -214,9 +230,14 @@ function WhodunnitMode.KillVictim(modelName)
 end
 
 function WhodunnitMode.MorningMurderEvidence()
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Scream")
+	task.wait(3)
+
+	--
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 1, 1)
 	task.wait(1)
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Mysterious")
+
 	HostDistortion.Level = 1
 	PlayNextHostTTS()
 	GeneralRemotes.EnableControls:FireClient(PlayerRef)
@@ -232,13 +253,34 @@ function WhodunnitMode.ArrivedAtMurder()
 
 	-- victims head turn to you
 	WhodunnitGuest.TurnGuestHeadsToPlayer(PlayerRef.Character.Head)
-
 	task.wait(1)
 	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(
 		PlayerRef,
-		`Seems like a decision has been made huh, {PlayerRef.DisplayName} You really are bad killer aren't you?`
+		`Seems like a decision has been made huh, what we saying guys?`
 	)
+
+	WhodunnitGuest.AnnouncePlayerIsMurderer(PlayerRef.DisplayName)
 	PlayNextHostTTS()
+	task.wait(1)
+	WhodunnitMode.VotedOut()
+end
+
+function WhodunnitMode.VotedOut()
+	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
+	GeneralRemotes.DisableControls:FireClient(PlayerRef)
+	task.wait(2)
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Kill {PlayerRef.DisplayName}`)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Oof")
+	PlayerRef.Character:PivotTo(BoothPos)
+	task.wait(3)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Yay")
+	--
+	ServerHelperFunctions.SetNPCDialogueFile({ WhodunnitNameTag = "WhodunnitFailed" })
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 3, 1)
+	GeneralRemotes.EnableControls:FireClient(PlayerRef)
+	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Main")
+	WhodunnitMode.Cleanup()
 end
 
 function WhodunnitMode.AssemblyHall()
