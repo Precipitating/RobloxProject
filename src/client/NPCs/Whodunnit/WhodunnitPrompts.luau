@@ -1,5 +1,5 @@
 local WhodunnitPrompts = {}
-local MaxAttempts = 3
+local MaxAttempts = 5
 local HostTTSRef = nil
 
 function WhodunnitPrompts.HostTalk(text, attempts)
@@ -15,7 +15,7 @@ function WhodunnitPrompts.HostTalk(text, attempts)
 			:WaitForChild("AudioTextToSpeech")
 
 		if not HostTTSRef then
-			warn("Can't find HostTTS reference!")
+			error("Can't find HostTTS reference!")
 			return false
 		end
 	end

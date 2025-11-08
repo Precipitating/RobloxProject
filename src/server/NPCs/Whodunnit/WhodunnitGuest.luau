@@ -22,6 +22,11 @@ end
 function WhodunnitGuest.RemoveHeadFromTable(key)
 	GuestHeads[key] = nil
 end
+function WhodunnitGuest.ToggleCanKillPrompt(val)
+	for _, head in pairs(GuestHeads) do
+		head.Parent:FindFirstChildWhichIsA("ProximityPrompt").Enabled = val
+	end
+end
 
 function WhodunnitGuest.AnnouncePlayerIsMurderer(playerName)
 	local CaughtDialogue = {

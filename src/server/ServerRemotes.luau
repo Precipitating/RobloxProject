@@ -31,6 +31,7 @@ local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ServerTools = ServerStorage.Tools
 
 local ServerRemotes = {}
+
 function ServerRemotes.PsychoMantisRemotes()
 	GeneralRemotes.GetFriendsList.OnServerInvoke = function(player)
 		return ProfileDataModule.RetrieveFriendsList(player)
@@ -528,6 +529,7 @@ function ServerRemotes.WhodunnitRemotes(player)
 			if not Players:GetPlayerFromCharacter(hit:FindFirstAncestorOfClass("Model")) then
 				return
 			end
+			debounce = true
 
 			customFunc()
 
@@ -541,16 +543,27 @@ function ServerRemotes.WhodunnitRemotes(player)
 		if CollectionService:HasTag(descendant, "SleepRoomBlockage") then
 			PlayerHitWall(descendant, function()
 				if WhodunnitMode.SleepAreaUnlocked() then
-					touchConn:Disconnect()
 					descendant:Destroy()
 					WhodunnitMode.SleepArea()
 				end
 			end)
 		elseif CollectionService:HasTag(descendant, "ArrivedAtMurder") then
 			PlayerHitWall(descendant, function()
-				touchConn:Disconnect()
 				descendant:Destroy()
-				WhodunnitMode.ArrivedAtMurder()
+				if WhodunnitMode.HasAccessory() then
+					WhodunnitMode.ArrivedAtMurderEvidence()
+				else
+					WhodunnitMode.ArrivedAtMurderNoEvidence()
+				end
+			end)
+		elseif CollectionService:HasTag(descendant, "PoolTouched") then
+			print("POOOL")
+			PlayerHitWall(descendant, function()
+				print("Touch event connected")
+				if WhodunnitMode.PoolUnlocked() then
+					descendant:Destroy()
+					WhodunnitMode.PoolAreaEvent()
+				end
 			end)
 		end
 	end)
