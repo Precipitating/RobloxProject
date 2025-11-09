@@ -24,6 +24,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerStorage = game:GetService("ServerStorage")
+local ConnectionManager = require(script.Parent.ConnectionManager)
 local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local PlayerInitialize = require(ServerScriptService.Server.Player.PlayerInitialize)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
@@ -557,13 +558,40 @@ function ServerRemotes.WhodunnitRemotes(player)
 				end
 			end)
 		elseif CollectionService:HasTag(descendant, "PoolTouched") then
-			print("POOOL")
 			PlayerHitWall(descendant, function()
-				print("Touch event connected")
 				if WhodunnitMode.PoolUnlocked() then
 					descendant:Destroy()
 					WhodunnitMode.PoolAreaEvent()
 				end
+			end)
+		elseif CollectionService:HasTag(descendant, "WhodunnitVote") then
+			local function ToggleHighlight(val)
+				local highlight = descendant.Parent:FindFirstChildWhichIsA("Highlight")
+				if highlight.Enabled ~= val then
+					highlight.Enabled = val
+				end
+			end
+
+			ConnectionManager.Add("Whodunnit", descendant.MouseHoverEnter, function(_)
+				if not WhodunnitMode.CanVote() then
+					return
+				end
+				ToggleHighlight(true)
+			end)
+
+			ConnectionManager.Add("Whodunnit", descendant.MouseHoverLeave, function(_)
+				if not WhodunnitMode.CanVote() then
+					return
+				end
+				ToggleHighlight(false)
+			end)
+
+			ConnectionManager.Add("Whodunnit", descendant.MouseClick, function(_)
+				if not WhodunnitMode.CanVote() then
+					return
+				end
+				ToggleHighlight(false)
+				WhodunnitMode.PoolGuestVoted(descendant:FindFirstAncestorOfClass("Model").Name)
 			end)
 		end
 	end)
@@ -573,7 +601,27 @@ function ServerRemotes.WhodunnitRemotes(player)
 	end)
 end
 
+function ServerRemotes.EnableHatDropping()
+	GeneralRemotes.DropHats.OnServerEvent:Connect(function(player)
+		if player and player.Character then
+			for _, obj in pairs(player.Character:GetChildren()) do
+				if obj:IsA("Accessory") or obj:IsA("Accoutrement") then
+					obj.Parent = game.Workspace
+					for _, object in ipairs(obj:GetChildren()) do
+						if object:IsA("BasePart") then
+							object:PivotTo(player.Character.Head.CFrame * CFrame.new(0, 0, -5))
+							object.CanCollide = true
+							object.Locked = false
+						end
+					end
+				end
+			end
+		end
+	end)
+end
+
 function ServerRemotes.Initialize(player)
+	ServerRemotes.EnableHatDropping()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
 	ServerRemotes.ModelRemotes()

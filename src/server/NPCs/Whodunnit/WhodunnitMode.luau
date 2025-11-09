@@ -1,6 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
+local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local CurrencyHandler = require(ServerScriptService.Server.CurrencyHandler)
 local WhodunnitGuest = require(script.Parent.WhodunnitGuest)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
@@ -18,21 +20,22 @@ local PoolUnlocked = false
 local BoothPos = nil
 local HasAccessory = nil
 local Guests = nil
+local CanVote = false
 local HostTTSDialogue = {
 	"Welcome guests to my mansion! Lets get settled in quickly. But first, an little chat in the assembly hall to the right. Let's go in and sit down shall we?",
 	"As I said, welcome to my mansion, This is a prestigious mansion with top of the quality service.",
 	"This mansion was built by top paid workers, with top paid benefits, with top of the notch treatment, I swear.",
 	"We hope you enjoy your stay at the Wilson mansion, but first can you guys turn off your base stations, I can hear something.",
 	"How did you get btools you hacking liar. ban pre!",
-	"Ignore what transpired fellow guests, you should go to sleep and prepare for the next day. Rooms are up the stairs. Pick any room and bed. See you tommorow.",
-	"Go to the left room and get some shut eye.",
+	"Ignore what transpired fellow guests, you should go to sleep and prepare for the next day. Rooms are up the stairs. Go to the left room. See you tommorow.",
+	"Your bed is on the far left, go get some shut eye.",
 	-- KILLER CHOOSE
 	"Blind all",
 	"Congratulations. I have chosen you to be the killer. Pick a victim and i'll do the rest.",
 	"By the way, everyone's blind, so they can't see this.",
 	-- FIRST MURDER ON MAIN HALL
 	"OH MY GOD EVERYONE COME TO THE MAIN AREA",
-	"GUEST NUMBER 67 HAS BEEN MURDERED! WHO COULD DO SUCH A THING!",
+	"GUEST NUMBER SIX SEVEN HAS BEEN MURDERED! WHO COULD DO SUCH A THING!",
 	"IT SEEMS THAT ONE OF YOU IS THE KILLER, WHO COULD IT POSSIBLY BE?",
 	-- ACCESSORY EXISTS
 	"What is that on the floor?",
@@ -44,8 +47,17 @@ local HostTTSDialogue = {
 	"Blind all",
 	"You know the drill, pick a victim.",
 	-- POOL MURDER
-	"Oh my god guys, guest 21 has drowned! Could he swim or was it another murder?",
-	"Shall we vote on who the murderer is? if he kills one more, the murderer will win and destroy us all!",
+	"Oh my god guys, guest twenny wan has drowned! Could he not swim or was it another murder?",
+	"Shall we discuss on who the murderer could be? We need to vote one out or the killer wins!",
+	"Start clicking on the person to vote and we'll continue from there!",
+	-- VOTED
+	"Results are in, and there are no ties. Lets make it dramatic. I will kill the chosen individual with the most votes! Ready...",
+	-- VOTED OUT GUEST
+	"Oh dear, looks like that individual was eliminated, but is it the right one?",
+	"But was that guest really the killer? I will give a sword to the killer after the suspense if they exist, if not, guests win! Ready...",
+	-- KILLER REVEALED
+	"Oh my god the killer is still here! the guests have failed!",
+	"I have god mode you donkey!",
 }
 
 local WhodunnitMode = {}
@@ -66,6 +78,9 @@ end
 function WhodunnitMode.PoolUnlocked()
 	return PoolUnlocked
 end
+function WhodunnitMode.CanVote()
+	return CanVote
+end
 function WhodunnitMode.Cleanup()
 	Host = nil
 	MapRef = nil
@@ -79,6 +94,7 @@ function WhodunnitMode.Cleanup()
 	HasAccessory = nil
 	PoolUnlocked = false
 	Guests = nil
+	CanVote = false
 	HostTTSIdx = 0
 
 	local mansion = workspace:FindFirstChild("ZapsMansion")
@@ -117,6 +133,7 @@ local function SetHostReferences()
 	HostDistortion = Host:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("AudioDistortion")
 end
 function WhodunnitMode.Start(player)
+	GeneralRemotes.Whodunnit.ResetHostTTS:FireClient(player)
 	CurrencyHandler.ReduceMoney(player, 100)
 	PlayerRef = player
 	BoothPos = player.Character:GetPivot()
@@ -188,6 +205,7 @@ function WhodunnitMode.Sleeping()
 	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
 
 	MoveHostNextLocation()
+
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "CreepyNightTheme")
 	Guests = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "WhodunnitGuests", nil)
 
@@ -198,7 +216,7 @@ end
 
 function WhodunnitMode.PickKiller()
 	task.wait(5)
-	WhodunnitMode.UnblindAll(0.5)
+	WhodunnitMode.Unblind(0.7, true)
 	--
 	PlayNextHostTTS()
 	PlayNextHostTTS()
@@ -307,7 +325,7 @@ end
 
 function WhodunnitMode.ArrivedAtMurderNoEvidence()
 	PoolUnlocked = true
-	HostDistortion.Level = 0.3
+	HostDistortion.Level = 0.7
 	GeneralRemotes.DisableControls:FireClient(PlayerRef)
 	--
 	PlayNextHostTTS()
@@ -333,12 +351,14 @@ end
 function WhodunnitMode.PoolAreaEvent()
 	print("Touched pool")
 	GeneralRemotes.DisableControls:FireClient(PlayerRef)
+	HostDistortion.Level = 1
 	PlayNextHostTTS()
 	--
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
 	WhodunnitMode.SetGuestsPanicking()
-
-	WhodunnitMode.UnblindAll(0.5)
+	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "CreepyNightTheme")
+	task.wait(3)
+	WhodunnitMode.Unblind(0.7, true)
 	--
 	PlayNextHostTTS()
 	GeneralRemotes.EnableControls:FireClient(PlayerRef)
@@ -347,20 +367,89 @@ end
 
 function WhodunnitMode.PoolMurder(victimName)
 	WhodunnitGuest.SetPanicking(false)
-	WhodunnitMode.SpawnDeadBody(victimName, "DeadBodyDrowned")
+	local body = WhodunnitMode.SpawnDeadBody(victimName, "DeadBodyDrowned")
+	local victimHumanoid = body:FindFirstChild("DeadVictim"):FindFirstChild("Humanoid")
+	victimHumanoid.DisplayName = `{PlayerRef.DisplayName} Waz Here.`
 	task.wait(3)
-	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Scream")
-	task.wait(3)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Scream", false, true)
 	--
-	WhodunnitMode.UnblindAll(0.5)
+	WhodunnitMode.Unblind(0.7)
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Mysterious")
 	--
 	PlayNextHostTTS()
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(
+		PlayerRef,
+		`Guys, theres something inscribed on his head! It says {PlayerRef.DisplayName} waz here! I wonder what that could mean!`
+	)
 	PlayNextHostTTS()
+	PlayNextHostTTS()
+	--
+	WhodunnitGuest.DiscussVoteSelection()
+	CanVote = true
+	GeneralRemotes.EnableControls:FireClient(PlayerRef)
 end
-function WhodunnitMode.UnblindAll(endPitch)
+
+function WhodunnitMode.PoolGuestVoted(guestVotedName)
+	ConnectionManager.ClearAll()
+	if not guestVotedName then
+		error("Guest voted name is nil!")
+	end
+	CanVote = false
+	print(guestVotedName)
+
+	--
+	local chosenGuest = Guests:FindFirstChild(guestVotedName)
+	if not chosenGuest then
+		error("Can't find the chosen guest model!")
+	end
+	-- kill chosen target
+	GeneralRemotes.DisableControls:FireClient(PlayerRef)
+	PlayNextHostTTS()
+	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ScaryRiser", false, true)
+	chosenGuest:Destroy()
+	WhodunnitGuest.RemoveHeadFromTable(guestVotedName)
+	task.wait(2)
+	--
+	PlayNextHostTTS()
+	PlayNextHostTTS()
+	-- reveal killer
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ScaryRiser", false, true)
+	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "CreepyNightTheme")
+	ServerHelperFunctions.GiveTool(PlayerRef, { "Sword", true })
+	ServerHelperFunctions.ForceEquip(PlayerRef, "Sword")
+	PlayNextHostTTS()
+	WhodunnitGuest.AllGuestsSpeak({
+		"This game is rubbish! you rigged this eye zap and im reporting this game for copying this game from ps5 player. Noob",
+	})
+	WhodunnitGuest.DestroyAllGuests()
+	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(
+		PlayerRef,
+		`Ahem.Ok tours over guys, remember to buy my admin commands for 1000 robux to become host and host these exciting, not boring and fixed events! You can give that sword back now, {PlayerRef.DisplayName}`
+	)
+	task.wait(1)
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `{PlayerRef.DisplayName}?`)
+
+	-- end
+	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 0)
+	task.wait(3)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ForKingAndCountry", false, true)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "BattleCry", false, true)
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Parry", false, true)
+	PlayNextHostTTS()
+	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Kick {PlayerRef.DisplayName}`)
+	BadgeHandler.awardBadge(PlayerRef, 466173560868472)
+	PlayerRef:Kick("You really thought you could kill the host?")
+end
+
+function WhodunnitMode.Unblind(endPitch, user)
 	HostDistortion.Level = 1
-	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Unblind {PlayerRef.DisplayName}`)
+	if user then
+		GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Unblind {PlayerRef.DisplayName}`)
+	else
+		GeneralRemotes.Whodunnit.HostTalk:InvokeClient(PlayerRef, `Unblind all`)
+	end
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 0, 1)
 	HostDistortion.Level = endPitch or 0
 end
@@ -380,6 +469,7 @@ function WhodunnitMode.VotedOut()
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 3, 1)
 	GeneralRemotes.EnableControls:FireClient(PlayerRef)
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "Main")
+	BadgeHandler.awardBadge(PlayerRef, 466173560868472)
 	WhodunnitMode.Cleanup()
 end
 

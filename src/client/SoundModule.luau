@@ -601,6 +601,22 @@ local OneShots = {
 		SoundId = "rbxassetid://8304443672",
 		Volume = 0.5,
 	},
+	ScaryRiser = {
+		SoundId = "rbxassetid://9040554805",
+		Volume = 1,
+	},
+	ForKingAndCountry = {
+		SoundId = "rbxassetid://113115964475039",
+		Volume = 1,
+	},
+	BattleCry = {
+		SoundId = "rbxassetid://5291644593",
+		Volume = 3,
+	},
+	Parry = {
+		SoundId = "rbxassetid://75099255490892",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 
@@ -643,6 +659,8 @@ function SoundHandler.StopAllSounds()
 			sound:Stop()
 		end
 	end
+
+	return true
 end
 
 function SoundHandler.PlayTheme(name, lockTheme)
@@ -716,7 +734,7 @@ function SoundHandler.ResumeTheme()
 	end
 end
 
-function SoundHandler.PlaySound(soundName, parent)
+function SoundHandler.PlaySound(soundName, parent, waitUntilDone)
 	print(`Playing {soundName}`)
 
 	-- if the sound currently exists, just reuse it instead of a new sound instance.
@@ -776,6 +794,10 @@ function SoundHandler.PlaySound(soundName, parent)
 			GeneralRemotes.SoundEnded:FireServer(soundName)
 			sound:Destroy()
 		end)
+
+		if waitUntilDone then
+			sound.Ended:Wait()
+		end
 
 		return sound
 	else

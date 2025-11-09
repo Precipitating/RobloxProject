@@ -2,6 +2,7 @@ local TextToSpeech = {}
 
 local SoundService = game:GetService("SoundService")
 local TextToSpeechHandle = SoundService.AudioTextToSpeech
+local MaxAttempts = 5
 
 function TextToSpeech.CleanTextForTTS(str)
 	-- Replace <br/> and newlines with a single space
@@ -19,14 +20,18 @@ function TextToSpeech.CleanTextForTTS(str)
 
 	return str
 end
-function TextToSpeech.Speak(text)
+function TextToSpeech.Speak(text, attempts)
+	attempts = attempts or 1
+	if attempts > MaxAttempts then
+		return false
+	end
 	local cleanedText = TextToSpeech.CleanTextForTTS(text)
 	TextToSpeechHandle.Text = cleanedText
 
 	local status = TextToSpeechHandle:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn("TTS Load failed:", status.Name)
-		return false
+		return TextToSpeech.Speak(text, attempts + 1)
 	end
 	print("TTS loaded successfully")
 

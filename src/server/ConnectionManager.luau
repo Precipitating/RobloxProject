@@ -3,11 +3,15 @@ local ConnectionManager = {}
 local connections = {}
 
 -- adds a connection to a key
-function ConnectionManager.Add(key, conn)
+function ConnectionManager.Add(key, signal, handler)
 	if not connections[key] then
 		connections[key] = {}
 	end
+	local conn = signal:Connect(function(...)
+		task.spawn(handler, ...)
+	end)
 	table.insert(connections[key], conn)
+	return conn
 end
 
 -- clears all connections for a key

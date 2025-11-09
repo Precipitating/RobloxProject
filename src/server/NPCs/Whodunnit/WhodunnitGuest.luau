@@ -10,7 +10,11 @@ local Dialogue = {
 	"this game is scary",
 	"can i play",
 	"why u blind me",
+	"im so scared oooh, heh so scarrry..",
+	"can i be host plz",
+	"why is a blue tentacle guy in admin commands shirt comments saying its a scam? iZzap..?",
 }
+local MaxTTSAttempts = 5
 
 local IsPanicking = false
 local GuestHeads = {}
@@ -28,22 +32,53 @@ function WhodunnitGuest.ToggleCanKillPrompt(val)
 	end
 end
 
+function WhodunnitGuest.DestroyAllGuests()
+	for _, head in pairs(GuestHeads) do
+		head:FindFirstAncestorOfClass("Folder"):Destroy()
+		break
+	end
+	table.clear(GuestHeads)
+end
+
+function WhodunnitGuest.AllGuestsSpeak(textTable)
+	local idx = 1
+	local function PlayCurrentGuestTTS(tts, attempts)
+		if attempts >= MaxTTSAttempts then
+			return
+		end
+		local status = tts:LoadAsync()
+		if status == Enum.AssetFetchStatus.Success then
+			tts:Play()
+			tts.Ended:Wait()
+		else
+			task.wait(0.5)
+			PlayCurrentGuestTTS(tts, attempts + 1)
+		end
+	end
+	for _, head in pairs(GuestHeads) do
+		local tts = head.Parent:FindFirstChildWhichIsA("AudioTextToSpeech")
+		tts.Text = textTable[idx]
+		idx += 1
+		PlayCurrentGuestTTS(tts, 0)
+	end
+end
+
+function WhodunnitGuest.DiscussVoteSelection()
+	local DiscussDialogue = {
+		"How to play. Can I be Host Pleez. I no admin abuse.",
+		"According to my calculations, this is reverse psychology. I know exactly what this is as I have watched Life Note. I know exactly who to pick.",
+	}
+	WhodunnitGuest.AllGuestsSpeak(DiscussDialogue)
+end
+
 function WhodunnitGuest.AnnouncePlayerIsMurderer(playerName)
 	local CaughtDialogue = {
 		`{playerName}, just put the knife in the bag bro`,
 		`I pick {playerName}. Do I even need to explain?`,
 		`{playerName}, thanks for the easy win. You are the weakest link. Goodbye.`,
-		`{playerName}, atleast go bald next time`,
 	}
-	for _, head in pairs(GuestHeads) do
-		local tts = head.Parent:FindFirstChildWhichIsA("AudioTextToSpeech")
-		tts.Text = CaughtDialogue[math.random(1, #CaughtDialogue)]
-		local status = tts:LoadAsync()
-		if status == Enum.AssetFetchStatus.Success then
-			tts:Play()
-			tts.Ended:Wait()
-		end
-	end
+
+	WhodunnitGuest.AllGuestsSpeak(CaughtDialogue)
 end
 
 function WhodunnitGuest.TurnGuestHeadsToPlayer(target)

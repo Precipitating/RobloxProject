@@ -2,6 +2,10 @@ local WhodunnitPrompts = {}
 local MaxAttempts = 5
 local HostTTSRef = nil
 
+function WhodunnitPrompts.ResetHostTTSRef()
+	HostTTSRef = nil
+end
+
 function WhodunnitPrompts.HostTalk(text, attempts)
 	attempts = attempts or 1
 	if attempts > MaxAttempts then
@@ -24,6 +28,7 @@ function WhodunnitPrompts.HostTalk(text, attempts)
 	local status = HostTTSRef:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn(`TTS Load failed, retrying: {attempts} {status.Name}`)
+		task.wait(0.5)
 		return WhodunnitPrompts.HostTalk(text, attempts + 1)
 	end
 	HostTTSRef:Play()

@@ -17,6 +17,7 @@ local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local StarterPlayer = game:GetService("StarterPlayer")
+local UserInputService = game:GetService("UserInputService")
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
 local WhodunnitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Whodunnit.WhodunnitPrompts)
 local CameraFollowConnection = nil
@@ -114,14 +115,13 @@ function ClientRemotes.GeneralRemotes()
 	end)
 
 	-- play one shot sound
-	GeneralRemotes.PlaySound.OnClientInvoke = function(name, parent)
-		return SoundModule.PlaySound(name, parent)
+	GeneralRemotes.PlaySound.OnClientInvoke = function(name, parent, waitUntilDone)
+		return SoundModule.PlaySound(name, parent, waitUntilDone)
 	end
 
 	-- stop all one shots & theme
 	GeneralRemotes.StopAllMusic.OnClientInvoke = function()
-		SoundModule.StopAllSounds()
-		return true
+		return SoundModule.StopAllSounds()
 	end
 
 	-- rejoin server
@@ -404,9 +404,24 @@ function ClientRemotes.WhodunnitRemotes()
 	GeneralRemotes.Whodunnit.HostTalk.OnClientInvoke = function(text)
 		return WhodunnitPrompts.HostTalk(text)
 	end
+
+	GeneralRemotes.Whodunnit.ResetHostTTS.OnClientEvent:Connect(function()
+		WhodunnitPrompts.ResetHostTTSRef()
+	end)
+end
+
+function ClientRemotes.HatDroppingKey()
+	UserInputService.InputBegan:Connect(function(inputObject, gameProcessedEvent)
+		if not gameProcessedEvent then
+			if inputObject.KeyCode == Enum.KeyCode.Equals then
+				GeneralRemotes.DropHats:FireServer()
+			end
+		end
+	end)
 end
 
 function ClientRemotes.Initialize()
+	ClientRemotes.HatDroppingKey()
 	ClientRemotes.GeneralRemotes()
 	ClientRemotes.PsychoMantisRemotes()
 	ClientRemotes.GUIRemotes()

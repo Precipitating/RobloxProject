@@ -187,7 +187,9 @@ end
 local RandomEvents = { RoadEvents.SpawnLearnerDriver, RoadEvents.SpawnApocCar, RoadEvents.SpawnDNSL }
 function RoadEvents.PlayRandomEvent()
 	task.spawn(function()
-		RandomEvents[math.random(1, #RandomEvents)]()
+		if RunRoadEvents then
+			RandomEvents[math.random(1, #RandomEvents)]()
+		end
 	end)
 end
 

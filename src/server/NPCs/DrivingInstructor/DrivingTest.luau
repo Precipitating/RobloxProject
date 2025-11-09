@@ -6,6 +6,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local CurrencyHandler = require(ServerScriptService.Server.CurrencyHandler)
+local RoadEvents = require(ServerScriptService.Server.RoadEvents.RoadEvents)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
@@ -94,8 +95,10 @@ local function SpawnSheep(player, currentRoad)
 		sheep.Parent = currentRoad
 
 		-- Touched connection
-		sheep.Touched:Once(function(hit)
+		local conn = nil
+		conn = sheep.Touched:Connect(function(hit)
 			if CollectionService:HasTag(hit, "DrivingTestCar") then
+				conn:Disconnect()
 				GeneralRemotes.PlaySound:InvokeClient(player, "Baa")
 				SheepsHit += 1
 				if sheep and sheep.Parent then
@@ -141,17 +144,14 @@ local function SpawnTrafficLight(currentRoad)
 		-- change the attribute true if red light else false
 		local changer = trafficLight:FindFirstChild("LightStateChanger")
 		local bindable = changer:FindFirstChild("LightChanged")
-		local conn
 
-		conn = bindable.Event:Connect(function(state)
+		ConnectionManager.Add(currentRoad:GetAttribute("ID"), bindable.Event, function(state)
 			if state == "Red" then
 				currentRoad:SetAttribute("IsRedLight", true)
 			else
 				currentRoad:SetAttribute("IsRedLight", false)
 			end
 		end)
-
-		ConnectionManager.Add(currentRoad:GetAttribute("ID"), conn)
 		return true
 	end
 	return false
@@ -394,6 +394,8 @@ local function AddFinishedRoad(player)
 		GeneralRemotes.EnableControls:FireClient(player, nil)
 		GeneralRemotes.PlayTheme:FireClient(player, "WindAmbience")
 		ServerHelperFunctions.SetNPCDialogueFile({ DrivingInstructorNameTag = "DrivingInstructorResults" })
+		--
+		RoadEvents.EnableRoadEvents(true)
 	end)
 end
 
@@ -407,8 +409,8 @@ local function HandleRoundAboutValidation(player, roundAboutModel, correctExit)
 		local validators = roundAboutValidators:GetChildren()
 
 		for _, touchedValidator in ipairs(validators) do
-			local conn
-			conn = touchedValidator.Touched:Connect(function(hit)
+			local conn = nil
+			conn = ConnectionManager.Add(roundAboutModel:GetAttribute("ID"), touchedValidator.Touched, function(hit)
 				if not CollectionService:HasTag(hit, "DrivingTestCar") then
 					return
 				end
@@ -421,7 +423,7 @@ local function HandleRoundAboutValidation(player, roundAboutModel, correctExit)
 					if touchedCheckpointID == RoundAboutExpectedCheckpoint then
 						-- if not last checkpoint before correct exit, add one to RoundAboutExpectedCheckpoint
 						if touchedCheckpointID ~= correctExitToID then
-							RoundAboutExpectedCheckpoint = RoundAboutExpectedCheckpoint + 1
+							RoundAboutExpectedCheckpoint += 1
 							print("Correct roundabout checkpoint touched! not finished yet!")
 						else
 							-- indicates final checkpoint reached to exit correctly
@@ -434,14 +436,11 @@ local function HandleRoundAboutValidation(player, roundAboutModel, correctExit)
 						print(`Expected {RoundAboutExpectedCheckpoint}, touched {touchedCheckpointID} `)
 						GeneralRemotes.PlaySound:InvokeClient(player, "Error")
 						ConnectionManager.Clear(roundAboutModel:GetAttribute("ID"))
-						FailedRoundAbout = FailedRoundAbout + 1
+						FailedRoundAbout += 1
 						RoundAboutExpectedCheckpoint = 1
 					end
 				end
 			end)
-			-- it only disconnects IF we touch it, so if we pool we need to store the
-			-- other connections that aren't touched to disconnect it all
-			ConnectionManager.Add(roundAboutModel:GetAttribute("ID"), conn)
 		end
 	end
 end
@@ -483,18 +482,15 @@ function DrivingTest.RoundAboutCheckpointTouchedHandler(player, roundAboutModel)
 			end)
 		else
 			-- wrong exits
-			local conn2
-			conn2 = touchPart.Touched:Connect(function(hit)
+			ConnectionManager.Add(id, touchPart.Touched, function(hit)
 				if not CollectionService:HasTag(hit, "DrivingTestCar") then
 					return
 				end
-				conn2:Disconnect()
 				GeneralRemotes.PlaySound:InvokeClient(player, "Error")
 				FailedRoundAbout = FailedRoundAbout + 1
+				RoundAboutExpectedCheckpoint = 1
 				ConnectionManager.Clear(id)
 			end)
-
-			ConnectionManager.Add(id, conn2)
 		end
 	end
 
@@ -637,6 +633,8 @@ function DrivingTest.Init(player, posBeforeTeleport)
 	PositionBeforeTeleport = posBeforeTeleport
 	GeneralRemotes.BlackFade:FireClient(player, 0.5, 0)
 	CurrencyHandler.ReduceMoney(player, 200)
+
+	RoadEvents.EnableRoadEvents(false)
 
 	-- ensure EndCutscene stops the current main theme before calling this
 	task.wait(1)
