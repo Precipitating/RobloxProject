@@ -617,6 +617,10 @@ local OneShots = {
 		SoundId = "rbxassetid://75099255490892",
 		Volume = 1,
 	},
+	Pop = {
+		SoundId = "rbxassetid://1289263994",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 

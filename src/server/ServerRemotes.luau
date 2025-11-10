@@ -389,7 +389,7 @@ function ServerRemotes.MoneyBaitRemotes()
 		PrisonWardenEvent.PlayerAttachRope(player)
 	end)
 
-	GeneralRemotes.MoneyBait.FailedRope.OnServerEvent:Connect(function(player)
+	GeneralRemotes.MoneyBait.FailedRope.OnServerEvent:Connect(function(_)
 		PrisonWardenEvent.CancelRopeTween()
 	end)
 end
@@ -484,7 +484,7 @@ function ServerRemotes.FrankensteinRemotes()
 		BodyPartToTool()
 	end)
 
-	GeneralRemotes.Frankenstein.FrankensteinHomeSpawn.OnServerEvent:Connect(function(player)
+	GeneralRemotes.Frankenstein.FrankensteinHomeSpawn.OnServerEvent:Connect(function(_)
 		local home = workspace:WaitForChild("Home")
 		local frankensteinRoom =
 			ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Frankenstein", "FrankensteinAtHome", nil)
@@ -511,7 +511,7 @@ function ServerRemotes.WhodunnitRemotes(player)
 			GeneralRemotes.DisableControls:FireClient(player)
 			WhodunnitMode.AssemblyHall()
 		elseif CollectionService:HasTag(seat, "WhodunnitBed") then
-			seatConn:Disconnect()
+			seat.Disabled = true
 			GeneralRemotes.DisableControls:FireClient(player)
 			WhodunnitMode.Sleeping()
 		end

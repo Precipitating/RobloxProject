@@ -9,15 +9,17 @@ local GeneralRemotes = ReplicatedStorage.Remotes
 local Initialized = false
 local TimeOfDay = {}
 function TimeOfDay.StartSyncing()
-	while task.wait(1) do
-		local t = os.date("*t") -- player’s local time
-		local clockTime = t.hour + (t.min / 60) + (t.sec / 3600)
-		Lighting.ClockTime = clockTime
-		if not Initialized then
-			TimeOfDay.ClientSyncWithLightPosts()
-			Initialized = true
+	task.spawn(function()
+		while task.wait(1) do
+			local t = os.date("*t") -- player’s local time
+			local clockTime = t.hour + (t.min / 60) + (t.sec / 3600)
+			Lighting.ClockTime = clockTime
+			if not Initialized then
+				TimeOfDay.ClientSyncWithLightPosts()
+				Initialized = true
+			end
 		end
-	end
+	end)
 end
 
 function TimeOfDay.GetLightState()

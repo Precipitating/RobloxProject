@@ -6,6 +6,7 @@ local StarterGui = game:GetService("StarterGui")
 local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
 local ClientRemotes = require(script.ClientRemotes)
 local Thief = require(ReplicatedStorage.NPCs.Thief.Thief)
+local AnimationController = require(script.NPCs.MoveableNPCAnimate.AnimationController)
 
 local function RespawnDisabler()
 	-- disable respawn button
@@ -34,6 +35,7 @@ local function Startup()
 	SetMonitorPicture.Set()
 	Thief.Initialize()
 	TimeOfDay.StartSyncing()
+	AnimationController.ApplyToMoveableNPCS()
 
 	--GeneralRemotes.AddMoney:FireServer(10000)
 end

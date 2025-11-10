@@ -1,5 +1,7 @@
 local Chat = game:GetService("Chat")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local Dialogue = {
 	"I can't see!",
 	"how to play?",
@@ -14,8 +16,6 @@ local Dialogue = {
 	"can i be host plz",
 	"why is a blue tentacle guy in admin commands shirt comments saying its a scam? iZzap..?",
 }
-local MaxTTSAttempts = 5
-
 local IsPanicking = false
 local GuestHeads = {}
 local WhodunnitGuest = {}
@@ -42,24 +42,11 @@ end
 
 function WhodunnitGuest.AllGuestsSpeak(textTable)
 	local idx = 1
-	local function PlayCurrentGuestTTS(tts, attempts)
-		if attempts >= MaxTTSAttempts then
-			return
-		end
-		local status = tts:LoadAsync()
-		if status == Enum.AssetFetchStatus.Success then
-			tts:Play()
-			tts.Ended:Wait()
-		else
-			task.wait(0.5)
-			PlayCurrentGuestTTS(tts, attempts + 1)
-		end
-	end
 	for _, head in pairs(GuestHeads) do
 		local tts = head.Parent:FindFirstChildWhichIsA("AudioTextToSpeech")
 		tts.Text = textTable[idx]
 		idx += 1
-		PlayCurrentGuestTTS(tts, 0)
+		TextToSpeech.Speak3D(tts, nil, 0)
 	end
 end
 

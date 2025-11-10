@@ -2,7 +2,7 @@ local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local GeneralRemotes = ReplicatedStorage.Remotes
-local player = game.Players.LocalPlayer
+local player = Players.LocalPlayer
 local Character = player.Character or player.CharacterAdded:Wait()
 local PlayerGui = player:WaitForChild("PlayerGui")
 local Humanoid = Character:WaitForChild("Humanoid")
@@ -181,16 +181,15 @@ function ClientRemotes.GeneralRemotes()
 
 	-- invert player controls
 	GeneralRemotes.InvertControls.OnClientEvent:Connect(function(invert)
-		local thisPlayer = Players.LocalPlayer
-		local playerScripts = thisPlayer:WaitForChild("PlayerScripts")
+		local playerScripts = player:WaitForChild("PlayerScripts")
 		local playerModule = require(playerScripts:WaitForChild("PlayerModule"))
 		local movementController = playerModule:GetControls()
 		if invert then
 			movementController.moveFunction = function(player_, direction, relative)
-				thisPlayer.Move(player_, -direction, relative)
+				player.Move(player_, -direction, relative)
 			end
 		else
-			movementController.moveFunction = thisPlayer.Move
+			movementController.moveFunction = player.Move
 		end
 	end)
 

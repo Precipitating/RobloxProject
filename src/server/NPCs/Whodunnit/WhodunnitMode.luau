@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local TweenService = game:GetService("TweenService")
+local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local BadgeHandler = require(ServerScriptService.Server.BadgeHandler)
 local ConnectionManager = require(ServerScriptService.Server.ConnectionManager)
 local CurrencyHandler = require(ServerScriptService.Server.CurrencyHandler)
@@ -175,9 +176,9 @@ end
 local function UFOConfrontEvent()
 	local me = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Whodunnit", "MeConfront", nil)
 	GeneralRemotes.BlackFade:FireClient(PlayerRef, 1, 1)
+	--
 	local tts = me:FindFirstChild("HumanoidRootPart"):FindFirstChildOfClass("AudioTextToSpeech")
-	tts:Play()
-	tts.Ended:Wait()
+	TextToSpeech.Speak3D(tts, nil, 0)
 	--
 	PlayNextHostTTS()
 	--
@@ -370,7 +371,7 @@ function WhodunnitMode.PoolMurder(victimName)
 	local body = WhodunnitMode.SpawnDeadBody(victimName, "DeadBodyDrowned")
 	local victimHumanoid = body:FindFirstChild("DeadVictim"):FindFirstChild("Humanoid")
 	victimHumanoid.DisplayName = `{PlayerRef.DisplayName} Waz Here.`
-	task.wait(3)
+	task.wait(1)
 	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Scream", false, true)
 	--
 	WhodunnitMode.Unblind(0.7)
@@ -408,6 +409,7 @@ function WhodunnitMode.PoolGuestVoted(guestVotedName)
 	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
 	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ScaryRiser", false, true)
 	chosenGuest:Destroy()
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Pop")
 	WhodunnitGuest.RemoveHeadFromTable(guestVotedName)
 	task.wait(2)
 	--
@@ -423,6 +425,7 @@ function WhodunnitMode.PoolGuestVoted(guestVotedName)
 		"This game is rubbish! you rigged this eye zap and im reporting this game for copying this game from ps5 player. Noob",
 	})
 	WhodunnitGuest.DestroyAllGuests()
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Pop")
 	GeneralRemotes.StopAllMusic:InvokeClient(PlayerRef)
 	GeneralRemotes.Whodunnit.HostTalk:InvokeClient(
 		PlayerRef,

@@ -21,7 +21,7 @@ function TextToSpeech.CleanTextForTTS(str)
 	return str
 end
 function TextToSpeech.Speak(text, attempts)
-	attempts = attempts or 1
+	attempts = attempts or 0
 	if attempts > MaxAttempts then
 		return false
 	end
@@ -36,6 +36,26 @@ function TextToSpeech.Speak(text, attempts)
 	print("TTS loaded successfully")
 
 	TextToSpeechHandle:Play()
+	return true
+end
+
+function TextToSpeech.Speak3D(tts, text, attempts)
+	attempts = attempts or 0
+	if attempts > MaxAttempts then
+		print(`Failed to play 3D TTS for {tts.FindFirstAncestorOfClass("Model").Name}, skipping...`)
+		return false
+	end
+	if text and attempts == 0 then
+		tts.Text = text
+	end
+	local status = tts:LoadAsync()
+	if status ~= Enum.AssetFetchStatus.Success then
+		print(`Failed to play 3D TTS, attempt {attempts + 1}`)
+		task.wait(0.5)
+		return TextToSpeech.Speak3D(tts, text, attempts + 1)
+	end
+	tts:Play()
+	tts.Ended:Wait()
 	return true
 end
 

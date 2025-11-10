@@ -7,7 +7,7 @@ local function StartDialogue()
 		return {
 			Name = "Adam",
 			Portrait = "rbxassetid://36301142",
-			Dialogue = "Hello sir, would you like a tour of the game i made",
+			Dialogue = "Hello sir, would you like a tour of the game I made?",
 			VoiceId = "7",
 			Pitch = -1,
 			Speed = 1,
@@ -55,10 +55,10 @@ return {
 		One = {
 			Name = "Adam",
 			Portrait = "rbxassetid://14723079797",
-			Dialogue = "It's worth it mate.<br/>It's an ancient forgotten history of a feature called personal servers mate.<br/>It was popular and my 1k robux admin commands was selling like hot pockets!",
+			Dialogue = "It's worth it mate.<br/>It's an ancient forgotten history of a feature called personal servers mate.<br/>It was popular and my 1000 robux admin commands was selling like hot pockets!",
 			Responses = {
 				{
-					Text = "Why not I guess",
+					Text = "Why not I guess?",
 					Type = "NextMessage",
 					NextId = "Two",
 				},
@@ -71,10 +71,10 @@ return {
 		Two = {
 			Name = "Adam",
 			Portrait = "rbxassetid://5317216871",
-			Dialogue = "Excellent, let me describe who I am and the context to this tour firstly before we go to the place of where horrors occured.",
+			Dialogue = "Excellent.<br/>Let me describe who I am and the context to this tour firstly, before we go to the place of where horrors occured.",
 			Responses = {
 				{
-					Text = "Explain in 3 minutes bro.",
+					Text = "Explain in 3 minutes bro",
 					Type = "NextMessage",
 					NextId = "Three",
 				},
@@ -124,7 +124,7 @@ return {
 		Five = {
 			Name = "Adam",
 			Portrait = "rbxassetid://401846955",
-			Dialogue = "The idea stolen from ps1player, the first issue was presented. I can't script.<br/>No problem, i'll host manually and use some admin commands to help me out.<br/>Secondly, I need some help building the map.",
+			Dialogue = "The idea stolen from ps1player, the first issue was presented.<br/>I can't script.<br/>No problem, i'll host manually and use some admin commands to help me out.<br/>Secondly, I need some help building the map.",
 			Responses = {
 				{
 					Text = "I guess you hired some...?",
@@ -149,7 +149,7 @@ return {
 					NextId = "Seven",
 				},
 				{
-					Text = "You nasty man!",
+					Text = "You evil man!",
 					Type = "NextMessage",
 					NextId = "Seven",
 				},
