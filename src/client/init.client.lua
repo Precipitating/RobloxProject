@@ -30,7 +30,8 @@ local function RespawnDisabler()
 end
 
 local function Startup()
-	-- play main theme
+	RespawnDisabler()
+	ClientRemotes.Initialize()
 	SoundModule.PlayTheme("HomeTheme")
 	SetMonitorPicture.Set()
 	Thief.Initialize()
@@ -39,7 +40,4 @@ local function Startup()
 
 	--GeneralRemotes.AddMoney:FireServer(10000)
 end
-
-RespawnDisabler()
-ClientRemotes.Initialize()
 Startup()

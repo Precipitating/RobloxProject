@@ -19,6 +19,7 @@ local HouseDoorDebounce = false
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local FrankensteinPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Frankenstein.FrankensteinPrompts)
 local MoneyBaitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.MoneyBait.MoneyBaitPrompts)
+local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC

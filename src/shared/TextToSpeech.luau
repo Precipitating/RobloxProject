@@ -42,7 +42,7 @@ end
 function TextToSpeech.Speak3D(tts, text, attempts)
 	attempts = attempts or 0
 	if attempts > MaxAttempts then
-		print(`Failed to play 3D TTS for {tts.FindFirstAncestorOfClass("Model").Name}, skipping...`)
+		print(`Failed to play 3D TTS for {tts:FindFirstAncestorOfClass("Model").Name}, skipping...`)
 		return false
 	end
 	if text and attempts == 0 then
@@ -50,7 +50,7 @@ function TextToSpeech.Speak3D(tts, text, attempts)
 	end
 	local status = tts:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
-		print(`Failed to play 3D TTS, attempt {attempts + 1}`)
+		print(`Failed to play 3D TTS, attempt {attempts}`)
 		task.wait(0.5)
 		return TextToSpeech.Speak3D(tts, text, attempts + 1)
 	end

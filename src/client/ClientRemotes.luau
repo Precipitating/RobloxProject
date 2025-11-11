@@ -19,7 +19,7 @@ local RunService = game:GetService("RunService")
 local StarterPlayer = game:GetService("StarterPlayer")
 local UserInputService = game:GetService("UserInputService")
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
-local WhodunnitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Whodunnit.WhodunnitPrompts)
+local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local CameraFollowConnection = nil
 local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
 local WeatherVisualizer = require(script.Parent.Weather.WeatherVisualizer)
@@ -400,13 +400,9 @@ function ClientRemotes.FrankensteinRemotes()
 end
 
 function ClientRemotes.WhodunnitRemotes()
-	GeneralRemotes.Whodunnit.HostTalk.OnClientInvoke = function(text)
-		return WhodunnitPrompts.HostTalk(text)
+	GeneralRemotes.Whodunnit.Speak3D.OnClientInvoke = function(ttsHandle, text)
+		return TextToSpeech.Speak3D(ttsHandle, text, 0)
 	end
-
-	GeneralRemotes.Whodunnit.ResetHostTTS.OnClientEvent:Connect(function()
-		WhodunnitPrompts.ResetHostTTSRef()
-	end)
 end
 
 function ClientRemotes.HatDroppingKey()
@@ -419,9 +415,14 @@ function ClientRemotes.HatDroppingKey()
 	end)
 end
 
+function ClientRemotes.HomeRemotes()
+	SimulateTVCapture.Initialize()
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.HatDroppingKey()
 	ClientRemotes.GeneralRemotes()
+	ClientRemotes.HomeRemotes()
 	ClientRemotes.PsychoMantisRemotes()
 	ClientRemotes.GUIRemotes()
 	ClientRemotes.CashierRemotes()

@@ -1,7 +1,7 @@
 local Chat = game:GetService("Chat")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+local GeneralRemotes = ReplicatedStorage.Remotes
 local TweenService = game:GetService("TweenService")
-local TextToSpeech = require(ReplicatedStorage.Shared.TextToSpeech)
 local Dialogue = {
 	"I can't see!",
 	"how to play?",
@@ -40,32 +40,32 @@ function WhodunnitGuest.DestroyAllGuests()
 	table.clear(GuestHeads)
 end
 
-function WhodunnitGuest.AllGuestsSpeak(textTable)
+function WhodunnitGuest.AllGuestsSpeak(player, textTable)
 	local idx = 1
 	for _, head in pairs(GuestHeads) do
 		local tts = head.Parent:FindFirstChildWhichIsA("AudioTextToSpeech")
 		tts.Text = textTable[idx]
 		idx += 1
-		TextToSpeech.Speak3D(tts, nil, 0)
+		GeneralRemotes.Whodunnit.Speak3D:InvokeClient(player, tts, nil)
 	end
 end
 
-function WhodunnitGuest.DiscussVoteSelection()
+function WhodunnitGuest.DiscussVoteSelection(player)
 	local DiscussDialogue = {
 		"How to play. Can I be Host Pleez. I no admin abuse.",
-		"According to my calculations, this is reverse psychology. I know exactly what this is as I have watched Life Note. I know exactly who to pick.",
+		"According to my calculations, this is reverse psychology. I know exactly what this is as I have watched Life Note and Protect The 3 foot titan. I know exactly who to pick.",
 	}
-	WhodunnitGuest.AllGuestsSpeak(DiscussDialogue)
+	WhodunnitGuest.AllGuestsSpeak(player, DiscussDialogue)
 end
 
-function WhodunnitGuest.AnnouncePlayerIsMurderer(playerName)
+function WhodunnitGuest.AnnouncePlayerIsMurderer(player)
 	local CaughtDialogue = {
-		`{playerName}, just put the knife in the bag bro`,
-		`I pick {playerName}. Do I even need to explain?`,
-		`{playerName}, thanks for the easy win. You are the weakest link. Goodbye.`,
+		`{player.DisplayName}, just put the knife in the bag bro`,
+		`I pick {player.DisplayName}. Do I even need to explain?`,
+		`{player.DisplayName}, thanks for the easy win. You are the weakest link. Goodbye.`,
 	}
 
-	WhodunnitGuest.AllGuestsSpeak(CaughtDialogue)
+	WhodunnitGuest.AllGuestsSpeak(player, CaughtDialogue)
 end
 
 function WhodunnitGuest.TurnGuestHeadsToPlayer(target)

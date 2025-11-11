@@ -510,8 +510,7 @@ function ServerRemotes.WhodunnitRemotes(player)
 		if CollectionService:HasTag(seat, "WhodunnitSeat") and not WhodunnitMode.SleepAreaUnlocked() then
 			GeneralRemotes.DisableControls:FireClient(player)
 			WhodunnitMode.AssemblyHall()
-		elseif CollectionService:HasTag(seat, "WhodunnitBed") then
-			seat.Disabled = true
+		elseif CollectionService:HasTag(seat, "WhodunnitBed") and not WhodunnitMode.SatOnBed() then
 			GeneralRemotes.DisableControls:FireClient(player)
 			WhodunnitMode.Sleeping()
 		end
