@@ -1,5 +1,7 @@
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
+local MissionsHandler = require(script.MissionsHandler)
+local Glitcher = require(script.NPCs.Glitcher.Glitcher)
 local NPCModule = require(script.NPCs.NPCModule)
 local PlayerInitialize = require(script.Player.PlayerInitialize)
 local RoadEvents = require(script.RoadEvents.RoadEvents)
@@ -10,6 +12,7 @@ local MaxDistBeforeTP = -400
 
 -- handles player spawning
 Players.PlayerAdded:Connect(function(player)
+	MissionsHandler.Initialize()
 	PlayerInitialize.SetupAchievements(player)
 	local safePosition = nil
 
@@ -81,10 +84,13 @@ Players.PlayerAdded:Connect(function(player)
 	WeatherHandler.Start()
 
 	-- road events
-	task.spawn(RoadEvents.SpawnLoop)
+	RoadEvents.SpawnLoop()
 
 	-- traffic lights initialization
 	for _, model in ipairs(CollectionService:GetTagged("TrafficLight")) do
 		TrafficLightModule.StartTrafficLight(model)
 	end
+
+	-- start glitcher movement
+	Glitcher.Initialize()
 end)

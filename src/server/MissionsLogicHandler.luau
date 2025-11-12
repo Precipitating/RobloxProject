@@ -4,7 +4,6 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerStorage = game:GetService("ServerStorage")
-local StarterPlayer = game:GetService("StarterPlayer")
 local TweenService = game:GetService("TweenService")
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
 local HaulJob = require(ReplicatedStorage.NPCs.ManualLabor.HaulJob)
@@ -19,10 +18,9 @@ local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.P
 local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local BulletGuesser = require(ServerScriptService.Server.RoomScripts.Gamba.BulletGuesser)
-local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local GeneralRemotes = ReplicatedStorage.Remotes
-local SafechatterHelpers = require(script.Parent.NPCs.Safechatter.SafechatterHelpers)
+local Safechatter = require(script.Parent.NPCs.Safechatter.Safechatter)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local ZombieJob = require(ReplicatedStorage.NPCs.ZombieJob.ZombieJob)
@@ -85,18 +83,18 @@ end
 
 -- Safechatter
 MissionEventHandlers["GuestMoney"] = function(_)
-	print("GUEST MISSIO NBEGIN")
+	print("GUEST MISSION BEGIN")
 	ServerHelperFunctions.SpawnMissionPositionedModels("MissionModels", "Safechatter", "Mission")
 end
 
 MissionEventHandlers["GuestHorrorMode"] = function(player)
-	local light, pathModel, prevPlayerPos, prevEnemyPos = SafechatterHelpers.InitializeGuestHorrorMode(player)
+	local light, pathModel, prevPlayerPos, prevEnemyPos = Safechatter.InitializeGuestHorrorMode(player)
 
 	-- handle fail obby
-	SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
+	Safechatter.HandleGuestHorrorModeFail(pathModel, light, player)
 
 	-- handle touching the portal
-	SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlayerPos, prevEnemyPos)
+	Safechatter.HandleGuestHorrorModeWin(pathModel, player, prevPlayerPos, prevEnemyPos)
 end
 
 MissionEventHandlers["GuestPwn"] = function(player)

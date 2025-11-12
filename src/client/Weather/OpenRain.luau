@@ -5,7 +5,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Client = Players.LocalPlayer
-local Debug = true
+local Debug = false
 local OpenRain = {}
 OpenRain.__index = OpenRain
 
@@ -182,7 +182,11 @@ function OpenRain:Start()
 			_floor.Parent = workspace
 			_rain.Parent = workspace
 			_rain.Position = Client.Character.PrimaryPart.Position + vector.create(0, 50, 0)
-			_floor.Position = groundHit.Position
+			if groundHit then
+				_floor.Position = groundHit.Position
+			else
+				PRNT("Player is in the air! no ground position identified!")
+			end
 		end
 	end)
 end

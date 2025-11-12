@@ -18,10 +18,12 @@ local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local StarterPlayer = game:GetService("StarterPlayer")
 local UserInputService = game:GetService("UserInputService")
+local Camera = require(script.Parent.Camera)
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
 local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local CameraFollowConnection = nil
 local ClientHelperFunctions = require(script.Parent.ClientHelperFunctions)
+local GreenCircle = require(script.Parent.GreenCircle)
 local WeatherVisualizer = require(script.Parent.Weather.WeatherVisualizer)
 
 -- CupcakeLover
@@ -419,12 +421,37 @@ function ClientRemotes.HomeRemotes()
 	SimulateTVCapture.Initialize()
 end
 
+function ClientRemotes.CameraRemotes()
+	GeneralRemotes.EnableCameraLookDetection.OnClientEvent:Connect(function(enabled, partToFind)
+		if enabled then
+			Camera.StartLooking(partToFind)
+			print("Camera look enabled!")
+		else
+			Camera.DisconnectRenderStepConn()
+		end
+	end)
+end
+
+function ClientRemotes.GreenCircleRemotes()
+	GeneralRemotes.EnableClickToMove.OnClientEvent:Connect(function(val)
+		GreenCircle.SetEnabled(val)
+
+		if GreenCircle.IsEnabled() then
+			GreenCircle.StartClickToMove()
+		else
+			GreenCircle.DisconnectAll()
+		end
+	end)
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.HatDroppingKey()
 	ClientRemotes.GeneralRemotes()
 	ClientRemotes.HomeRemotes()
 	ClientRemotes.PsychoMantisRemotes()
 	ClientRemotes.GUIRemotes()
+	ClientRemotes.CameraRemotes()
+	ClientRemotes.GreenCircleRemotes()
 	ClientRemotes.CashierRemotes()
 	ClientRemotes.CupcakeLoverRemotes()
 	ClientRemotes.CurrencyRemotes()

@@ -21,15 +21,17 @@ function RoadEvents.EnableRoadEvents(enable)
 end
 
 function RoadEvents.SpawnLoop()
-	while RunRoadEvents do
-		-- wait a random amount of time before next attempt
-		task.wait(math.random(30, 300))
+	task.spawn(function()
+		while RunRoadEvents do
+			-- wait a random amount of time before next attempt
+			task.wait(math.random(30, 300))
 
-		-- only spawn if there isn't already an active event
-		if not RoadEvents.IsActive() then
-			RoadEvents.PlayRandomEvent()
+			-- only spawn if there isn't already an active event
+			if not RoadEvents.IsActive() then
+				RoadEvents.PlayRandomEvent()
+			end
 		end
-	end
+	end)
 end
 
 function RoadEvents.SpawnLearnerDriver()

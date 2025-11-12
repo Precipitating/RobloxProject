@@ -7,16 +7,21 @@ local NPCModule = require(ServerScriptService.Server.NPCs.NPCModule)
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 local TalkModuleHelpers = require(ServerScriptService.Server.TalkModuleHelpers)
 local GeneralRemotes = ReplicatedStorage.Remotes
-local SafechatterHelpers = {}
+local DelayHandle = nil
+local HitEventConnected = false
+local TouchedDebounce = false
+local SafechatterHorrorEvent = false
 
-function SafechatterHelpers.ResetGuestHorrorEnvironment(player)
+local Safechatter = {}
+
+function Safechatter.ResetGuestHorrorEnvironment(player)
 	Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
 	Lighting.ClockTime = 12
 	GeneralRemotes.EnableClickToMove:FireClient(player, false)
 	GeneralRemotes.ChangeFOV:FireClient(player, 20)
 end
 
-function SafechatterHelpers.ResetPlayerState(hrp, humanoid)
+function Safechatter.ResetPlayerState(hrp, humanoid)
 	hrp.Velocity = vector.zero
 	hrp.RotVelocity = vector.zero
 	hrp.AssemblyLinearVelocity = vector.zero
@@ -29,13 +34,16 @@ function SafechatterHelpers.ResetPlayerState(hrp, humanoid)
 	end
 end
 
-function SafechatterHelpers.ResetCamera(player)
+function Safechatter.ResetCamera(player)
 	player.CameraMaxZoomDistance = 60
 	player.CameraMinZoomDistance = 0.5
 	GeneralRemotes.ChangeFOV:FireClient(player, 70)
 end
-
-function SafechatterHelpers.InitializeGuestHorrorMode(player)
+function Safechatter.IsSafechatterHorrorEvent()
+	return SafechatterHorrorEvent
+end
+function Safechatter.InitializeGuestHorrorMode(player)
+	SafechatterHorrorEvent = true
 	-- handle camera settings
 	player.CameraMaxZoomDistance = 20
 	player.CameraMinZoomDistance = 20
@@ -97,7 +105,7 @@ function SafechatterHelpers.InitializeGuestHorrorMode(player)
 	return light, pathModel, prevPlayerPos, prevEnemyPos
 end
 
-function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
+function Safechatter.HandleGuestHorrorModeFail(pathModel, light, player)
 	-- handle falling out of obby
 	local NPC = NPCModule:GetNPC("Safechatter")
 	local character = player.Character
@@ -111,6 +119,7 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 	failed = failPart.Touched:Connect(function(hit)
 		if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 			failed:Disconnect()
+			SafechatterHorrorEvent = false
 			GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 			GeneralRemotes.DisableControls:FireClient(player, "Cutscene")
 			-- spawn cutscene model
@@ -123,7 +132,7 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 			NPC:DisconnectAllConnections() -- disable the onTouch trip player
 
 			-- -- stop all player physics movement
-			SafechatterHelpers.ResetPlayerState(hrp, humanoid)
+			Safechatter.ResetPlayerState(hrp, humanoid)
 
 			hrp.Anchored = true
 
@@ -145,7 +154,7 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 			BadgeHandler.awardBadge(player, 2723844059823653)
 
 			-- back to day and remove player light
-			SafechatterHelpers.ResetGuestHorrorEnvironment(player)
+			Safechatter.ResetGuestHorrorEnvironment(player)
 			light:Destroy()
 			task.wait(3)
 			GeneralRemotes.PlayCutscene:FireClient(player, "SafechatterFailedObby")
@@ -155,7 +164,7 @@ function SafechatterHelpers.HandleGuestHorrorModeFail(pathModel, light, player)
 	end)
 end
 
-function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlayerPos, prevEnemyPos)
+function Safechatter.HandleGuestHorrorModeWin(pathModel, player, prevPlayerPos, prevEnemyPos)
 	local safeChatterModel = CollectionService:GetTagged("Safechatter")[1]
 	local NPC = NPCModule:GetNPC("Safechatter")
 	local character = player.Character
@@ -175,6 +184,7 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlay
 		winConnection = winPart.Touched:Connect(function(hit)
 			if hit.Parent == character and hit.Parent:FindFirstChild("Humanoid") then
 				winConnection:Disconnect()
+				SafechatterHorrorEvent = false
 				GeneralRemotes.BlackFade:FireClient(player, 0, 0)
 				-- disconnect all related events
 				GeneralRemotes.EnableClickToMove:FireClient(player, false)
@@ -182,14 +192,14 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlay
 				NPC:DisconnectAllConnections() -- disable the onTouch trip player
 
 				-- reset player velocity etc
-				SafechatterHelpers.ResetPlayerState(hrp, humanoid)
-				SafechatterHelpers.ResetGuestHorrorEnvironment(player)
+				Safechatter.ResetPlayerState(hrp, humanoid)
+				Safechatter.ResetGuestHorrorEnvironment(player)
 
 				-- reset music to main
 				local hasAllSoundsStopped = GeneralRemotes.StopAllMusic:InvokeClient(player)
 
 				-- reset camera settings
-				SafechatterHelpers.ResetCamera(player)
+				Safechatter.ResetCamera(player)
 
 				-- tp back to original position before obby
 				safeChatterModel:PivotTo(prevEnemyPos)
@@ -212,4 +222,43 @@ function SafechatterHelpers.HandleGuestHorrorModeWin(pathModel, player, prevPlay
 	end
 end
 
-return SafechatterHelpers
+-- camera related functions
+function Safechatter.IsTouchDebounce()
+	return TouchedDebounce
+end
+function Safechatter.SetTouchDebounce(val)
+	TouchedDebounce = val
+end
+function Safechatter.HitEventConnected()
+	return HitEventConnected
+end
+
+function Safechatter.SetHitEventConnected(val)
+	HitEventConnected = val
+end
+
+function Safechatter.WeepingAngelMode(player, isLooking)
+	local SafeChatterRef = NPCModule:GetNPC("Safechatter")
+	if isLooking then
+		--player is looking: cancel any delayed move and stop movement
+		if DelayHandle ~= nil then
+			task.cancel(DelayHandle)
+			DelayHandle = nil
+		end
+		SafeChatterRef:ForceStopMovement()
+	else
+		-- player is NOT looking: start delay before movement
+		if player and player.Character then
+			DelayHandle = task.delay(2, function()
+				-- Double-check character still exists
+				if player.Character then
+					SafeChatterRef:StartPathing(player.Character:GetPivot())
+					print("Path resume")
+				end
+				DelayHandle = nil
+			end)
+		end
+	end
+end
+
+return Safechatter

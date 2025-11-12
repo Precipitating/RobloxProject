@@ -678,8 +678,6 @@ function SoundHandler.PlayTheme(name, lockTheme)
 	-- save playback position to emulate pausing
 	-- we have only 1 sound instance hence why normal pausing wont work when we switch sounds thru this
 	Themes[CurrentThemeName].LastPlaybackPosition = CurrentTheme.TimePosition
-
-	PreviousThemeName = CurrentThemeName
 	SoundHandler.StopTheme()
 	CurrentTheme.PlaybackSpeed = 1
 
@@ -724,6 +722,9 @@ function SoundHandler.PauseTheme()
 	if CurrentTheme then
 		if CurrentTheme.IsPlaying then
 			CurrentTheme:Pause()
+			if PreviousThemeName ~= CurrentThemeName then
+				PreviousThemeName = CurrentThemeName
+			end
 		else
 			print("Theme cannot be found to be paused")
 		end

@@ -1,8 +1,14 @@
 local CollectionService = game:GetService("CollectionService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
+local ServerStorage = game:GetService("ServerStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
+--
+local Events = ReplicatedStorage.Events
+local GeneralRemotes = ReplicatedStorage.Remotes
+local ServerTools = ServerStorage.Tools
+--
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
@@ -12,6 +18,7 @@ local PumpkinBossFight = require(script.Parent.NPCs.CupcakeLover.PumpkinBossFigh
 local BosnianRoulette = require(script.Parent.NPCs.Glitcher.BosnianRoulette)
 local TShirtChecker = require(script.Parent.NPCs.Glitcher.TShirtChecker)
 local NPCModule = require(script.Parent.NPCs.NPCModule)
+local Missions = require(ReplicatedStorage.Missions.Server.Missions)
 local ProfileDataModule = require(script.Parent.Player.GetPlayerInfo)
 local RoomHandler = require(script.Parent.RoomHandler)
 local DrivingTest = require(script.Parent.NPCs.DrivingInstructor.DrivingTest)
@@ -21,16 +28,14 @@ local SlotMachine = require(script.Parent.RoomScripts.Gamba.SlotMachine)
 local WheelSpinner = require(script.Parent.RoomScripts.Gamba.WheelSpinner)
 local ServerHelperFunctions = require(script.Parent.ServerHelperFunctions)
 local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
-local Events = ReplicatedStorage.Events
-local GeneralRemotes = ReplicatedStorage.Remotes
-local ServerStorage = game:GetService("ServerStorage")
+local Safechatter = require(ServerScriptService.Server.NPCs.Safechatter.Safechatter)
 local ConnectionManager = require(script.Parent.ConnectionManager)
+local MissionsLogicHandler = require(script.Parent.MissionsLogicHandler)
 local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local PlayerInitialize = require(ServerScriptService.Server.Player.PlayerInitialize)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
 local TimeOfDay = require(ReplicatedStorage.TimeOfDay.TimeOfDay)
-local ServerTools = ServerStorage.Tools
-
+--
 local ServerRemotes = {}
 
 function ServerRemotes.PsychoMantisRemotes()
@@ -619,17 +624,138 @@ function ServerRemotes.EnableHatDropping()
 	end)
 end
 
+function ServerRemotes.CameraRemotes()
+	GeneralRemotes.IsCameraLookingAtPart.OnServerEvent:Connect(function(player, looking)
+		if Safechatter.IsSafechatterHorrorEvent() then
+			print(`player looking at safechatter: {looking}`)
+			Safechatter.WeepingAngelMode(player, looking)
+		end
+	end)
+end
+function ServerRemotes.SafeChatterRemotes()
+	ReplicatedStorage.Events.NPC.WeepingAngelMode.Event:Connect(function(player)
+		local SafeChatterRef = NPCModule:GetNPC("Safechatter")
+		GeneralRemotes.EnableCameraLookDetection:FireClient(player, true, SafeChatterRef.HumanoidRootPart)
+		Safechatter.WeepingAngelMode(player, false)
+
+		-- if NPC touches player, trip them
+		if not Safechatter.HitEventConnected() then
+			for _, part in pairs(SafeChatterRef:GetModel():GetDescendants()) do
+				if part:IsA("BasePart") then
+					local connection = part.Touched:Connect(function(hit)
+						local isPlayer = Players:GetPlayerFromCharacter(hit.Parent)
+						if isPlayer and not Safechatter.IsTouchDebounce() then
+							Safechatter.SetTouchDebounce(true)
+							GeneralRemotes.Trip:FireClient(player)
+							task.wait(1)
+							Safechatter.SetTouchDebounce(false)
+						end
+					end)
+					SafeChatterRef.Connections[connection] = true
+				end
+			end
+			Safechatter.SetHitEventConnected(true)
+		end
+	end)
+end
+
+function ServerRemotes.MissionRemotes()
+	ReplicatedStorage.Missions.Events.UnlockMissionEvent.OnServerEvent:Connect(function(player, missionName)
+		print(missionName)
+		if typeof(missionName) == "string" then
+			Missions.unlockMission(player, missionName)
+			print("Server unlocked the mission " .. missionName)
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.ProgressMissionEvent.OnServerEvent:Connect(function(player, progressDict)
+		if typeof(progressDict) == "table" then
+			GeneralRemotes.PlaySound:InvokeClient(player, "Ping")
+			Missions.addProgressToTask(player, progressDict.MissionName, progressDict.TaskId, progressDict.ProgressVal)
+			print("Progress added to " .. progressDict.MissionName)
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.GiveToolEvent.OnServerInvoke = function(player, data)
+		print(`Server received GiveToolEvent, attempting to give you the tool {data[1]} `)
+		local result = false
+		if typeof(data) == "table" then
+			result = ServerHelperFunctions.GiveTool(player, data)
+			if result then
+				-- if tool uses GUI
+				GeneralRemotes.InitializeGUI:FireClient(player, data[1])
+			end
+		end
+		return result
+	end
+
+	ReplicatedStorage.Missions.Events.ForceEquipEvent.OnServerEvent:Connect(function(player, toolName)
+		print("Force equip tool arrived at server")
+		if typeof(toolName) == "string" then
+			ServerHelperFunctions.ForceEquip(player, toolName)
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.RemoveToolsEvent.OnServerInvoke = function(player, toolsStringList)
+		print("Remove tool arrived at server")
+		if typeof(toolsStringList) == "table" then
+			return ServerHelperFunctions.RemoveTools(player, toolsStringList)
+		end
+		warn("Remove tools argument not a table!")
+		return false
+	end
+
+	ReplicatedStorage.Missions.Events.RemoveEquippedToolEvent.OnServerEvent:Connect(function(player)
+		print("Remove equipped tools arrived at server")
+		ServerHelperFunctions.RemoveEquippedTool(player)
+	end)
+
+	ReplicatedStorage.Missions.Events.SetMeshVisibilityEvent.OnServerEvent:Connect(function(_, meshTagList)
+		print("Set mesh visibility arrived at server")
+		if typeof(meshTagList) == "table" then
+			ServerHelperFunctions.SetMeshVisibility(meshTagList)
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.SetDialogueFileEvent.OnServerEvent:Connect(function(_, fromToTable)
+		print("Set dialogue arrived at server")
+		if typeof(fromToTable) == "table" then
+			ServerHelperFunctions.SetNPCDialogueFile(fromToTable)
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.ExecuteScenarioEvent.OnServerEvent:Connect(function(player, eventName)
+		print(` {player} calling server mission event {eventName}...`)
+		local handler = MissionsLogicHandler[eventName]
+		if handler then
+			handler(player)
+		else
+			print("Event handler not found. Check spelling")
+		end
+	end)
+
+	ReplicatedStorage.Missions.Events.DestroyObjectEvent.OnServerEvent:Connect(function(_, objectTagList)
+		print("Destroy object arrived at server")
+		if typeof(objectTagList) == "table" then
+			ServerHelperFunctions.DestroyObject(objectTagList)
+		end
+	end)
+end
+
 function ServerRemotes.Initialize(player)
+	ServerRemotes.MissionRemotes()
 	ServerRemotes.EnableHatDropping()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
 	ServerRemotes.ModelRemotes()
 	ServerRemotes.GlitcherRemotes()
 	ServerRemotes.HouseRemotes()
+	ServerRemotes.CameraRemotes()
+	ServerRemotes.SafeChatterRemotes()
 	ServerRemotes.DrivingInstructorRemotes()
 	ServerRemotes.MoneyRemotes()
 	ServerRemotes.CashierRemotes()
-	ServerRemotes.GambaRemotes()
+	--ServerRemotes.GambaRemotes()
 	ServerRemotes.CupcakeLoverRemotes()
 	ServerRemotes.JobRemotes()
 	ServerRemotes.RoadEventsRemotes()
