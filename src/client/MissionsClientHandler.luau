@@ -28,4 +28,5 @@ MissionsClientHandler["R2DPumpkinBoss"] = function()
 	SoundModule.PlayTheme("PumpkinBossTheme", true)
 	InitializeGUIModule["R2DPumpkinBoss"]()
 end
+
 return MissionsClientHandler

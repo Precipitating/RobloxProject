@@ -1,5 +1,8 @@
 local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
+local UserInputService = game:GetService("UserInputService")
+local InitializeGUIModule = require(script.Parent.InitializeGUIModule)
+local CameraTool = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Photographer.CameraTool)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Player = Players.LocalPlayer
@@ -76,6 +79,36 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 			BallTerrainDestroy(result)
 		end
 	end)
+end
+
+InitializeToolModule["Camera"] = function(tool)
+	CameraTool.Initialize()
+
+	local function EquipCamera()
+		Player.CameraMode = Enum.CameraMode.LockFirstPerson
+		UserInputService.MouseIconEnabled = false
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+	end
+
+	local function UnequipCamera()
+		Player.CameraMode = Enum.CameraMode.Classic
+		UserInputService.MouseIconEnabled = true
+		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+	end
+
+	trackConnect("Camera", tool.Equipped, function()
+		EquipCamera()
+	end)
+
+	trackConnect("Camera", tool.Unequipped, function()
+		UnequipCamera()
+	end)
+
+	trackConnect("Camera", tool.Activated, function()
+		CameraTool.TakePhotograph()
+	end)
+
+	print("Camera tool initialized!")
 end
 
 return InitializeToolModule

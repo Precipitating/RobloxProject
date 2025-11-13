@@ -33,6 +33,7 @@ local Destroy = true
 local NoYield = false
 local SafeMode = true
 
+local ScreenGUIHandler = require(StarterPlayer.StarterPlayerScripts.Client.ScreenGUIHandler)
 local UIHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.UIHelperFunctions)
 local TextToSpeech = require(ReplicatedStorage.TextToSpeech)
 local Cutscene = require(CutsceneModule)
@@ -969,13 +970,7 @@ end
 
 -- Play a cutscene with optional per-keyframe function
 function CutsceneClientHandler.Play(name)
-	StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
-	-- disable custom GUI
-	for _, gui in ipairs(PlayerGui:GetChildren()) do
-		if gui:IsA("ScreenGui") and gui.Name ~= "BlackScreen" then
-			gui.Enabled = false
-		end
-	end
+	ScreenGUIHandler.DisableAllGUI(true)
 	GeneralRemotes.EnableRoadEvents:FireServer(false)
 	UserInputService.MouseIconEnabled = false
 	GeneralRemotes.EnableAllNPCPrompts:FireServer(false)

@@ -40,6 +40,11 @@ function ServerHelperFunctions.GiveTool(player, data)
 	local clone = tool:Clone()
 	clone.Parent = player.Backpack
 	GeneralRemotes.PlaySound:InvokeClient(player, "Rustle")
+
+	-- if tool initializes
+	GeneralRemotes.InitializeGUI:FireClient(player, data[1])
+	GeneralRemotes.InitializeTool:FireClient(player, clone)
+
 	print(data[1] .. " should be in your backpack")
 	return true
 end

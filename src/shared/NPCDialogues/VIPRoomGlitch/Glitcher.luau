@@ -3,7 +3,7 @@ return {
 		Glitcher = {
 			Name = "Dia",
 			Portrait = "rbxassetid://15251428254",
-			Dialogue = "<b>COME ON!!!!</b><br/>LET...<br/>ME...<br/>IN...<br/>",
+			Dialogue = "<b>COME ON!</b><br/>LET!<br/>ME!<br/>IN!<br/>",
 			VoiceId = "8",
 			Pitch = 1,
 			Speed = 1,

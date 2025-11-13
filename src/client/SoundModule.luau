@@ -243,6 +243,10 @@ local Themes = {
 		SoundId = "rbxassetid://1845756489",
 		Volume = 0.05,
 	},
+	Eerie = {
+		SoundId = "rbxassetid://9112775414",
+		Volume = 0.5,
+	},
 }
 local OneShots = {
 	Anvil = {
@@ -619,6 +623,10 @@ local OneShots = {
 	},
 	Pop = {
 		SoundId = "rbxassetid://1289263994",
+		Volume = 1,
+	},
+	CameraFlash = {
+		SoundId = "rbxassetid://131275645840932",
 		Volume = 1,
 	},
 }

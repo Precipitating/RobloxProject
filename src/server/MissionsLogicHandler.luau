@@ -429,4 +429,9 @@ end
 MissionEventHandlers["WhodunnitStart"] = function(player)
 	WhodunnitMode.Start(player)
 end
+
+MissionEventHandlers["PhotoJob"] = function(player)
+	ServerHelperFunctions.GiveTool(player, { "Camera", true })
+end
+
 return MissionEventHandlers

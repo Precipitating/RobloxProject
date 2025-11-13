@@ -681,10 +681,6 @@ function ServerRemotes.MissionRemotes()
 		local result = false
 		if typeof(data) == "table" then
 			result = ServerHelperFunctions.GiveTool(player, data)
-			if result then
-				-- if tool uses GUI
-				GeneralRemotes.InitializeGUI:FireClient(player, data[1])
-			end
 		end
 		return result
 	end

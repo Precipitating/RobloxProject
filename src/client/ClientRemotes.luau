@@ -18,7 +18,8 @@ local TeleportService = game:GetService("TeleportService")
 local RunService = game:GetService("RunService")
 local StarterPlayer = game:GetService("StarterPlayer")
 local UserInputService = game:GetService("UserInputService")
-local Camera = require(script.Parent.Camera)
+local CameraLookDetector = require(script.Parent.CameraLookDectector)
+local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
 local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local CameraFollowConnection = nil
@@ -210,6 +211,12 @@ function ClientRemotes.GeneralRemotes()
 		end
 		CutsceneModule.Play(name)
 		CutsceneRan = true
+	end)
+
+	GeneralRemotes.InitializeTool.OnClientEvent:Connect(function(tool)
+		if InitializeToolModule[tool.Name] then
+			InitializeToolModule[tool.Name](tool)
+		end
 	end)
 end
 
@@ -421,13 +428,13 @@ function ClientRemotes.HomeRemotes()
 	SimulateTVCapture.Initialize()
 end
 
-function ClientRemotes.CameraRemotes()
+function ClientRemotes.CameraLookDetectorRemotes()
 	GeneralRemotes.EnableCameraLookDetection.OnClientEvent:Connect(function(enabled, partToFind)
 		if enabled then
-			Camera.StartLooking(partToFind)
+			CameraLookDetector.StartLooking(partToFind)
 			print("Camera look enabled!")
 		else
-			Camera.DisconnectRenderStepConn()
+			CameraLookDetector.DisconnectRenderStepConn()
 		end
 	end)
 end
@@ -450,7 +457,7 @@ function ClientRemotes.Initialize()
 	ClientRemotes.HomeRemotes()
 	ClientRemotes.PsychoMantisRemotes()
 	ClientRemotes.GUIRemotes()
-	ClientRemotes.CameraRemotes()
+	ClientRemotes.CameraLookDetectorRemotes()
 	ClientRemotes.GreenCircleRemotes()
 	ClientRemotes.CashierRemotes()
 	ClientRemotes.CupcakeLoverRemotes()

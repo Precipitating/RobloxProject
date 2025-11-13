@@ -28,6 +28,11 @@ function TextToSpeech.Speak(text, attempts)
 	local cleanedText = TextToSpeech.CleanTextForTTS(text)
 	TextToSpeechHandle.Text = cleanedText
 
+	if string.match(text, "^%.+$") then
+		warn("Only dots, don't play TTS")
+		return false
+	end
+
 	local status = TextToSpeechHandle:LoadAsync()
 	if status ~= Enum.AssetFetchStatus.Success then
 		warn("TTS Load failed:", status.Name)
