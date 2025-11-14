@@ -61,7 +61,7 @@ function CameraTool.SnapPictureOfPlayer()
 		ScreenGUIHandler.DisableAllGUI(false, true)
 		UserInputService.MouseIconEnabled = true
 		ClientHelperFunctions.ChangeCameraSubject(nil)
-		--light.Enabled = false
+		light.Enabled = false
 	end
 
 	ClientHelperFunctions.ChangeCameraSubject(camPos.CFrame)
