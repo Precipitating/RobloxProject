@@ -629,6 +629,10 @@ local OneShots = {
 		SoundId = "rbxassetid://131275645840932",
 		Volume = 1,
 	},
+	HorrorSting = {
+		SoundId = "rbxassetid://1014740409",
+		Volume = 3,
+	},
 }
 local SoundHandler = {}
 

@@ -20,6 +20,7 @@ local StarterPlayer = game:GetService("StarterPlayer")
 local UserInputService = game:GetService("UserInputService")
 local CameraLookDetector = require(script.Parent.CameraLookDectector)
 local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
+local CameraTool = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Photographer.CameraTool)
 local SetMonitorPicture = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.PsychoMantis.SetMonitorPicture)
 local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local CameraFollowConnection = nil
@@ -451,6 +452,14 @@ function ClientRemotes.GreenCircleRemotes()
 	end)
 end
 
+function ClientRemotes.PhotographerRemotes()
+	GeneralRemotes.Photographer.SetPlayerPhoto.OnClientEvent:Connect(function(model)
+		local decal =
+			model:WaitForChild("Laptop"):WaitForChild("Screen"):WaitForChild("SurfaceGui"):WaitForChild("ImageLabel")
+		decal.Image = CameraTool.GetPlayerPicture()
+	end)
+end
+
 function ClientRemotes.Initialize()
 	ClientRemotes.HatDroppingKey()
 	ClientRemotes.GeneralRemotes()
@@ -467,6 +476,7 @@ function ClientRemotes.Initialize()
 	ClientRemotes.TVHomeRemotes()
 	ClientRemotes.FrankensteinRemotes()
 	ClientRemotes.WhodunnitRemotes()
+	ClientRemotes.PhotographerRemotes()
 end
 
 return ClientRemotes

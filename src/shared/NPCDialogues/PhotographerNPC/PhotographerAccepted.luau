@@ -1,17 +1,22 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local StarterPlayer = game:GetService("StarterPlayer")
+local InitializeToolModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeToolModule)
 local CameraTool = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Photographer.CameraTool)
+local Events = ReplicatedStorage.Missions.Events
 local FailDialogue = {
 	"What is this bro?",
 	"What im I looking at?",
-	"Gnarly dude...",
-	"Bruh...",
+	"Sir this isn't what I wanted...",
+	"Bruh this isn't the target...",
+	"Huh?",
 }
 local Nodes = {}
+local RNG = Random.new()
 local function Done()
-	if CameraTool.ShotsLeft() >= 0 then
+	if CameraTool.ShotsLeft() > 0 then
 		return {
 			Name = "???",
-			Portrait = "rbxassetid://8474920817",
+			Portrait = "rbxassetid://18434768340",
 			Dialogue = "Done or what?",
 			VoiceId = "3",
 			Pitch = 4,
@@ -32,7 +37,7 @@ local function Done()
 	else
 		return {
 			Name = "???",
-			Portrait = "rbxassetid://8474920817",
+			Portrait = "rbxassetid://18434768340",
 			Dialogue = "Done or what?",
 			VoiceId = "3",
 			Pitch = 4,
@@ -55,12 +60,13 @@ local function Done()
 end
 
 local function ProcessCorrectPhotos()
+	InitializeToolModule.DisconnectAll("Camera")
+	Events.RemoveToolsEvent:InvokeServer({ "Camera" })
 	local photosList = CameraTool.GetCorrectPhotos()
-	local size = #photosList
+	local correctPhotosCount = CameraTool.CorrectPhotosCount()
 	local idx = 1
-
-	-- no correct
-	if size == 0 then
+	-- none correct
+	if correctPhotosCount == 0 then
 		Nodes["NoCorrect"] = {
 			Name = "???",
 			Portrait = "rbxassetid://6568954064",
@@ -82,9 +88,9 @@ local function ProcessCorrectPhotos()
 	end
 	-- create dialogue for each correct
 	for _, photoData in pairs(photosList) do
-		if idx + 1 > size then
+		if idx + 1 > correctPhotosCount then
 			-- last entry before fail check
-			Nodes[`Correct{tostring(idx)}`] = {
+			Nodes[`Correct{idx}`] = {
 				Name = "???",
 				Portrait = photoData.Id,
 				Dialogue = photoData.Text,
@@ -101,8 +107,9 @@ local function ProcessCorrectPhotos()
 					},
 				},
 			}
+			break
 		else
-			Nodes[`Correct{tostring(idx)}`] = {
+			Nodes[`Correct{idx}`] = {
 				Name = "???",
 				Portrait = photoData.Id,
 				Dialogue = photoData.Text,
@@ -120,6 +127,7 @@ local function ProcessCorrectPhotos()
 				},
 			}
 		end
+		idx += 1
 	end
 	return Nodes["Correct1"]
 end
@@ -147,11 +155,11 @@ local function ProcessFailPhotos()
 	end
 
 	for idx, decalId in ipairs(photosList) do
-		if idx == #photosList then
-			Nodes[{ `Fail{idx}` }] = {
+		if idx >= #photosList then
+			Nodes[`Fail{idx}`] = {
 				Name = "???",
 				Portrait = decalId,
-				Dialogue = FailDialogue[math.random(1, #FailDialogue)],
+				Dialogue = FailDialogue[RNG:NextInteger(1, #FailDialogue)],
 				Responses = {
 					{
 						Text = "...",
@@ -168,7 +176,7 @@ local function ProcessFailPhotos()
 			break
 		end
 		--
-		Nodes[{ `Fail{idx}` }] = {
+		Nodes[`Fail{idx}`] = {
 			Name = "???",
 			Portrait = decalId,
 			Dialogue = FailDialogue[math.random(1, #FailDialogue)],
@@ -199,10 +207,12 @@ local function ProcessEnd()
 			Responses = {
 				{
 					Text = "NOOOOOOOOOOOOOOOOOO",
+					ExecuteScenarioEvent = "PhotographerFail",
 					Type = "CloseCutscene",
 				},
 				{
-					Text = "WHY DO I NEED TO CENTER IT?<br/>LEARN TO SCRIPT!!!",
+					Text = "WHY DO I NEED TO CENTER IT? LEARN TO SCRIPT!",
+					ExecuteScenarioEvent = "PhotographerFail",
 					Type = "CloseCutscene",
 				},
 			},
@@ -210,16 +220,18 @@ local function ProcessEnd()
 	else
 		return {
 			Name = "???",
-			Portrait = "rbxassetid://16909037668",
+			Portrait = "rbxassetid://12934920558",
 			Dialogue = "YOU DID IT! I WILL DESTROY YOUR PHOTO AND I GET PAID WELL! HORAAY!",
 			Responses = {
 				{
 					Text = "Good, I am pro photographer.",
 					Type = "CloseCutscene",
+					ExecuteScenarioEvent = "PhotographerWin",
 				},
 				{
-					Text = "Wait you get paid...?",
+					Text = "Where's my cut..?",
 					Type = "CloseCutscene",
+					ExecuteScenarioEvent = "PhotographerWin",
 				},
 			},
 		}

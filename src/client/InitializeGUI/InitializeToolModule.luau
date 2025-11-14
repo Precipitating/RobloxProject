@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
 local UserInputService = game:GetService("UserInputService")
-local InitializeGUIModule = require(script.Parent.InitializeGUIModule)
 local CameraTool = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Photographer.CameraTool)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
@@ -12,6 +11,7 @@ local InitializeToolModule = {}
 local Connections = {}
 
 function InitializeToolModule.DisconnectAll(name)
+	Character.Humanoid:UnequipTools()
 	if not Connections[name] then
 		warn("Disconnect failed, key doesn't exist")
 		return
@@ -83,17 +83,38 @@ end
 
 InitializeToolModule["Camera"] = function(tool)
 	CameraTool.Initialize()
+	local MIN_FOV = 20
+	local MAX_FOV = 70
+	local ZOOM_STEP = 2
 
 	local function EquipCamera()
 		Player.CameraMode = Enum.CameraMode.LockFirstPerson
 		UserInputService.MouseIconEnabled = false
 		GeneralRemotes.EnableAllNPCPrompts:FireServer(false)
+
+		trackConnect("CameraScroll", UserInputService.InputChanged, function(input, _)
+			if input.UserInputType == Enum.UserInputType.MouseWheel then
+				local cam = workspace.CurrentCamera
+				if input.Position.Z > 0 then
+					-- scroll up = zoom in
+					cam.FieldOfView = math.clamp(cam.FieldOfView - ZOOM_STEP, MIN_FOV, MAX_FOV)
+				else
+					-- scroll down = zoom out
+					cam.FieldOfView = math.clamp(cam.FieldOfView + ZOOM_STEP, MIN_FOV, MAX_FOV)
+				end
+			end
+			local fov = workspace.CurrentCamera.FieldOfView
+			fov = fov + 1
+		end)
 	end
 
 	local function UnequipCamera()
 		Player.CameraMode = Enum.CameraMode.Classic
 		UserInputService.MouseIconEnabled = true
 		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
+
+		InitializeToolModule.DisconnectAll("CameraScroll")
+		workspace.CurrentCamera.FieldOfView = 70
 	end
 
 	trackConnect("Camera", tool.Equipped, function()

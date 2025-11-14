@@ -1,27 +1,34 @@
-return {
-	Nodes = {
-		Photographer = {
-			Name = "???",
-			Portrait = "rbxassetid://8474920817",
-			Dialogue = "...",
-			VoiceId = "3",
-			Pitch = 4,
-			Speed = 1,
-			Volume = 1,
-			PlayTheme = "Eerie",
-			PlaySound = "CameraFlash",
-			Responses = {
-				{
-					Text = "DID YOU TAKE A PIC OF ME?",
-					Type = "NextMessage",
-					NextId = "One",
-				},
-				{
-					Text = "Fast walk past",
-					Type = "Close",
-				},
+local StarterPlayer = game:GetService("StarterPlayer")
+local CameraTool = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Photographer.CameraTool)
+local function StartDialogue()
+	CameraTool.SnapPictureOfPlayer()
+	return {
+		Name = "???",
+		Portrait = "rbxassetid://76158188409836",
+		Dialogue = "...",
+		VoiceId = "3",
+		Pitch = 4,
+		Speed = 1,
+		Volume = 1,
+		PlayTheme = "Eerie",
+		PlaySound = "CameraFlash",
+		Responses = {
+			{
+				Text = "DID YOU TAKE A PIC OF ME?",
+				Type = "NextMessage",
+				NextId = "One",
+			},
+			{
+				Text = "Fast walk past",
+				Type = "Close",
 			},
 		},
+	}
+end
+
+return {
+	Nodes = {
+		Photographer = StartDialogue,
 
 		One = {
 			Name = "???",
@@ -112,7 +119,7 @@ return {
 		Six = {
 			Name = `???"`,
 			Portrait = "rbxassetid://1592626808",
-			Dialogue = "Theres only 5 shots left.<br/> Tell you what, if you do my job and take 5 shots of a list of things, I will destroy the photo of you.",
+			Dialogue = "Theres only 5 shots left.<br/>Tell you what, if you do my job and take 5 shots of a list of things, I will destroy the photo of you.",
 			Responses = {
 				{
 					Text = "Fine.",
@@ -128,7 +135,7 @@ return {
 		Seven = {
 			Name = `???"`,
 			Portrait = "rbxassetid://5055375402",
-			Dialogue = "Excellent, take my camera and take a picture of:<br/>The Ginger Man Portrait<br/>A Dancing Geeza<br/>Amy<br/>Homeless Guy<br/>Whodunnit Guy<br/>Make sure it's centered and not too far away.",
+			Dialogue = "Excellent, take my camera and take a picture of:<br/>The Ginger Man Portrait.<br/>A Dancing Eggman.<br/>Amy.<br/>Homeless Guy.<br/>Whodunnit Guy.<br/>Make sure it's centered and not too far away and you can zoom in/out via scroll wheel.",
 			Responses = {
 				{
 					Text = "You better delete it.",

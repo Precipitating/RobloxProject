@@ -66,6 +66,7 @@ local voices = {
 	Damon = { VoiceId = "1", Pitch = 2, Speed = 1, Volume = 3 },
 	CitizenGirl = { VoiceId = "6", Pitch = 1, Speed = 1, Volume = 3 },
 	Director = { VoiceId = "3", Pitch = -6, Speed = 1, Volume = 3 },
+	Rainbolt = { VoiceId = "7", Pitch = -8, Speed = 1, Volume = 3 },
 }
 
 local function TweenLookAtCamera(duration, part)
@@ -821,6 +822,31 @@ CutsceneClientHandler.KeyframeHandler = {
 			UIHelperFunctions.AdjustBlackScreen(7, 0)
 		end
 	end,
+
+	PhotographerFail = function(instruction, _, _)
+		if instruction == 1 then
+			RunCutsceneAction(function()
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
+				task.wait(5)
+			end)
+		elseif instruction == 2 then
+			RunCutsceneAction(function()
+				Speak("Rainbolt", "Well well well, a new street added to Roogle Maps huh?")
+				Speak("Rainbolt", "I know exactly where this is")
+				Speak("Rainbolt", "The pavement using the 1932 chimmy chonger design")
+				Speak(
+					"Rainbolt",
+					"The four way with the green light state at exactly four thirty two P.M sharp using the prefabricated UK design from the Goo Goo Ging Gan era"
+				)
+				Speak("Rainbolt", "Most importantly, the extremely bang average looking robloxian covering the screen")
+				Speak("Rainbolt", "It's junction street")
+				task.wait(2)
+				Speak("Rainbolt", `I know you're looking at me, {Player.DisplayName}, i'm coming for you"`)
+				SoundModule.PlaySound("HorrorSting")
+				UIHelperFunctions.AdjustBlackScreen(0, 0)
+			end)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -952,6 +978,10 @@ CutsceneClientHandler.Initialize = {
 	ThiefSuccess = function()
 		Music.SoundId = "rbxassetid://106495808773197"
 		Music.Volume = 0.1
+	end,
+	PhotographerFail = function()
+		Music.SoundId = "rbxassetid://9112775175"
+		Music.Volume = 0.5
 	end,
 }
 

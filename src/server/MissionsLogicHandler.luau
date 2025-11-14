@@ -433,5 +433,14 @@ end
 MissionEventHandlers["PhotoJob"] = function(player)
 	ServerHelperFunctions.GiveTool(player, { "Camera", true })
 end
+MissionEventHandlers["PhotographerFail"] = function(player)
+	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
+	local model =
+		ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Photographer", "PhotographerFailModel", nil)
+	GeneralRemotes.Photographer.SetPlayerPhoto:FireClient(player, model)
+
+	GeneralRemotes.PlayCutscene:FireClient(player, "PhotographerFail")
+	BadgeHandler.awardBadge(player, 3460379227107089)
+end
 
 return MissionEventHandlers

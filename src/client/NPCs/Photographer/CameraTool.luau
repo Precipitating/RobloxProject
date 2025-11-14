@@ -2,7 +2,9 @@ local CaptureService = game:GetService("CaptureService")
 local Players = game:GetService("Players")
 local StarterPlayer = game:GetService("StarterPlayer")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local CameraLookDectector = require(StarterPlayer.StarterPlayerScripts.Client.CameraLookDectector)
+local ClientHelperFunctions = require(StarterPlayer.StarterPlayerScripts.Client.ClientHelperFunctions)
 local ScreenGUIHandler = require(StarterPlayer.StarterPlayerScripts.Client.ScreenGUIHandler)
 local SoundModule = require(StarterPlayer.StarterPlayerScripts.Client.SoundModule)
 local Player = Players.LocalPlayer
@@ -19,6 +21,7 @@ local TweenInfo = TweenInfo.new(
 	0,
 	true -- reverses on
 )
+local BasePhotoDistance = 30
 
 local BlockCastParams = RaycastParams.new()
 BlockCastParams.CollisionGroup = "CameraTarget"
@@ -27,6 +30,7 @@ local TopGoal = { Position = UDim2.fromScale(0.5, 0) }
 local BottomGoal = { Position = UDim2.fromScale(0.5, 1) }
 local GUIHandle = nil
 local IsActive = false
+local PlayerPicture = nil
 
 local CameraTool = {}
 
@@ -39,6 +43,35 @@ function CameraTool.Initialize()
 	TweenBottom = TweenService:Create(GUIHandle.BottomFrame, TweenInfo, BottomGoal)
 end
 
+function CameraTool.GetPlayerPicture()
+	return PlayerPicture
+end
+
+function CameraTool.SnapPictureOfPlayer()
+	local camPos = workspace
+		:WaitForChild("NPCs")
+		:WaitForChild("Photographer")
+		:WaitForChild("Photographer")
+		:WaitForChild("CameraPos")
+
+	local light = camPos:WaitForChild("SpotLight")
+
+	local function SetPlayerPic(decalID)
+		PlayerPicture = decalID
+		ScreenGUIHandler.DisableAllGUI(false, true)
+		UserInputService.MouseIconEnabled = true
+		ClientHelperFunctions.ChangeCameraSubject(nil)
+		--light.Enabled = false
+	end
+
+	ClientHelperFunctions.ChangeCameraSubject(camPos.CFrame)
+	ScreenGUIHandler.DisableAllGUI(true, true)
+	UserInputService.MouseIconEnabled = false
+	light.Enabled = true
+	task.wait()
+	CaptureService:CaptureScreenshot(SetPlayerPic)
+end
+
 function CameraTool.Cleanup()
 	GUIHandle:Destroy()
 	GUIHandle = nil
@@ -47,6 +80,7 @@ function CameraTool.Cleanup()
 	ShotsLeft = 5
 	FailPhotoIds = {}
 	CorrectPhotos = {}
+	PlayerPicture = nil
 end
 function CameraTool.GetFailPhotoIds()
 	return FailPhotoIds
@@ -65,8 +99,15 @@ function CameraTool.CorrectPhotosCount()
 end
 
 local function PhotographedTarget(decalID)
-	local result = CameraLookDectector.CameraBlockCast(4, 50, BlockCastParams)
+	local scaledDistWithFOV = BasePhotoDistance
+		* (math.tan(math.rad(70) / 2) / math.tan(math.rad(workspace.CurrentCamera.FieldOfView) / 2))
+
+	print(scaledDistWithFOV)
+
+	local result = CameraLookDectector.CameraBlockCast(4, scaledDistWithFOV, BlockCastParams)
 	if not result then
+		table.insert(FailPhotoIds, decalID)
+		print("Wrong photo taken")
 		return
 	end
 	if result then
@@ -87,8 +128,6 @@ local function PhotographedTarget(decalID)
 				print(modelAttribute)
 			end
 		end
-	else
-		table.insert(FailPhotoIds, decalID)
 	end
 end
 local function OnShotTaken(decalID)
