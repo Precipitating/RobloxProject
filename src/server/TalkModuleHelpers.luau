@@ -5,7 +5,7 @@ local CanTalk = true
 local function DisableAllPrompts(canTalk)
 	local npcs = CollectionService:GetTagged("NPC")
 	for _, npc in ipairs(npcs) do
-		local prompt = npc:FindFirstChild("ProximityPrompt")
+		local prompt = npc:FindFirstChildOfClass("ProximityPrompt")
 		if prompt then
 			prompt.Enabled = canTalk
 		end

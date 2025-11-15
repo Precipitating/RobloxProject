@@ -3,13 +3,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
-local StarterGui = game:GetService("StarterGui")
 local StarterPlayer = game:GetService("StarterPlayer")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
-local Player = Players.LocalPlayer
-local PlayerGui = Player:WaitForChild("PlayerGui")
 
 local CodesOtaku = ReplicatedStorage.CodesOtaku
 local CutsceneModule = CodesOtaku:WaitForChild("CutsceneModule")
@@ -67,6 +64,8 @@ local voices = {
 	CitizenGirl = { VoiceId = "6", Pitch = 1, Speed = 1, Volume = 3 },
 	Director = { VoiceId = "3", Pitch = -6, Speed = 1, Volume = 3 },
 	Rainbolt = { VoiceId = "7", Pitch = -8, Speed = 1, Volume = 3 },
+	GoogleGuy = { VoiceId = "7", Pitch = -1, Speed = 1, Volume = 3 },
+	Photographer = { VoiceId = "3", Pitch = 4, Speed = 1, Volume = 3 },
 }
 
 local function TweenLookAtCamera(duration, part)
@@ -847,6 +846,66 @@ CutsceneClientHandler.KeyframeHandler = {
 			end)
 		end
 	end,
+
+	PhotographerWin = function(instruction, _, _)
+		if instruction == 1 then
+			RunCutsceneAction(function()
+				UIHelperFunctions.AdjustBlackScreen(1, 1)
+				task.wait(1)
+			end)
+		elseif instruction == 4 then
+			RunCutsceneAction(function()
+				task.wait(5)
+				Speak("Photographer", "Hey bro-mama, i've got the photos taken at junction street. ")
+				Speak("GoogleGuy", "Just put the photos on the table, employee number 15832.")
+				Speak(
+					"Photographer",
+					"Before I do so, i'm assuming the previous rate agreed to per picture is still in effect?"
+				)
+				Speak(
+					"GoogleGuy",
+					"You'll find out soon enough when you meet again, hurry up and give me the photos, each second wasted is a gallon of water consumed to keep the AI running."
+				)
+				Speak("Photographer", "What are you talking about meeting again? It's 1000 robux per picture, right?")
+				Speak(
+					"GoogleGuy",
+					"Last chance, give the photos or you'll no longer be hired again for another job like this."
+				)
+				Speak("Photographer", "Fine.")
+				SoundModule.PlaySound("Rustle", nil, true)
+				Speak("GoogleGuy", "Good photos, much higer quality then the ones you usually take...")
+				Speak(
+					"Photographer",
+					"Yeah, upped my game since it was the infamous junction street after all. Now give me the money"
+				)
+				Speak("GoogleGuy", "Stop joking, why would I pay you guys again")
+				Speak("Photographer", "What are you talking ABOUT? I DID THIS ALL MYSELF, A SOLO JOB. ")
+				Speak(
+					"GoogleGuy",
+					"LOOK, YOUR PAL ALREADY TOLD ME YOU WOULD DELIVER THE PHOTOS, I GAVE HIM THE CASH SO YOU CAN SPLIT IT LATER. STOP TRYING TO SCAM ME FOR ANOTHER PAYMENT"
+				)
+				Speak(
+					"Photographer",
+					"WHO ARE YOU TALKING ABOUT? WHY DID YOU GIVE SOME RANDOM SOME MONEY BEFORE GIVING ANYTHING"
+				)
+				Speak(
+					"GoogleGuy",
+					"HE KNEW YOUR NAME, YOUR CURRENT TASK ON JUNCTION STREET WHICH IS IMPOSSIBLE DUE TO N.D.A, WHICH PHOTOS TO TAKE AND A PICTURE OF YOUR MUG ON HIS PHONE, HOW WOULD HE KNOW IF YOU DID IT SOLO?"
+				)
+				Speak("Photographer", "STOP TAKING THE FOCUS OFF THE POINT YOU GAVE IT TO A RANDOM GUY OTHER THAN ME")
+				Speak(
+					"GoogleGuy",
+					"WHATS DONE IS DONE, YOU'RE HIDING SOMETHING AND THE MONEY ISN'T HERE, GO FIND THAT ROBLOXIAN AND GET YOUR SPLIT YOURSELF, FOOL! BY THE WAY YOU'RE FIRED PUNK!"
+				)
+				Speak("Photographer", "WAIT I WAS JOKING. PLEASE RECONSIDER IT WAS A RAGE BAIT. I NEED THIS!")
+				UIHelperFunctions.AdjustBlackScreen(0, 0)
+				task.wait(1)
+				Speak("GoogleGuy", "No!")
+				SoundModule.PlaySound("MetalDoorClose", nil, true)
+				SoundModule.PlaySound("SadTrombone")
+			end)
+		end
+	end,
 }
 
 CutsceneClientHandler.CutsceneFinishedHandler = {
@@ -981,6 +1040,10 @@ CutsceneClientHandler.Initialize = {
 	end,
 	PhotographerFail = function()
 		Music.SoundId = "rbxassetid://9112775175"
+		Music.Volume = 0.5
+	end,
+	PhotographerWin = function()
+		Music.SoundId = "rbxassetid://86633948901635"
 		Music.Volume = 0.5
 	end,
 }

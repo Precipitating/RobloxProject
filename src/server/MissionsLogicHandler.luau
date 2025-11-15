@@ -443,4 +443,12 @@ MissionEventHandlers["PhotographerFail"] = function(player)
 	BadgeHandler.awardBadge(player, 3460379227107089)
 end
 
+MissionEventHandlers["PhotographerWin"] = function(player)
+	GeneralRemotes.BlackFade:FireClient(player, 0, 0)
+	ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Photographer", "PhotographerWinModel", nil)
+
+	GeneralRemotes.PlayCutscene:FireClient(player, "PhotographerWin")
+	BadgeHandler.awardBadge(player, 1724723416621681)
+end
+
 return MissionEventHandlers

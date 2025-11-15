@@ -145,8 +145,8 @@ function TalkModule.hideUI(responseData)
 		if CurrentPrompt and responseData.Type ~= "CloseCutscene" then
 			CurrentPrompt.Enabled = true
 			CurrentPrompt = nil
+			GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 		end
-		GeneralRemotes.EnableAllNPCPrompts:FireServer(true)
 	end)
 end
 

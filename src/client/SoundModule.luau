@@ -633,6 +633,14 @@ local OneShots = {
 		SoundId = "rbxassetid://1014740409",
 		Volume = 3,
 	},
+	MetalDoorClose = {
+		SoundId = "rbxassetid://5930776732",
+		Volume = 10,
+	},
+	SadTrombone = {
+		SoundId = "rbxassetid://190705984",
+		Volume = 1,
+	},
 }
 local SoundHandler = {}
 
