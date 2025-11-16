@@ -1,14 +1,17 @@
 local CollectionService = game:GetService("CollectionService")
+local Debris = game:GetService("Debris")
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ServerStorage = game:GetService("ServerStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local TweenService = game:GetService("TweenService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 --
 local Events = ReplicatedStorage.Events
 local GeneralRemotes = ReplicatedStorage.Remotes
 local ServerTools = ServerStorage.Tools
 --
+local BakeryShop = require(ServerScriptService.Server.NPCs.BakeryCashier.BakeryShop)
 local PrisonWardenEvent = require(ServerScriptService.Server.NPCs.PrisonWarden.PrisonWardenEvent)
 local TrashPickup = require(ReplicatedStorage.NPCs.TrashPickup.TrashPickup)
 local CurrencyHandler = require(script.Parent.CurrencyHandler)
@@ -31,6 +34,7 @@ local TalkModuleHelpers = require(script.Parent.TalkModuleHelpers)
 local Safechatter = require(ServerScriptService.Server.NPCs.Safechatter.Safechatter)
 local ConnectionManager = require(script.Parent.ConnectionManager)
 local MissionsLogicHandler = require(script.Parent.MissionsLogicHandler)
+local NormalDoor = require(script.Parent.NormalDoor)
 local WhodunnitMode = require(ServerScriptService.Server.NPCs.Whodunnit.WhodunnitMode)
 local PlayerInitialize = require(ServerScriptService.Server.Player.PlayerInitialize)
 local TVRoomInitialize = require(ServerScriptService.Server.Room.TVRoomInitialize)
@@ -222,7 +226,7 @@ function ServerRemotes.GlitcherRemotes()
 end
 
 function ServerRemotes.HouseRemotes()
-	GeneralRemotes.House.HouseDoorInteracted.OnServerEvent:Connect(function(player, interactType, roomName)
+	GeneralRemotes.HouseDoorInteracted.OnServerEvent:Connect(function(player, interactType, roomName)
 		if interactType == "Enter" then
 			RoomHandler.SpawnRoomAndEnter(player, roomName, true)
 		else
@@ -309,6 +313,18 @@ function ServerRemotes.GambaRemotes()
 	end)
 end
 
+function ServerRemotes.BakeryToolsRemotes()
+	GeneralRemotes.BakeryTools.Puke.OnServerEvent:Connect(function(player)
+		local playerHead = player.Character.Head
+		local puke = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Cupcake", "Puke", nil)
+		puke:PivotTo(playerHead.CFrame * CFrame.new(0, 0, -0.5) * CFrame.Angles(math.rad(45), 0, 0))
+		puke:FindFirstChildOfClass("WeldConstraint").Part0 = playerHead
+
+		Debris:AddItem(puke, 2)
+		GeneralRemotes.PlaySound:InvokeClient(player, "Puke")
+		task.wait(2)
+	end)
+end
 function ServerRemotes.CupcakeLoverRemotes()
 	GeneralRemotes.CupcakeLover.EnemyHit.OnServerEvent:Connect(function(_, type, id)
 		PumpkinBossFight.ReduceHP(type, id)
@@ -738,8 +754,24 @@ function ServerRemotes.MissionRemotes()
 	end)
 end
 
+function ServerRemotes.BakeryCashierRemotes()
+	GeneralRemotes.BakeryCashier.BuyBakeryItem.OnServerEvent:Connect(function(player, itemName)
+		BakeryShop.BuyItem(player, itemName)
+	end)
+end
+
+function ServerRemotes.NormalDoorRemotes()
+	GeneralRemotes.NormalDoor.InteractNormalDoor.OnServerEvent:Connect(function(_, prompt, hinge, doorName)
+		NormalDoor.Interact(prompt, hinge, doorName)
+	end)
+	GeneralRemotes.NormalDoor.ClearDoorTweens.OnServerEvent:Connect(function()
+		NormalDoor.Clear()
+	end)
+end
+
 function ServerRemotes.Initialize(player)
 	ServerRemotes.MissionRemotes()
+	ServerRemotes.NormalDoorRemotes()
 	ServerRemotes.EnableHatDropping()
 	ServerRemotes.PsychoMantisRemotes()
 	ServerRemotes.NPCRemotes()
@@ -762,6 +794,8 @@ function ServerRemotes.Initialize(player)
 	ServerRemotes.TVHomeRemotes()
 	ServerRemotes.FrankensteinRemotes()
 	ServerRemotes.WhodunnitRemotes(player)
+	ServerRemotes.BakeryCashierRemotes()
+	ServerRemotes.BakeryToolsRemotes()
 end
 
 return ServerRemotes

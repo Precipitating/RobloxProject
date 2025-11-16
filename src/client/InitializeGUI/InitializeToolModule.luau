@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local Player = Players.LocalPlayer
 local Character = Player.Character or Player.CharacterAdded:Wait()
 local GeneralRemotes = ReplicatedStorage.Remotes
+local ToolActivated = false
 local InitializeToolModule = {}
 local Connections = {}
 
@@ -78,6 +79,27 @@ InitializeToolModule["PrisonSpoon"] = function(tool)
 
 			BallTerrainDestroy(result)
 		end
+	end)
+end
+
+InitializeToolModule["Cupcake"] = function(tool)
+	-- lets use the instance as the key, so we can disconnect its specific instance connection,
+	-- instead of globally disconnecting all cupcakes if we use a string key (there may be multiple in inventory)
+	trackConnect(tool, tool.Activated, function()
+		if ToolActivated then
+			return
+		end
+		ToolActivated = true
+		tool.GripForward = vector.create(0, -0.759, -0.651)
+		tool.GripPos = vector.create(1.5, -0.5, 0.3)
+		tool.GripRight = vector.create(1, 0, 0)
+		tool.GripUp = vector.create(0, 0.651, -0.759)
+		SoundModule.PlaySound("EatFast", nil, true)
+		tool:Destroy()
+		InitializeToolModule.DisconnectAll(tool)
+		task.wait(1)
+		GeneralRemotes.BakeryTools.Puke:FireServer()
+		ToolActivated = false
 	end)
 end
 

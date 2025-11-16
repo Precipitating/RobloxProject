@@ -119,8 +119,8 @@ function ClientRemotes.GeneralRemotes()
 	end)
 
 	-- play one shot sound
-	GeneralRemotes.PlaySound.OnClientInvoke = function(name, parent, waitUntilDone)
-		return SoundModule.PlaySound(name, parent, waitUntilDone)
+	GeneralRemotes.PlaySound.OnClientInvoke = function(name, parent, waitUntilDone, playbackSpeed)
+		return SoundModule.PlaySound(name, parent, waitUntilDone, playbackSpeed)
 	end
 
 	-- stop all one shots & theme

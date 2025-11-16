@@ -12,14 +12,13 @@ local PlayerGui = Player:WaitForChild("PlayerGui")
 local GeneralRemotes = ReplicatedStorage.Remotes
 
 -- house
-local HouseRemote = ReplicatedStorage.Remotes.House.HouseDoorInteracted
+local HouseRemote = ReplicatedStorage.Remotes.HouseDoorInteracted
 local HouseDoorDebounce = false
 
 -- talk
 local InitializeGUIModule = require(StarterPlayer.StarterPlayerScripts.Client.InitializeGUI.InitializeGUIModule)
 local FrankensteinPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.Frankenstein.FrankensteinPrompts)
 local MoneyBaitPrompts = require(StarterPlayer.StarterPlayerScripts.Client.NPCs.MoneyBait.MoneyBaitPrompts)
-local SimulateTVCapture = require(StarterPlayer.StarterPlayerScripts.Client.Rooms.Home.SimulateTVCapture)
 local SoundModule = require(script.Parent.SoundModule)
 local TalkModule = require(script.Parent.TalkModule)
 local NPCEvents = ReplicatedStorage.Events.NPC
@@ -51,6 +50,9 @@ local RoomExitFunctions = {
 
 		Events.ExecuteScenarioEvent:FireServer("StealTVModeExit")
 		PlayerGui:WaitForChild("SleepMeter"):Destroy()
+	end,
+	HomeExit = function()
+		GeneralRemotes.NormalDoor.ClearDoorTweens:FireServer()
 	end,
 }
 
@@ -131,6 +133,16 @@ local function GetShopItems()
 	end
 
 	return shopItems
+end
+
+local function NormalDoorProximityPrompt(prompt)
+	if not CollectionService:HasTag(prompt.Parent, "NormalDoor") then
+		return
+	end
+	local hinge = prompt.Parent.Parent.Doorframe.Hinge
+	GeneralRemotes.NormalDoor.InteractNormalDoor:FireServer(prompt, hinge, prompt.Parent:GetAttribute("Door"))
+
+	SoundModule.PlaySound("DoorOpen", prompt.Parent)
 end
 
 local function HouseDoorProximityPrompt(prompt)
@@ -372,6 +384,7 @@ local function WhodunnitPrompts(prompt)
 end
 
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
+	NormalDoorProximityPrompt(prompt)
 	HouseDoorProximityPrompt(prompt)
 	TalkProximityPrompt(prompt)
 	ShopBasketProximityPrompt(prompt)

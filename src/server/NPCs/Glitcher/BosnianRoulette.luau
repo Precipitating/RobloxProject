@@ -6,9 +6,8 @@ local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFun
 local GeneralRemotes = ReplicatedStorage.Remotes
 local BosnianRoulette = {}
 local LandMine = nil
-local LandMineTimer = math.floor(math.random(60, 300))
 local BeepSound = nil
-local BoomSound = nil
+local LandMineTimer = math.floor(math.random(60, 300))
 local CurrentTime = LandMineTimer
 local GUILocation = ReplicatedStorage.GUI.Glitcher.BosnianRouletteGUI
 local GUIInstance = nil
@@ -35,9 +34,6 @@ local function RevealLandMine()
 		local tween = TweenService:Create(LandMine.Mesh, tweenInfo, goal)
 		tween:Play()
 	end)
-
-	BeepSound = LandMine:FindFirstChild("beep")
-	BoomSound = LandMine:FindFirstChild("boom")
 end
 
 function BosnianRoulette.Init(player)
@@ -45,6 +41,9 @@ function BosnianRoulette.Init(player)
 	task.wait(1)
 	GeneralRemotes.PlayTheme:FireClient(player, "Breathing")
 	LandMine = workspace:FindFirstChild("GlitchRoom"):FindFirstChild("LandMine")
+	BeepSound = Instance.new("Sound")
+	BeepSound.Parent = LandMine
+	BeepSound.SoundId = "rbxassetid://1283290053"
 	-- set global player ref so we don't have to pass arguments everywhere
 	PlayerRef = player
 
@@ -57,7 +56,7 @@ function BosnianRoulette.Init(player)
 	RevealLandMine()
 
 	BosnianRoulette.InitGUI()
-	BosnianRoulette.StartBomb()
+	BosnianRoulette.StartBomb(player)
 end
 
 function BosnianRoulette.InitGUI()
@@ -124,14 +123,12 @@ function BosnianRoulette.NPCTurn()
 	BosnianRoulette.ReduceBombTime(choice)
 end
 
-function BosnianRoulette.StartBomb()
+function BosnianRoulette.StartBomb(player)
 	local rampStart = 30 -- seconds before end when pitch starts rising
 	local minPitch = 1
 	local maxPitch = 2
 	local done = false
 	while CurrentTime > 0 do
-		BeepSound:Play()
-
 		local progress = 0
 		if CurrentTime <= rampStart then
 			progress = 1 - (CurrentTime / rampStart)
@@ -144,7 +141,7 @@ function BosnianRoulette.StartBomb()
 
 		-- pitch ramps up only in final ramp
 		BeepSound.PlaybackSpeed = minPitch + (maxPitch - minPitch) * (progress ^ 2)
-
+		BeepSound:Play()
 		task.wait(delayTime)
 		CurrentTime -= delayTime
 
@@ -152,7 +149,7 @@ function BosnianRoulette.StartBomb()
 	end
 	if not done then
 		done = true
-		BoomSound:Play()
+		GeneralRemotes.PlaySound:InvokeClient(player, "Boom")
 		print(YourTurn)
 		GUIInstance.Enabled = false
 

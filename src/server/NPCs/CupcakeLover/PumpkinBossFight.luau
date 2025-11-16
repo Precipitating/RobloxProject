@@ -320,16 +320,15 @@ function PumpkinBossFight.Fireball(player)
 		fireball:PivotTo(FireballPos.WorldCFrame)
 		fireball.CFrame = CFrame.lookAt(fireball.Position, player.Character:GetPivot().Position)
 
-		local sound = fireball:FindFirstChild("FireballSound")
-		if sound then
-			sound:Play()
-		end
+		GeneralRemotes.PlaySound:InvokeClient(player, "FireballSound", fireball)
 
 		fireball.Touched:Once(function(fireballTouch)
 			if CollectionService:HasTag(fireballTouch, "SoulFetcher") then
 				return
 			end
+			GeneralRemotes.PlaySound:InvokeClient(player, "FireballExplosion", fireball)
 			fireball:Destroy()
+
 			FireballExplosionHandler(fireball)
 			fireball = nil
 		end)

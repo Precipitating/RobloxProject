@@ -14,7 +14,9 @@ function SimulateTVCapture.DisconnectAll()
 end
 
 local function OnCaptureReady(contentId)
-	TVImageRef.Image = contentId
+	if TVImageRef then
+		TVImageRef.Image = contentId
+	end
 end
 
 function SimulateTVCapture.Initialize()

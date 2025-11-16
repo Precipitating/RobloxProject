@@ -31,12 +31,16 @@ local function CollectedAllParts()
 end
 
 local function ActivateLever(prompt)
+	if not BodyComplete then
+		warn("Body not assembled")
+		return
+	end
 	prompt.Enabled = false
 	local hitbox = prompt.Parent
 	local goal = { CFrame = hitbox.CFrame * CFrame.new(0, 0, -1.275) }
 	local info = TweenInfo.new(0.5, Enum.EasingStyle.Sine)
 	local tween = TweenService:Create(hitbox, info, goal)
-	hitbox:WaitForChild("LeverSound"):Play()
+	SoundModule.PlaySound("FrankensteinLever", prompt.Parent)
 	tween:Play()
 	tween.Completed:Wait()
 	print("done")

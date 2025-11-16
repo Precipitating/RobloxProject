@@ -432,6 +432,7 @@ function WhodunnitMode.PoolGuestVoted(guestVotedName)
 	GeneralRemotes.PlayTheme:FireClient(PlayerRef, "CreepyNightTheme")
 	ServerHelperFunctions.GiveTool(PlayerRef, { "Sword", true })
 	ServerHelperFunctions.ForceEquip(PlayerRef, "Sword")
+	GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "Unsheath")
 	PlayNextHostTTS()
 	WhodunnitGuest.AllGuestsSpeak(PlayerRef, {
 		"This game is rubbish! you rigged this eye zap and im reporting this game for you stealing this idea from ps5 player. See you in court.",

@@ -1,6 +1,7 @@
 local ServerStorage = game:GetService("ServerStorage")
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage").Shared
 local ServerScriptService = game:GetService("ServerScriptService")
 local ServerHelperFunctions = require(ServerScriptService.Server.ServerHelperFunctions)
 
@@ -10,6 +11,8 @@ local FlingForce = 200
 local ApocDriveDuration = 20
 local DNSLDriveDuration = 30
 local RunRoadEvents = true
+local PlayerRef = nil
+local GeneralRemotes = ReplicatedStorage.Remotes
 
 function RoadEvents.IsActive()
 	return IsActive
@@ -20,7 +23,8 @@ function RoadEvents.EnableRoadEvents(enable)
 	RunRoadEvents = enable
 end
 
-function RoadEvents.SpawnLoop()
+function RoadEvents.SpawnLoop(playerRef)
+	PlayerRef = playerRef
 	task.spawn(function()
 		while RunRoadEvents do
 			-- wait a random amount of time before next attempt
@@ -127,15 +131,10 @@ function RoadEvents.SpawnApocCar()
 			part.Transparency = 0
 		end
 
-		local crash = base:FindFirstChild("Crash")
-		local explode = base:FindFirstChild("Explode")
-		local anger = base:FindFirstChild("Angry")
 		local drive = base:FindFirstChild("Drive")
-		if not crash and not explode and not anger then
-			error("Apoc car missing sound references")
-		end
-		crash:Play()
-		explode:Play()
+
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocCrash", car)
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocExplode", car)
 		drive:Stop()
 
 		for _, part in ipairs(car:GetDescendants()) do
@@ -155,7 +154,7 @@ function RoadEvents.SpawnApocCar()
 		tween:Cancel()
 
 		task.wait(1)
-		anger:Play()
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocAnger", car)
 
 		-- despawn
 		task.delay(7, function()

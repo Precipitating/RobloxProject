@@ -348,18 +348,8 @@ InitializeGUIModule["BakeryCashier"] = function()
 			if not price then
 				error(`{item.Name} has no price value`)
 			end
-			local currentMoney = GeneralRemotes.GetCurrentMoney:InvokeServer()
 
-			-- exit early if can't afford item
-			if currentMoney < price.Value then
-				warn(`Can't afford {item.Name}, which costs {price.Value}`)
-				SoundModule.PlaySound("Error")
-				return
-			end
-
-			-- can afford, give tool and reduce money
-			GeneralRemotes.ReduceMoney:FireServer(price.Value)
-			MissionRemotes.GiveToolEvent:InvokeServer({ item.Name, false })
+			GeneralRemotes.BakeryCashier.BuyBakeryItem:FireServer(item.Name)
 		end)
 	end
 	print("success")

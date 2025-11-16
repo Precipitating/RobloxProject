@@ -641,6 +641,52 @@ local OneShots = {
 		SoundId = "rbxassetid://190705984",
 		Volume = 1,
 	},
+	EatFast = {
+		SoundId = "rbxassetid://1398544778",
+		Volume = 1,
+	},
+	Puke = {
+		SoundId = "rbxassetid://112726200832979",
+		Volume = 1,
+	},
+	FireballSound = {
+		SoundId = "rbxassetid://7106659874",
+		Volume = 1,
+	},
+	FireballExplosion = {
+		SoundId = "rbxassetid://130565967505452",
+		Volume = 1,
+	},
+	Unsheath = {
+		SoundId = "rbxassetid://12222225",
+		Volume = 1,
+	},
+	Boom = {
+		SoundId = "rbxassetid://140615626179933",
+		Volume = 1,
+	},
+	FrankensteinLever = {
+		SoundId = "rbxassetid://7639377355",
+		Volume = 1.7,
+		PlaybackSpeed = 1.7,
+	},
+	ApocAngry = {
+		SoundId = "rbxassetid://6131500210",
+		Volume = 3,
+	},
+	ApocExplode = {
+		SoundId = "rbxassetid://2248511",
+		Volume = 1,
+		PlaybackSpeed = 0.7,
+	},
+	ApocCrash = {
+		SoundId = "rbxassetid://159875211",
+		Volume = 0.7,
+	},
+	DoorOpen = {
+		SoundId = "rbxassetid://5122149230",
+		Volume = 2,
+	},
 }
 local SoundHandler = {}
 
@@ -759,7 +805,7 @@ function SoundHandler.ResumeTheme()
 	end
 end
 
-function SoundHandler.PlaySound(soundName, parent, waitUntilDone)
+function SoundHandler.PlaySound(soundName, parent, waitUntilDone, playbackSpeed)
 	print(`Playing {soundName}`)
 
 	-- if the sound currently exists, just reuse it instead of a new sound instance.
@@ -798,6 +844,13 @@ function SoundHandler.PlaySound(soundName, parent, waitUntilDone)
 			chorusObject.Mix = soundData.Chorus.Mix
 			chorusObject.Rate = soundData.Chorus.Rate
 			chorusObject.Parent = sound
+		end
+
+		-- playback speed
+		if playbackSpeed then
+			sound.PlaybackSpeed = playbackSpeed
+		elseif soundData.PlaybackSpeed then
+			sound.PlaybackSpeed = soundData.PlaybackSpeed
 		end
 
 		-- tag
