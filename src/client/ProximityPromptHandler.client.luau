@@ -383,6 +383,39 @@ local function WhodunnitPrompts(prompt)
 	GeneralRemotes.Whodunnit.KillVictim:FireServer(prompt.Parent.Name)
 end
 
+local function SeatPrompts(prompt)
+	if not CollectionService:HasTag(prompt.Parent, "Seat") then
+		return
+	end
+	local seat = prompt.Parent:FindFirstChildOfClass("Seat")
+
+	if seat.Occupant then
+		return
+	end
+
+	if not Character then
+		return
+	end
+
+	local humanoid = Character:FindFirstChildOfClass("Humanoid")
+	if not humanoid then
+		return
+	end
+	seat:Sit(humanoid)
+
+	if not CollectionService:HasTag(prompt.Parent, "Set") then
+		seat:GetPropertyChangedSignal("Occupant"):Connect(function()
+			local seatHumanoid = seat.Occupant
+			if seatHumanoid then
+				prompt.Enabled = false
+			else
+				prompt.Enabled = true
+			end
+			prompt.Parent:AddTag("Set")
+		end)
+	end
+end
+
 ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	NormalDoorProximityPrompt(prompt)
 	HouseDoorProximityPrompt(prompt)
@@ -396,4 +429,5 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _)
 	TVHomePrompts(prompt)
 	FrankensteinPrompts.HandlePrompts(prompt)
 	WhodunnitPrompts(prompt)
+	SeatPrompts(prompt)
 end)
