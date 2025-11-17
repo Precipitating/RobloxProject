@@ -52,7 +52,6 @@ function PlayerBadgeDisplayer.GetObtainedBadges(player)
 end
 
 function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
-	print("called")
 	local expandableParts = ServerHelperFunctions.GetTaggedOfDirectory(workspace, "AchievementExpand")
 	local achievementEndWall = ServerHelperFunctions.GetTaggedOfDirectory(workspace, "AchievementEnd")
 	local currOffset = AchievementsOffset

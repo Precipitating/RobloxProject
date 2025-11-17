@@ -132,9 +132,10 @@ function RoadEvents.SpawnApocCar()
 		end
 
 		local drive = base:FindFirstChild("Drive")
+		local driverHead = car:FindFirstChild("Driver"):FindFirstChild("Head")
 
-		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocCrash", car)
-		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocExplode", car)
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocCrash", driverHead)
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocExplode", driverHead)
 		drive:Stop()
 
 		for _, part in ipairs(car:GetDescendants()) do
@@ -154,7 +155,7 @@ function RoadEvents.SpawnApocCar()
 		tween:Cancel()
 
 		task.wait(1)
-		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocAnger", car)
+		GeneralRemotes.PlaySound:InvokeClient(PlayerRef, "ApocAngry", driverHead)
 
 		-- despawn
 		task.delay(7, function()
@@ -186,6 +187,7 @@ function RoadEvents.SpawnDNSL()
 end
 
 local RandomEvents = { RoadEvents.SpawnLearnerDriver, RoadEvents.SpawnApocCar, RoadEvents.SpawnDNSL }
+
 function RoadEvents.PlayRandomEvent()
 	task.spawn(function()
 		if RunRoadEvents then

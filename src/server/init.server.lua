@@ -84,7 +84,7 @@ Players.PlayerAdded:Connect(function(player)
 	WeatherHandler.Start()
 
 	-- road events
-	RoadEvents.SpawnLoop()
+	RoadEvents.SpawnLoop(player)
 
 	-- traffic lights initialization
 	for _, model in ipairs(CollectionService:GetTagged("TrafficLight")) do
