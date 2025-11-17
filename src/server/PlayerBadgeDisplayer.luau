@@ -36,7 +36,9 @@ local Badges = {
 	3460379227107089,
 	1724723416621681,
 }
-local positions = ServerHelperFunctions.GetTaggedOfDirectory(ServerStorage, "AchievementPos")
+local originalPositions = ServerHelperFunctions.GetTaggedOfDirectory(ServerStorage, "AchievementPos")
+local AchievementLights = ServerHelperFunctions.GetTaggedOfDirectory(ServerStorage, "AchievementLight")
+local AchievementsOffset = 20
 
 function PlayerBadgeDisplayer.GetObtainedBadges(player)
 	for _, id in ipairs(Badges) do
@@ -50,29 +52,58 @@ function PlayerBadgeDisplayer.GetObtainedBadges(player)
 end
 
 function PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
+	print("called")
+	local expandableParts = ServerHelperFunctions.GetTaggedOfDirectory(workspace, "AchievementExpand")
+	local achievementEndWall = ServerHelperFunctions.GetTaggedOfDirectory(workspace, "AchievementEnd")
+	local currOffset = AchievementsOffset
+	local positions = table.clone(originalPositions)
+
 	if #positions <= 0 then
 		error("Missing position part for achievement displaying")
 		return
 	end
-
-	if #positions < #ObtainedBadgesList then
-		warn("Not enough achievement positions to spawn all achievements!")
-		return
-	end
-
 	-- for each badge the player owns, spawn a display case and set its badge info
 	for idx, info in ipairs(ObtainedBadgesList) do
 		--print(positions[idx].Name)
 		local display = ServerHelperFunctions.SpawnModelAtPosition("MissionModels", "Home", "Display", nil)
-
+		local achievementsRoom = workspace:FindFirstChild("Home"):FindFirstChild("AchievementsRoom")
 		local decal = display.Frame.LargePictureFrame.Picture.Decal
 		local textInfo = display.Info.SurfaceGui.TextLabel
 
 		if not display or not decal or not textInfo then
 			error(`Missing badge display references: display = {display}, decal = {decal}, info = {textInfo}`)
 		end
+		if idx > #positions then
+			-- expand walls
+			for _, part in expandableParts do
+				part.Size += vector.create(AchievementsOffset, 0, 0)
+				part:PivotTo(part.CFrame * CFrame.new(AchievementsOffset / 2, 0, 0))
+			end
+			-- clone and move lights
+			for i = 1, 3 do
+				local clone = AchievementLights[i]:Clone()
+				clone:PivotTo(clone.CFrame * CFrame.new(0, 0, currOffset))
+				clone.Parent = achievementsRoom.Lights
+			end
+			-- move end wall
+			achievementEndWall[1]:PivotTo(achievementEndWall[1].CFrame * CFrame.new(0, 0, AchievementsOffset))
+
+			-- create new achievement positions
+			for i = 1, 2 do
+				local clone = positions[i]:Clone()
+				if clone.Orientation.Y == 180 then
+					clone:PivotTo(clone.CFrame * CFrame.new(0, 0, currOffset))
+				else
+					clone:PivotTo(clone.CFrame * CFrame.new(0, 0, -currOffset))
+				end
+				clone.Parent = achievementsRoom.Achievements
+
+				table.insert(positions, clone)
+			end
+			currOffset += AchievementsOffset
+		end
 		display:PivotTo(positions[idx].CFrame)
-		display.Parent = workspace:FindFirstChild("Home"):FindFirstChild("AchievementsRoom")
+		display.Parent = achievementsRoom
 
 		if info.IconImageId then
 			decal.Texture = `rbxassetid://{info.IconImageId}`

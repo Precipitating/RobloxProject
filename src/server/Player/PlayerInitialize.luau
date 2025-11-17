@@ -55,8 +55,6 @@ function PlayerInitialize.SpawnHome()
 	-- Wait until SpawnLocation exists inside the room
 	local spawnLocation = workspace:FindFirstChild("Home"):WaitForChild("SpawnLocation", 5)
 
-	PlayerBadgeDisplayer.SetObtainedBadgesToAchievements()
-
 	return spawnLocation
 end
 
