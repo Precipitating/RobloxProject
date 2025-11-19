@@ -68,7 +68,7 @@ function ServerRemotes.PsychoMantisRemotes()
 	end
 end
 
-function ServerRemotes.NPCRemotes()
+function ServerRemotes.NPCRemotes(player)
 	ReplicatedStorage.Events.NPC.PauseNPCMovement.OnServerEvent:Connect(function(player, pause, NPCName)
 		print(`{NPCName} pathfinding state on server: {pause}`)
 		local targetNPC = NPCModule:GetNPC(NPCName)
@@ -131,8 +131,8 @@ function ServerRemotes.NPCRemotes()
 			else
 				tts.Text = `Warden! I don't like how the new prisoner is looking at me! check him!`
 			end
-			tts:Play()
-			tts.Ended:Wait()
+
+			GeneralRemotes.Speak3D:InvokeClient(player, tts, tts.Text)
 		end
 
 		npc:StartPathing(playerCell)
@@ -172,8 +172,7 @@ function ServerRemotes.NPCRemotes()
 					local tts = arrivedPart:FindFirstChildOfClass("AudioTextToSpeech")
 					if tts then
 						tts.Text = YapLines[math.random(1, #YapLines)]
-						tts:Play()
-						tts.Ended:Wait()
+						GeneralRemotes.Speak3D:InvokeClient(player, tts, tts.Text)
 					end
 					npc:StartPathing(nextLocation)
 				else
@@ -774,7 +773,7 @@ function ServerRemotes.Initialize(player)
 	ServerRemotes.NormalDoorRemotes()
 	ServerRemotes.EnableHatDropping()
 	ServerRemotes.PsychoMantisRemotes()
-	ServerRemotes.NPCRemotes()
+	ServerRemotes.NPCRemotes(player)
 	ServerRemotes.ModelRemotes()
 	ServerRemotes.GlitcherRemotes()
 	ServerRemotes.HouseRemotes()
