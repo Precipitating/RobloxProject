@@ -120,7 +120,7 @@ function ShopLiftConsequences.SpawnJacker(player)
 		-- face the player
 		local lookAt = hrp.Position - spawnPos
 		lookAt = vector.normalize(vector.create(lookAt.X, 0, lookAt.Z))
-		jacker:SetPrimaryPartCFrame(CFrame.lookAt(spawnPos, spawnPos + lookAt))
+		jacker:PivotTo(CFrame.lookAt(spawnPos, spawnPos + lookAt))
 		JackerTouchConnection(jacker, primary, player, collisionBox)
 	end
 

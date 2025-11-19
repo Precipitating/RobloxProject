@@ -5,7 +5,7 @@ return {
 			Portrait = "rbxassetid://15375763382",
 			Dialogue = "Oi wagwan <b>bruv</b> what you looking at mate?<br/>I'll <font color='#e22f1e'><b>ching</b></font> ya.",
 			VoiceId = "1",
-			Pitch = 3,
+			Pitch = 7,
 			Speed = 2,
 			Volume = 3,
 			PlayTheme = "RoadmanTune",
